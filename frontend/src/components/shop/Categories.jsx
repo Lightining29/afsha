@@ -47,7 +47,7 @@ export default function Categories() {
                   className="category-icon-wrap"
                   style={{ background: `linear-gradient(135deg, ${cat.from}, ${cat.to})` }}
                 >
-                  <cat.icon size={30} />
+                  <cat.icon size={34} />
                 </div>
                 <div className="category-info">
                   <h3>{cat.name}</h3>
