@@ -2,20 +2,26 @@
    HOME PAGE — Section rhythm, feature cards, CTA band
    ========================================= */
 
-/* Shared section spacing so every block on the page breathes the same */
+/* Shared section spacing so every block on the page breathes the same.
+   Page reads as clean white, with faint warm tint on alternate sections. */
 .section.home-section {
-  padding: 72px 0;
+  padding: 80px 0;
+  background: var(--white);
+}
+
+.section.home-section:nth-child(even) {
+  background: var(--off-white);
 }
 
 @media (max-width: 768px) {
   .section.home-section {
-    padding: 52px 0;
+    padding: 56px 0;
   }
 }
 
 /* ----- About section ----- */
 .about-section {
-  background: linear-gradient(180deg, var(--white) 0%, var(--off-white) 100%);
+  background: var(--white) !important;
   text-align: center;
 }
 
