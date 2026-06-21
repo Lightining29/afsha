@@ -1,6 +1,53 @@
 /* =========================================
-   HOME PAGE — Section rhythm, feature cards, CTA band
+   HOME PAGE — Stat strip, section rhythm, feature cards, CTA band
    ========================================= */
+
+/* ----- Stat strip (social proof right under hero) ----- */
+.stat-strip {
+  background: var(--text-dark);
+  padding: 26px 0;
+}
+
+.stat-strip-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #fff;
+}
+
+.stat-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--rose-gold-light);
+  flex-shrink: 0;
+}
+
+.stat-value {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 768px) {
+  .stat-strip-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+}
 
 /* Shared section spacing so every block on the page breathes the same.
    Page reads as clean white, with faint warm tint on alternate sections. */

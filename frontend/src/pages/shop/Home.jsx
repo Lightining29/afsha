@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Leaf, FlaskConical, Recycle, Rabbit, ArrowRight } from 'lucide-react';
+import { Leaf, FlaskConical, Recycle, Rabbit, ArrowRight, Star, Truck, ShieldCheck, Users } from 'lucide-react';
 import Navbar from '../../components/layout/Navbar';
 import Hero from '../../components/shop/Hero';
 import TrustBar from '../../components/shop/TrustBar';
@@ -19,10 +19,32 @@ const pillars = [
   { icon: Rabbit,        title: 'Cruelty-Free',       desc: 'Never tested on animals' },
 ];
 
+const stats = [
+  { icon: Users,      value: '10k+', label: 'Happy Customers' },
+  { icon: Star,       value: '4.9',  label: 'Average Rating' },
+  { icon: Truck,      value: 'Free', label: 'Shipping Over ₹999' },
+  { icon: ShieldCheck,value: '100%', label: 'Secure Payments' },
+];
+
 export default function Home() {
   return (
     <>
       <Hero />
+
+      {/* Bold stat strip — instant social proof right under the hero */}
+      <section className="stat-strip">
+        <div className="container stat-strip-grid">
+          {stats.map(({ icon: Icon, value, label }) => (
+            <div key={label} className="stat-item">
+              <span className="stat-icon"><Icon size={22} /></span>
+              <div>
+                <div className="stat-value">{value}</div>
+                <div className="stat-label">{label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <section className="section home-section reveal">
         <div className="container">
