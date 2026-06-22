@@ -5,13 +5,13 @@ import CategoryCard from '../product/CategoryCard';
 import './Categories.css';
 
 // Shown immediately when the API returns no categories yet.
-// Each has a gradient + lucide icon so cards look professional with no image.
+// Each has a sky-blue gradient + lucide icon so cards look professional with no image.
 const fallbackCategories = [
-  { _id: 'f1', name: 'Skincare',          icon: Sparkles, count: 24, from: '#ffe6ef', to: '#ffd9ea' },
-  { _id: 'f2', name: 'Wellness & Massage', icon: Wind,    count: 12, from: '#e8f4fa', to: '#d9ecf5' },
-  { _id: 'f3', name: 'Hair Care',          icon: Droplets, count: 18, from: '#fff4e6', to: '#ffe9d6' },
-  { _id: 'f4', name: 'Body',               icon: Flower2,  count: 15, from: '#f0fae8', to: '#e2f5d8' },
-  { _id: 'f5', name: 'Fragrance',          icon: Hand,     count: 9,  from: '#f5e8fa', to: '#edd8f5' },
+  { _id: 'f1', name: 'Skincare',          icon: Sparkles, count: 24, from: '#dbeafe', to: '#bfdbfe' },
+  { _id: 'f2', name: 'Wellness & Massage', icon: Wind,    count: 12, from: '#e0f2fe', to: '#bae6fd' },
+  { _id: 'f3', name: 'Hair Care',          icon: Droplets, count: 18, from: '#dbeafe', to: '#93c5fd' },
+  { _id: 'f4', name: 'Body',               icon: Flower2,  count: 15, from: '#eff6ff', to: '#dbeafe' },
+  { _id: 'f5', name: 'Fragrance',          icon: Hand,     count: 9,  from: '#e0e7ff', to: '#c7d2fe' },
 ];
 
 export default function Categories() {

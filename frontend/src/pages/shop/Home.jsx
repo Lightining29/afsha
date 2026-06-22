@@ -46,11 +46,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section home-section reveal">
-        <div className="container">
-          <TrustBar />
-        </div>
-      </section>
+    
 
       <section id="categories" className="section home-section reveal">
         <div className="container">

@@ -4,26 +4,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Rose Gold & Luxury Skincare Palette */
-  --rose-gold: #C97A6E;
-  --rose-gold-light: #E8C4B8;
-  --rose-gold-dark: #9B5A52;
-  --rose-gold-deep: #7A4A42;
-  --peach: #F5E6D3;
-  --peach-light: #F9EEE4;
-  --cream: #F8F4F0;
-  --warm-beige: #E8DFD5;
+  /* Sky Blue Palette */
+  --rose-gold: #3b82f6;        /* primary blue */
+  --rose-gold-light: #93c5fd;  /* light blue */
+  --rose-gold-dark: #2563eb;   /* deep blue */
+  --rose-gold-deep: #1d4ed8;
+  --peach: #e0f2fe;
+  --peach-light: #f0f9ff;
+  --cream: #f8fafc;
+  --warm-beige: #e2e8f0;
   --white: #FFFFFF;
-  --off-white: #FBF9F6;
-  --bg-subtle: #FAF8F5;
-  --text-dark: #3D3430;
-  --text-muted: #6B6460;
-  --text-light: #94897F;
-  --border: #EDE6DF;
-  --shadow: 0 4px 24px rgba(201, 122, 110, 0.1);
-  --shadow-md: 0 8px 32px rgba(201, 122, 110, 0.12);
-  --shadow-lg: 0 16px 56px rgba(201, 122, 110, 0.15);
-  --shadow-xl: 0 32px 80px rgba(201, 122, 110, 0.2);
+  --off-white: #f8fbff;
+  --bg-subtle: #f1f6fc;
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --border: #e2e8f0;
+  --shadow: 0 4px 24px rgba(59, 130, 246, 0.1);
+  --shadow-md: 0 8px 32px rgba(59, 130, 246, 0.12);
+  --shadow-lg: 0 16px 56px rgba(59, 130, 246, 0.15);
+  --shadow-xl: 0 32px 80px rgba(59, 130, 246, 0.2);
   --radius: 20px;
   --radius-sm: 12px;
   --radius-xs: 8px;
@@ -31,9 +31,18 @@
   --font-sans: 'Inter', system-ui, sans-serif;
 
   /* Gradient presets */
-  --gradient-sky: linear-gradient(135deg, #E8C4B8 0%, #D9A891 50%, #C97A6E 100%);
-  --gradient-fresh: linear-gradient(135deg, #F9EEE4 0%, #F5E6D3 100%);
-  --gradient-dark: linear-gradient(135deg, #3D3430 0%, #52403A 100%);
+  --gradient-sky: linear-gradient(135deg, #93c5fd 0%, #60a5fa 50%, #3b82f6 100%);
+  --gradient-fresh: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  --gradient-dark: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+
+  /* Neumorphic surface (must match the section bg behind cards) */
+  --neu-surface: #eef4fb;
+  --neu-shadow-light: rgba(255, 255, 255, 0.95);
+  --neu-shadow-dark: rgba(99, 132, 173, 0.32);
+  --neu-out: 9px 9px 20px var(--neu-shadow-dark), -9px -9px 20px var(--neu-shadow-light);
+  --neu-out-sm: 6px 6px 14px var(--neu-shadow-dark), -6px -6px 14px var(--neu-shadow-light);
+  --neu-in: inset 5px 5px 12px var(--neu-shadow-dark), inset -5px -5px 12px var(--neu-shadow-light);
+  --sky-glow: 0 0 0 1px rgba(59, 130, 246, 0.18), 0 14px 36px rgba(59, 130, 246, 0.22);
 }
 
 *, *::before, *::after {

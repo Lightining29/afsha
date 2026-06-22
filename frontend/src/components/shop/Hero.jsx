@@ -3,7 +3,7 @@ import { ArrowRight, Sparkles, Battery, Volume2, Layers } from 'lucide-react';
 import { fetchBanner } from '../../api';
 import './Hero.css';
 
-const HERO_IMAGE_URL = '/massager.png';
+const HERO_IMAGE_URL = '/masage.jpg';
 
 // Inline SVG placeholder shown if public/massager.png is missing or fails to load.
 const PLACEHOLDER_SVG =
@@ -12,17 +12,17 @@ const PLACEHOLDER_SVG =
     `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
        <defs>
          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-           <stop offset="0%" stop-color="#ffe6ef"/>
-           <stop offset="100%" stop-color="#fff5f9"/>
+           <stop offset="0%" stop-color="#dbeafe"/>
+           <stop offset="100%" stop-color="#eff6ff"/>
          </linearGradient>
        </defs>
        <rect width="600" height="800" fill="url(#g)"/>
-       <g fill="none" stroke="#d46a95" stroke-width="6" opacity="0.5">
+       <g fill="none" stroke="#3b82f6" stroke-width="6" opacity="0.5">
          <rect x="210" y="240" width="180" height="320" rx="40"/>
          <circle cx="300" cy="200" r="60"/>
        </g>
-       <text x="300" y="640" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#5a3145">Massager Photo</text>
-       <text x="300" y="684" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="#8a5a6e">Add public/massager.png</text>
+       <text x="300" y="640" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#1e3a8a">Massager Photo</text>
+       <text x="300" y="684" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="#3b82f6">Add public/massager.png</text>
      </svg>`
   );
 
@@ -36,9 +36,9 @@ const DEFAULT_BANNER = {
 };
 
 const badges = [
-  { icon: Layers,   label: '9 Interchangeable Heads' },
-  { icon: Battery,  label: 'Up to 6h Battery' },
-  { icon: Volume2,  label: 'Whisper-Quiet' },
+  { icon: Layers, label: '9 Interchangeable Heads' },
+  { icon: Battery, label: 'Up to 6h Battery' },
+  { icon: Volume2, label: 'Whisper-Quiet' },
 ];
 
 function buildTitle(heading, highlight) {
@@ -71,7 +71,7 @@ export default function Hero() {
           subheading: data?.subheading || DEFAULT_BANNER.subheading,
         })
       )
-      .catch(() => {});
+      .catch(() => { });
 
     const onScroll = () => setScrollY(window.scrollY);
     onScroll();
