@@ -26,7 +26,7 @@ import Footer from './components/layout/Footer';
 import './pages/shop/Home.css';
 
 function RevealShell({ children }) {
-  return <div className="reveal">{children}</div>;
+  return <div>{children}</div>;
 }
 
 function App() {
@@ -40,12 +40,23 @@ function App() {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.05, rootMargin: '50px' });
 
-    const nodes = document.querySelectorAll('.reveal, .animate-in, .scroll-reveal');
-    nodes.forEach((node) => io.observe(node));
+    // Small delay to let the DOM settle after route change
+    const timer = setTimeout(() => {
+      const nodes = document.querySelectorAll('.reveal, .animate-in, .scroll-reveal');
+      nodes.forEach((node) => {
+        // Immediately reveal elements already in viewport (fixes mobile)
+        const rect = node.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          node.classList.add('visible');
+        } else {
+          io.observe(node);
+        }
+      });
+    }, 100);
 
-    return () => io.disconnect();
+    return () => { clearTimeout(timer); io.disconnect(); };
   }, [location.pathname]);
 
   return (

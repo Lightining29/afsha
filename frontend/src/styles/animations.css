@@ -57,3 +57,16 @@
 @media (prefers-reduced-motion: reduce){
   .reveal, .animate-in, .stagger .product-card, .stagger .category-card, .fade-up{ transition: none !important; transform: none !important; opacity: 1 !important; }
 }
+
+/* Mobile safety: guarantee content becomes visible even if IntersectionObserver fails */
+@media (max-width: 1024px) {
+  .reveal, .animate-in {
+    animation: mobileFallbackReveal 0s 1.5s forwards;
+  }
+  .reveal.visible, .animate-in.visible {
+    animation: none;
+  }
+}
+@keyframes mobileFallbackReveal {
+  to { opacity: 1; transform: none; }
+}
