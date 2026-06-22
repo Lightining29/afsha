@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { fetchMe, login as apiLogin, register as apiRegister, setToken } from '../api';
+import { fetchMe, login as apiLogin, register as apiRegister, setToken, verifyOtp as apiVerifyOtp, resendOtp as apiResendOtp } from '../api';
 
 const AuthContext = createContext(null);
 
@@ -35,11 +35,19 @@ export function AuthProvider({ children }) {
     return u;
   };
 
-  const register = async (name, email, password) => {
-    const { token, user: u } = await apiRegister(name, email, password);
+  const register = async (name, email, password, photoFile) => {
+    return await apiRegister(name, email, password, photoFile);
+  };
+
+  const verifyOtp = async (email, code) => {
+    const { token, user: u } = await apiVerifyOtp(email, code);
     setToken(token);
     setUser(u);
     return u;
+  };
+
+  const resendOtp = async (email) => {
+    return await apiResendOtp(email);
   };
 
   const logout = () => {
@@ -56,6 +64,8 @@ export function AuthProvider({ children }) {
         isAuthenticated: !!user,
         login,
         register,
+        verifyOtp,
+        resendOtp,
         logout,
         refreshUser: loadUser,
       }}

@@ -69,7 +69,7 @@ export default function Navbar() {
           <span className="logo-mark">
             <Droplets size={18} />
           </span>
-          <span className="logo-text">Glowora</span>
+          <span className="logo-text">Afsha Enterprises</span>
         </Link>
 
         <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
@@ -96,8 +96,12 @@ export default function Navbar() {
           </form>
 
           <div className="user-menu-wrap">
-            <button className="icon-btn" aria-label="Account" onClick={() => setUserMenuOpen(!userMenuOpen)}>
-              <User size={19} />
+            <button className={`icon-btn ${user?.photoUrl ? 'navbar-user-btn' : ''}`} aria-label="Account" onClick={() => setUserMenuOpen(!userMenuOpen)}>
+              {user?.photoUrl ? (
+                <img src={user.photoUrl} alt="Avatar" className="navbar-avatar" />
+              ) : (
+                <User size={19} />
+              )}
             </button>
             {userMenuOpen && (
               <div className="user-dropdown">

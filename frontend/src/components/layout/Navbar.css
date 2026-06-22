@@ -276,3 +276,17 @@
   .nav-search.open { position: absolute; top: 72px; left: 12px; right: 12px; padding: 6px; }
   .nav-search.open input { width: 100%; flex: 1; }
 }
+
+/* ---- Avatar styling ---- */
+.navbar-user-btn {
+  padding: 0 !important;
+  overflow: hidden;
+  border-radius: 50% !important;
+}
+
+.navbar-avatar {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 50%;
+}

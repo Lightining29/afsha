@@ -8,6 +8,14 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true, minlength: 6, select: false },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    // Email verification (OTP)
+    isVerified: { type: Boolean, default: false },
+    otpHash: { type: String, select: false },
+    otpExpires: { type: Date, select: false },
+    otpCooldownUntil: { type: Date, select: false },
+    // Profile photo (binary, like product/category images)
+    photoData: { type: Buffer, select: false },
+    photoContentType: { type: String },
   },
   { timestamps: true }
 );

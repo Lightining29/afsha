@@ -22,7 +22,11 @@ export default function Login() {
       const user = await login(email, password);
       navigate(user.role === 'admin' ? '/admin' : from, { replace: true });
     } catch (err) {
-      setError(err.message);
+      if (err.data?.requireVerification) {
+        navigate('/verify-otp', { state: { email: err.data.email } });
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }

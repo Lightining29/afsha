@@ -18,9 +18,22 @@ export default function AccountLayout() {
       <Navbar />
       <div className="panel-layout">
         <aside className="panel-sidebar">
-          <div className="panel-sidebar-header">
-            <h2>My Account</h2>
-            <p>{user?.name}</p>
+          <div className="panel-sidebar-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '4px' }}>
+            {user?.photoUrl ? (
+              <img 
+                src={user.photoUrl} 
+                alt={user.name} 
+                style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', marginBottom: '8px', border: '3px solid var(--sky-blue-light)' }} 
+              />
+            ) : (
+              <div 
+                style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--off-white)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '2rem', fontWeight: 'bold', marginBottom: '8px', border: '2px solid var(--border)' }}
+              >
+                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              </div>
+            )}
+            <h2 style={{ fontSize: '1.25rem', margin: 0 }}>My Account</h2>
+            <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-muted)' }}>{user?.name}</p>
           </div>
           <nav className="panel-nav">
             <NavLink to="/account" end>

@@ -16,7 +16,12 @@ async function apiFetch(path, options = {}) {
   if (token) headers.Authorization = `Bearer ${token}`;
   const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || 'Request failed');
+  if (!res.ok) {
+    const error = new Error(data.message || 'Request failed');
+    error.status = res.status;
+    error.data = data;
+    throw error;
+  }
   return data;
 }
 
@@ -30,7 +35,12 @@ async function apiUpload(path, method, formData) {
   if (token) headers.Authorization = `Bearer ${token}`;
   const res = await fetch(`${API_BASE}${path}`, { method, body: formData, headers });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || 'Upload failed');
+  if (!res.ok) {
+    const error = new Error(data.message || 'Upload failed');
+    error.status = res.status;
+    error.data = data;
+    throw error;
+  }
   return data;
 }
 
@@ -46,8 +56,29 @@ export async function fetchProduct(slug) { return apiFetch(`/products/${slug}`);
 export async function login(email, password) {
   return apiFetch('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
 }
-export async function register(name, email, password) {
-  return apiFetch('/auth/register', { method: 'POST', body: JSON.stringify({ name, email, password }) });
+export async function register(name, email, password, photoFile) {
+  const fd = new FormData();
+  fd.append('name', name);
+  fd.append('email', email);
+  fd.append('password', password);
+  if (photoFile) {
+    fd.append('photo', photoFile);
+  }
+  return apiUpload('/auth/register', 'POST', fd);
+}
+
+export async function verifyOtp(email, code) {
+  return apiFetch('/auth/verify-otp', {
+    method: 'POST',
+    body: JSON.stringify({ email, code }),
+  });
+}
+
+export async function resendOtp(email) {
+  return apiFetch('/auth/resend-otp', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  });
 }
 export async function fetchMe() { return apiFetch('/auth/me'); }
 

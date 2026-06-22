@@ -15,7 +15,7 @@ export default function Footer() {
           <div className="footer-brand">
             <div className="footer-logo">
               <Droplets size={26} />
-              <span>Glowora</span>
+              <span>Afsha Enterprises</span>
             </div>
             <p>
               Premium skincare crafted with love. Clean ingredients, real results,
@@ -53,15 +53,15 @@ export default function Footer() {
             <h4>Get In Touch</h4>
             <div className="contact-item">
               <Mail size={15} />
-              <span>hello@glowora.com</span>
+              <span>reazafsha0@gmail.com</span>
             </div>
             <div className="contact-item">
               <Phone size={15} />
-              <span>+1 (555) 123-4567</span>
+              <span>+91 80 7378 6650</span>
             </div>
             <div className="contact-item">
               <MapPin size={15} />
-              <span>123 Beauty Lane, NY 10001</span>
+              <span>75 Raja muthai road periyamet nehru stadium main gate opposite</span>
             </div>
             <div className="footer-newsletter">
               <p>Get exclusive deals in your inbox</p>

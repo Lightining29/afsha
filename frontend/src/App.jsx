@@ -5,6 +5,7 @@ import Cart from './pages/shop/Cart';
 import ProductDetail from './pages/shop/ProductDetail';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import VerifyOtp from './pages/auth/VerifyOtp';
 import Checkout from './pages/shop/Checkout';
 import CheckoutSuccess from './pages/shop/CheckoutSuccess';
 import AccountLayout from './pages/account/AccountLayout';
@@ -76,6 +77,7 @@ function App() {
       />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/verify-otp" element={<VerifyOtp />} />
       <Route
         path="/checkout"
         element={

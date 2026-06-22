@@ -69,3 +69,37 @@ export async function sendOrderReceipt(order, userEmail) {
   });
   return true;
 }
+
+/**
+ * Send a 6-digit OTP to verify a user's email.
+ * In dev (no SMTP configured) the code is logged to the server console
+ * so you can complete verification without a mailbox.
+ */
+export async function sendOtp(email, code) {
+  if (!email) return false;
+
+  const html = `
+    <div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;background:#F8FBFF;padding:32px;border-radius:16px">
+      <h1 style="color:#2563eb;font-family:Georgia,serif;margin:0 0 8px">Glowora</h1>
+      <p style="color:#475569;margin:0 0 24px">Verify your email address</p>
+      <div style="background:white;padding:28px;border-radius:12px;box-shadow:0 4px 24px rgba(59,130,246,0.15);text-align:center">
+        <p style="color:#1e293b;margin:0 0 12px">Your verification code is:</p>
+        <div style="font-family:Georgia,serif;font-size:2.4rem;font-weight:700;letter-spacing:10px;color:#2563eb;margin:8px 0 16px">${code}</div>
+        <p style="color:#94a3b8;font-size:0.85em;margin:0">This code expires in 10 minutes.</p>
+      </div>
+      <p style="color:#94a3b4;font-size:0.85em;margin-top:24px;text-align:center">If you didn't request this, you can ignore this email.</p>
+    </div>`;
+
+  if (!createTransporter()) {
+    console.log(`[Email Demo] OTP for ${email} → ${code}`);
+    return true;
+  }
+
+  await createTransporter().sendMail({
+    from: process.env.SMTP_FROM || '"Glowora" <noreply@glowora.com>',
+    to: email,
+    subject: 'Your Glowora verification code',
+    html,
+  });
+  return true;
+}
