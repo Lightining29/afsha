@@ -1,7 +1,8 @@
 /* =========================================
-   CATEGORIES — neumorphic circles with sky-blue glow
+   CATEGORIES — compact modern neumorphic chips
    ========================================= */
 .categories-section {
+  padding: 72px 0;
   background: var(--neu-surface);
   position: relative;
 }
@@ -10,25 +11,127 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 16px;
+}
+
+.categories-title {
+  text-align: left;
+  margin-bottom: 0;
 }
 
 .categories-view-all {
-  padding: 12px 28px;
-  font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--rose-gold-dark);
+  background: var(--neu-surface);
+  box-shadow: var(--neu-out-sm);
   white-space: nowrap;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.categories-view-all:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sky-glow), var(--neu-out-sm);
+}
+
+/* ---- Compact chip grid ----
+   Mobile-first: horizontal scroll; >=768px wraps into a grid. */
+.category-chips {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.category-chips::-webkit-scrollbar { height: 6px; }
+.category-chips::-webkit-scrollbar-thumb {
+  background: rgba(99, 132, 173, 0.3);
+  border-radius: 999px;
+}
+
+.category-chip {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px 12px 12px;
+  border-radius: 16px;
+  background: var(--neu-surface);
+  box-shadow: var(--neu-out-sm);
+  color: var(--text-dark);
+  transition: transform 0.25s, box-shadow 0.25s;
+  min-width: 180px;
+}
+
+.category-chip:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sky-glow), var(--neu-out-sm);
+}
+
+.category-chip-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: var(--rose-gold-dark);
+  background: var(--neu-surface);
+  box-shadow: var(--neu-in);
   flex-shrink: 0;
 }
 
+.category-chip-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.category-chip-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text-dark);
+}
+
+.category-chip-count {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Desktop: chips wrap into a clean grid */
+@media (min-width: 768px) {
+  .category-chips {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+  .category-chip { min-width: 0; }
+}
+
+@media (min-width: 768px) and (max-width: 1100px) {
+  .category-chips { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---- Legacy image-card grid (DB categories with images) ---- */
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 26px;
+  gap: 22px;
 }
 
-/* Category Card overrides — neumorphic */
 .category-card {
   display: block;
   border-radius: var(--radius);
@@ -59,15 +162,12 @@
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.category-card:hover img {
-  transform: scale(1.08);
-}
+.category-card:hover img { transform: scale(1.08); }
 
 .category-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 40%, rgba(30, 41, 59, 0.32) 100%);
-  transition: opacity 0.3s;
 }
 
 .category-info {
@@ -90,32 +190,6 @@
   font-weight: 500;
 }
 
-/* Icon fallback card — neumorphic circle with sky-blue glow */
-.category-card--icon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px 18px 24px;
-}
-
-.category-icon-wrap {
-  display: grid;
-  place-items: center;
-  width: 110px;
-  height: 110px;
-  margin-bottom: 18px;
-  border-radius: 50%;
-  color: var(--rose-gold-dark);
-  /* Inner press on the same surface = inset neumorphic well */
-  box-shadow: var(--neu-in), 0 0 22px rgba(59, 130, 246, 0.25);
-  transition: transform 0.35s, box-shadow 0.35s;
-}
-
-.category-card--icon:hover .category-icon-wrap {
-  transform: scale(1.06);
-  box-shadow: var(--neu-in), 0 0 34px rgba(59, 130, 246, 0.45);
-}
-
 @media (max-width: 1100px) {
   .categories-grid { grid-template-columns: repeat(3, 1fr); }
 }
@@ -123,4 +197,8 @@
 @media (max-width: 680px) {
   .categories-grid { grid-template-columns: repeat(2, 1fr); }
   .categories-header { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 768px) {
+  .categories-section { padding: 52px 0; }
 }

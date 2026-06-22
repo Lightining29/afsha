@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Sparkles, Wind, Droplets, Flower2, Hand } from 'lucide-react';
+import { Sparkles, Wind, Droplets, Flower2, Hand, ArrowRight } from 'lucide-react';
 import { fetchCategories } from '../../api';
 import CategoryCard from '../product/CategoryCard';
 import './Categories.css';
 
-// Shown immediately when the API returns no categories yet.
-// Each has a sky-blue gradient + lucide icon so cards look professional with no image.
+// Compact fallback chips shown immediately when the API has no categories yet.
 const fallbackCategories = [
-  { _id: 'f1', name: 'Skincare',          icon: Sparkles, count: 24, from: '#dbeafe', to: '#bfdbfe' },
-  { _id: 'f2', name: 'Wellness & Massage', icon: Wind,    count: 12, from: '#e0f2fe', to: '#bae6fd' },
-  { _id: 'f3', name: 'Hair Care',          icon: Droplets, count: 18, from: '#dbeafe', to: '#93c5fd' },
-  { _id: 'f4', name: 'Body',               icon: Flower2,  count: 15, from: '#eff6ff', to: '#dbeafe' },
-  { _id: 'f5', name: 'Fragrance',          icon: Hand,     count: 9,  from: '#e0e7ff', to: '#c7d2fe' },
+  { _id: 'f1', name: 'Skincare',           icon: Sparkles, count: 24 },
+  { _id: 'f2', name: 'Wellness',           icon: Wind,    count: 12 },
+  { _id: 'f3', name: 'Hair Care',          icon: Droplets, count: 18 },
+  { _id: 'f4', name: 'Body',               icon: Flower2,  count: 15 },
+  { _id: 'f5', name: 'Fragrance',          icon: Hand,     count: 9 },
 ];
 
 export default function Categories() {
@@ -25,40 +24,46 @@ export default function Categories() {
       .catch(() => {});
   }, []);
 
+  const hasIcons = categories.some((c) => c.icon);
+
   return (
-    <section id="categories" className="section categories-section">
+    <section id="categories" className="categories-section">
       <div className="container">
         <div className="categories-header">
           <div>
             <p className="section-label">Browse</p>
-            <h2 className="section-title" style={{ textAlign: 'left', marginBottom: 0 }}>
+            <h2 className="section-title categories-title">
               Shop By <span className="serif-italic">Category</span>
             </h2>
           </div>
-          <a href="#bestsellers" className="btn btn-secondary categories-view-all">
-            View All Products →
+          <a href="#bestsellers" className="categories-view-all">
+            View All <ArrowRight size={15} />
           </a>
         </div>
-        <div className="categories-grid">
-          {categories.map((cat) =>
-            cat.icon ? (
-              <a href="#bestsellers" key={cat._id} className="category-card category-card--icon">
-                <div
-                  className="category-icon-wrap"
-                  style={{ background: `linear-gradient(135deg, ${cat.from}, ${cat.to})` }}
-                >
-                  <cat.icon size={34} />
-                </div>
-                <div className="category-info">
-                  <h3>{cat.name}</h3>
-                  <span>{cat.count} Products</span>
-                </div>
+
+        {hasIcons ? (
+          // Compact modern chips — horizontal scroll on mobile, wrap on desktop
+          <div className="category-chips">
+            {categories.map((cat) => (
+              <a href="#bestsellers" key={cat._id} className="category-chip">
+                <span className="category-chip-icon">
+                  <cat.icon size={18} />
+                </span>
+                <span className="category-chip-text">
+                  <span className="category-chip-name">{cat.name}</span>
+                  <span className="category-chip-count">{cat.count} items</span>
+                </span>
               </a>
-            ) : (
+            ))}
+          </div>
+        ) : (
+          // DB categories with images → image cards grid
+          <div className="categories-grid">
+            {categories.map((cat) => (
               <CategoryCard key={cat._id} category={cat} />
-            )
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

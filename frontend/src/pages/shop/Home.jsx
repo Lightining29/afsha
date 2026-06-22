@@ -4,6 +4,7 @@ import Navbar from '../../components/layout/Navbar';
 import Hero from '../../components/shop/Hero';
 import TrustBar from '../../components/shop/TrustBar';
 import Categories from '../../components/shop/Categories';
+import AdsBanner from '../../components/shop/AdsBanner';
 import PromoBanner from '../../components/shop/PromoBanner';
 import Bestsellers from '../../components/shop/Bestsellers';
 import AllProducts from '../../components/shop/AllProducts';
@@ -46,13 +47,11 @@ export default function Home() {
         </div>
       </section>
 
-    
+      {/* Ads banner grid right after hero */}
+      <AdsBanner />
 
-      <section id="categories" className="section home-section reveal">
-        <div className="container">
-          <Categories />
-        </div>
-      </section>
+      {/* Categories manages its own section + padding */}
+      <Categories />
 
       <section id="bestsellers" className="section home-section reveal">
         <div className="container">
