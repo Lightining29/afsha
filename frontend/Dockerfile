@@ -5,11 +5,11 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Copy package files and install
-COPY frontend/package*.json ./
+COPY package*.json ./
 RUN npm ci
 
 # Copy frontend sources and build
-COPY frontend/ ./
+COPY . ./
 RUN npm run build
 
 # --- Production stage ---
@@ -17,6 +17,9 @@ FROM nginx:alpine AS runner
 
 # Copy built static site
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy custom nginx configuration for SPA routing
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose nginx default port
 EXPOSE 80
