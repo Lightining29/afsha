@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import http from 'http';
@@ -37,9 +39,7 @@ app.post('/api/orders/webhook', express.raw({ type: 'application/json' }), razor
 
 app.use(express.json());
 
-app.get('/', (_req, res) => {
-  res.json({ status: 'ok', message: 'Welcome to Glowora API' });
-});
+
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', message: 'Glowora API is running' });
@@ -56,6 +56,17 @@ app.use('/api/banner', bannerRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/settings', settingsRoutes);
+
+// Serve frontend static files
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const publicPath = path.join(__dirname, '..', 'public');
+app.use(express.static(publicPath));
+
+// SPA catch-all: serve index.html for any non-API route
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(publicPath, 'index.html'));
+});
 
 connectDB();
 
