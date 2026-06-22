@@ -43,6 +43,12 @@
   --neu-out-sm: 6px 6px 14px var(--neu-shadow-dark), -6px -6px 14px var(--neu-shadow-light);
   --neu-in: inset 5px 5px 12px var(--neu-shadow-dark), inset -5px -5px 12px var(--neu-shadow-light);
   --sky-glow: 0 0 0 1px rgba(59, 130, 246, 0.18), 0 14px 36px rgba(59, 130, 246, 0.22);
+
+  /* Sky-blue alias tokens (used across legacy components) */
+  --sky-blue: #3b82f6;
+  --sky-blue-light: #dbeafe;
+  --sky-blue-dark: #2563eb;
+  --sky-blue-deep: #1d4ed8;
 }
 
 *, *::before, *::after {

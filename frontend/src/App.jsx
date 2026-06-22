@@ -15,8 +15,6 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminProductForm from './pages/admin/AdminProductForm';
-import AdminBanner from './pages/admin/AdminBanner';
-import AdminTheme from './pages/admin/AdminTheme';
 import AdminCategories from './pages/admin/AdminCategories';
 import AdminContacts from './pages/admin/AdminContacts';
 import AdminStock from './pages/admin/AdminStock';
@@ -119,8 +117,6 @@ function App() {
         <Route path="products/new" element={<AdminProductForm />} />
         <Route path="products/:id/edit" element={<AdminProductForm />} />
         <Route path="stock" element={<AdminStock />} />
-        <Route path="banner" element={<AdminBanner />} />
-        <Route path="theme" element={<AdminTheme />} />
         <Route path="categories" element={<AdminCategories />} />
         <Route path="categories/new" element={<AdminCategories />} />
         <Route path="categories/:id/edit" element={<AdminCategories />} />

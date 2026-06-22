@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, PlusCircle, LogOut, Home, Image, Mail, Boxes, Palette } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, PlusCircle, LogOut, Home, Mail, Boxes } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import '../../styles/Panel.css';
 
@@ -35,12 +35,6 @@ export default function AdminLayout() {
           </NavLink>
           <NavLink to="/admin/products/new" style={{ color: 'rgba(255,255,255,0.7)' }}>
             <PlusCircle size={18} /> Add Product
-          </NavLink>
-          <NavLink to="/admin/banner" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            <Image size={18} /> Banner Editor
-          </NavLink>
-          <NavLink to="/admin/theme" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            <Palette size={18} /> Theme Colors
           </NavLink>
           <NavLink to="/" style={{ color: 'rgba(255,255,255,0.7)' }}>
             <Home size={18} /> Storefront
