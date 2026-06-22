@@ -37,6 +37,10 @@ app.post('/api/orders/webhook', express.raw({ type: 'application/json' }), razor
 
 app.use(express.json());
 
+app.get('/', (_req, res) => {
+  res.json({ status: 'ok', message: 'Welcome to Glowora API' });
+});
+
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', message: 'Glowora API is running' });
 });
