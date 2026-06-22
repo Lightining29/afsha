@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, User, ShoppingBag, Menu, X, Droplets } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
@@ -9,8 +9,7 @@ const navLinks = [
   { label: 'Home', href: '#home' },
   { label: 'Shop', href: '#bestsellers' },
   { label: 'Categories', href: '#categories' },
-  { label: 'About Us', href: '#about' },
-  { label: 'Blog', href: '#blog' },
+  { label: 'About', href: '#about' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -21,15 +20,23 @@ export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [scrolled, setScrolled] = useState(false);
+
+  // Elevate the bar (stronger shadow / tighter blur) once the page scrolls.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   function handleNavClick(e, link) {
-    // close mobile menu
     setMenuOpen(false);
-
     if (link.href && link.href.startsWith('#')) {
       e.preventDefault();
       const id = link.href.slice(1);
-
       if (location.pathname === '/') {
         const el = document.getElementById(id);
         if (el) {
@@ -37,8 +44,6 @@ export default function Navbar() {
           return;
         }
       }
-
-      // navigate to home and then scroll to section
       navigate('/');
       setTimeout(() => {
         const el = document.getElementById(id);
@@ -48,12 +53,23 @@ export default function Navbar() {
     }
   }
 
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+    const q = query.trim();
+    if (!q) return;
+    setSearchOpen(false);
+    setQuery('');
+    navigate(`/?q=${encodeURIComponent(q)}#bestsellers`);
+  }
+
   return (
-    <header className="navbar">
+    <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="container navbar-inner">
-        <Link to="/" className="logo">
-          <Droplets size={22} className="logo-icon" />
-          <span>Glowora</span>
+        <Link to="/" className="logo" onClick={() => setMenuOpen(false)}>
+          <span className="logo-mark">
+            <Droplets size={18} />
+          </span>
+          <span className="logo-text">Glowora</span>
         </Link>
 
         <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
@@ -65,12 +81,23 @@ export default function Navbar() {
         </nav>
 
         <div className="nav-actions">
-          <button className="icon-btn" aria-label="Search">
-            <Search size={20} />
-          </button>
+          {/* Expandable search */}
+          <form className={`nav-search ${searchOpen ? 'open' : ''}`} onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              placeholder="Search products…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              aria-label="Search products"
+            />
+            <button type="button" className="icon-btn" aria-label="Search" onClick={() => setSearchOpen((v) => !v)}>
+              <Search size={19} />
+            </button>
+          </form>
+
           <div className="user-menu-wrap">
             <button className="icon-btn" aria-label="Account" onClick={() => setUserMenuOpen(!userMenuOpen)}>
-              <User size={20} />
+              <User size={19} />
             </button>
             {userMenuOpen && (
               <div className="user-dropdown">
@@ -95,10 +122,12 @@ export default function Navbar() {
               </div>
             )}
           </div>
+
           <Link to="/cart" className="icon-btn cart-btn" aria-label="Cart">
-            <ShoppingBag size={20} />
+            <ShoppingBag size={19} />
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </Link>
+
           <button
             className="icon-btn menu-toggle"
             onClick={() => setMenuOpen(!menuOpen)}

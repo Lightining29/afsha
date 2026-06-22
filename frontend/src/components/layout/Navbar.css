@@ -1,118 +1,165 @@
 /* =========================================
-   NAVBAR — Premium Glassmorphism
+   NAVBAR — Modern sticky glass + neumorphic
    ========================================= */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 200;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-  box-shadow: 0 1px 20px rgba(59, 130, 246, 0.05);
-  transition: box-shadow 0.3s;
+  background: rgba(248, 251, 255, 0.78);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  transition: box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Elevated state once the user scrolls */
+.navbar.navbar--scrolled {
+  background: rgba(248, 251, 255, 0.92);
+  border-bottom-color: rgba(59, 130, 246, 0.18);
+  box-shadow: 0 8px 30px rgba(30, 41, 59, 0.08);
 }
 
 .navbar-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 76px;
+  height: 72px;
+  gap: 20px;
 }
 
-/* Logo */
+/* ---- Logo ---- */
 .logo {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   font-family: var(--font-serif);
-  font-size: 1.55rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-dark);
   letter-spacing: -0.3px;
-  transition: opacity 0.2s;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
 }
 
-.logo:hover {
-  opacity: 0.85;
+.logo:hover { transform: translateY(-1px); }
+
+.logo-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
-.logo-icon {
-  color: var(--rose-gold);
-  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.3));
-}
-
-/* Nav links */
+/* ---- Nav links (modern pills) ---- */
 .nav-links {
   display: flex;
-  gap: 6px;
+  gap: 4px;
+  align-items: center;
 }
 
 .nav-links a {
   font-size: 0.88rem;
   font-weight: 500;
   color: var(--text-muted);
-  padding: 8px 14px;
-  border-radius: 8px;
-  transition: color 0.2s, background 0.2s;
+  padding: 8px 16px;
+  border-radius: 999px;
+  transition: color 0.2s, background 0.25s;
   position: relative;
-}
-
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2px;
-  background: var(--rose-gold);
-  border-radius: 2px;
-  transition: width 0.25s;
+  white-space: nowrap;
 }
 
 .nav-links a:hover {
-  color: var(--rose-gold);
+  color: var(--rose-gold-dark);
   background: rgba(59, 130, 246, 0.08);
 }
 
-.nav-links a:hover::after {
-  width: 60%;
-}
-
-/* Actions */
+/* ---- Actions ---- */
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
+/* Neumorphic icon buttons */
 .icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 42px;
   height: 42px;
-  border-radius: 12px;
+  border-radius: 14px;
   color: var(--text-dark);
-  transition: background 0.2s, color 0.2s, transform 0.2s;
+  background: var(--neu-surface);
+  box-shadow: var(--neu-out-sm);
+  border: none;
+  cursor: pointer;
   position: relative;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, color 0.2s ease;
 }
 
 .icon-btn:hover {
-  background: var(--bg-subtle);
   color: var(--rose-gold);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--sky-glow), var(--neu-out-sm);
 }
 
-/* Cart badge */
+.icon-btn:active {
+  transform: translateY(0);
+  box-shadow: var(--neu-in);
+}
+
+/* ---- Expandable search ---- */
+.nav-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border-radius: 14px;
+  background: transparent;
+  transition: background 0.25s ease, box-shadow 0.25s ease, padding 0.25s ease;
+}
+
+.nav-search .icon-btn { flex-shrink: 0; }
+
+.nav-search input {
+  width: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  padding: 0;
+  outline: none;
+  transition: width 0.3s ease, padding 0.3s ease;
+}
+
+.nav-search.open {
+  background: var(--neu-surface);
+  box-shadow: var(--neu-in);
+  padding: 4px 6px 4px 14px;
+}
+
+.nav-search.open input {
+  width: 180px;
+  padding: 8px 4px;
+}
+
+/* ---- Cart badge ---- */
+.cart-btn { position: relative; }
+
 .cart-badge {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  background: linear-gradient(135deg, var(--rose-gold), var(--rose-gold-dark));
-  color: white;
-  font-size: 0.6rem;
+  top: -2px;
+  right: -2px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  font-size: 0.62rem;
   font-weight: 700;
   min-width: 18px;
   height: 18px;
@@ -120,61 +167,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 2px;
-  box-shadow: 0 2px 6px rgba(201, 122, 110, 0.4);
+  padding: 0 4px;
+  box-shadow: 0 0 0 2px var(--neu-surface), 0 4px 12px rgba(59, 130, 246, 0.5);
+  animation: badge-pop 0.3s ease;
 }
 
-/* Mobile toggle */
-.menu-toggle {
-  display: none;
+@keyframes badge-pop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  60%  { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
-/* Responsive mobile menu */
-@media (max-width: 900px) {
-  .nav-links {
-    display: none;
-    position: fixed;
-    top: 76px;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.97);
-    backdrop-filter: blur(16px);
-    padding: 20px 28px;
-    gap: 4px;
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
-    z-index: 199;
-  }
+/* ---- Mobile toggle ---- */
+.menu-toggle { display: none; }
 
-  .nav-links.open {
-    display: flex;
-  }
-
-  .nav-links a {
-    padding: 12px 16px;
-    font-size: 0.95rem;
-    border-radius: 10px;
-  }
-
-  .menu-toggle {
-    display: flex;
-  }
-}
-
-/* User dropdown */
-.user-menu-wrap {
-  position: relative;
-}
+/* ---- User dropdown ---- */
+.user-menu-wrap { position: relative; }
 
 .user-dropdown {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 12px);
   right: 0;
-  background: white;
-  border-radius: 14px;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.14);
-  min-width: 190px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(30, 41, 59, 0.16);
+  min-width: 200px;
   padding: 8px;
   z-index: 300;
   border: 1px solid var(--border);
@@ -199,13 +216,63 @@
   font-size: 0.88rem;
   font-weight: 500;
   color: var(--text-muted);
-  border-radius: 8px;
+  border-radius: 10px;
   transition: background 0.15s, color 0.15s;
   font-family: var(--font-sans);
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .user-dropdown a:hover,
 .user-dropdown button:hover {
-  background: var(--bg-subtle);
-  color: var(--rose-gold);
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--rose-gold-dark);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: 72px;
+    left: 12px;
+    right: 12px;
+    flex-direction: column;
+    align-items: stretch;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(20px);
+    padding: 14px;
+    gap: 6px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 16px 48px rgba(30, 41, 59, 0.14);
+    z-index: 199;
+    animation: fadeIn 0.22s ease;
+  }
+
+  .nav-links.open { display: flex; }
+
+  .nav-links a {
+    padding: 13px 16px;
+    font-size: 0.95rem;
+    border-radius: 12px;
+  }
+
+  .menu-toggle { display: flex; }
+
+  /* Shrink the expanded search width on tablet */
+  .nav-search.open input { width: 130px; }
+}
+
+@media (max-width: 560px) {
+  .navbar-inner { gap: 8px; }
+  .logo-text { display: none; }
+  .nav-search.open { position: absolute; top: 72px; left: 12px; right: 12px; padding: 6px; }
+  .nav-search.open input { width: 100%; flex: 1; }
 }
