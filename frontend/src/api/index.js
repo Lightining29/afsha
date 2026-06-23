@@ -1,3 +1,5 @@
+import { compressImage } from '../utils/imageCompressor.js';
+
 const API_BASE = '/api';
 
 function getToken() {
@@ -62,7 +64,8 @@ export async function register(name, email, password, photoFile) {
   fd.append('email', email);
   fd.append('password', password);
   if (photoFile) {
-    fd.append('photo', photoFile);
+    const compressed = await compressImage(photoFile);
+    fd.append('photo', compressed);
   }
   return apiUpload('/auth/register', 'POST', fd);
 }
@@ -124,8 +127,14 @@ export async function updateAdminBanner(fields, heroImageFile, promoImageFile) {
   Object.entries(fields).forEach(([k, v]) => {
     if (v !== undefined && v !== null) fd.append(k, v);
   });
-  if (heroImageFile)  fd.append('image', heroImageFile);
-  if (promoImageFile) fd.append('promoImage', promoImageFile);
+  if (heroImageFile) {
+    const compressed = await compressImage(heroImageFile);
+    fd.append('image', compressed);
+  }
+  if (promoImageFile) {
+    const compressed = await compressImage(promoImageFile);
+    fd.append('promoImage', compressed);
+  }
   return apiUpload('/admin/banner', 'PUT', fd);
 }
 
@@ -150,14 +159,20 @@ export async function deleteAdminContact(id) { return apiFetch(`/admin/contacts/
 export async function createAdminCategory(fields, imageFile) {
   const fd = new FormData();
   if (fields.name) fd.append('name', fields.name);
-  if (imageFile) fd.append('image', imageFile);
+  if (imageFile) {
+    const compressed = await compressImage(imageFile);
+    fd.append('image', compressed);
+  }
   return apiUpload('/admin/categories', 'POST', fd);
 }
 
 export async function updateAdminCategory(id, fields, imageFile) {
   const fd = new FormData();
   if (fields.name) fd.append('name', fields.name);
-  if (imageFile) fd.append('image', imageFile);
+  if (imageFile) {
+    const compressed = await compressImage(imageFile);
+    fd.append('image', compressed);
+  }
   return apiUpload(`/admin/categories/${id}`, 'PUT', fd);
 }
 
@@ -175,7 +190,8 @@ export async function createProduct(fields, imageFiles = []) {
   Object.entries(fields).forEach(([k, v]) => {
     if (v !== undefined && v !== null) fd.append(k, String(v));
   });
-  imageFiles.forEach((file) => fd.append('images', file));
+  const compressedFiles = await Promise.all(imageFiles.map(file => compressImage(file)));
+  compressedFiles.forEach((file) => fd.append('images', file));
   return apiUpload('/admin/products', 'POST', fd);
 }
 
@@ -194,8 +210,8 @@ export async function updateProduct(id, fields, imageFiles = [], opts = {}) {
     if (v !== undefined && v !== null) fd.append(k, String(v));
   });
   if (imageFiles && imageFiles.length > 0) {
-    // Uploading files always replaces the full set (backend clears images[] first).
-    imageFiles.forEach((file) => fd.append('images', file));
+    const compressedFiles = await Promise.all(imageFiles.map(file => compressImage(file)));
+    compressedFiles.forEach((file) => fd.append('images', file));
   } else if (Array.isArray(deleteIndices) && deleteIndices.length > 0) {
     // Each index becomes a repeated form field; backend normalizes to an array.
     deleteIndices.forEach((i) => fd.append('deleteImageIndex', String(i)));
@@ -267,7 +283,8 @@ export async function createReview(fields, photoFiles = []) {
   fd.append('productId', fields.productId);
   fd.append('rating', String(fields.rating));
   if (fields.comment) fd.append('comment', String(fields.comment));
-  photoFiles.forEach((file) => fd.append('photos', file));
+  const compressedFiles = await Promise.all(photoFiles.map(file => compressImage(file)));
+  compressedFiles.forEach((file) => fd.append('photos', file));
   return apiUpload('/reviews', 'POST', fd);
 }
 
@@ -284,7 +301,8 @@ export async function updateReview(id, fields = {}, photoFiles = [], opts = {}) 
   if (fields.rating !== undefined) fd.append('rating', String(fields.rating));
   if (fields.comment !== undefined) fd.append('comment', String(fields.comment));
   if (photoFiles && photoFiles.length > 0) {
-    photoFiles.forEach((file) => fd.append('photos', file));
+    const compressedFiles = await Promise.all(photoFiles.map(file => compressImage(file)));
+    compressedFiles.forEach((file) => fd.append('photos', file));
   } else if (Array.isArray(deleteIndices) && deleteIndices.length > 0) {
     deleteIndices.forEach((i) => fd.append('deletePhotoIndex', String(i)));
   }

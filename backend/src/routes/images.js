@@ -57,7 +57,7 @@ router.get('/product/:id/:index', async (req, res) => {
 
 /**
  * GET /api/images/banner/hero
- * Serve the hero banner image — never cached (always fresh)
+ * Serve the hero banner image — cached long term using version query parameter in URL
  */
 router.get('/banner/hero', async (_req, res) => {
   try {
@@ -66,9 +66,7 @@ router.get('/banner/hero', async (_req, res) => {
       return res.status(404).json({ message: 'No hero image set' });
     }
     res.set('Content-Type', banner.imageContentType || 'image/jpeg');
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.set('Pragma', 'no-cache');
-    res.set('Expires', '0');
+    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(banner.imageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -77,7 +75,7 @@ router.get('/banner/hero', async (_req, res) => {
 
 /**
  * GET /api/images/banner/promo
- * Serve the promo section image — never cached
+ * Serve the promo section image — cached long term
  */
 router.get('/banner/promo', async (_req, res) => {
   try {
@@ -86,9 +84,7 @@ router.get('/banner/promo', async (_req, res) => {
       return res.status(404).json({ message: 'No promo image set' });
     }
     res.set('Content-Type', banner.promoImageContentType || 'image/jpeg');
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.set('Pragma', 'no-cache');
-    res.set('Expires', '0');
+    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(banner.promoImageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
