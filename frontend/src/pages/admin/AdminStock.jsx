@@ -83,15 +83,9 @@ export default function AdminStock() {
 
   return (
     <>
-<<<<<<< HEAD
       <div className="admin-page-header">
         <h1>Stock Management</h1>
         <div className="admin-action-group">
-=======
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-        <h1>Stock Management</h1>
-        <div style={{ display: 'flex', gap: 8 }}>
->>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
           <button className="btn btn-sky btn-sm" onClick={() => openModal('add')}>
             <ArrowUp size={16} /> Add Stock
           </button>
@@ -106,11 +100,7 @@ export default function AdminStock() {
       <p className="panel-subtitle">Monitor and manage inventory levels</p>
 
       {/* Tabs */}
-<<<<<<< HEAD
       <div className="admin-tabs">
-=======
-      <div style={{ display: 'flex', gap: 16, marginBottom: 24, borderBottom: '1px solid var(--border-color)', paddingBottom: 16 }}>
->>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
         <button
           onClick={() => setActiveTab('levels')}
           style={{
@@ -191,26 +181,15 @@ export default function AdminStock() {
 
                   return (
                     <tr key={product._id}>
-<<<<<<< HEAD
                       <td data-label="Product" data-full style={{ fontWeight: 500 }}>{product.name}</td>
                       <td data-label="Category">{product.category?.name || '—'}</td>
                       <td data-label="Stock Level" style={{ fontSize: 16, fontWeight: 600 }}>{product.stockQuantity}</td>
                       <td data-label="Status">
-=======
-                      <td style={{ fontWeight: 500 }}>{product.name}</td>
-                      <td>{product.category?.name || '—'}</td>
-                      <td style={{ fontSize: 16, fontWeight: 600 }}>{product.stockQuantity}</td>
-                      <td>
->>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                         <span className="status-badge" style={{ background: `${statusColor}20`, color: statusColor }}>
                           {status}
                         </span>
                       </td>
-<<<<<<< HEAD
                       <td data-label="Actions">
-=======
-                      <td>
->>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                         <div className="panel-actions" style={{ display: 'flex', gap: 8 }}>
                           <button className="btn btn-sm btn-sky" onClick={() => openModal('add', product._id)}>
                             Add
@@ -259,13 +238,8 @@ export default function AdminStock() {
                 ) : (
                   history.map((tx) => (
                     <tr key={tx._id}>
-<<<<<<< HEAD
                       <td data-label="Date">{new Date(tx.createdAt).toLocaleDateString()}</td>
                       <td data-label="Type">
-=======
-                      <td>{new Date(tx.createdAt).toLocaleDateString()}</td>
-                      <td>
->>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                         <span className="status-badge" style={{
                           background: tx.transactionType === 'add' ? '#10B98120' : tx.transactionType === 'remove' ? '#EF444420' : '#F59E0B20',
                           color: tx.transactionType === 'add' ? '#10B981' : tx.transactionType === 'remove' ? '#EF4444' : '#F59E0B',
@@ -273,19 +247,11 @@ export default function AdminStock() {
                           {tx.transactionType.charAt(0).toUpperCase() + tx.transactionType.slice(1)}
                         </span>
                       </td>
-<<<<<<< HEAD
                       <td data-label="Quantity" style={{ fontWeight: 600 }}>{tx.quantity}</td>
                       <td data-label="Before">{tx.previousQuantity}</td>
                       <td data-label="After">{tx.newQuantity}</td>
                       <td data-label="Reason">{tx.reason || '—'}</td>
                       <td data-label="Notes">{tx.notes || '—'}</td>
-=======
-                      <td style={{ fontWeight: 600 }}>{tx.quantity}</td>
-                      <td>{tx.previousQuantity}</td>
-                      <td>{tx.newQuantity}</td>
-                      <td>{tx.reason || '—'}</td>
-                      <td>{tx.notes || '—'}</td>
->>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                     </tr>
                   ))
                 )}
@@ -309,11 +275,7 @@ export default function AdminStock() {
           justifyContent: 'center',
           zIndex: 1000,
         }}>
-<<<<<<< HEAD
           <div className="stock-modal" style={{
-=======
-          <div style={{
->>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
             background: 'white',
             borderRadius: 8,
             padding: 24,

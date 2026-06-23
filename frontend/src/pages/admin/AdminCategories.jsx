@@ -96,28 +96,17 @@ export default function AdminCategories() {
 
   return (
     <div className="panel" style={{ padding: 20 }}>
-<<<<<<< HEAD
       <div className="admin-page-header">
-=======
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
->>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
         <h1>Categories</h1>
         <button className="btn" onClick={startCreate}><PlusCircle size={16} /> New</button>
       </div>
 
       <div style={{ marginTop: 16, marginBottom: 24, border: '1px solid #eee', padding: 12, borderRadius: 8 }}>
         <h3>{editing ? 'Edit Category' : 'Create Category'}</h3>
-<<<<<<< HEAD
         <div className="category-form-row">
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Category name" />
           <ImageUploader existingUrl={editing?.imageUrl} file={file} onFile={setFile} />
           <div className="admin-action-group">
-=======
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Category name" />
-          <ImageUploader existingUrl={editing?.imageUrl} file={file} onFile={setFile} />
-          <div>
->>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
             <button className="btn" onClick={handleSave} disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
             {editing && <button className="btn-outline" onClick={() => { setEditing(null); setName(''); setFile(null); }}>Cancel</button>}
           </div>
@@ -125,7 +114,6 @@ export default function AdminCategories() {
       </div>
 
       {loading ? <div>Loading…</div> : (
-<<<<<<< HEAD
         <div className="data-table">
           <table>
             <thead>
@@ -147,27 +135,6 @@ export default function AdminCategories() {
             </tbody>
           </table>
         </div>
-=======
-        <table className="panel-table">
-          <thead>
-            <tr><th>Image</th><th>Name</th><th>Actions</th></tr>
-          </thead>
-          <tbody>
-            {categories.map((c) => (
-              <tr key={c._id}>
-                <td style={{ width: 140 }}>
-                  {c.imageUrl ? <img src={c.imageUrl} alt={c.name} style={{ width: 120, height: 80, objectFit: 'cover', borderRadius: 6 }} /> : <div style={{ width: 120, height: 80, background: '#f6f7f8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>No image</div>}
-                </td>
-                <td>{c.name}</td>
-                <td>
-                  <button className="btn-ghost" onClick={() => startEdit(c)}><Edit size={14} /> Edit</button>
-                  <button className="btn-ghost danger" onClick={() => handleDelete(c._id)}><Trash size={14} /> Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
->>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
       )}
     </div>
   );
