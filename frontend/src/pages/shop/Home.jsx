@@ -6,7 +6,6 @@ import TrustBar from '../../components/shop/TrustBar';
 import Categories from '../../components/shop/Categories';
 import AdsBanner from '../../components/shop/AdsBanner';
 import PromoBanner from '../../components/shop/PromoBanner';
-import Bestsellers from '../../components/shop/Bestsellers';
 import AllProducts from '../../components/shop/AllProducts';
 import Testimonials from '../../components/shop/Testimonials';
 import Footer from '../../components/layout/Footer';
@@ -53,11 +52,6 @@ export default function Home() {
       {/* Categories manages its own section + padding */}
       <Categories />
 
-      <section id="bestsellers" className="section home-section reveal">
-        <div className="container">
-          <Bestsellers />
-        </div>
-      </section>
 
       <section className="section home-section reveal">
         <div className="container">
