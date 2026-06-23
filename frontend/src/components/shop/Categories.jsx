@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Sparkles, Wind, Droplets, Flower2, Hand, ArrowRight } from 'lucide-react';
 import { fetchCategories } from '../../api';
 import CategoryCard from '../product/CategoryCard';
@@ -36,16 +37,13 @@ export default function Categories() {
               Shop By <span className="serif-italic">Category</span>
             </h2>
           </div>
-          <a href="#bestsellers" className="categories-view-all">
-            View All <ArrowRight size={15} />
-          </a>
         </div>
 
         {hasIcons ? (
           // Compact modern chips — horizontal scroll on mobile, wrap on desktop
           <div className="category-chips">
             {categories.map((cat) => (
-              <a href="#bestsellers" key={cat._id} className="category-chip">
+              <Link to={`/category/${cat._id}`} key={cat._id} className="category-chip">
                 <span className="category-chip-icon">
                   <cat.icon size={18} />
                 </span>
@@ -53,7 +51,7 @@ export default function Categories() {
                   <span className="category-chip-name">{cat.name}</span>
                   <span className="category-chip-count">{cat.count} items</span>
                 </span>
-              </a>
+              </Link>
             ))}
           </div>
         ) : (
@@ -68,3 +66,4 @@ export default function Categories() {
     </section>
   );
 }
+

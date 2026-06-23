@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { HomeLayout } from './pages/shop/Home';
 import Cart from './pages/shop/Cart';
 import ProductDetail from './pages/shop/ProductDetail';
+import CategoryProducts from './pages/shop/CategoryProducts';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import VerifyOtp from './pages/auth/VerifyOtp';
@@ -76,6 +77,10 @@ function App() {
       <Route
         path="/product/:slug"
         element={<RevealShell><ProductDetail /></RevealShell>}
+      />
+      <Route
+        path="/category/:categoryId"
+        element={<RevealShell><CategoryProducts /></RevealShell>}
       />
       <Route
         path="/contact"
