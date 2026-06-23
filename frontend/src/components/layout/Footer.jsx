@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Droplets, Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 import './Footer.css';
 
 const socials = ['IG', 'FB', 'TW', 'YT'];
@@ -14,8 +14,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="footer-brand">
             <div className="footer-logo">
-              <Droplets size={26} />
-              <span>Afsha Enterprises</span>
+              <img src="/logo.png" alt="Afsha Enterprises" className="footer-logo-img" />
             </div>
             <p>
               Premium skincare crafted with love. Clean ingredients, real results,

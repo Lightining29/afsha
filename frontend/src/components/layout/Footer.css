@@ -32,19 +32,14 @@
 
 /* Logo */
 .footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-serif);
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: white;
   margin-bottom: 18px;
 }
 
-.footer-logo svg {
-  color: var(--sky-blue-light);
-  filter: drop-shadow(0 0 8px rgba(135, 206, 235, 0.4));
+.footer-logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(1.1);
 }
 
 .footer-brand p {

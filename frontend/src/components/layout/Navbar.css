@@ -32,27 +32,17 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-dark);
-  letter-spacing: -0.3px;
   transition: transform 0.25s ease;
   flex-shrink: 0;
 }
 
 .logo:hover { transform: translateY(-1px); }
 
-.logo-mark {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  color: #fff;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+.logo-img {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+  transition: height 0.3s ease;
 }
 
 /* ---- Nav links (modern pills) ---- */
@@ -268,11 +258,13 @@
 
   /* Shrink the expanded search width on tablet */
   .nav-search.open input { width: 130px; }
+
+  .logo-img { height: 46px; }
 }
 
 @media (max-width: 560px) {
   .navbar-inner { gap: 8px; }
-  .logo-text { display: none; }
+  .logo-img { height: 38px; }
   .nav-search.open { position: absolute; top: 72px; left: 12px; right: 12px; padding: 6px; }
   .nav-search.open input { width: 100%; flex: 1; }
 }

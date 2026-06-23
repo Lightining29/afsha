@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, User, ShoppingBag, Menu, X, Droplets } from 'lucide-react';
+import { Search, User, ShoppingBag, Menu, X } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
@@ -66,10 +66,7 @@ export default function Navbar() {
     <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="container navbar-inner">
         <Link to="/" className="logo" onClick={() => setMenuOpen(false)}>
-          <span className="logo-mark">
-            <Droplets size={18} />
-          </span>
-          <span className="logo-text">Afsha Enterprises</span>
+          <img src="/logo.png" alt="Afsha Enterprises" className="logo-img" />
         </Link>
 
         <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
