@@ -250,51 +250,51 @@
 
 @media (max-width: 480px) {
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
   .product-card {
-    border-radius: 14px;
+    border-radius: var(--radius);
   }
   .product-image-wrap img {
-    padding: 8px;
+    padding: 12px;
   }
   .product-info {
-    padding: 10px 10px 12px;
+    padding: 18px 20px 20px;
   }
   .product-name {
-    font-size: 0.88rem;
-    margin-bottom: 4px;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
   }
   .product-rating {
-    margin-bottom: 8px;
-    font-size: 0.76rem;
+    margin-bottom: 14px;
+    font-size: 0.85rem;
   }
   .price-current {
-    font-size: 0.95rem;
+    font-size: 1.15rem;
   }
   .price-original {
-    font-size: 0.76rem;
+    font-size: 0.88rem;
   }
   .add-cart-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
   }
   .add-cart-btn svg {
-    width: 14px;
-    height: 14px;
-  }
-  .product-prices {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
+    width: 18px;
+    height: 18px;
   }
   .discount-badge {
-    top: 8px;
-    left: 8px;
-    font-size: 0.62rem;
-    padding: 2px 6px;
+    top: 14px;
+    left: 14px;
+    font-size: 0.72rem;
+    padding: 5px 11px;
+  }
+  .product-prices {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
   }
   .bestsellers-header { flex-direction: column; align-items: flex-start; gap: 12px; }
 }
