@@ -65,6 +65,7 @@
 .panel-content {
   padding: 32px 40px;
   overflow-y: auto;
+<<<<<<< HEAD
   width: 100%;
   box-sizing: border-box;
 }
@@ -90,6 +91,8 @@
   color: #fff;
   border-radius: 8px;
   cursor: pointer;
+=======
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
 }
 
 .panel-content h1 {
@@ -280,6 +283,7 @@
   opacity: 0.4;
 }
 
+<<<<<<< HEAD
 /* ============================================================
    Reusable layout helper classes (extracted from inline styles
    so media queries can take over on smaller screens)
@@ -560,5 +564,23 @@
     max-width: none !important;
     max-height: 90vh;
     overflow-y: auto;
+=======
+@media (max-width: 768px) {
+  .panel-layout {
+    grid-template-columns: 1fr;
+  }
+  .panel-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-nav {
+    display: flex;
+    overflow-x: auto;
+  }
+  .panel-nav a,
+  .panel-nav button {
+    white-space: nowrap;
+    width: auto;
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
   }
 }

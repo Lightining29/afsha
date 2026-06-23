@@ -37,7 +37,11 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+<<<<<<< HEAD
       <div className="dashboard-grid">
+=======
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
         <div>
           <h3 style={{ marginBottom: 16 }}>Recent Orders</h3>
           <div className="data-table">
@@ -48,10 +52,17 @@ export default function AdminDashboard() {
               <tbody>
                 {data.recentOrders.map((o) => (
                   <tr key={o._id}>
+<<<<<<< HEAD
                     <td data-label="Order">{o.orderNumber}</td>
                     <td data-label="Customer">{o.user?.name || '—'}</td>
                     <td data-label="Total">{formatPrice(o.total)}</td>
                     <td data-label="Status">
+=======
+                    <td>{o.orderNumber}</td>
+                    <td>{o.user?.name || '—'}</td>
+                    <td>{formatPrice(o.total)}</td>
+                    <td>
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                       <span className="status-badge" style={{ background: `${getStatusColor(o.status)}20`, color: getStatusColor(o.status) }}>
                         {getStatusLabel(o.status)}
                       </span>
@@ -73,9 +84,15 @@ export default function AdminDashboard() {
               <tbody>
                 {data.topProducts.map((p) => (
                   <tr key={p._id}>
+<<<<<<< HEAD
                     <td data-label="Product">{p.name}</td>
                     <td data-label="Sold">{p.sold}</td>
                     <td data-label="Revenue">{formatPrice(p.revenue)}</td>
+=======
+                    <td>{p.name}</td>
+                    <td>{p.sold}</td>
+                    <td>{formatPrice(p.revenue)}</td>
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                   </tr>
                 ))}
                 {data.topProducts.length === 0 && (
@@ -94,8 +111,13 @@ export default function AdminDashboard() {
                   <tbody>
                     {data.lowStock.map((p) => (
                       <tr key={p._id}>
+<<<<<<< HEAD
                         <td data-label="Product">{p.name}</td>
                         <td data-label="Stock" style={{ color: '#EF4444', fontWeight: 600 }}>{p.stockQuantity}</td>
+=======
+                        <td>{p.name}</td>
+                        <td style={{ color: '#EF4444', fontWeight: 600 }}>{p.stockQuantity}</td>
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                       </tr>
                     ))}
                   </tbody>

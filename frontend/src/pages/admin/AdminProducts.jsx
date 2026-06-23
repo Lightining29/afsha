@@ -41,7 +41,11 @@ export default function AdminProducts() {
 
   return (
     <>
+<<<<<<< HEAD
       <div className="admin-page-header">
+=======
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
         <h1>Products</h1>
         <Link to="/admin/products/new" className="btn btn-sky btn-sm">
           <PlusCircle size={16} /> Add Product
@@ -64,14 +68,23 @@ export default function AdminProducts() {
           <tbody>
             {products.map((p) => (
               <tr key={p._id}>
+<<<<<<< HEAD
                 <td data-label="Product" data-full>
+=======
+                <td>
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <img src={p.image} alt={p.name} style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover' }} />
                     {p.name}
                   </div>
                 </td>
+<<<<<<< HEAD
                 <td data-label="Price">{formatPrice(p.price)}</td>
                 <td data-label="Discount">
+=======
+                <td>{formatPrice(p.price)}</td>
+                <td>
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                   <input
                     type="number"
                     className="discount-input"
@@ -81,8 +94,13 @@ export default function AdminProducts() {
                     onBlur={(e) => handleDiscount(p._id, e.target.value)}
                   />%
                 </td>
+<<<<<<< HEAD
                 <td data-label="Final">{formatPrice(getProductPrice(p))}</td>
                 <td data-label="Stock">
+=======
+                <td>{formatPrice(getProductPrice(p))}</td>
+                <td>
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                   <input
                     type="number"
                     className="stock-input"
@@ -91,7 +109,11 @@ export default function AdminProducts() {
                     onBlur={(e) => handleStock(p._id, e.target.value)}
                   />
                 </td>
+<<<<<<< HEAD
                 <td data-label="Actions">
+=======
+                <td>
+>>>>>>> 715b6936714f9861f1b1425fa1a3286b176524c1
                   <div className="panel-actions">
                     <Link to={`/admin/products/${p._id}/edit`} className="btn btn-sm btn-secondary">Edit</Link>
                     <button className="btn btn-sm btn-danger" onClick={() => handleDelete(p._id)}>Delete</button>
