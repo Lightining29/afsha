@@ -19,6 +19,7 @@ import AdminProductForm from './pages/admin/AdminProductForm';
 import AdminCategories from './pages/admin/AdminCategories';
 import AdminContacts from './pages/admin/AdminContacts';
 import AdminStock from './pages/admin/AdminStock';
+import AdminReviews from './pages/admin/AdminReviews';
 import Contact from './pages/Contact';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Navbar from './components/layout/Navbar';
@@ -134,6 +135,7 @@ function App() {
         <Route path="categories/new" element={<AdminCategories />} />
         <Route path="categories/:id/edit" element={<AdminCategories />} />
         <Route path="contacts" element={<AdminContacts />} />
+        <Route path="reviews" element={<AdminReviews />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

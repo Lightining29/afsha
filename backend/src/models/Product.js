@@ -7,9 +7,16 @@ const productSchema = new mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true },
     originalPrice: { type: Number },
-    // Binary image storage
+    // Binary image storage — primary/cover image (images[0] is mirrored here
+    // for backward compatibility with product.image consumers).
     imageData: { type: Buffer },
     imageContentType: { type: String },
+    // All product images (max 5). images[0] === primary. Each entry stores the
+    // binary buffer + content type, served via /api/images/product/:id/:index.
+    images: [{
+      data: Buffer,
+      contentType: String,
+    }],
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     rating: { type: Number, default: 4.5, min: 0, max: 5 },
     reviewCount: { type: Number, default: 0 },

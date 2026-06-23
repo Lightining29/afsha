@@ -228,6 +228,104 @@
   gap: 12px;
 }
 
+/* =========================================
+   Multi-image upload
+   ========================================= */
+.apf-section-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.apf-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 50px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.apf-thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.apf-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.apf-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.apf-thumb.cover {
+  border-color: #87CEEB;
+}
+
+.apf-cover-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(58, 155, 196, 0.92);
+  padding: 2px 6px;
+  border-radius: 50px;
+}
+
+.apf-thumb-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  background: rgba(239, 68, 68, 0.92);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.apf-thumb-remove:hover {
+  background: #dc2626;
+}
+
+/* Compact multi-image dropzone (smaller than the single-image one) */
+.apf-dropzone-multi {
+  min-height: 150px;
+}
+
+.apf-dropzone-multi .apf-drop-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  margin-bottom: 10px;
+}
+
+.apf-dropzone-multi .apf-drop-title {
+  margin-bottom: 4px;
+}
+
 @media (max-width: 860px) {
   .apf-grid {
     grid-template-columns: 1fr;
@@ -240,4 +338,10 @@
 
 @media (max-width: 540px) {
   .apf-row { grid-template-columns: 1fr; }
+
+  /* Wider thumbnails on phones — 2 per row reads better */
+  .apf-thumb-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+

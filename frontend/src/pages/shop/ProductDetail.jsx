@@ -14,6 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import ProductCard from '../../components/product/ProductCard';
+import ReviewSection from '../../components/shop/ReviewSection';
 import './ProductDetail.css';
 
 export default function ProductDetail() {
@@ -27,6 +28,7 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [cartAdded, setCartAdded] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
+  const [activeImage, setActiveImage] = useState(0);
 
   // Load product, then load related products from the same category.
   useEffect(() => {
@@ -71,6 +73,7 @@ export default function ProductDetail() {
     setQuantity(1);
     setCartAdded(false);
     setActiveTab('description');
+    setActiveImage(0);
   }, [product?._id]);
 
   if (loading) {
@@ -101,6 +104,14 @@ export default function ProductDetail() {
   const finalPrice = getProductPrice(product);
   const discount = product.discountPercent > 0 ? product.price - finalPrice : 0;
   const wished = isInWishlist(product._id);
+
+  // Build the gallery: prefer the multi-image array, fall back to the single
+  // primary URL. Clamp the active index against the available count.
+  const gallery = Array.isArray(product.images) && product.images.length > 0
+    ? product.images
+    : [product.image].filter(Boolean);
+  const activeIdx = Math.min(activeImage, gallery.length - 1);
+  const mainImage = gallery[activeIdx] || product.image;
 
   const handleWishlist = async () => {
     toggleWishlist(product);
@@ -153,8 +164,8 @@ export default function ProductDetail() {
           <div className="product-image-section">
             <div className="product-image-container">
               <img
-                src={product.image}
-                alt={product.name}
+                src={mainImage}
+                alt={`${product.name} - image ${activeIdx + 1}`}
                 className="product-image-main"
               />
               {product.discountPercent > 0 && (
@@ -169,11 +180,19 @@ export default function ProductDetail() {
                 </div>
               )}
             </div>
-            <div className="product-image-thumbnails">
-              <div className="thumbnail active">
-                <img src={product.image} alt={product.name} />
+            {gallery.length > 1 && (
+              <div className="product-image-thumbnails">
+                {gallery.map((src, i) => (
+                  <div
+                    key={i}
+                    className={`thumbnail ${i === activeIdx ? 'active' : ''}`}
+                    onClick={() => setActiveImage(i)}
+                  >
+                    <img src={src} alt={`${product.name} thumbnail ${i + 1}`} />
+                  </div>
+                ))}
               </div>
-            </div>
+            )}
           </div>
 
           {/* Right: Product Info */}
@@ -405,6 +424,9 @@ export default function ProductDetail() {
             )}
           </div>
         </div>
+
+        {/* Customer Reviews */}
+        <ReviewSection product={product} />
 
         {/* Related Products (same category) */}
         {related.length > 0 && (

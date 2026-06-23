@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, PlusCircle, LogOut, Home, Mail, Boxes, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, PlusCircle, LogOut, Home, Mail, Boxes, Menu, X, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import '../../styles/Panel.css';
 
@@ -78,6 +78,9 @@ export default function AdminLayout() {
           </NavLink>
           <NavLink to="/admin/contacts" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <Mail size={18} /> Messages
+          </NavLink>
+          <NavLink to="/admin/reviews" style={navItemStyle} onClick={() => setMenuOpen(false)}>
+            <Star size={18} /> Reviews
           </NavLink>
           <NavLink to="/admin/products/new" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <PlusCircle size={18} /> Add Product

@@ -13,6 +13,7 @@ import userRoutes from './routes/users.js';
 import orderRoutes, { razorpayWebhookHandler } from './routes/orders.js';
 import adminRoutes from './routes/admin.js';
 import bannerRoutes from './routes/banner.js';
+import reviewRoutes from './routes/reviews.js';
 import imageRoutes from './routes/images.js';
 import contactRoutes from './routes/contact.js';
 import stockRoutes from './routes/stock.js';
@@ -53,6 +54,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/stock', stockRoutes);
 app.use('/api/banner', bannerRoutes);
+app.use('/api/reviews', reviewRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/settings', settingsRoutes);
@@ -82,6 +84,18 @@ io.on('connection', (socket) => {
 // Watch Banner collection for changes and broadcast to all connected clients
 async function setupBannerChangeStream() {
   try {
+    // Check if the MongoDB deployment supports change streams (requires replica set or mongos)
+    const admin = Banner.db.db.admin();
+    const serverStatus = await admin.command({ isMaster: 1 });
+    const isReplicaSetOrMongos = !!(serverStatus.setName || serverStatus.msg === 'isdbgrid');
+
+    if (!isReplicaSetOrMongos) {
+      console.log('MongoDB is running as a standalone instance — change streams are not supported.');
+      console.log('Using polling fallback for banner updates.');
+      setupBannerPolling();
+      return;
+    }
+
     const bannerCollection = Banner.collection;
     const changeStream = bannerCollection.watch([
       { $match: { 'operationType': { $in: ['insert', 'update', 'replace'] }, 'fullDocument.singleton': true } },
@@ -108,10 +122,35 @@ async function setupBannerChangeStream() {
       // Reconnect after 5 seconds
       setTimeout(setupBannerChangeStream, 5000);
     });
+
+    console.log('Banner change stream active (replica set detected).');
   } catch (err) {
     console.error('Failed to setup banner change stream:', err.message);
-    setTimeout(setupBannerChangeStream, 5000);
+    console.log('Falling back to polling for banner updates.');
+    setupBannerPolling();
   }
+}
+
+// Polling fallback: check for banner changes every 10 seconds
+let lastBannerUpdate = null;
+function setupBannerPolling() {
+  setInterval(async () => {
+    try {
+      const banner = await Banner.findOne({ singleton: true });
+      if (banner) {
+        const updatedAt = banner.updatedAt ? banner.updatedAt.toISOString() : null;
+        if (updatedAt && updatedAt !== lastBannerUpdate) {
+          lastBannerUpdate = updatedAt;
+          const v = banner.updatedAt ? banner.updatedAt.getTime() : Date.now();
+          const imageUrl = banner.imageData ? `/api/images/banner/hero?v=${v}` : null;
+          const promoImageUrl = banner.promoImageData ? `/api/images/banner/promo?v=${v}` : null;
+          io.emit('banner-updated', { imageUrl, promoImageUrl, updatedAt: banner.updatedAt });
+        }
+      }
+    } catch (err) {
+      // Silently ignore polling errors
+    }
+  }, 10000);
 }
 
 // Start change stream listener after DB connects

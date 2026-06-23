@@ -166,31 +166,40 @@ export async function deleteAdminCategory(id) {
 }
 
 /**
- * Create product — sends FormData with required "image" file field.
+ * Create product — sends FormData with one or more "images" files (max 5).
  * @param {object} fields — product fields (name, price, etc.)
- * @param {File} imageFile — image file
+ * @param {File[]} imageFiles — array of image files (at least 1 required)
  */
-export async function createProduct(fields, imageFile) {
+export async function createProduct(fields, imageFiles = []) {
   const fd = new FormData();
   Object.entries(fields).forEach(([k, v]) => {
     if (v !== undefined && v !== null) fd.append(k, String(v));
   });
-  if (imageFile) fd.append('image', imageFile);
+  imageFiles.forEach((file) => fd.append('images', file));
   return apiUpload('/admin/products', 'POST', fd);
 }
 
 /**
- * Update product — sends FormData; image is optional.
+ * Update product — sends FormData; images are optional.
  * @param {string} id
  * @param {object} fields
- * @param {File|null} imageFile
+ * @param {File[]} imageFiles — new files to replace the current set (optional)
+ * @param {object} opts — { deleteIndices: number[] } positions of existing
+ *                       images to remove (ignored when imageFiles is non-empty)
  */
-export async function updateProduct(id, fields, imageFile) {
+export async function updateProduct(id, fields, imageFiles = [], opts = {}) {
+  const { deleteIndices = [] } = opts;
   const fd = new FormData();
   Object.entries(fields).forEach(([k, v]) => {
     if (v !== undefined && v !== null) fd.append(k, String(v));
   });
-  if (imageFile) fd.append('image', imageFile);
+  if (imageFiles && imageFiles.length > 0) {
+    // Uploading files always replaces the full set (backend clears images[] first).
+    imageFiles.forEach((file) => fd.append('images', file));
+  } else if (Array.isArray(deleteIndices) && deleteIndices.length > 0) {
+    // Each index becomes a repeated form field; backend normalizes to an array.
+    deleteIndices.forEach((i) => fd.append('deleteImageIndex', String(i)));
+  }
   return apiUpload(`/admin/products/${id}`, 'PUT', fd);
 }
 
@@ -236,6 +245,60 @@ export async function adjustStock(productId, newQuantity, reason, notes) {
     method: 'POST',
     body: JSON.stringify({ productId, newQuantity, reason, notes }),
   });
+}
+
+/* ── Reviews (public + authenticated) ── */
+export async function fetchProductReviews(productId, { page = 1, limit = 10 } = {}) {
+  const query = new URLSearchParams({ page: String(page), limit: String(limit) }).toString();
+  return apiFetch(`/reviews/product/${productId}?${query}`);
+}
+
+export async function fetchMyReview(productId) {
+  return apiFetch(`/reviews/mine/${productId}`);
+}
+
+/**
+ * Create a review — sends FormData (multipart) with up to 4 "photos" files.
+ * @param {object} fields — { productId, rating, comment }
+ * @param {File[]} photoFiles — optional review photos
+ */
+export async function createReview(fields, photoFiles = []) {
+  const fd = new FormData();
+  fd.append('productId', fields.productId);
+  fd.append('rating', String(fields.rating));
+  if (fields.comment) fd.append('comment', String(fields.comment));
+  photoFiles.forEach((file) => fd.append('photos', file));
+  return apiUpload('/reviews', 'POST', fd);
+}
+
+/**
+ * Update a review — FormData; photos optional.
+ * @param {string} id
+ * @param {object} fields — { rating?, comment? }
+ * @param {File[]} photoFiles — new photos to replace the set (optional)
+ * @param {object} opts — { deleteIndices: number[] } to remove existing photos
+ */
+export async function updateReview(id, fields = {}, photoFiles = [], opts = {}) {
+  const { deleteIndices = [] } = opts;
+  const fd = new FormData();
+  if (fields.rating !== undefined) fd.append('rating', String(fields.rating));
+  if (fields.comment !== undefined) fd.append('comment', String(fields.comment));
+  if (photoFiles && photoFiles.length > 0) {
+    photoFiles.forEach((file) => fd.append('photos', file));
+  } else if (Array.isArray(deleteIndices) && deleteIndices.length > 0) {
+    deleteIndices.forEach((i) => fd.append('deletePhotoIndex', String(i)));
+  }
+  return apiUpload(`/reviews/${id}`, 'PUT', fd);
+}
+
+export async function deleteReview(id) {
+  return apiFetch(`/reviews/${id}`, { method: 'DELETE' });
+}
+
+/* ── Admin: Reviews ── */
+export async function fetchAdminReviews() { return apiFetch('/admin/reviews'); }
+export async function deleteAdminReview(id) {
+  return apiFetch(`/admin/reviews/${id}`, { method: 'DELETE' });
 }
 
 /* ── Helpers ── */

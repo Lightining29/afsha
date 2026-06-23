@@ -6,6 +6,9 @@ import '../../styles/Panel.css';
 import '../auth/Auth.css';
 import './AdminProductForm.css';
 
+const MAX_IMAGES = 5;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
 const emptyForm = {
   name: '',
   description: '',
@@ -25,10 +28,26 @@ export default function AdminProductForm() {
 
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState(emptyForm);
-  const [imageFile, setImageFile] = useState(null);       // new File chosen
-  const [previewUrl, setPreviewUrl] = useState(null);     // local blob or existing API URL
+  // newFiles: File[] chosen in this session (not yet saved)
+  const [newFiles, setNewFiles] = useState([]);
+  // originalUrls: full set of already-saved image URLs as returned by the API
+  const [originalUrls, setOriginalUrls] = useState([]);
+  // removedIndices: Set of indices into originalUrls the user has discarded
+  const [removedIndices, setRemovedIndices] = useState(new Set());
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Existing images still visible = original minus removed ones.
+  const keptOriginals = originalUrls
+    .map((url, i) => ({ url, originalIndex: i }))
+    .filter((entry) => !removedIndices.has(entry.originalIndex));
+
+  // Build live previews: kept originals first, then new files.
+  const previews = [
+    ...keptOriginals.map((entry) => ({ url: entry.url, isExisting: true, originalIndex: entry.originalIndex })),
+    ...newFiles.map((file) => ({ url: URL.createObjectURL(file), isExisting: false, file })),
+  ];
+  const totalCount = previews.length;
 
   useEffect(() => {
     fetchAdminCategories().then(setCategories);
@@ -46,8 +65,9 @@ export default function AdminProductForm() {
             discountPercent: p.discountPercent || 0,
             bestseller: p.bestseller,
           });
-          // p.image is already the /api/images/product/:id path
-          if (p.image) setPreviewUrl(p.image);
+          // Prefer the multi-image array; fall back to the primary URL.
+          const imgs = Array.isArray(p.images) ? p.images : [];
+          setOriginalUrls(imgs.length > 0 ? imgs : p.image ? [p.image] : []);
         }
       });
     }
@@ -58,38 +78,62 @@ export default function AdminProductForm() {
     setForm((prev) => ({ ...prev, [field]: val }));
   };
 
+  // Add one or more files, respecting the 5-image cap and per-file size/type.
+  const addFiles = (fileList) => {
+    const incoming = Array.from(fileList || []).filter((f) => f.type.startsWith('image/'));
+    setError('');
+    setNewFiles((prev) => {
+      const room = MAX_IMAGES - keptOriginals.length - prev.length;
+      if (room <= 0) {
+        setError(`Maximum ${MAX_IMAGES} images per product.`);
+        return prev;
+      }
+      const accepted = [];
+      for (const f of incoming) {
+        if (accepted.length >= room) {
+          setError(`Only ${room} more image${room === 1 ? '' : 's'} can be added (max ${MAX_IMAGES}).`);
+          break;
+        }
+        if (f.size > MAX_FILE_SIZE) {
+          setError(`${f.name} exceeds the 5 MB limit.`);
+          continue;
+        }
+        accepted.push(f);
+      }
+      return [...prev, ...accepted];
+    });
+  };
+
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setImageFile(file);
-    // Revoke previous object URL to avoid memory leak
-    if (previewUrl && previewUrl.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(URL.createObjectURL(file));
+    addFiles(e.target.files);
+    // Allow re-selecting the same file(s)
+    if (fileRef.current) fileRef.current.value = '';
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      setImageFile(file);
-      if (previewUrl && previewUrl.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(URL.createObjectURL(file));
-    }
+    addFiles(e.dataTransfer.files);
   };
 
-  const clearImage = () => {
-    if (previewUrl && previewUrl.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
-    setImageFile(null);
-    setPreviewUrl(null);
-    if (fileRef.current) fileRef.current.value = '';
+  // Remove a preview slot by its position in the previews grid.
+  //  - Existing (saved) image: mark its original index for deletion on submit.
+  //  - New (unsaved) file: drop it locally.
+  const removePreview = (idx) => {
+    const target = previews[idx];
+    if (!target) return;
+    if (target.isExisting) {
+      setRemovedIndices((prev) => new Set(prev).add(target.originalIndex));
+    } else {
+      setNewFiles((prev) => prev.filter((_, i) => i !== idx - keptOriginals.length));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (!isEdit && !imageFile) {
-      setError('Please upload a product image.');
+    if (totalCount === 0) {
+      setError('Please upload at least one product image.');
       return;
     }
 
@@ -104,8 +148,16 @@ export default function AdminProductForm() {
         bestseller: form.bestseller,
       };
 
-      if (isEdit) await updateProduct(id, fields, imageFile || null);
-      else await createProduct(fields, imageFile);
+      if (isEdit) {
+        // New files replace the entire image set on the backend, so any
+        // removed-originals are moot in that case. Otherwise, send the set of
+        // original indices the user discarded for deletion.
+        const hasNew = newFiles.length > 0;
+        const opts = hasNew ? {} : { deleteIndices: [...removedIndices] };
+        await updateProduct(id, fields, newFiles, opts);
+      } else {
+        await createProduct(fields, newFiles);
+      }
 
       navigate('/admin/products');
     } catch (err) {
@@ -119,7 +171,7 @@ export default function AdminProductForm() {
     <>
       <h1>{isEdit ? 'Edit Product' : 'Add Product'}</h1>
       <p className="panel-subtitle">
-        {isEdit ? 'Update product details and image' : 'Create a new product listing'}
+        {isEdit ? 'Update product details and images' : 'Create a new product listing'}
       </p>
 
       <form className="product-form" onSubmit={handleSubmit}>
@@ -185,59 +237,74 @@ export default function AdminProductForm() {
             </div>
           </div>
 
-          {/* Right column — image upload */}
+          {/* Right column — image upload (multiple) */}
           <div className="apf-image-col">
-            <label className="apf-section-label">Product Image {!isEdit && '*'}</label>
+            <label className="apf-section-label">
+              Product Images {!isEdit && '*'}
+              <span className="apf-count">{totalCount} / {MAX_IMAGES}</span>
+            </label>
 
-            {/* Drop zone */}
-            <div
-              className={`apf-dropzone ${previewUrl ? 'has-image' : ''}`}
-              onClick={() => fileRef.current?.click()}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={handleDrop}
-            >
-              {previewUrl ? (
-                <>
-                  <img src={previewUrl} alt="Preview" className="apf-preview-img" />
-                  <button
-                    type="button"
-                    className="apf-clear-btn"
-                    onClick={(e) => { e.stopPropagation(); clearImage(); }}
-                  >
-                    <X size={14} /> Remove
-                  </button>
-                </>
-              ) : (
+            {/* Thumbnail grid */}
+            {totalCount > 0 && (
+              <div className="apf-thumb-grid">
+                {previews.map((p, i) => (
+                  <div className={`apf-thumb ${i === 0 ? 'cover' : ''}`} key={i}>
+                    <img src={p.url} alt={`Product ${i + 1}`} />
+                    {i === 0 && <span className="apf-cover-badge">Cover</span>}
+                    <button
+                      type="button"
+                      className="apf-thumb-remove"
+                      onClick={() => removePreview(i)}
+                      aria-label={`Remove image ${i + 1}`}
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Drop zone — hidden once cap reached */}
+            {totalCount < MAX_IMAGES && (
+              <div
+                className="apf-dropzone apf-dropzone-multi"
+                onClick={() => fileRef.current?.click()}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleDrop}
+              >
                 <div className="apf-dropzone-empty">
                   <div className="apf-drop-icon">
-                    <ImagePlus size={36} />
+                    <ImagePlus size={28} />
                   </div>
                   <p className="apf-drop-title">Drag & drop or click to upload</p>
-                  <p className="apf-drop-hint">JPG, PNG, WEBP — Max 5 MB</p>
+                  <p className="apf-drop-hint">Up to {MAX_IMAGES} images · JPG, PNG, WEBP · Max 5 MB each</p>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             <input
               ref={fileRef}
               type="file"
               accept="image/*"
+              multiple
               style={{ display: 'none' }}
               onChange={handleFileChange}
             />
 
-            <button
-              type="button"
-              className="apf-browse-btn"
-              onClick={() => fileRef.current?.click()}
-            >
-              <Upload size={15} />
-              {previewUrl ? 'Change Photo' : 'Browse Files'}
-            </button>
+            {totalCount < MAX_IMAGES && (
+              <button
+                type="button"
+                className="apf-browse-btn"
+                onClick={() => fileRef.current?.click()}
+              >
+                <Upload size={15} />
+                {totalCount === 0 ? 'Browse Files' : 'Add More'}
+              </button>
+            )}
 
-            {imageFile && (
+            {newFiles.length > 0 && (
               <p className="apf-file-name">
-                📎 {imageFile.name} ({(imageFile.size / 1024).toFixed(1)} KB)
+                {newFiles.length} new image{newFiles.length > 1 ? 's' : ''} ready to upload
               </p>
             )}
           </div>

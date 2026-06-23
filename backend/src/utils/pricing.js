@@ -13,6 +13,16 @@ export function enrichProduct(product) {
   obj.inStock = (obj.stockQuantity ?? 0) > 0;
   // Expose image as a URL path — never send raw binary to clients
   obj.image = obj._id ? `/api/images/product/${obj._id}` : null;
+  // Expose all product images as position-based URLs. If the images[] array
+  // isn't populated yet (legacy product), fall back to the single primary URL.
+  if (obj._id) {
+    const count = Array.isArray(obj.images) ? obj.images.length : 0;
+    obj.images = count > 0
+      ? Array.from({ length: count }, (_, i) => `/api/images/product/${obj._id}/${i}`)
+      : [obj.image];
+  } else {
+    obj.images = [];
+  }
   // Remove buffer fields from response
   delete obj.imageData;
   delete obj.imageContentType;

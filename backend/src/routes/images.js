@@ -3,16 +3,17 @@ import Product from '../models/Product.js';
 import Banner from '../models/Banner.js';
 import Category from '../models/Category.js';
 import User from '../models/User.js';
+import Review from '../models/Review.js';
 
 const router = express.Router();
 
 /**
  * GET /api/images/product/:id
- * Serve a product's binary image
+ * Serve a product's primary (cover) binary image.
  */
 router.get('/product/:id', async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).select('imageData imageContentType');
+    const product = await Product.findById(req.params.id).select('imageData imageContentType images');
     if (!product || !product.imageData) {
       return res.status(404).json({ message: 'Image not found' });
     }
@@ -20,6 +21,35 @@ router.get('/product/:id', async (req, res) => {
     // version query param (?v=...) ensures cache busts on update
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(product.imageData);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/**
+ * GET /api/images/product/:id/:index
+ * Serve a specific product image by position (0-based). Falls back to the
+ * legacy primary for index 0 when the images[] array isn't populated.
+ */
+router.get('/product/:id/:index', async (req, res) => {
+  try {
+    const idx = parseInt(req.params.index, 10);
+    if (Number.isNaN(idx) || idx < 0) {
+      return res.status(400).json({ message: 'Invalid image index' });
+    }
+    const product = await Product.findById(req.params.id).select('imageData imageContentType images');
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    // Prefer the images[] array; fall back to legacy primary for index 0.
+    const slot = product.images?.[idx]
+      || (idx === 0 && product.imageData ? { data: product.imageData, contentType: product.imageContentType } : null);
+
+    if (!slot || !slot.data) {
+      return res.status(404).json({ message: 'Image not found' });
+    }
+    res.set('Content-Type', slot.contentType || 'image/jpeg');
+    res.set('Cache-Control', 'public, max-age=31536000, immutable');
+    res.send(slot.data);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -97,6 +127,31 @@ router.get('/user/:id', async (req, res) => {
     }
     res.set('Content-Type', user.photoContentType || 'image/jpeg');
     res.send(user.photoData);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/**
+ * GET /api/images/review/:id/:index
+ * Serve a specific review photo by position (0-based).
+ */
+router.get('/review/:id/:index', async (req, res) => {
+  try {
+    const idx = parseInt(req.params.index, 10);
+    if (Number.isNaN(idx) || idx < 0) {
+      return res.status(400).json({ message: 'Invalid image index' });
+    }
+    const review = await Review.findById(req.params.id).select('photos');
+    if (!review) return res.status(404).json({ message: 'Review not found' });
+
+    const slot = review.photos?.[idx];
+    if (!slot || !slot.data) {
+      return res.status(404).json({ message: 'Image not found' });
+    }
+    res.set('Content-Type', slot.contentType || 'image/jpeg');
+    res.set('Cache-Control', 'public, max-age=31536000, immutable');
+    res.send(slot.data);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
