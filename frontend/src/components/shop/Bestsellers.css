@@ -240,6 +240,47 @@
 }
 
 @media (max-width: 480px) {
-  .products-grid { grid-template-columns: 1fr; }
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .product-card {
+    border-radius: 14px;
+  }
+  .product-image-wrap img {
+    padding: 8px;
+  }
+  .product-info {
+    padding: 10px 10px 12px;
+  }
+  .product-name {
+    font-size: 0.88rem;
+    margin-bottom: 4px;
+  }
+  .product-rating {
+    margin-bottom: 8px;
+    font-size: 0.76rem;
+  }
+  .price-current {
+    font-size: 0.95rem;
+  }
+  .price-original {
+    font-size: 0.76rem;
+  }
+  .add-cart-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+  .add-cart-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  .discount-badge {
+    top: 8px;
+    left: 8px;
+    font-size: 0.62rem;
+    padding: 2px 6px;
+  }
   .bestsellers-header { flex-direction: column; align-items: flex-start; gap: 12px; }
 }
