@@ -88,7 +88,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 1;
-  background: #f8f9fb;
+  background: var(--white);
   border-radius: var(--radius);
   overflow: hidden;
   display: flex;
@@ -160,13 +160,9 @@
   border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
-  background: var(--neu-surface);
+  background: var(--white);
   box-shadow: var(--neu-out-sm);
   transition: box-shadow 0.25s;
-}
-
-.thumbnail {
-  background: #f8f9fb;
 }
 
 .thumbnail img {
