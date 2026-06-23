@@ -1,0 +1,182 @@
+/* =========================================
+   HOME PAGE — Stat strip, section rhythm, feature cards, CTA band
+   ========================================= */
+
+/* ----- Stat strip (social proof right under hero) ----- */
+.stat-strip {
+  background: var(--text-dark);
+  padding: 26px 0;
+}
+
+.stat-strip-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #fff;
+}
+
+.stat-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--rose-gold-light);
+  flex-shrink: 0;
+}
+
+.stat-value {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 768px) {
+  .stat-strip-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+}
+
+/* Shared section spacing so every block on the page breathes the same.
+   Page reads as clean neumorphic surface; alternate sections slightly lighter. */
+.section.home-section {
+  padding: 80px 0;
+  background: var(--neu-surface);
+}
+
+.section.home-section:nth-child(even) {
+  background: var(--off-white);
+}
+
+@media (max-width: 768px) {
+  .section.home-section {
+    padding: 56px 0;
+  }
+}
+
+/* ----- About section ----- */
+.about-section {
+  background: var(--neu-surface) !important;
+  text-align: center;
+}
+
+.about-content p.about-desc {
+  max-width: 680px;
+  margin: 0 auto 48px;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.85;
+}
+
+.about-pillars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 26px;
+  margin-top: 0;
+}
+
+.about-pillar {
+  background: var(--neu-surface);
+  border: none;
+  border-radius: var(--radius);
+  padding: 32px 22px;
+  text-align: center;
+  box-shadow: var(--neu-out);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.about-pillar:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--sky-glow), var(--neu-out);
+}
+
+/* Icon chip — neumorphic inset well with sky-blue glow */
+.about-pillar-icon {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 16px;
+  border-radius: 18px;
+  color: var(--rose-gold-dark);
+  background: var(--neu-surface);
+  box-shadow: var(--neu-in), 0 0 18px rgba(59, 130, 246, 0.22);
+}
+
+.about-pillar h4 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.about-pillar p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .about-pillars { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .about-pillars { grid-template-columns: 1fr; }
+}
+
+/* ----- Closing CTA band (sky-blue) ----- */
+.cta-band {
+  position: relative;
+  padding: 64px 0;
+  text-align: center;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(96, 165, 250, 0.32), transparent 45%),
+    radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.28), transparent 45%),
+    linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #eff6ff 100%);
+  overflow: hidden;
+}
+
+.cta-band-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.cta-band-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: #1e293b;
+  margin: 0 0 6px;
+}
+
+.cta-band-sub {
+  color: #475569;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.cta-band-btn {
+  white-space: nowrap;
+  padding: 14px 24px;
+}
+
+@media (max-width: 640px) {
+  .cta-band { padding: 48px 0; }
+  .cta-band-inner { flex-direction: column; text-align: center; }
+}
+

@@ -1,0 +1,29 @@
+# Render Blueprint configuration for monorepo using Docker
+services:
+  - type: web
+    name: glowora-backend
+    env: docker
+    rootDir: backend
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    branch: main
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: "5000"
+      - key: MONGODB_URI
+        value: "" # set via Render dashboard (secret)
+      - key: NODE_ENV
+        value: "production"
+
+  - type: web
+    name: glowora-frontend
+    env: docker
+    rootDir: frontend
+    dockerfilePath: frontend/Dockerfile
+    dockerContext: frontend
+    branch: main
+    autoDeploy: true
+    envVars:
+      - key: VITE_API_URL
+        value: "" # set to backend URL in Render dashboard

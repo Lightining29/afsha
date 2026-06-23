@@ -1,0 +1,101 @@
+/* =========================================
+   ADS BANNER — neumorphic promotional tiles
+   ========================================= */
+.ads-banner-section {
+  padding: 24px 0 8px;
+  background: var(--neu-surface);
+}
+
+.ads-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.ad-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 22px;
+  border-radius: var(--radius);
+  background: var(--neu-surface);
+  box-shadow: var(--neu-out);
+  color: var(--text-dark);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.ad-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  pointer-events: none;
+  background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.06), transparent 60%);
+}
+
+.ad-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sky-glow), var(--neu-out);
+}
+
+.ad-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  flex-shrink: 0;
+  color: #fff;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.ad-card--indigo .ad-icon { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3); }
+.ad-card--sky .ad-icon    { background: linear-gradient(135deg, #38bdf8, #0ea5e9); box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3); }
+
+.ad-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ad-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 2px;
+}
+
+.ad-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.ad-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--rose-gold-dark);
+  white-space: nowrap;
+  padding-top: 2px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 980px) {
+  .ads-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .ads-banner-section { padding: 16px 0 4px; }
+  .ad-card { padding: 16px; gap: 12px; }
+  .ad-icon { width: 44px; height: 44px; border-radius: 12px; }
+  .ad-title { font-size: 1.05rem; }
+  .ad-subtitle { font-size: 0.78rem; }
+  .ad-cta { font-size: 0.72rem; }
+}
