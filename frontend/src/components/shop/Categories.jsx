@@ -44,12 +44,16 @@ export default function Categories() {
           <div className="category-chips">
             {categories.map((cat) => (
               <Link to={`/category/${cat._id}`} key={cat._id} className="category-chip">
-                <span className="category-chip-icon">
-                  <cat.icon size={18} />
-                </span>
+                {cat.icon && (
+                  <span className="category-chip-icon">
+                    <cat.icon size={18} />
+                  </span>
+                )}
                 <span className="category-chip-text">
                   <span className="category-chip-name">{cat.name}</span>
-                  <span className="category-chip-count">{cat.count} items</span>
+                  <span className="category-chip-count">
+                    {cat.productCount ?? cat.count ?? 0} { (cat.productCount ?? cat.count ?? 0) === 1 ? 'Product' : 'Products' }
+                  </span>
                 </span>
               </Link>
             ))}

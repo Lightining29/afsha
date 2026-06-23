@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
 import './CategoryCard.css';
 
 export default function CategoryCard({ category }) {
+  const count = category.productCount ?? 0;
+
   return (
     <Link to={`/category/${category._id}`} className="category-card">
       <div className="category-image-wrap">
@@ -13,8 +16,13 @@ export default function CategoryCard({ category }) {
         <div className="category-overlay" />
       </div>
       <div className="category-info">
-        <h3>{category.name}</h3>
-        <span>{category.productCount} Products</span>
+        <div className="category-text">
+          <h3>{category.name}</h3>
+          <span className="category-count">{count} {count === 1 ? 'Product' : 'Products'}</span>
+        </div>
+        <div className="category-arrow-btn">
+          <ArrowUpRight size={18} />
+        </div>
       </div>
     </Link>
   );
