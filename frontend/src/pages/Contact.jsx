@@ -74,7 +74,7 @@ export default function Contact() {
                 <div className="info-icon"><Mail size={18} /></div>
                 <div className="info-body">
                   <strong>Email</strong>
-                  <a href="mailto:support@glowora.com">support@glowora.com</a>
+                  <a href="mailto:support@glowora.com">reazafsha0@gmail.com</a>
                 </div>
               </div>
 
@@ -82,7 +82,7 @@ export default function Contact() {
                 <div className="info-icon"><Phone size={18} /></div>
                 <div className="info-body">
                   <strong>Phone</strong>
-                  <span>+1 (555) 123-4567</span>
+                  <span>+91 8073786650</span>
                 </div>
               </div>
 
@@ -90,7 +90,7 @@ export default function Contact() {
                 <div className="info-icon"><MapPin size={18} /></div>
                 <div className="info-body">
                   <strong>Address</strong>
-                  <span>123 Glowora Ave, Beauty City</span>
+                  <span>75 Raja muthai road periyamet nehru stadium main gate opposite, Chennai 600003</span>
                 </div>
               </div>
             </div>

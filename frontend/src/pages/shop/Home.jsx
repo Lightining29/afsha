@@ -13,17 +13,17 @@ import '../../styles/animations.css';
 import './Home.css';
 
 const pillars = [
-  { icon: Leaf,          title: 'Clean Ingredients',  desc: 'Only the best from nature' },
-  { icon: FlaskConical,  title: 'Science-Backed',     desc: 'Dermatologist tested formulas' },
-  { icon: Recycle,       title: 'Eco-Friendly',       desc: 'Sustainable packaging' },
-  { icon: Rabbit,        title: 'Cruelty-Free',       desc: 'Never tested on animals' },
+  { icon: Leaf, title: 'Clean Ingredients', desc: 'Only the best from nature' },
+  { icon: FlaskConical, title: 'Science-Backed', desc: 'Dermatologist tested formulas' },
+  { icon: Recycle, title: 'Eco-Friendly', desc: 'Sustainable packaging' },
+  { icon: Rabbit, title: 'Cruelty-Free', desc: 'Never tested on animals' },
 ];
 
 const stats = [
-  { icon: Users,      value: '10k+', label: 'Happy Customers' },
-  { icon: Star,       value: '4.9',  label: 'Average Rating' },
-  { icon: Truck,      value: 'Free', label: 'Shipping Over ₹999' },
-  { icon: ShieldCheck,value: '100%', label: 'Secure Payments' },
+  { icon: Users, value: '10k+', label: 'Happy Customers' },
+  { icon: Star, value: '4.9', label: 'Average Rating' },
+  { icon: Truck, value: 'Free', label: 'Shipping Over ₹999' },
+  { icon: ShieldCheck, value: '100%', label: 'Secure Payments' },
 ];
 
 export default function Home() {
@@ -75,12 +75,12 @@ export default function Home() {
         <div className="container about-content">
           <p className="section-label" style={{ justifyContent: 'center' }}>Our Story</p>
           <h2 className="section-title">
-            About <span className="serif-italic">Glowora</span>
+            About <span className="serif-italic">Afsha enterprises</span>
           </h2>
           <p className="about-desc">
-            We believe skincare should be simple, effective, and kind to both your skin
-            and the planet. Every Glowora product is formulated with dermatologist-tested
-            ingredients, free from harsh chemicals, and never tested on animals.
+            We believe skincare and pain relief massage should be simple, effective, and kind to both your skin
+            and the planet. Every Afsha enterprises product is formulated with dermatologist-tested
+            ingredients, products.
           </p>
           <div className="about-pillars">
             {pillars.map(({ icon: Icon, title, desc }) => (
@@ -98,7 +98,7 @@ export default function Home() {
         <div className="container cta-band-inner">
           <div>
             <h3 className="cta-band-title">Start your wellness ritual</h3>
-            <p className="cta-band-sub">Deep-tissue relief and everyday calm — meet the Glowora massager.</p>
+            <p className="cta-band-sub">Deep-tissue relief and everyday calm — meet the Afsha enterprises massager.</p>
           </div>
           <Link to="/checkout" className="btn btn-hero-primary cta-band-btn">
             Shop Now <ArrowRight size={18} />
