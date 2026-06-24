@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ArrowRight, Truck, ShieldCheck, Star } from 'lucide-react';
 import './Hero.css';
 
-const HERO_IMAGE_URL = '/masage.jpg';
+const HERO_IMAGE_URL = '/hi.jpg';
 
 // Inline SVG placeholder shown if the product photo is missing.
 const PLACEHOLDER_SVG =
@@ -26,9 +26,9 @@ const PLACEHOLDER_SVG =
   );
 
 const trustStats = [
-  { icon: Star,       value: '4.9',     label: 'Avg. Rating' },
-  { icon: ShieldCheck,value: '100%',    label: 'Secure Pay' },
-  { icon: Truck,      value: 'Free',    label: 'Over ₹999' },
+  { icon: Star, value: '4.9', label: 'Avg. Rating' },
+  { icon: ShieldCheck, value: '100%', label: 'Secure Pay' },
+  { icon: Truck, value: 'Free', label: 'Over ₹999' },
 ];
 
 export default function Hero() {
