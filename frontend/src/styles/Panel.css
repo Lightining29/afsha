@@ -17,10 +17,10 @@
   margin-bottom: 16px;
 }
 
-.panel-sidebar-header h2 {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  color: var(--rose-gold-deep);
+.admin-sidebar-logo {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
 }
 
 .panel-sidebar-header p {
@@ -357,10 +357,10 @@
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .admin-mobile-title {
-    font-family: var(--font-serif);
-    font-size: 1.05rem;
-    color: var(--sky-blue);
+  .admin-mobile-logo {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
   }
 
   .admin-mobile-user {

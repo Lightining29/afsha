@@ -44,7 +44,7 @@ export default function AdminLayout() {
         >
           {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
-        <span className="admin-mobile-title">Glowora Admin</span>
+        <img src="/logo.png" alt="Afsha Enterprises" className="admin-mobile-logo" />
         <span className="admin-mobile-user">{user?.name}</span>
       </div>
 
@@ -57,7 +57,7 @@ export default function AdminLayout() {
 
       <aside className={sidebarClass} style={sidebarStyle}>
         <div className="panel-sidebar-header" style={headerStyle}>
-          <h2 style={{ color: 'var(--sky-blue)' }}>Glowora Admin</h2>
+          <img src="/logo.png" alt="Afsha Enterprises" className="admin-sidebar-logo" />
           <p style={{ color: 'rgba(255,255,255,0.6)' }}>{user?.name}</p>
         </div>
         <nav className="panel-nav">
