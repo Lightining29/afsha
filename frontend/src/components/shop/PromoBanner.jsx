@@ -4,24 +4,24 @@ import { fetchBanner } from '../../api';
 import './PromoBanner.css';
 
 const DEFAULT = {
-  promoHeading: 'Skincare That Loves You Back',
+  promoHeading: 'Best massager for neck and shoulder pain',
   promoOffer: 'Flat 20% off on your first order',
   promoImageUrl: null,
 };
 
 const stats = [
   { icon: Users, value: '10K+', label: 'Happy Customers' },
-  { icon: Star,  value: '4.9',  label: 'Average Rating', stars: true },
-  { icon: Award, value: '50+',  label: 'Natural Ingredients' },
+  { icon: Star, value: '4.9', label: 'Average Rating', stars: true },
+  { icon: Award, value: '50+', label: 'Natural Ingredients' },
 ];
-
+const promoimg = '/bg.jpg';
 export default function PromoBanner() {
   const [data, setData] = useState(DEFAULT);
 
   useEffect(() => {
     fetchBanner()
       .then((b) => setData({ ...DEFAULT, ...b }))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Use the versioned URL from the MongoDB database
@@ -54,9 +54,9 @@ export default function PromoBanner() {
         {/* Center: binary image from MongoDB */}
         <div className="promo-image">
           <div className="promo-image-ring" />
-          {promoSrc ? (
+          {promoimg ? (
             <img
-              src={promoSrc}
+              src={promoimg}
               alt="Skincare collection"
             />
           ) : (
