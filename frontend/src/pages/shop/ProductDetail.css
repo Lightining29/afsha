@@ -75,6 +75,15 @@
     grid-template-columns: 1fr;
     gap: 36px;
   }
+
+  .product-image-container {
+    max-height: 420px;
+    margin: 0 auto;
+  }
+
+  .product-image-thumbnails {
+    justify-content: flex-start;
+  }
 }
 
 /* ===== Image section — neumorphic frame ===== */
@@ -152,6 +161,24 @@
 .product-image-thumbnails {
   display: flex;
   gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 4px 12px;
+}
+
+/* Custom scrollbar for thumbnails */
+.product-image-thumbnails::-webkit-scrollbar {
+  height: 6px;
+}
+
+.product-image-thumbnails::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.product-image-thumbnails::-webkit-scrollbar-thumb {
+  background: var(--rose-gold-light);
+  border-radius: 3px;
 }
 
 .thumbnail {
@@ -163,6 +190,7 @@
   background: var(--white);
   box-shadow: var(--neu-out-sm);
   transition: box-shadow 0.25s;
+  flex-shrink: 0;
 }
 
 .thumbnail img {
@@ -720,5 +748,27 @@
 
   .product-details-section {
     padding: 22px;
+  }
+
+  .product-image-container {
+    max-height: 340px;
+  }
+
+  .thumbnail {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+  }
+
+  .discount-badge-large {
+    top: 12px;
+    right: 12px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+  }
+
+  .discount-badge-large .save-amount {
+    font-size: 0.65rem;
   }
 }
