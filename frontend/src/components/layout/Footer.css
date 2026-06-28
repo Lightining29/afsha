@@ -201,6 +201,14 @@
   color: rgba(255,255,255,0.35);
 }
 
+.footer-bottom-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .footer-bottom-links {
   display: flex;
   gap: 20px;
@@ -223,5 +231,11 @@
 @media (max-width: 540px) {
   .footer-grid { grid-template-columns: 1fr; }
   .footer-bottom { justify-content: center; text-align: center; }
+  .footer-bottom-container {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 16px;
+  }
   .footer-bottom-links { justify-content: center; }
 }

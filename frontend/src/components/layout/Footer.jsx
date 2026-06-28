@@ -80,8 +80,11 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+        <div className="container footer-bottom-container">
           <p>© {new Date().getFullYear()} Glowora. All rights reserved.</p>
+          <p className="footer-developer">
+            Developed and Designed by <span style={{ color: 'var(--sky-blue-light)', fontWeight: 500 }}>Manish</span>
+          </p>
           <div className="footer-bottom-links">
             <a href="#privacy">Privacy Policy</a>
             <a href="#terms">Terms of Service</a>
