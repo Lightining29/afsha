@@ -349,6 +349,69 @@ router.get('/orders', async (_req, res) => {
   }
 });
 
+router.post('/orders/offline', async (req, res) => {
+  try {
+    const { items, paymentMethod, customerName, customerPhone, customerEmail } = req.body;
+    if (!items || items.length === 0) {
+      return res.status(400).json({ message: 'Cart items are required' });
+    }
+    if (!paymentMethod || !['cash', 'UPI'].includes(paymentMethod)) {
+      return res.status(400).json({ message: 'Valid payment method (cash/UPI) is required' });
+    }
+
+    const orderItems = [];
+    let subtotal = 0;
+
+    for (const item of items) {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        return res.status(400).json({ message: `Product not found: ${item.productId}` });
+      }
+      if (product.stockQuantity < item.quantity) {
+        return res.status(400).json({ message: `Insufficient stock for product: ${product.name}` });
+      }
+
+      // Check if product image exists to set image path
+      const v = product.updatedAt ? product.updatedAt.getTime() : Date.now();
+      const imageUrl = product.imageData ? `/api/images/product/${product._id}?v=${v}` : (product.image || null);
+
+      orderItems.push({
+        product: product._id,
+        name: product.name,
+        price: item.price ?? product.price,
+        quantity: item.quantity,
+        image: imageUrl || '',
+      });
+
+      subtotal += (item.price ?? product.price) * item.quantity;
+
+      // Decrement stock
+      product.stockQuantity = Math.max(0, product.stockQuantity - item.quantity);
+      product.inStock = product.stockQuantity > 0;
+      await product.save();
+    }
+
+    const order = await Order.create({
+      items: orderItems,
+      subtotal,
+      total: subtotal,
+      status: 'paid', // Offline sales are paid immediately
+      paymentMethod,
+      shippingAddress: {
+        fullName: customerName || 'Walk-in Customer',
+        phone: customerPhone || '',
+        email: customerEmail || '',
+        address: 'Offline Sale (In-Store)',
+        city: 'Walk-in',
+      },
+    });
+
+    res.status(201).json(order);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.patch('/orders/:id/approve', async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);

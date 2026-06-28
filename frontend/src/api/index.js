@@ -149,6 +149,12 @@ export async function approveOrder(id) {
 export async function shipOrder(id) {
   return apiFetch(`/admin/orders/${id}/ship`, { method: 'PATCH' });
 }
+export async function createOfflineSale(fields) {
+  return apiFetch('/admin/orders/offline', {
+    method: 'POST',
+    body: JSON.stringify(fields),
+  });
+}
 
 /* ── Admin: Products ── */
 export async function fetchAdminProducts() { return apiFetch('/admin/products'); }

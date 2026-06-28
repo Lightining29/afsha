@@ -67,6 +67,9 @@ export default function AdminLayout() {
           <NavLink to="/admin/orders" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <Package size={18} /> Orders
           </NavLink>
+          <NavLink to="/admin/offline-sale" style={navItemStyle} onClick={() => setMenuOpen(false)}>
+            <PlusCircle size={18} /> Add Offline Sale
+          </NavLink>
           <NavLink to="/admin/products" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <ShoppingCart size={18} /> Products
           </NavLink>

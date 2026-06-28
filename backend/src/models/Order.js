@@ -14,7 +14,7 @@ const orderItemSchema = new mongoose.Schema(
 const orderSchema = new mongoose.Schema(
   {
     orderNumber: { type: String, unique: true },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
     items: [orderItemSchema],
     subtotal: { type: Number, required: true },
     discount: { type: Number, default: 0 },
@@ -24,7 +24,7 @@ const orderSchema = new mongoose.Schema(
       enum: ['pending_payment', 'paid', 'approved', 'shipped', 'cancelled'],
       default: 'pending_payment',
     },
-    paymentMethod: { type: String, enum: ['razorpay'], default: 'razorpay' },
+    paymentMethod: { type: String, enum: ['razorpay', 'cash', 'UPI'], default: 'razorpay' },
     razorpayOrderId: { type: String, index: true },
     razorpayPaymentId: String,
     razorpaySignature: String,

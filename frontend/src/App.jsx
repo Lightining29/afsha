@@ -22,6 +22,7 @@ import AdminCategories from './pages/admin/AdminCategories';
 import AdminContacts from './pages/admin/AdminContacts';
 import AdminStock from './pages/admin/AdminStock';
 import AdminReviews from './pages/admin/AdminReviews';
+import AdminOfflineSale from './pages/admin/AdminOfflineSale';
 import Contact from './pages/Contact';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Navbar from './components/layout/Navbar';
@@ -152,6 +153,7 @@ function App() {
           <Route path="categories/:id/edit" element={<AdminCategories />} />
           <Route path="contacts" element={<AdminContacts />} />
           <Route path="reviews" element={<AdminReviews />} />
+          <Route path="offline-sale" element={<AdminOfflineSale />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
