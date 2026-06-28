@@ -7,24 +7,26 @@ import './ProductCard.css';
 
 export default function ProductCard({ product, onWishlistRemove }) {
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, setShowLoginModal } = useAuth();
   const wished     = isInWishlist(product._id);
   const finalPrice = getProductPrice(product);
   const hasDiscount = product.discountPercent > 0;
 
   const handleWishlist = async () => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
     toggleWishlist(product);
-    if (isAuthenticated) {
-      try {
-        if (wished) {
-          await removeFromWishlist(product._id);
-          onWishlistRemove?.();
-        } else {
-          await addToWishlist(product._id);
-        }
-      } catch {
-        toggleWishlist(product);
+    try {
+      if (wished) {
+        await removeFromWishlist(product._id);
+        onWishlistRemove?.();
+      } else {
+        await addToWishlist(product._id);
       }
+    } catch {
+      toggleWishlist(product);
     }
   };
 

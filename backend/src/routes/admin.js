@@ -73,7 +73,7 @@ router.get('/analytics', async (_req, res) => {
 router.get('/products', async (_req, res) => {
   try {
     const products = await Product.find()
-      .select('-imageData -imageContentType') // never send binary to listing
+      .select('-imageData -imageContentType -images.data') // never send binary to listing
       .populate('category', 'name slug')
       .sort({ createdAt: -1 });
     res.json(products.map(enrichProduct));
@@ -98,7 +98,7 @@ router.post('/products', upload.array('images', 5), async (req, res) => {
     }
 
     const slug = slugify(name);
-    const exists = await Product.findOne({ slug });
+    const exists = await Product.findOne({ slug }).select('_id');
     if (exists) return res.status(400).json({ message: 'Product with similar name exists' });
 
     // Build images[] from uploaded files; images[0] is the primary/cover.

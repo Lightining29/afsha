@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CreditCard } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
@@ -18,12 +18,27 @@ export default function CheckoutPage() {
   const [form, setForm] = useState({
     fullName: user?.name || '',
     email: user?.email || '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    zip: '',
+    phone: user?.phone || '',
+    address: user?.address || '',
+    city: user?.city || '',
+    state: user?.state || '',
+    zip: user?.zipCode || '',
   });
+
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        fullName: prev.fullName || user.name || '',
+        email: prev.email || user.email || '',
+        phone: prev.phone || user.phone || '',
+        address: prev.address || user.address || '',
+        city: prev.city || user.city || '',
+        state: prev.state || user.state || '',
+        zip: prev.zip || user.zipCode || '',
+      }));
+    }
+  }, [user]);
 
   const update = (field) => (e) => setForm({ ...form, [field]: e.target.value });
 

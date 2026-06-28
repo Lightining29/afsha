@@ -1,6 +1,6 @@
 import { compressImage } from '../utils/imageCompressor.js';
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://127.0.0.1:5000/api' : '/api');
 
 function getToken() {
   return localStorage.getItem('glowora_token');
@@ -57,6 +57,9 @@ export async function fetchProduct(slug) { return apiFetch(`/products/${slug}`);
 /* ── Auth ── */
 export async function login(email, password) {
   return apiFetch('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+}
+export async function loginWithGoogle(credential) {
+  return apiFetch('/auth/google', { method: 'POST', body: JSON.stringify({ credential }) });
 }
 export async function register(name, email, password, photoFile) {
   const fd = new FormData();
@@ -343,4 +346,20 @@ export function getStatusColor(status) {
     cancelled: '#EF4444',
   };
   return colors[status] || '#6B7C8D';
+}
+
+export async function forgotPassword(email) {
+  return apiFetch('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) });
+}
+
+export async function resetPassword(email, code, newPassword) {
+  return apiFetch('/auth/reset-password', { method: 'POST', body: JSON.stringify({ email, code, newPassword }) });
+}
+
+export async function changePassword(currentPassword, newPassword) {
+  return apiFetch('/auth/change-password', { method: 'POST', body: JSON.stringify({ currentPassword, newPassword }) });
+}
+
+export async function updateProfile(fields) {
+  return apiFetch('/users/profile', { method: 'PUT', body: JSON.stringify(fields) });
 }

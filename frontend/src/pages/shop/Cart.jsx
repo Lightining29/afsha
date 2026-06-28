@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import { formatPrice, getProductPrice } from '../../api';
 import './Cart.css';
 
 export default function Cart() {
   const { items, cartTotal, removeFromCart, updateQuantity } = useCart();
+  const { isAuthenticated, setShowLoginModal } = useAuth();
 
   if (items.length === 0) {
     return (
@@ -77,7 +79,17 @@ export default function Cart() {
               <span>Total</span>
               <span>{formatPrice(cartTotal)}</span>
             </div>
-            <Link to="/checkout" className="btn btn-sky checkout-btn">Proceed to Checkout</Link>
+            {isAuthenticated ? (
+              <Link to="/checkout" className="btn btn-sky checkout-btn">Proceed to Checkout</Link>
+            ) : (
+              <button 
+                onClick={() => setShowLoginModal(true)} 
+                className="btn btn-sky checkout-btn"
+                style={{ width: '100%', display: 'block', textAlign: 'center' }}
+              >
+                Proceed to Checkout
+              </button>
+            )}
           </div>
         </div>
       </div>

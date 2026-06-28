@@ -20,7 +20,7 @@ router.get('/wishlist', protect, async (req, res) => {
 
 router.post('/wishlist/:productId', protect, async (req, res) => {
   try {
-    const product = await Product.findById(req.params.productId);
+    const product = await Product.findById(req.params.productId).select('_id');
     if (!product) return res.status(404).json({ message: 'Product not found' });
 
     const user = await User.findById(req.user.id);
@@ -40,6 +40,37 @@ router.delete('/wishlist/:productId', protect, async (req, res) => {
     user.wishlist = user.wishlist.filter((id) => id.toString() !== req.params.productId);
     await user.save();
     res.json({ message: 'Removed from wishlist' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.put('/profile', protect, async (req, res) => {
+  try {
+    const { name, phone, address, city, state, zipCode } = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (name) user.name = name;
+    if (phone !== undefined) user.phone = phone;
+    if (address !== undefined) user.address = address;
+    if (city !== undefined) user.city = city;
+    if (state !== undefined) user.state = state;
+    if (zipCode !== undefined) user.zipCode = zipCode;
+
+    await user.save();
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      phone: user.phone || '',
+      address: user.address || '',
+      city: user.city || '',
+      state: user.state || '',
+      zipCode: user.zipCode || '',
+      photoUrl: user.photoContentType ? `/api/images/user/${user._id}` : null,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

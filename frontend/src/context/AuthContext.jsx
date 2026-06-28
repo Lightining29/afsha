@@ -1,11 +1,13 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { fetchMe, login as apiLogin, register as apiRegister, setToken, verifyOtp as apiVerifyOtp, resendOtp as apiResendOtp } from '../api';
+import { fetchMe, login as apiLogin, loginWithGoogle as apiLoginWithGoogle, register as apiRegister, setToken, verifyOtp as apiVerifyOtp, resendOtp as apiResendOtp, updateProfile as apiUpdateProfile } from '../api';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [requirePasswordSetup, setRequirePasswordSetup] = useState(false);
 
   const loadUser = useCallback(async () => {
     try {
@@ -35,6 +37,17 @@ export function AuthProvider({ children }) {
     return u;
   };
 
+  const loginWithGoogle = async (credential) => {
+    const res = await apiLoginWithGoogle(credential);
+    setToken(res.token);
+    setUser(res.user);
+    if (res.requirePasswordSetup) {
+      setRequirePasswordSetup(true);
+      setShowLoginModal(true);
+    }
+    return res.user;
+  };
+
   const register = async (name, email, password, photoFile) => {
     return await apiRegister(name, email, password, photoFile);
   };
@@ -50,6 +63,12 @@ export function AuthProvider({ children }) {
     return await apiResendOtp(email);
   };
 
+  const updateProfile = async (fields) => {
+    const updatedUser = await apiUpdateProfile(fields);
+    setUser(updatedUser);
+    return updatedUser;
+  };
+
   const logout = () => {
     setToken(null);
     setUser(null);
@@ -63,11 +82,17 @@ export function AuthProvider({ children }) {
         isAdmin: user?.role === 'admin',
         isAuthenticated: !!user,
         login,
+        loginWithGoogle,
         register,
         verifyOtp,
         resendOtp,
         logout,
         refreshUser: loadUser,
+        updateProfile,
+        showLoginModal,
+        setShowLoginModal,
+        requirePasswordSetup,
+        setRequirePasswordSetup,
       }}
     >
       {children}

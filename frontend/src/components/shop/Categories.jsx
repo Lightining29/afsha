@@ -22,7 +22,7 @@ export default function Categories() {
       .then((data) => {
         if (Array.isArray(data) && data.length) setCategories(data);
       })
-      .catch(() => {});
+      .catch((err) => console.error('Failed to fetch categories:', err));
   }, []);
 
   const hasIcons = categories.some((c) => c.icon);

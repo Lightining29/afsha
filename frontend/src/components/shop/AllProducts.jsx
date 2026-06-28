@@ -16,7 +16,7 @@ export default function AllProducts() {
         if (!mounted) return;
         if (Array.isArray(data)) setProducts(data);
       })
-      .catch(() => {})
+      .catch((err) => console.error('Failed to fetch products:', err))
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, []);

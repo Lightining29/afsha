@@ -249,6 +249,58 @@
   color: var(--rose-gold);
 }
 
+/* Neumorphic share button & tooltip */
+.share-icon-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: var(--neu-surface);
+  box-shadow: var(--neu-out-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.25s, color 0.25s;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.share-icon-btn:hover {
+  color: var(--sky-blue-deep);
+  box-shadow: var(--sky-glow), var(--neu-out-sm);
+}
+
+.share-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: rgba(15, 23, 42, 0.95);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: tooltipFadeIn 0.2s ease-out;
+  z-index: 10;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-8px);
+  }
+}
+
 /* Price */
 .price-section {
   display: flex;

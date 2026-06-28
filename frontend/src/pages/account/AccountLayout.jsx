@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Package, Heart, ShoppingBag, LogOut, Shield } from 'lucide-react';
+import { Package, Heart, ShoppingBag, LogOut, Shield, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import '../../styles/Panel.css';
@@ -41,6 +41,9 @@ export default function AccountLayout() {
             </NavLink>
             <NavLink to="/account/wishlist">
               <Heart size={18} /> Wishlist
+            </NavLink>
+            <NavLink to="/account/settings">
+              <User size={18} /> Settings
             </NavLink>
             <NavLink to="/cart">
               <ShoppingBag size={18} /> Cart

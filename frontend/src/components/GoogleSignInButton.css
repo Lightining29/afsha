@@ -1,0 +1,53 @@
+.google-btn-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  height: 48px;
+  margin: 16px auto;
+}
+
+/* Make Google's official button fill the container but be invisible */
+.google-official-btn-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.01; /* keeps it clickable */
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* Our beautiful neumorphic button */
+.google-neumorphic-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--white);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  box-shadow: 6px 6px 16px rgba(163, 177, 198, 0.4), -6px -6px 16px rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none; /* Let clicks pass through to Google's official button */
+  z-index: 1;
+}
+
+.google-btn-wrapper:hover .google-neumorphic-btn {
+  transform: translateY(-2px);
+  box-shadow: 8px 8px 20px rgba(163, 177, 198, 0.5), -8px -8px 20px rgba(255, 255, 255, 0.95);
+  background: var(--off-white);
+}
+
+.google-btn-wrapper:active .google-neumorphic-btn {
+  transform: translateY(0);
+  box-shadow: inset 4px 4px 10px rgba(163, 177, 198, 0.35), inset -4px -4px 10px rgba(255, 255, 255, 0.85);
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Star, Heart, ShoppingBag, Truck, RefreshCw, Shield, Minus, Plus, Check } from 'lucide-react';
+import { Star, Heart, ShoppingBag, Truck, RefreshCw, Shield, Minus, Plus, Check, Share2 } from 'lucide-react';
 import {
   fetchProduct,
   fetchProducts,
@@ -27,8 +27,8 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [cartAdded, setCartAdded] = useState(false);
-  const [activeTab, setActiveTab] = useState('description');
   const [activeImage, setActiveImage] = useState(0);
+  const [copied, setCopied] = useState(false);
 
   // Load product, then load related products from the same category.
   useEffect(() => {
@@ -68,11 +68,9 @@ export default function ProductDetail() {
     return () => { mounted = false; };
   }, [slug, navigate]);
 
-  // Reset quantity when product changes.
   useEffect(() => {
     setQuantity(1);
     setCartAdded(false);
-    setActiveTab('description');
     setActiveImage(0);
   }, [product?._id]);
 
@@ -124,6 +122,30 @@ export default function ProductDetail() {
         }
       } catch {
         toggleWishlist(product);
+      }
+    }
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: product.name,
+      text: `Check out ${product.name} on Glowora!`,
+      url: window.location.href,
+    };
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy link:', err);
       }
     }
   };
@@ -216,13 +238,23 @@ export default function ProductDetail() {
                   <span className="review-count">({product.reviewCount} reviews)</span>
                 </div>
               </div>
-              <button
-                className={`wishlist-icon-btn ${wished ? 'active' : ''}`}
-                onClick={handleWishlist}
-                title="Add to wishlist"
-              >
-                <Heart size={26} fill={wished ? 'currentColor' : 'none'} />
-              </button>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <button
+                  className="share-icon-btn"
+                  onClick={handleShare}
+                  title="Share product"
+                >
+                  <Share2 size={22} />
+                  {copied && <span className="share-tooltip">Copied!</span>}
+                </button>
+                <button
+                  className={`wishlist-icon-btn ${wished ? 'active' : ''}`}
+                  onClick={handleWishlist}
+                  title="Add to wishlist"
+                >
+                  <Heart size={26} fill={wished ? 'currentColor' : 'none'} />
+                </button>
+              </div>
             </div>
 
             {/* Price */}
@@ -358,70 +390,15 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* Product Details Tabs */}
+        {/* Product Details Section */}
         <div className="product-details-section">
-          <div className="tabs-header">
-            <button
-              className={`tab-btn ${activeTab === 'description' ? 'active' : ''}`}
-              onClick={() => setActiveTab('description')}
-            >
-              Description
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'ingredients' ? 'active' : ''}`}
-              onClick={() => setActiveTab('ingredients')}
-            >
-              Ingredients
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'usage' ? 'active' : ''}`}
-              onClick={() => setActiveTab('usage')}
-            >
-              How to Use
-            </button>
-          </div>
-
-          <div className="tabs-content">
-            {activeTab === 'description' && (
-              <div className="tab-pane">
-                <h3>Product Description</h3>
-                <p>{product.description}</p>
-                <p>
-                  This premium product is formulated with the finest ingredients to deliver visible results.
-                  Suitable for all skin types, dermatologist tested, and cruelty-free.
-                </p>
-              </div>
-            )}
-
-            {activeTab === 'ingredients' && (
-              <div className="tab-pane">
-                <h3>Key Ingredients</h3>
-                <ul className="ingredients-list">
-                  <li>Natural Botanical Extract</li>
-                  <li>Hyaluronic Acid</li>
-                  <li>Vitamin C &amp; E</li>
-                  <li>Organic Aloe Vera</li>
-                  <li>Chamomile Extract</li>
-                </ul>
-                <p className="ingredients-note">
-                  All ingredients are carefully selected and tested for safety and efficacy.
-                </p>
-              </div>
-            )}
-
-            {activeTab === 'usage' && (
-              <div className="tab-pane">
-                <h3>How to Use</h3>
-                <ol className="usage-steps">
-                  <li>Cleanse your face with water and pat dry</li>
-                  <li>Apply a small amount to fingertips</li>
-                  <li>Gently massage onto face and neck</li>
-                  <li>Allow to absorb for 1-2 minutes</li>
-                  <li>Follow with moisturizer if needed</li>
-                  <li>Use once or twice daily</li>
-                </ol>
-              </div>
-            )}
+          <div className="tab-pane" style={{ background: 'var(--white)', padding: '40px', borderRadius: '24px', border: '1px solid var(--border)', boxShadow: 'var(--neu-out-sm)' }}>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', marginBottom: '16px', color: 'var(--text-dark)' }}>Product Description</h3>
+            <p style={{ lineHeight: 1.7, color: 'var(--text-muted)' }}>{product.description}</p>
+            <p style={{ lineHeight: 1.7, color: 'var(--text-muted)', marginTop: '12px' }}>
+              This premium product is formulated with the finest ingredients to deliver visible results.
+              Suitable for all skin types, dermatologist tested, and cruelty-free.
+            </p>
           </div>
         </div>
 

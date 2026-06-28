@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Droplets } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import GoogleSignInButton from '../../components/GoogleSignInButton';
 import './Auth.css';
 
 export default function Login() {
@@ -9,10 +10,27 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || '/account';
+
+  const handleGoogleSuccess = async (credential) => {
+    setError('');
+    setLoading(true);
+    try {
+      const user = await loginWithGoogle(credential);
+      navigate(user.role === 'admin' ? '/admin' : from, { replace: true });
+    } catch (err) {
+      setError(err.message || 'Google login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (err) => {
+    setError(err.message || 'Google Sign-In failed');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,6 +86,10 @@ export default function Login() {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        <div className="auth-divider">or</div>
+
+        <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} text="signin_with" />
 
         <p className="auth-footer">
           Don't have an account? <Link to="/register">Create one</Link>

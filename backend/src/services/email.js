@@ -75,13 +75,13 @@ export async function sendOrderReceipt(order, userEmail) {
  * In dev (no SMTP configured) the code is logged to the server console
  * so you can complete verification without a mailbox.
  */
-export async function sendOtp(email, code) {
+export async function sendOtp(email, code, subject = 'Your Glowora verification code', title = 'Verify your email address') {
   if (!email) return false;
 
   const html = `
     <div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;background:#F8FBFF;padding:32px;border-radius:16px">
       <h1 style="color:#2563eb;font-family:Georgia,serif;margin:0 0 8px">Glowora</h1>
-      <p style="color:#475569;margin:0 0 24px">Verify your email address</p>
+      <p style="color:#475569;margin:0 0 24px">${title}</p>
       <div style="background:white;padding:28px;border-radius:12px;box-shadow:0 4px 24px rgba(59,130,246,0.15);text-align:center">
         <p style="color:#1e293b;margin:0 0 12px">Your verification code is:</p>
         <div style="font-family:Georgia,serif;font-size:2.4rem;font-weight:700;letter-spacing:10px;color:#2563eb;margin:8px 0 16px">${code}</div>
@@ -91,14 +91,14 @@ export async function sendOtp(email, code) {
     </div>`;
 
   if (!createTransporter()) {
-    console.log(`[Email Demo] OTP for ${email} → ${code}`);
+    console.log(`[Email Demo] OTP for ${email} → ${code} (Subject: ${subject})`);
     return true;
   }
 
   await createTransporter().sendMail({
     from: process.env.SMTP_FROM || '"Glowora" <noreply@glowora.com>',
     to: email,
-    subject: 'Your Glowora verification code',
+    subject: subject,
     html,
   });
   return true;

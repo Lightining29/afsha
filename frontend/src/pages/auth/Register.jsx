@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Droplets } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import GoogleSignInButton from '../../components/GoogleSignInButton';
 import './Auth.css';
 
 export default function Register() {
@@ -12,8 +13,25 @@ export default function Register() {
   const [photoPreview, setPhotoPreview] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+
+  const handleGoogleSuccess = async (credential) => {
+    setError('');
+    setLoading(true);
+    try {
+      const user = await loginWithGoogle(credential);
+      navigate(user.role === 'admin' ? '/admin' : '/account', { replace: true });
+    } catch (err) {
+      setError(err.message || 'Google registration failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (err) => {
+    setError(err.message || 'Google Sign-In failed');
+  };
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -127,6 +145,10 @@ export default function Register() {
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
+
+        <div className="auth-divider">or</div>
+
+        <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} text="signup_with" />
 
         <p className="auth-footer">
           Already have an account? <Link to="/login">Sign in</Link>
