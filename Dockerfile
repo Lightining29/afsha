@@ -26,4 +26,4 @@ COPY --from=frontend-builder /app/dist ./public
 
 EXPOSE 5000
 
-CMD ["node", "src/index.js"]
+CMD ["node", "server.js"]
