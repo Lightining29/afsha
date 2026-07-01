@@ -1,1 +1,159 @@
-import './src/index.js';
+import dotenv from 'dotenv';
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import cors from 'cors';
+import { Server } from 'socket.io';
+import http from 'http';
+import { connectDB } from './src/config/database.js';
+import categoryRoutes from './src/routes/categories.js';
+import productRoutes from './src/routes/products.js';
+import authRoutes from './src/routes/auth.js';
+import userRoutes from './src/routes/users.js';
+import orderRoutes, { razorpayWebhookHandler } from './src/routes/orders.js';
+import adminRoutes from './src/routes/admin.js';
+import bannerRoutes from './src/routes/banner.js';
+import reviewRoutes from './src/routes/reviews.js';
+import imageRoutes from './src/routes/images.js';
+import contactRoutes from './src/routes/contact.js';
+import stockRoutes from './src/routes/stock.js';
+import settingsRoutes from './src/routes/settings.js';
+import Banner from './src/models/Banner.js';
+
+dotenv.config();
+
+const app = express();
+const server = http.createServer(app);
+const PORT = process.env.PORT || 5000;
+
+// Socket.IO setup with CORS
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+  },
+});
+
+app.use(cors());
+
+app.post('/api/orders/webhook', express.raw({ type: 'application/json' }), razorpayWebhookHandler);
+
+app.use(express.json());
+
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', message: 'Glowora API is running' });
+});
+
+app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/stock', stockRoutes);
+app.use('/api/banner', bannerRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/images', imageRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/settings', settingsRoutes);
+
+// Serve frontend static files
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const publicPath = path.join(__dirname, 'public');
+app.use(express.static(publicPath));
+
+// SPA catch-all: serve index.html for any non-API route
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(publicPath, 'index.html'));
+});
+
+connectDB();
+
+// Socket.IO real-time banner updates using MongoDB change streams
+io.on('connection', (socket) => {
+  console.log(`Client connected: ${socket.id}`);
+
+  socket.on('disconnect', () => {
+    console.log(`Client disconnected: ${socket.id}`);
+  });
+});
+
+// Watch Banner collection for changes and broadcast to all connected clients
+async function setupBannerChangeStream() {
+  try {
+    // Check if the MongoDB deployment supports change streams (requires replica set or mongos)
+    const admin = Banner.db.db.admin();
+    const serverStatus = await admin.command({ isMaster: 1 });
+    const isReplicaSetOrMongos = !!(serverStatus.setName || serverStatus.msg === 'isdbgrid');
+
+    if (!isReplicaSetOrMongos) {
+      console.log('MongoDB is running as a standalone instance — change streams are not supported.');
+      console.log('Using polling fallback for banner updates.');
+      setupBannerPolling();
+      return;
+    }
+
+    const bannerCollection = Banner.collection;
+    const changeStream = bannerCollection.watch([
+      { $match: { 'operationType': { $in: ['insert', 'update', 'replace'] }, 'fullDocument.singleton': true } },
+    ]);
+
+    changeStream.on('change', async (change) => {
+      try {
+        const banner = await Banner.findOne({ singleton: true });
+        if (banner) {
+          const v = banner.updatedAt ? banner.updatedAt.getTime() : Date.now();
+          const imageUrl = banner.imageData ? `/api/images/banner/hero?v=${v}` : null;
+          const promoImageUrl = banner.promoImageData ? `/api/images/banner/promo?v=${v}` : null;
+          
+          io.emit('banner-updated', { imageUrl, promoImageUrl, updatedAt: banner.updatedAt });
+          console.log('Broadcasting banner update:', { imageUrl, promoImageUrl });
+        }
+      } catch (err) {
+        console.error('Error in change stream handler:', err.message);
+      }
+    });
+
+    changeStream.on('error', (err) => {
+      console.error('Change stream error:', err.message);
+      // Reconnect after 5 seconds
+      setTimeout(setupBannerChangeStream, 5000);
+    });
+
+    console.log('Banner change stream active (replica set detected).');
+  } catch (err) {
+    console.error('Failed to setup banner change stream:', err.message);
+    console.log('Falling back to polling for banner updates.');
+    setupBannerPolling();
+  }
+}
+
+// Polling fallback: check for banner changes every 10 seconds
+let lastBannerUpdate = null;
+function setupBannerPolling() {
+  setInterval(async () => {
+    try {
+      const banner = await Banner.findOne({ singleton: true });
+      if (banner) {
+        const updatedAt = banner.updatedAt ? banner.updatedAt.toISOString() : null;
+        if (updatedAt && updatedAt !== lastBannerUpdate) {
+          lastBannerUpdate = updatedAt;
+          const v = banner.updatedAt ? banner.updatedAt.getTime() : Date.now();
+          const imageUrl = banner.imageData ? `/api/images/banner/hero?v=${v}` : null;
+          const promoImageUrl = banner.promoImageData ? `/api/images/banner/promo?v=${v}` : null;
+          io.emit('banner-updated', { imageUrl, promoImageUrl, updatedAt: banner.updatedAt });
+        }
+      }
+    } catch (err) {
+      // Silently ignore polling errors
+    }
+  }, 10000);
+}
+
+// Start change stream listener after DB connects
+setTimeout(setupBannerChangeStream, 2000);
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
