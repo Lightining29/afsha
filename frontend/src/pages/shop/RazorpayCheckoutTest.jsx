@@ -372,111 +372,7 @@ export default function RazorpayCheckoutTest() {
                 </div>
               </div>
 
-              <form onSubmit={handlePayment}>
-                {/* Payment Method Selector */}
-                <div style={{ marginBottom: 20 }}>
-                  <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, fontSize: '0.9rem', color: '#334155' }}>
-                    Payment Method
-                  </label>
-                  <div style={{ display: 'flex', gap: 10 }}>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('upi')}
-                      disabled={loading || status === 'success'}
-                      style={{
-                        flex: 1,
-                        padding: '12px 16px',
-                        borderRadius: '10px',
-                        border: `2px solid ${paymentMethod === 'upi' ? '#0ea5e9' : 'rgba(14, 165, 233, 0.15)'}`,
-                        background: paymentMethod === 'upi' ? 'rgba(14, 165, 233, 0.08)' : 'rgba(255, 255, 255, 0.9)',
-                        color: paymentMethod === 'upi' ? '#0369a1' : '#64748b',
-                        fontWeight: 600,
-                        fontSize: '0.9rem',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 8
-                      }}
-                    >
-                      <span style={{ fontSize: '1.1rem' }}>📱</span> UPI
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('card')}
-                      disabled={loading || status === 'success'}
-                      style={{
-                        flex: 1,
-                        padding: '12px 16px',
-                        borderRadius: '10px',
-                        border: `2px solid ${paymentMethod === 'card' ? '#0ea5e9' : 'rgba(14, 165, 233, 0.15)'}`,
-                        background: paymentMethod === 'card' ? 'rgba(14, 165, 233, 0.08)' : 'rgba(255, 255, 255, 0.9)',
-                        color: paymentMethod === 'card' ? '#0369a1' : '#64748b',
-                        fontWeight: 600,
-                        fontSize: '0.9rem',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 8
-                      }}
-                    >
-                      <CreditCard size={16} /> Card
-                    </button>
-                  </div>
-                </div>
-
-                {/* UPI ID Field - shown when UPI is selected */}
-                {paymentMethod === 'upi' && (
-                  <div style={{ marginBottom: 20 }}>
-                    <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, fontSize: '0.9rem', color: '#334155' }}>
-                      UPI ID (VPA)
-                    </label>
-                    <input
-                      type="text"
-                      value={upiId}
-                      onChange={(e) => setUpiId(e.target.value)}
-                      placeholder="e.g. test@razorpay"
-                      disabled={loading || status === 'success'}
-                      style={{
-                        width: '100%',
-                        padding: '12px 16px',
-                        border: '2px solid rgba(14, 165, 233, 0.2)',
-                        borderRadius: '8px',
-                        fontSize: '1rem',
-                        fontWeight: 500,
-                        color: '#0f172a',
-                        background: 'rgba(255, 255, 255, 0.9)',
-                        outline: 'none',
-                        transition: 'border-color 0.2s',
-                        fontFamily: 'monospace'
-                      }}
-                    />
-                    <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'block', marginTop: 6 }}>
-                      For test mode, use <strong>success@razorpay</strong>
-                    </span>
-                  </div>
-                )}
-
-                {/* Card Info - shown when Card is selected */}
-                {paymentMethod === 'card' && (
-                  <div style={{
-                    marginBottom: 20,
-                    background: '#f8fafc',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '10px',
-                    padding: '14px 16px',
-                    fontSize: '0.82rem',
-                    color: '#475569'
-                  }}>
-                    <div style={{ fontWeight: 600, marginBottom: 6, color: '#334155' }}>💳 Card details will be entered in the Razorpay modal</div>
-                    <div>Use test card: <code style={{ color: '#0ea5e9' }}>4111 1111 1111 1111</code> · CVV: <code style={{ color: '#0ea5e9' }}>123</code> · Expiry: <code style={{ color: '#0ea5e9' }}>12/26</code></div>
-                  </div>
-                )}
-
-                <div style={{ marginBottom: 24 }}>
+              <div style={{ marginBottom: 24 }}>
                   <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, fontSize: '0.9rem', color: '#334155' }}>
                     Payment Amount (INR)
                   </label>
@@ -508,94 +404,67 @@ export default function RazorpayCheckoutTest() {
                         background: 'rgba(255, 255, 255, 0.9)',
                         outline: 'none',
                         transition: 'border-color 0.2s',
+                        boxSizing: 'border-box',
                       }}
-                      required
                     />
                   </div>
                   <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'block', marginTop: 6 }}>
-                    Equals {Math.round(parseFloat(amountInRupees || '0') * 100)} Paise. Minimum required amount is ₹1.00 (100 Paise).
+                    Minimum ₹1.00
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', gap: 12 }}>
-                  {status === 'success' ? (
-                    <button
-                      type="button"
-                      className="btn btn-sky"
-                      onClick={() => { setStatus('idle'); setAmountInRupees('10.00'); setPaymentDetails(null); setUpiId('test@razorpay'); setPaymentMethod('upi'); }}
-                      style={{ flex: 1, justifyContent: 'center', padding: '12px' }}
-                    >
-                      Reset and Pay Again
-                    </button>
-                  ) : (
-                    <button
-                      type="submit"
-                      className="btn btn-sky"
-                      disabled={loading}
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        padding: '14px',
-                        fontWeight: 600,
-                        fontSize: '1rem',
-                        boxShadow: '0 4px 14px 0 rgba(14, 165, 233, 0.4)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8
-                      }}
-                    >
-                      {loading ? (
-                        <>
-                          <RefreshCw className="spin" size={18} /> Processing...
-                        </>
-                      ) : (
-                        <>
-                          <CreditCard size={18} /> Pay {amountInRupees ? `₹${parseFloat(amountInRupees).toFixed(2)}` : ''}
-                        </>
-                      )}
-                    </button>
-                  )}
-                </div>
-
-                {/* Divider */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '16px 0' }}>
-                  <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
-                  <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 500 }}>OR</span>
-                  <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
-                </div>
-
-                {/* Manual Test Payment Button */}
-                <button
-                  type="button"
-                  onClick={handleManualTestPayment}
-                  disabled={loading || status === 'success'}
-                  style={{
-                    width: '100%',
-                    padding: '14px',
-                    borderRadius: '10px',
-                    border: '2px solid #10b981',
-                    background: 'linear-gradient(135deg, #ecfdf5, #f0fdf4)',
-                    color: '#065f46',
-                    fontWeight: 700,
-                    fontSize: '0.95rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 8,
-                    transition: 'all 0.2s',
-                    opacity: loading ? 0.6 : 1,
-                  }}
-                >
-                  {loading ? (
-                    <><RefreshCw className="spin" size={16} /> Processing...</>
-                  ) : (
-                    <>🧪 Manual Test Payment (API Direct — No Modal)</>  
-                  )}
-                </button>
-                <span style={{ fontSize: '0.72rem', color: '#64748b', display: 'block', marginTop: 6, textAlign: 'center' }}>
-                  Bypasses Razorpay modal. Creates order → simulates payment via API → verifies signature. Uses UPI ID: <strong>{upiId}</strong>
-                </span>
+                {status === 'success' ? (
+                  <button
+                    type="button"
+                    onClick={() => { setStatus('idle'); setAmountInRupees('10.00'); setPaymentDetails(null); }}
+                    style={{
+                      width: '100%',
+                      padding: '14px',
+                      borderRadius: '10px',
+                      border: '2px solid #0ea5e9',
+                      background: 'linear-gradient(135deg, #e0f2fe, #f0f9ff)',
+                      color: '#0369a1',
+                      fontWeight: 700,
+                      fontSize: '1rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Test Again
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleManualTestPayment}
+                    disabled={loading}
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      borderRadius: '10px',
+                      border: '2px solid #10b981',
+                      background: loading ? '#d1fae5' : 'linear-gradient(135deg, #10b981, #059669)',
+                      color: '#fff',
+                      fontWeight: 700,
+                      fontSize: '1.05rem',
+                      cursor: loading ? 'not-allowed' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 10,
+                      transition: 'all 0.2s',
+                      opacity: loading ? 0.7 : 1,
+                      boxShadow: loading ? 'none' : '0 4px 14px 0 rgba(16,185,129,0.4)',
+                    }}
+                  >
+                    {loading ? (
+                      <><RefreshCw className="spin" size={18} /> Processing...</>
+                    ) : (
+                      <>✅ Run Test Payment</>
+                    )}
+                  </button>
+                )}
+                <p style={{ fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center', marginTop: 10 }}>
+                  Creates a real Razorpay order → generates signature → verifies it. No modal, no UPI, no card required.
+                </p>
               </form>
             </div>
           </div>
