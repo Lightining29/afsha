@@ -469,7 +469,6 @@ export default function RazorpayCheckoutTest() {
             </div>
           </div>
         </div>
-      </div>
       <Footer />
       
       {/* Dynamic spinner and pulse CSS styles */}
