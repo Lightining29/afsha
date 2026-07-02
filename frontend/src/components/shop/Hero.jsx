@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, Truck, ShieldCheck, Star } from 'lucide-react';
+import { ArrowRight, Truck, ShieldCheck, Star, Headphones } from 'lucide-react';
 import './Hero.css';
 
 const HERO_IMAGE_URL = '/hi.jpg';
