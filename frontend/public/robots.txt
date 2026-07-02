@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://afshaenterprises.com/sitemap.xml
+Sitemap: https://www.afshaenterprises.com/sitemap.xml
