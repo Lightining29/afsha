@@ -71,9 +71,9 @@ export default function Register() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-logo">
-          <Droplets size={28} /> Glowora
+          <Droplets size={28} /> Afsha enterprises
         </div>
-        <p className="auth-subtitle">Create your Glowora account</p>
+        <p className="auth-subtitle">Create your  account</p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           {error && <div className="auth-error">{error}</div>}

@@ -17,8 +17,8 @@ const ads = [
   },
   {
     icon: Truck,
-    title: 'Free Shipping',
-    subtitle: 'On all orders over ₹999',
+    title: 'Fast deleivery',
+    subtitle: 'Fast and secure delivery across India',
     cta: 'Browse Products',
     href: '#bestsellers',
     accent: 'indigo',

@@ -28,7 +28,7 @@ const PLACEHOLDER_SVG =
 const trustStats = [
   { icon: Star, value: '4.9', label: 'Avg. Rating' },
   { icon: ShieldCheck, value: '100%', label: 'Secure Pay' },
-  { icon: Truck, value: 'Free', label: 'Over ₹999' },
+   { icon: Headphones, value: '', label: '24/7 Support' },
 ];
 
 export default function Hero() {

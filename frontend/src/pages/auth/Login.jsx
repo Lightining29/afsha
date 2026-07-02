@@ -54,7 +54,7 @@ export default function Login() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-logo">
-          <Droplets size={28} /> Glowora
+          <Droplets size={28} /> Afsha enterprises
         </div>
         <p className="auth-subtitle">Welcome back — sign in to your account</p>
 
@@ -94,10 +94,7 @@ export default function Login() {
         <p className="auth-footer">
           Don't have an account? <Link to="/register">Create one</Link>
         </p>
-        <div className="demo-credentials">
-          Demo: demo@glowora.com / demo123<br />
-          Admin: admin@glowora.com / admin123
-        </div>
+
       </div>
     </div>
   );

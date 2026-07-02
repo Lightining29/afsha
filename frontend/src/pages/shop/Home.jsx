@@ -82,21 +82,6 @@ export default function Home() {
       </Helmet>
       <Hero />
 
-      {/* Bold stat strip — instant social proof right under the hero */}
-      <section className="stat-strip">
-        <div className="container stat-strip-grid">
-          {stats.map(({ icon: Icon, value, label }) => (
-            <div key={label} className="stat-item">
-              <span className="stat-icon"><Icon size={22} /></span>
-              <div>
-                <div className="stat-value">{value}</div>
-                <div className="stat-label">{label}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Ads banner grid right after hero */}
       <AdsBanner />
 

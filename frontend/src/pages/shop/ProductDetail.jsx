@@ -363,15 +363,15 @@ export default function ProductDetail() {
               <div className="feature-item">
                 <Truck size={20} />
                 <div>
-                  <div className="feature-title">Free Shipping</div>
-                  <div className="feature-subtitle">On orders over ₹50</div>
+                  <div className="feature-title">Fast deleivery</div>
+                  <div className="feature-subtitle">Fast and secure delivery across India</div>
                 </div>
               </div>
               <div className="feature-item">
                 <RefreshCw size={20} />
                 <div>
-                  <div className="feature-title">Easy Returns</div>
-                  <div className="feature-subtitle">30-day return policy</div>
+                  <div className="feature-title">Customer Support</div>
+                  <div className="feature-subtitle">Dedicated assistance for your orders</div>
                 </div>
               </div>
               <div className="feature-item">
