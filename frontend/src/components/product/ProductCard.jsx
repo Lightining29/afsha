@@ -31,7 +31,7 @@ export default function ProductCard({ product, onWishlistRemove }) {
   };
 
   return (
-    <Link to={`/product/${product.slug}`} className="product-card-link">
+    <Link to={`/products/${product.slug}`} className="product-card-link">
       <div className="product-card">
         <div className="product-image-wrap">
           <img

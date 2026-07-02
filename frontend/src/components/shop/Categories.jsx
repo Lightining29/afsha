@@ -43,7 +43,7 @@ export default function Categories() {
           // Compact modern chips — horizontal scroll on mobile, wrap on desktop
           <div className="category-chips">
             {categories.map((cat) => (
-              <Link to={`/category/${cat._id}`} key={cat._id} className="category-chip">
+              <Link to={`/category/${cat.slug || cat._id}`} key={cat._id} className="category-chip">
                 {cat.icon && (
                   <span className="category-chip-icon">
                     <cat.icon size={18} />

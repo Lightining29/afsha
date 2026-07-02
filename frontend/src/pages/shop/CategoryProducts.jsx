@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { fetchProducts, fetchCategories } from '../../api';
+import { Helmet } from 'react-helmet-async';
+import { fetchProducts, fetchCategories, fetchCategory } from '../../api';
 import ProductCard from '../../components/product/ProductCard';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
@@ -9,40 +10,82 @@ import '../../components/shop/Bestsellers.css';
 import './CategoryProducts.css';
 
 export default function CategoryProducts() {
-  const { categoryId } = useParams();
+  const { categorySlug } = useParams();
   const [products, setProducts] = useState([]);
   const [categoryName, setCategoryName] = useState('');
+  const [categoryObj, setCategoryObj] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
     setLoading(true);
 
-    // Fetch category name
-    fetchCategories()
-      .then((cats) => {
-        if (!mounted) return;
-        const cat = (Array.isArray(cats) ? cats : []).find((c) => c._id === categoryId);
-        if (cat) setCategoryName(cat.name);
-      })
-      .catch(() => {});
+    const loadData = async () => {
+      try {
+        let cat = null;
+        // Check if categorySlug is a 24-character hex ObjectId
+        if (categorySlug && categorySlug.match(/^[0-9a-fA-F]{24}$/)) {
+          const cats = await fetchCategories();
+          cat = (Array.isArray(cats) ? cats : []).find((c) => c._id === categorySlug);
+        } else if (categorySlug) {
+          cat = await fetchCategory(categorySlug);
+        }
 
-    // Fetch products for this category
-    fetchProducts({ category: categoryId })
-      .then((data) => {
         if (!mounted) return;
-        if (Array.isArray(data)) setProducts(data);
-      })
-      .catch(() => {})
-      .finally(() => {
+
+        if (cat) {
+          setCategoryObj(cat);
+          setCategoryName(cat.name);
+          const data = await fetchProducts({ category: cat._id });
+          if (mounted && Array.isArray(data)) {
+            setProducts(data);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load category data:', err);
+      } finally {
         if (mounted) setLoading(false);
-      });
+      }
+    };
+
+    loadData();
 
     return () => { mounted = false; };
-  }, [categoryId]);
+  }, [categorySlug]);
+
+  const canonicalUrl = `https://afshaenterprises.com/category/${categoryObj?.slug || categorySlug}`;
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://afshaenterprises.com'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': categoryName || 'Category',
+        'item': canonicalUrl
+      }
+    ]
+  };
 
   return (
     <>
+      <Helmet>
+        <title>{categoryName ? `${categoryName} | Afsha Enterprises` : 'Shop Category | Afsha Enterprises'}</title>
+        <meta name="description" content={`Explore our premium range of ${categoryName || 'wellness'} products. High-quality body massagers, skincare, and wellness devices with quick delivery in India.`} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={categoryName ? `${categoryName} | Afsha Enterprises` : 'Shop Category'} />
+        <meta property="og:description" content={`Explore our premium range of ${categoryName || 'wellness'} products.`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
+      </Helmet>
       <Navbar />
       <div className="category-products-page">
         <div className="container">

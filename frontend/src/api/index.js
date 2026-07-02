@@ -48,11 +48,14 @@ async function apiUpload(path, method, formData) {
 
 /* ── Public ── */
 export async function fetchCategories() { return apiFetch('/categories'); }
+export async function fetchCategory(slug) { return apiFetch(`/categories/${slug}`); }
 export async function fetchProducts(params = {}) {
   const query = new URLSearchParams(params).toString();
   return apiFetch(`/products${query ? `?${query}` : ''}`);
 }
 export async function fetchProduct(slug) { return apiFetch(`/products/${slug}`); }
+export async function fetchBlogs() { return apiFetch('/blogs'); }
+export async function fetchBlog(slug) { return apiFetch(`/blogs/${slug}`); }
 
 /* ── Auth ── */
 export async function login(email, password) {

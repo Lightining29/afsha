@@ -24,6 +24,10 @@ import AdminStock from './pages/admin/AdminStock';
 import AdminReviews from './pages/admin/AdminReviews';
 import AdminOfflineSale from './pages/admin/AdminOfflineSale';
 import Contact from './pages/Contact';
+import BlogList from './pages/blog/BlogList';
+import BlogDetail from './pages/blog/BlogDetail';
+import LocalSEO from './pages/shop/LocalSEO';
+import NotFound from './pages/NotFound';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -90,8 +94,24 @@ function App() {
           element={<RevealShell><ProductDetail /></RevealShell>}
         />
         <Route
-          path="/category/:categoryId"
+          path="/products/:slug"
+          element={<RevealShell><ProductDetail /></RevealShell>}
+        />
+        <Route
+          path="/category/:categorySlug"
           element={<RevealShell><CategoryProducts /></RevealShell>}
+        />
+        <Route
+          path="/blogs"
+          element={<RevealShell><BlogList /></RevealShell>}
+        />
+        <Route
+          path="/blog/:slug"
+          element={<RevealShell><BlogDetail /></RevealShell>}
+        />
+        <Route
+          path="/locations/:city"
+          element={<RevealShell><LocalSEO /></RevealShell>}
         />
         <Route
           path="/contact"
@@ -155,7 +175,7 @@ function App() {
           <Route path="reviews" element={<AdminReviews />} />
           <Route path="offline-sale" element={<AdminOfflineSale />} />
         </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
     </>

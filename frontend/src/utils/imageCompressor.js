@@ -50,14 +50,14 @@ export async function compressImage(file, { maxWidth = 1000, maxHeight = 1000, q
         // Draw image onto canvas (automatically downscaling it)
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Convert canvas drawing to compressed JPEG blob
+        // Convert canvas drawing to compressed WebP blob
         canvas.toBlob(
           (blob) => {
             if (blob) {
               // Create a new File from the blob
-              const newFileName = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
+              const newFileName = file.name.replace(/\.[^/.]+$/, '') + '.webp';
               const compressedFile = new File([blob], newFileName, {
-                type: 'image/jpeg',
+                type: 'image/webp',
                 lastModified: Date.now(),
               });
 
@@ -71,7 +71,7 @@ export async function compressImage(file, { maxWidth = 1000, maxHeight = 1000, q
               resolve(file);
             }
           },
-          'image/jpeg',
+          'image/webp',
           quality
         );
       };

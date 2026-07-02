@@ -11,11 +11,14 @@ const router = express.Router();
 
 // Single Razorpay client. If keys are missing, endpoints fail loudly (no silent demo).
 let razorpay = null;
-if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
-  razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-  });
+function getRazorpay() {
+  if (!razorpay && process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+    razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+  }
+  return razorpay;
 }
 
 /**
@@ -73,7 +76,8 @@ export async function razorpayWebhookHandler(req, res) {
 // Create order + Razorpay order, then return the payload the Checkout modal needs.
 router.post('/checkout', protect, async (req, res) => {
   try {
-    if (!razorpay) {
+    const rzp = getRazorpay();
+    if (!rzp) {
       return res.status(500).json({ message: 'Razorpay not configured' });
     }
 
@@ -112,7 +116,7 @@ router.post('/checkout', protect, async (req, res) => {
       status: 'pending_payment',
     });
 
-    const razorpayOrder = await razorpay.orders.create({
+    const razorpayOrder = await rzp.orders.create({
       amount: Math.round(order.total * 100), // paise
       currency: 'INR',
       receipt: order.orderNumber,
@@ -153,7 +157,11 @@ router.post('/verify/:orderId', protect, async (req, res) => {
       return res.json({ ok: true, alreadyPaid: true });
     }
 
-    const payment = await razorpay.payments.fetch(razorpayPaymentId);
+    const rzp = getRazorpay();
+    if (!rzp) {
+      return res.status(500).json({ message: 'Razorpay not configured' });
+    }
+    const payment = await rzp.payments.fetch(razorpayPaymentId);
     if (payment.status !== 'captured') {
       return res.status(402).json({ message: 'Payment not captured' });
     }

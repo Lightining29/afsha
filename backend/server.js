@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -19,8 +19,12 @@ import contactRoutes from './src/routes/contact.js';
 import stockRoutes from './src/routes/stock.js';
 import settingsRoutes from './src/routes/settings.js';
 import Banner from './src/models/Banner.js';
+import compression from 'compression';
+import blogRoutes from './src/routes/blogs.js';
+import Product from './src/models/Product.js';
+import Category from './src/models/Category.js';
+import Blog from './src/models/Blog.js';
 
-dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -35,6 +39,7 @@ const io = new Server(server, {
 });
 
 app.use(cors());
+app.use(compression());
 
 app.post('/api/orders/webhook', express.raw({ type: 'application/json' }), razorpayWebhookHandler);
 
@@ -56,6 +61,86 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/blogs', blogRoutes);
+
+// Robots.txt Route
+app.get('/robots.txt', (_req, res) => {
+  res.header('Content-Type', 'text/plain');
+  res.send(`User-agent: *\nAllow: /\n\nSitemap: https://afshaenterprises.com/sitemap.xml`);
+});
+
+// Sitemap.xml Route
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const categories = await Category.find().select('slug updatedAt');
+    const products = await Product.find().select('slug updatedAt');
+    const blogs = await Blog.find().select('slug updatedAt');
+
+    const domain = 'https://afshaenterprises.com';
+
+    // Static pages
+    const staticUrls = [
+      { loc: `${domain}/`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/contact`, priority: '0.6', changefreq: 'monthly' },
+      { loc: `${domain}/blogs`, priority: '0.8', changefreq: 'weekly' },
+      { loc: `${domain}/locations/delhi`, priority: '0.7', changefreq: 'monthly' },
+      { loc: `${domain}/locations/mumbai`, priority: '0.7', changefreq: 'monthly' },
+      { loc: `${domain}/locations/bangalore`, priority: '0.7', changefreq: 'monthly' },
+    ];
+
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+    // Append static URLs
+    staticUrls.forEach((url) => {
+      xml += `  <url>\n`;
+      xml += `    <loc>${url.loc}</loc>\n`;
+      xml += `    <changefreq>${url.changefreq}</changefreq>\n`;
+      xml += `    <priority>${url.priority}</priority>\n`;
+      xml += `  </url>\n`;
+    });
+
+    // Append Category URLs
+    categories.forEach((c) => {
+      const date = c.updatedAt ? c.updatedAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+      xml += `  <url>\n`;
+      xml += `    <loc>${domain}/category/${c.slug}</loc>\n`;
+      xml += `    <lastmod>${date}</lastmod>\n`;
+      xml += `    <changefreq>weekly</changefreq>\n`;
+      xml += `    <priority>0.8</priority>\n`;
+      xml += `  </url>\n`;
+    });
+
+    // Append Product URLs
+    products.forEach((p) => {
+      const date = p.updatedAt ? p.updatedAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+      xml += `  <url>\n`;
+      xml += `    <loc>${domain}/products/${p.slug}</loc>\n`;
+      xml += `    <lastmod>${date}</lastmod>\n`;
+      xml += `    <changefreq>daily</changefreq>\n`;
+      xml += `    <priority>0.9</priority>\n`;
+      xml += `  </url>\n`;
+    });
+
+    // Append Blog URLs
+    blogs.forEach((b) => {
+      const date = b.updatedAt ? b.updatedAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+      xml += `  <url>\n`;
+      xml += `    <loc>${domain}/blog/${b.slug}</loc>\n`;
+      xml += `    <lastmod>${date}</lastmod>\n`;
+      xml += `    <changefreq>weekly</changefreq>\n`;
+      xml += `    <priority>0.8</priority>\n`;
+      xml += `  </url>\n`;
+    });
+
+    xml += `</urlset>`;
+
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (err) {
+    res.status(500).end();
+  }
+});
 
 // Serve frontend static files
 const __filename = fileURLToPath(import.meta.url);

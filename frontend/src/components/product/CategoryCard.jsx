@@ -6,7 +6,7 @@ export default function CategoryCard({ category }) {
   const count = category.productCount ?? 0;
 
   return (
-    <Link to={`/category/${category._id}`} className="category-card">
+    <Link to={`/category/${category.slug || category._id}`} className="category-card">
       <div className="category-image-wrap">
         <img
           src={category.imageUrl || category.image}

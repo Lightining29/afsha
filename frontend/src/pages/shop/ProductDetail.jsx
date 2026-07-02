@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Star, Heart, ShoppingBag, Truck, RefreshCw, Shield, Minus, Plus, Check, Share2 } from 'lucide-react';
 import {
   fetchProduct,
@@ -169,15 +170,87 @@ export default function ProductDetail() {
     }
   };
 
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    'name': product.name,
+    'image': [
+      product.image ? (product.image.startsWith('http') ? product.image : `https://afshaenterprises.com${product.image}`) : 'https://afshaenterprises.com/masage.jpg'
+    ],
+    'description': product.description,
+    'brand': {
+      '@type': 'Brand',
+      'name': 'Afsha Enterprises'
+    },
+    'offers': {
+      '@type': 'Offer',
+      'url': `https://afshaenterprises.com/products/${product.slug}`,
+      'priceCurrency': 'INR',
+      'price': finalPrice,
+      'itemCondition': 'https://schema.org/NewCondition',
+      'availability': product.inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
+    }
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://afshaenterprises.com'
+      },
+      product.category ? {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': product.category.name,
+        'item': `https://afshaenterprises.com/category/${product.category.slug}`
+      } : null,
+      {
+        '@type': 'ListItem',
+        'position': product.category ? 3 : 2,
+        'name': product.name,
+        'item': `https://afshaenterprises.com/products/${product.slug}`
+      }
+    ].filter(Boolean)
+  };
+
   return (
     <>
+      <Helmet>
+        <title>{`${product.name} | Afsha Enterprises`}</title>
+        <meta name="description" content={product.description.substring(0, 160)} />
+        <link rel="canonical" href={`https://afshaenterprises.com/products/${product.slug}`} />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content={`${product.name} | Afsha Enterprises`} />
+        <meta property="og:description" content={product.description.substring(0, 160)} />
+        <meta property="og:type" content="product" />
+        <meta property="og:url" content={`https://afshaenterprises.com/products/${product.slug}`} />
+        <meta property="og:image" content={product.image ? (product.image.startsWith('http') ? product.image : `https://afshaenterprises.com${product.image}`) : 'https://afshaenterprises.com/masage.jpg'} />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${product.name} | Afsha Enterprises`} />
+        <meta name="twitter:description" content={product.description.substring(0, 160)} />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">{JSON.stringify(productSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
+      </Helmet>
       <Navbar />
       <div className="product-detail-container">
         <div className="breadcrumb">
           <Link to="/">Home</Link>
           <span className="separator">/</span>
-          <Link to="/">Shop</Link>
-          <span className="separator">/</span>
+          {product.category && (
+            <>
+              <Link to={`/category/${product.category.slug}`}>{product.category.name}</Link>
+              <span className="separator">/</span>
+            </>
+          )}
           <span className="current">{product.name}</span>
         </div>
 

@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -20,7 +20,6 @@ import stockRoutes from './routes/stock.js';
 import settingsRoutes from './routes/settings.js';
 import Banner from './models/Banner.js';
 
-dotenv.config();
 
 const app = express();
 const server = http.createServer(app);

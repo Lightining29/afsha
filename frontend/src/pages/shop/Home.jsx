@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Leaf, FlaskConical, Recycle, Rabbit, ArrowRight, Star, Truck, ShieldCheck, Users } from 'lucide-react';
 import Navbar from '../../components/layout/Navbar';
 import Hero from '../../components/shop/Hero';
@@ -27,8 +28,58 @@ const stats = [
 ];
 
 export default function Home() {
+  const orgSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    'name': 'Afsha Enterprises',
+    'url': 'https://afshaenterprises.com',
+    'logo': 'https://afshaenterprises.com/logo.png',
+    'sameAs': [
+      'https://www.facebook.com/afshaenterprises',
+      'https://www.instagram.com/afshaenterprises',
+      'https://twitter.com/afshaenterprises'
+    ],
+    'contactPoint': {
+      '@type': 'ContactPoint',
+      'telephone': '+91-9999999999',
+      'contactType': 'customer service'
+    }
+  };
+
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    'name': 'Afsha Enterprises',
+    'url': 'https://afshaenterprises.com',
+    'potentialAction': {
+      '@type': 'SearchAction',
+      'target': 'https://afshaenterprises.com/search?q={search_term_string}',
+      'query-input': 'required name=search_term_string'
+    }
+  };
+
   return (
     <>
+      <Helmet>
+        <title>Best Body Massager in India | Afsha Enterprises</title>
+        <meta name="description" content="Buy premium body massagers from Afsha Enterprises. Electric, handheld and pain relief massagers with fast delivery across India." />
+        <meta name="keywords" content="Best body massager in India, Electric massager machine, Handheld massager online, Neck and shoulder massager, Pain relief massager, Foot massager machine, Deep tissue massager" />
+        <link rel="canonical" href="https://afshaenterprises.com" />
+        {/* Open Graph */}
+        <meta property="og:title" content="Best Body Massager in India | Afsha Enterprises" />
+        <meta property="og:description" content="Buy premium body massagers from Afsha Enterprises. Electric, handheld and pain relief massagers with fast delivery across India." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://afshaenterprises.com" />
+        <meta property="og:image" content="https://afshaenterprises.com/logo.png" />
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Best Body Massager in India | Afsha Enterprises" />
+        <meta name="twitter:description" content="Buy premium body massagers from Afsha Enterprises. Electric, handheld and pain relief massagers with fast delivery across India." />
+        
+        {/* Structured Data */}
+        <script type="application/ld+json">{JSON.stringify(orgSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(websiteSchema)}</script>
+      </Helmet>
       <Hero />
 
       {/* Bold stat strip — instant social proof right under the hero */}
