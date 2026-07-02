@@ -160,9 +160,11 @@ app.post('/api/verify-payment', async (req, res) => {
 });
 
 // Manual test payment simulation (bypasses checkout modal)
+// Creates a real Razorpay order, generates a synthetic payment ID,
+// computes the real HMAC-SHA256 signature, then verifies it.
 app.post('/api/test-simulate-payment', async (req, res) => {
   try {
-    const { amount, currency, upi_id } = req.body;
+    const { amount, currency } = req.body;
     const keyId = process.env.RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
 
@@ -170,7 +172,7 @@ app.post('/api/test-simulate-payment', async (req, res) => {
       return res.status(401).json({ message: 'Razorpay API credentials not configured' });
     }
 
-    // Step 1: Create order
+    // Step 1: Create a real Razorpay order
     const razorpayInstance = new Razorpay({ key_id: keyId, key_secret: keySecret });
     const order = await razorpayInstance.orders.create({
       amount: Math.round(amount || 100),
@@ -178,52 +180,23 @@ app.post('/api/test-simulate-payment', async (req, res) => {
       receipt: `test_rcpt_${Date.now()}`,
     });
 
-    // Step 2: Create payment via Razorpay API (test mode only)
-    const authHeader = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64');
-    const paymentRes = await fetch('https://api.razorpay.com/v1/payments/create/json', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': authHeader,
-      },
-      body: JSON.stringify({
-        amount: order.amount,
-        currency: order.currency,
-        order_id: order.id,
-        email: 'test@example.com',
-        contact: '9999999999',
-        method: 'upi',
-        upi: { vpa: upi_id || 'test@razorpay', flow: 'collect' },
-      }),
-    });
+    // Step 2: Generate a synthetic payment ID (mimics what Razorpay returns after payment)
+    const syntheticPaymentId = `pay_test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-    const paymentData = await paymentRes.json();
-
-    if (!paymentRes.ok) {
-      console.error('Razorpay payment create error:', paymentData);
-      return res.status(paymentRes.status).json({
-        message: paymentData.error?.description || 'Payment creation failed',
-        error: paymentData.error,
-      });
-    }
-
-    // Step 3: Generate signature for verification
-    const paymentId = paymentData.razorpay_payment_id;
-    const orderId = paymentData.razorpay_order_id || order.id;
+    // Step 3: Compute the real HMAC-SHA256 signature exactly as Razorpay does
     const signature = crypto
       .createHmac('sha256', keySecret)
-      .update(`${orderId}|${paymentId}`)
+      .update(`${order.id}|${syntheticPaymentId}`)
       .digest('hex');
 
     return res.json({
       success: true,
-      order_id: orderId,
-      payment_id: paymentId,
+      order_id: order.id,
+      payment_id: syntheticPaymentId,
       signature: signature,
       amount: order.amount,
       currency: order.currency,
-      method: 'upi',
-      vpa: upi_id || 'test@razorpay',
+      note: 'Test simulation: real order + synthetic payment_id + valid HMAC signature',
     });
   } catch (err) {
     console.error('Test simulate payment error:', err);
