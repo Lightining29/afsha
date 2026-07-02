@@ -432,39 +432,83 @@ export default function RazorpayCheckoutTest() {
                     Test Again
                   </button>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={handleManualTestPayment}
-                    disabled={loading}
-                    style={{
-                      width: '100%',
-                      padding: '16px',
-                      borderRadius: '10px',
-                      border: '2px solid #10b981',
-                      background: loading ? '#d1fae5' : 'linear-gradient(135deg, #10b981, #059669)',
-                      color: '#fff',
-                      fontWeight: 700,
-                      fontSize: '1.05rem',
-                      cursor: loading ? 'not-allowed' : 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 10,
-                      transition: 'all 0.2s',
-                      opacity: loading ? 0.7 : 1,
-                      boxShadow: loading ? 'none' : '0 4px 14px 0 rgba(16,185,129,0.4)',
-                    }}
-                  >
-                    {loading ? (
-                      <><RefreshCw className="spin" size={18} /> Processing...</>
-                    ) : (
-                      <>✅ Run Test Payment</>
-                    )}
-                  </button>
+                  <>
+                    {/* Primary: Razorpay Modal - needed for dashboard test transaction */}
+                    <button
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); handlePayment(e); }}
+                      disabled={loading}
+                      style={{
+                        width: '100%',
+                        padding: '16px',
+                        borderRadius: '10px',
+                        border: 'none',
+                        background: loading ? '#93c5fd' : 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                        color: '#fff',
+                        fontWeight: 700,
+                        fontSize: '1.05rem',
+                        cursor: loading ? 'not-allowed' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 10,
+                        transition: 'all 0.2s',
+                        opacity: loading ? 0.7 : 1,
+                        boxShadow: loading ? 'none' : '0 4px 14px 0 rgba(59,130,246,0.4)',
+                        marginBottom: 10,
+                      }}
+                    >
+                      {loading ? (
+                        <><RefreshCw className="spin" size={18} /> Processing...</>
+                      ) : (
+                        <>💳 Pay via Razorpay Modal</>
+                      )}
+                    </button>
+                    <p style={{ fontSize: '0.75rem', color: '#64748b', textAlign: 'center', marginTop: 0, marginBottom: 16 }}>
+                      Opens Razorpay checkout. Select <strong>Netbanking</strong> → pick any bank → click <strong>Success</strong> on the mock page.
+                    </p>
+
+                    {/* Divider */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                      <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+                      <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 500 }}>OR</span>
+                      <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+                    </div>
+
+                    {/* Secondary: Manual API test */}
+                    <button
+                      type="button"
+                      onClick={handleManualTestPayment}
+                      disabled={loading}
+                      style={{
+                        width: '100%',
+                        padding: '14px',
+                        borderRadius: '10px',
+                        border: '2px solid #10b981',
+                        background: 'linear-gradient(135deg, #ecfdf5, #f0fdf4)',
+                        color: '#065f46',
+                        fontWeight: 600,
+                        fontSize: '0.9rem',
+                        cursor: loading ? 'not-allowed' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 8,
+                        transition: 'all 0.2s',
+                        opacity: loading ? 0.6 : 1,
+                      }}
+                    >
+                      {loading ? (
+                        <><RefreshCw className="spin" size={16} /> Processing...</>
+                      ) : (
+                        <>🧪 API-Only Test (No Modal)</>
+                      )}
+                    </button>
+                    <p style={{ fontSize: '0.72rem', color: '#94a3b8', textAlign: 'center', marginTop: 6 }}>
+                      Server-side only. Won't count as a Razorpay dashboard test transaction.
+                    </p>
+                  </>
                 )}
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center', marginTop: 10 }}>
-                  Creates a real Razorpay order → generates signature → verifies it. No modal, no UPI, no card required.
-                </p>
               </div>
             </div>
           </div>
