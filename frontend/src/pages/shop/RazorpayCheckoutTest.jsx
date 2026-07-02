@@ -12,7 +12,7 @@ export default function RazorpayCheckoutTest() {
   const [status, setStatus] = useState('idle'); // idle, creating_order, modal_open, verifying, success, failed
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('upi'); // upi or card
-  const [upiId, setUpiId] = useState('success@razorpay');
+  const [upiId, setUpiId] = useState('test@razorpay');
 
   const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
   const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_T8Ygt8NbBXbGwW';
@@ -136,6 +136,69 @@ export default function RazorpayCheckoutTest() {
     } catch (err) {
       setError(err.message || 'An error occurred during payment setup.');
       setStatus('failed');
+      setLoading(false);
+    }
+  };
+
+  // Manual test payment - bypasses Razorpay modal entirely
+  const handleManualTestPayment = async () => {
+    setError('');
+    setPaymentDetails(null);
+    setLoading(true);
+    setStatus('creating_order');
+
+    const amountInPaise = Math.round(parseFloat(amountInRupees) * 100);
+    if (isNaN(amountInPaise) || amountInPaise < 100) {
+      setError('Amount must be at least ₹1.00 (100 paise).');
+      setLoading(false);
+      setStatus('failed');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/test-simulate-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: amountInPaise,
+          currency: 'INR',
+          upi_id: upiId || 'test@razorpay',
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Manual test payment failed');
+      }
+
+      // Now verify the signature
+      setStatus('verifying');
+      const verifyRes = await fetch(`${API_BASE}/verify-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          razorpay_order_id: data.order_id,
+          razorpay_payment_id: data.payment_id,
+          razorpay_signature: data.signature,
+        }),
+      });
+
+      const verifyData = await verifyRes.json();
+      if (!verifyRes.ok) {
+        throw new Error(verifyData.message || 'Signature verification failed');
+      }
+
+      setStatus('success');
+      setPaymentDetails({
+        paymentId: data.payment_id,
+        orderId: data.order_id,
+        signature: data.signature,
+      });
+    } catch (err) {
+      setError(err.message || 'Manual test payment error.');
+      setStatus('failed');
+    } finally {
       setLoading(false);
     }
   };
@@ -459,7 +522,7 @@ export default function RazorpayCheckoutTest() {
                     <button
                       type="button"
                       className="btn btn-sky"
-                      onClick={() => { setStatus('idle'); setAmountInRupees('10.00'); setPaymentDetails(null); setUpiId('success@razorpay'); setPaymentMethod('upi'); }}
+                      onClick={() => { setStatus('idle'); setAmountInRupees('10.00'); setPaymentDetails(null); setUpiId('test@razorpay'); setPaymentMethod('upi'); }}
                       style={{ flex: 1, justifyContent: 'center', padding: '12px' }}
                     >
                       Reset and Pay Again
@@ -493,6 +556,46 @@ export default function RazorpayCheckoutTest() {
                     </button>
                   )}
                 </div>
+
+                {/* Divider */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '16px 0' }}>
+                  <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+                  <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 500 }}>OR</span>
+                  <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+                </div>
+
+                {/* Manual Test Payment Button */}
+                <button
+                  type="button"
+                  onClick={handleManualTestPayment}
+                  disabled={loading || status === 'success'}
+                  style={{
+                    width: '100%',
+                    padding: '14px',
+                    borderRadius: '10px',
+                    border: '2px solid #10b981',
+                    background: 'linear-gradient(135deg, #ecfdf5, #f0fdf4)',
+                    color: '#065f46',
+                    fontWeight: 700,
+                    fontSize: '0.95rem',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    transition: 'all 0.2s',
+                    opacity: loading ? 0.6 : 1,
+                  }}
+                >
+                  {loading ? (
+                    <><RefreshCw className="spin" size={16} /> Processing...</>
+                  ) : (
+                    <>🧪 Manual Test Payment (API Direct — No Modal)</>  
+                  )}
+                </button>
+                <span style={{ fontSize: '0.72rem', color: '#64748b', display: 'block', marginTop: 6, textAlign: 'center' }}>
+                  Bypasses Razorpay modal. Creates order → simulates payment via API → verifies signature. Uses UPI ID: <strong>{upiId}</strong>
+                </span>
               </form>
             </div>
           </div>

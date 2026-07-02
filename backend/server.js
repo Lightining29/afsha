@@ -159,6 +159,78 @@ app.post('/api/verify-payment', async (req, res) => {
   }
 });
 
+// Manual test payment simulation (bypasses checkout modal)
+app.post('/api/test-simulate-payment', async (req, res) => {
+  try {
+    const { amount, currency, upi_id } = req.body;
+    const keyId = process.env.RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!keyId || !keySecret) {
+      return res.status(401).json({ message: 'Razorpay API credentials not configured' });
+    }
+
+    // Step 1: Create order
+    const razorpayInstance = new Razorpay({ key_id: keyId, key_secret: keySecret });
+    const order = await razorpayInstance.orders.create({
+      amount: Math.round(amount || 100),
+      currency: currency || 'INR',
+      receipt: `test_rcpt_${Date.now()}`,
+    });
+
+    // Step 2: Create payment via Razorpay API (test mode only)
+    const authHeader = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64');
+    const paymentRes = await fetch('https://api.razorpay.com/v1/payments/create/json', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authHeader,
+      },
+      body: JSON.stringify({
+        amount: order.amount,
+        currency: order.currency,
+        order_id: order.id,
+        email: 'test@example.com',
+        contact: '9999999999',
+        method: 'upi',
+        upi: { vpa: upi_id || 'test@razorpay', flow: 'collect' },
+      }),
+    });
+
+    const paymentData = await paymentRes.json();
+
+    if (!paymentRes.ok) {
+      console.error('Razorpay payment create error:', paymentData);
+      return res.status(paymentRes.status).json({
+        message: paymentData.error?.description || 'Payment creation failed',
+        error: paymentData.error,
+      });
+    }
+
+    // Step 3: Generate signature for verification
+    const paymentId = paymentData.razorpay_payment_id;
+    const orderId = paymentData.razorpay_order_id || order.id;
+    const signature = crypto
+      .createHmac('sha256', keySecret)
+      .update(`${orderId}|${paymentId}`)
+      .digest('hex');
+
+    return res.json({
+      success: true,
+      order_id: orderId,
+      payment_id: paymentId,
+      signature: signature,
+      amount: order.amount,
+      currency: order.currency,
+      method: 'upi',
+      vpa: upi_id || 'test@razorpay',
+    });
+  } catch (err) {
+    console.error('Test simulate payment error:', err);
+    return res.status(500).json({ message: err.message || 'Test payment simulation failed' });
+  }
+});
+
 // Robots.txt Route
 app.get('/robots.txt', (_req, res) => {
   res.header('Content-Type', 'text/plain');
