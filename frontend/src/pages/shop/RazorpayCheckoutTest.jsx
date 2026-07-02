@@ -117,20 +117,6 @@ export default function RazorpayCheckoutTest() {
           contact: '9999999999',
           ...(paymentMethod === 'upi' && upiId ? { 'method': 'upi', 'vpa': upiId } : {}),
         },
-        config: {
-          display: {
-            blocks: {
-              banks: {
-                name: paymentMethod === 'upi' ? 'Pay via UPI' : 'Pay via Card',
-                instruments: paymentMethod === 'upi'
-                  ? [{ method: 'upi', flows: ['collect'] }]
-                  : [{ method: 'card' }],
-              },
-            },
-            sequence: ['block.banks'],
-            preferences: { show_default_blocks: false },
-          },
-        },
         notes: {
           purpose: 'Testing Standard Checkout Integration',
         },
