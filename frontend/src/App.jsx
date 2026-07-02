@@ -9,6 +9,7 @@ import Register from './pages/auth/Register';
 import VerifyOtp from './pages/auth/VerifyOtp';
 import Checkout from './pages/shop/Checkout';
 import CheckoutSuccess from './pages/shop/CheckoutSuccess';
+import RazorpayCheckoutTest from './pages/shop/RazorpayCheckoutTest';
 import AccountLayout from './pages/account/AccountLayout';
 import OrderHistory from './pages/account/OrderHistory';
 import WishlistPage from './pages/account/WishlistPage';
@@ -141,6 +142,10 @@ function App() {
               <RevealShell><CheckoutSuccess /></RevealShell>
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/razorpay-checkout"
+          element={<RevealShell><RazorpayCheckoutTest /></RevealShell>}
         />
         <Route
           path="/account"
