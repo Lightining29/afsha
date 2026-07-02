@@ -107,7 +107,7 @@ export default function Navbar() {
                     <p className="user-dropdown-name">{user.name}</p>
                     <Link to="/account" onClick={() => setUserMenuOpen(false)}>My Account</Link>
                     <Link to="/account/wishlist" onClick={() => setUserMenuOpen(false)}>Wishlist</Link>
-                    <Link to="/razorpay-checkout" onClick={() => setUserMenuOpen(false)}>Razorpay Demo</Link>
+
                     {isAdmin && (
                       <Link to="/admin" onClick={() => setUserMenuOpen(false)}>Admin Panel</Link>
                     )}
