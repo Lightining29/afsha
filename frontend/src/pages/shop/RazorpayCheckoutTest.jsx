@@ -465,7 +465,7 @@ export default function RazorpayCheckoutTest() {
                 <p style={{ fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center', marginTop: 10 }}>
                   Creates a real Razorpay order → generates signature → verifies it. No modal, no UPI, no card required.
                 </p>
-              </form>
+              </div>
             </div>
           </div>
         </div>
