@@ -66,17 +66,6 @@ export default function CheckoutPage() {
       description: `Order ${result.orderId}`,
       order_id: result.razorpayOrderId,
       prefill: { name: form.fullName, email: form.email, contact: form.phone },
-      method: { upi: true, card: false, netbanking: false, wallet: false },
-      config: {
-        display: {
-          blocks: {
-            upi: {
-              name: 'Pay via UPI',
-              instruments: [{ method: 'upi', flows: ['intent', 'collect'] }],
-            },
-          },
-        },
-      },
       handler: async (response) => {
         try {
           await verifyPayment(result.orderId, {
@@ -132,10 +121,6 @@ export default function CheckoutPage() {
             <form className="checkout-form-card" onSubmit={handleSubmit}>
               <h3>Shipping Information</h3>
               {error && <div className="auth-error">{error}</div>}
-              <div className="demo-pay-notice">
-                <CreditCard size={16} style={{ verticalAlign: 'middle', marginRight: 6 }} />
-                Pay via UPI through Razorpay. On mobile this opens GPay, PhonePe, BHIM or your UPI app; on desktop it shows a UPI QR code.
-              </div>
               <div className="checkout-grid">
                 <div className="form-group full">
                   <label>Full Name</label>
