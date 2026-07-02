@@ -11,6 +11,8 @@ export default function RazorpayCheckoutTest() {
   const [error, setError] = useState('');
   const [status, setStatus] = useState('idle'); // idle, creating_order, modal_open, verifying, success, failed
   const [paymentDetails, setPaymentDetails] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('upi'); // upi or card
+  const [upiId, setUpiId] = useState('test@razorpay');
 
   const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
   const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_T8Ygt8NbBXbGwW';
@@ -113,6 +115,21 @@ export default function RazorpayCheckoutTest() {
           name: 'Test User',
           email: 'test@example.com',
           contact: '9999999999',
+          ...(paymentMethod === 'upi' && upiId ? { 'method': 'upi', 'vpa': upiId } : {}),
+        },
+        config: {
+          display: {
+            blocks: {
+              banks: {
+                name: paymentMethod === 'upi' ? 'Pay via UPI' : 'Pay via Card',
+                instruments: paymentMethod === 'upi'
+                  ? [{ method: 'upi', flows: ['collect'] }]
+                  : [{ method: 'card' }],
+              },
+            },
+            sequence: ['block.banks'],
+            preferences: { show_default_blocks: false },
+          },
         },
         notes: {
           purpose: 'Testing Standard Checkout Integration',
@@ -283,7 +300,134 @@ export default function RazorpayCheckoutTest() {
                 </div>
               )}
 
+              {/* Test Credentials Info */}
+              <div style={{
+                background: 'linear-gradient(135deg, #eff6ff, #f0f9ff)',
+                border: '1px solid rgba(59, 130, 246, 0.2)',
+                borderRadius: '12px',
+                padding: '16px 20px',
+                marginBottom: 24,
+                fontSize: '0.82rem',
+                color: '#334155'
+              }}>
+                <div style={{ fontWeight: 700, marginBottom: 8, color: '#1e40af', fontSize: '0.85rem' }}>🧪 Test Credentials</div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div style={{ background: '#fff', borderRadius: 8, padding: '10px 12px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ fontWeight: 600, color: '#475569', marginBottom: 4 }}>UPI</div>
+                    <code style={{ color: '#0ea5e9', fontWeight: 600 }}>test@razorpay</code>
+                  </div>
+                  <div style={{ background: '#fff', borderRadius: 8, padding: '10px 12px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ fontWeight: 600, color: '#475569', marginBottom: 4 }}>Card</div>
+                    <code style={{ color: '#0ea5e9', fontSize: '0.75rem', fontWeight: 600 }}>4111 1111 1111 1111</code>
+                    <div style={{ color: '#64748b', fontSize: '0.72rem', marginTop: 2 }}>CVV: 123 · Exp: 12/26</div>
+                  </div>
+                </div>
+              </div>
+
               <form onSubmit={handlePayment}>
+                {/* Payment Method Selector */}
+                <div style={{ marginBottom: 20 }}>
+                  <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, fontSize: '0.9rem', color: '#334155' }}>
+                    Payment Method
+                  </label>
+                  <div style={{ display: 'flex', gap: 10 }}>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod('upi')}
+                      disabled={loading || status === 'success'}
+                      style={{
+                        flex: 1,
+                        padding: '12px 16px',
+                        borderRadius: '10px',
+                        border: `2px solid ${paymentMethod === 'upi' ? '#0ea5e9' : 'rgba(14, 165, 233, 0.15)'}`,
+                        background: paymentMethod === 'upi' ? 'rgba(14, 165, 233, 0.08)' : 'rgba(255, 255, 255, 0.9)',
+                        color: paymentMethod === 'upi' ? '#0369a1' : '#64748b',
+                        fontWeight: 600,
+                        fontSize: '0.9rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 8
+                      }}
+                    >
+                      <span style={{ fontSize: '1.1rem' }}>📱</span> UPI
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod('card')}
+                      disabled={loading || status === 'success'}
+                      style={{
+                        flex: 1,
+                        padding: '12px 16px',
+                        borderRadius: '10px',
+                        border: `2px solid ${paymentMethod === 'card' ? '#0ea5e9' : 'rgba(14, 165, 233, 0.15)'}`,
+                        background: paymentMethod === 'card' ? 'rgba(14, 165, 233, 0.08)' : 'rgba(255, 255, 255, 0.9)',
+                        color: paymentMethod === 'card' ? '#0369a1' : '#64748b',
+                        fontWeight: 600,
+                        fontSize: '0.9rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 8
+                      }}
+                    >
+                      <CreditCard size={16} /> Card
+                    </button>
+                  </div>
+                </div>
+
+                {/* UPI ID Field - shown when UPI is selected */}
+                {paymentMethod === 'upi' && (
+                  <div style={{ marginBottom: 20 }}>
+                    <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, fontSize: '0.9rem', color: '#334155' }}>
+                      UPI ID (VPA)
+                    </label>
+                    <input
+                      type="text"
+                      value={upiId}
+                      onChange={(e) => setUpiId(e.target.value)}
+                      placeholder="e.g. test@razorpay"
+                      disabled={loading || status === 'success'}
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        border: '2px solid rgba(14, 165, 233, 0.2)',
+                        borderRadius: '8px',
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: '#0f172a',
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        outline: 'none',
+                        transition: 'border-color 0.2s',
+                        fontFamily: 'monospace'
+                      }}
+                    />
+                    <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'block', marginTop: 6 }}>
+                      For test mode, use <strong>test@razorpay</strong>
+                    </span>
+                  </div>
+                )}
+
+                {/* Card Info - shown when Card is selected */}
+                {paymentMethod === 'card' && (
+                  <div style={{
+                    marginBottom: 20,
+                    background: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '10px',
+                    padding: '14px 16px',
+                    fontSize: '0.82rem',
+                    color: '#475569'
+                  }}>
+                    <div style={{ fontWeight: 600, marginBottom: 6, color: '#334155' }}>💳 Card details will be entered in the Razorpay modal</div>
+                    <div>Use test card: <code style={{ color: '#0ea5e9' }}>4111 1111 1111 1111</code> · CVV: <code style={{ color: '#0ea5e9' }}>123</code> · Expiry: <code style={{ color: '#0ea5e9' }}>12/26</code></div>
+                  </div>
+                )}
+
                 <div style={{ marginBottom: 24 }}>
                   <label style={{ display: 'block', marginBottom: 8, fontWeight: 600, fontSize: '0.9rem', color: '#334155' }}>
                     Payment Amount (INR)
@@ -330,7 +474,7 @@ export default function RazorpayCheckoutTest() {
                     <button
                       type="button"
                       className="btn btn-sky"
-                      onClick={() => { setStatus('idle'); setAmountInRupees('10.00'); setPaymentDetails(null); }}
+                      onClick={() => { setStatus('idle'); setAmountInRupees('10.00'); setPaymentDetails(null); setUpiId('test@razorpay'); setPaymentMethod('upi'); }}
                       style={{ flex: 1, justifyContent: 'center', padding: '12px' }}
                     >
                       Reset and Pay Again
