@@ -12,7 +12,7 @@ export default function RazorpayCheckoutTest() {
   const [status, setStatus] = useState('idle'); // idle, creating_order, modal_open, verifying, success, failed
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('upi'); // upi or card
-  const [upiId, setUpiId] = useState('test@razorpay');
+  const [upiId, setUpiId] = useState('success@razorpay');
 
   const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
   const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_T8Ygt8NbBXbGwW';
@@ -115,7 +115,6 @@ export default function RazorpayCheckoutTest() {
           name: 'Test User',
           email: 'test@example.com',
           contact: '9999999999',
-          ...(paymentMethod === 'upi' && upiId ? { 'method': 'upi', 'vpa': upiId } : {}),
         },
         notes: {
           purpose: 'Testing Standard Checkout Integration',
@@ -300,7 +299,7 @@ export default function RazorpayCheckoutTest() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div style={{ background: '#fff', borderRadius: 8, padding: '10px 12px', border: '1px solid #e2e8f0' }}>
                     <div style={{ fontWeight: 600, color: '#475569', marginBottom: 4 }}>UPI</div>
-                    <code style={{ color: '#0ea5e9', fontWeight: 600 }}>test@razorpay</code>
+                    <code style={{ color: '#0ea5e9', fontWeight: 600 }}>success@razorpay</code>
                   </div>
                   <div style={{ background: '#fff', borderRadius: 8, padding: '10px 12px', border: '1px solid #e2e8f0' }}>
                     <div style={{ fontWeight: 600, color: '#475569', marginBottom: 4 }}>Card</div>
@@ -393,7 +392,7 @@ export default function RazorpayCheckoutTest() {
                       }}
                     />
                     <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'block', marginTop: 6 }}>
-                      For test mode, use <strong>test@razorpay</strong>
+                      For test mode, use <strong>success@razorpay</strong>
                     </span>
                   </div>
                 )}
@@ -460,7 +459,7 @@ export default function RazorpayCheckoutTest() {
                     <button
                       type="button"
                       className="btn btn-sky"
-                      onClick={() => { setStatus('idle'); setAmountInRupees('10.00'); setPaymentDetails(null); setUpiId('test@razorpay'); setPaymentMethod('upi'); }}
+                      onClick={() => { setStatus('idle'); setAmountInRupees('10.00'); setPaymentDetails(null); setUpiId('success@razorpay'); setPaymentMethod('upi'); }}
                       style={{ flex: 1, justifyContent: 'center', padding: '12px' }}
                     >
                       Reset and Pay Again
