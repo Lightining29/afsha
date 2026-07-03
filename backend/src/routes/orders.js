@@ -65,6 +65,18 @@ export async function fulfillOrder(order) {
   }
 }
 
+async function sendReceiptIfNeeded(order) {
+  if (!order.receiptSent) {
+    await sendOrderReceipt(order, order.shippingAddress?.email);
+    order.receiptSent = true;
+    await order.save();
+  }
+}
+
+function hasConfirmedPayment(order) {
+  return ['paid', 'approved', 'shipped'].includes(order.status);
+}
+
 /** Razorpay webhook — raw body registered in index.js. Idempotent safety net. */
 export async function razorpayWebhookHandler(req, res) {
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
@@ -87,6 +99,8 @@ export async function razorpayWebhookHandler(req, res) {
         order.razorpayPaymentId = payment.id;
         await order.save();
         await fulfillOrder(order);
+      } else if (order && hasConfirmedPayment(order)) {
+        await sendReceiptIfNeeded(order);
       }
     }
   } catch (err) {
@@ -178,6 +192,9 @@ router.post('/verify/:orderId', protect, async (req, res) => {
 
     // Idempotency — if webhook already fulfilled, don't double-process.
     if (order.status !== 'pending_payment') {
+      if (hasConfirmedPayment(order)) {
+        await sendReceiptIfNeeded(order);
+      }
       return res.json({ ok: true, alreadyPaid: true });
     }
 
