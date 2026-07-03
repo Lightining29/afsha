@@ -51,7 +51,11 @@ export default function OrderHistory() {
             <div className="order-items-list">
               {order.items.map((item, i) => (
                 <div key={i} className="order-item-row">
-                  <img src={item.image} alt={item.name} />
+                  {item.image ? (
+                    <img src={item.image} alt={item.name} loading="lazy" />
+                  ) : (
+                    <div className="order-item-image-placeholder" aria-hidden="true" />
+                  )}
                   <span>{item.name}</span>
                   <span style={{ color: 'var(--text-muted)' }}>×{item.quantity}</span>
                   <span style={{ marginLeft: 'auto' }}>{formatPrice(item.price * item.quantity)}</span>

@@ -20,6 +20,21 @@ function slugify(name) {
     .replace(/(^-|-$)/g, '');
 }
 
+function getProductId(product) {
+  if (!product) return '';
+  if (typeof product === 'string') return product;
+  if (product._id) return product._id.toString();
+  if (product.toString) return product.toString();
+  return '';
+}
+
+function getProductImageUrl(product) {
+  const productId = getProductId(product);
+  if (!productId) return '';
+  const updatedAt = product?.updatedAt ? new Date(product.updatedAt).getTime() : '';
+  return `/api/images/product/${productId}${updatedAt ? `?v=${updatedAt}` : ''}`;
+}
+
 /* ─── ANALYTICS ─────────────────────────────────────────────────── */
 router.get('/analytics', async (_req, res) => {
   try {
@@ -342,8 +357,19 @@ router.delete('/categories/:id', async (req, res) => {
 /* ─── ORDERS ─────────────────────────────────────────────────────── */
 router.get('/orders', async (_req, res) => {
   try {
-    const orders = await Order.find().populate('user', 'name email').sort({ createdAt: -1 });
-    res.json(orders);
+    const orders = await Order.find()
+      .populate('user', 'name email phone')
+      .populate('items.product', 'updatedAt')
+      .sort({ createdAt: -1 });
+
+    res.json(orders.map((order) => {
+      const obj = order.toObject();
+      obj.items = (obj.items || []).map((item) => ({
+        ...item,
+        image: item.image || getProductImageUrl(item.product),
+      }));
+      return obj;
+    }));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -371,16 +397,12 @@ router.post('/orders/offline', async (req, res) => {
         return res.status(400).json({ message: `Insufficient stock for product: ${product.name}` });
       }
 
-      // Check if product image exists to set image path
-      const v = product.updatedAt ? product.updatedAt.getTime() : Date.now();
-      const imageUrl = product.imageData ? `/api/images/product/${product._id}?v=${v}` : (product.image || null);
-
       orderItems.push({
         product: product._id,
         name: product.name,
         price: item.price ?? product.price,
         quantity: item.quantity,
-        image: imageUrl || '',
+        image: getProductImageUrl(product),
       });
 
       subtotal += (item.price ?? product.price) * item.quantity;

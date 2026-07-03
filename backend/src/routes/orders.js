@@ -21,6 +21,30 @@ function getRazorpay() {
   return razorpay;
 }
 
+function getProductId(product) {
+  if (!product) return '';
+  if (typeof product === 'string') return product;
+  if (product._id) return product._id.toString();
+  if (product.toString) return product.toString();
+  return '';
+}
+
+function getProductImageUrl(product) {
+  const productId = getProductId(product);
+  if (!productId) return '';
+  const version = product.updatedAt ? `?v=${product.updatedAt.getTime()}` : '';
+  return `/api/images/product/${productId}${version}`;
+}
+
+function withItemImageFallback(order) {
+  const obj = order.toObject();
+  obj.items = (obj.items || []).map((item) => ({
+    ...item,
+    image: item.image || getProductImageUrl(item.product),
+  }));
+  return obj;
+}
+
 /**
  * Fulfill an order: decrement stock and send the receipt email.
  * Idempotent — safe to call from both /verify and /webhook.
@@ -100,7 +124,7 @@ router.post('/checkout', protect, async (req, res) => {
       orderItems.push({
         product: product._id,
         name: product.name,
-        image: product.image,
+        image: getProductImageUrl(product),
         price,
         quantity: item.quantity,
       });
@@ -180,8 +204,10 @@ router.post('/verify/:orderId', protect, async (req, res) => {
 
 router.get('/my', protect, async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user.id }).sort({ createdAt: -1 });
-    res.json(orders);
+    const orders = await Order.find({ user: req.user.id })
+      .populate('items.product', 'updatedAt')
+      .sort({ createdAt: -1 });
+    res.json(orders.map(withItemImageFallback));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -189,9 +215,10 @@ router.get('/my', protect, async (req, res) => {
 
 router.get('/:id', protect, async (req, res) => {
   try {
-    const order = await Order.findOne({ _id: req.params.id, user: req.user.id });
+    const order = await Order.findOne({ _id: req.params.id, user: req.user.id })
+      .populate('items.product', 'updatedAt');
     if (!order) return res.status(404).json({ message: 'Order not found' });
-    res.json(order);
+    res.json(withItemImageFallback(order));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
