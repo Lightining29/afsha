@@ -2,61 +2,61 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Static Pages -->
   <url>
-    <loc>https://afshaenterprises.com/</loc>
+    <loc>https://www.afshaenterprises.com/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://afshaenterprises.com/contact</loc>
+    <loc>https://www.afshaenterprises.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://afshaenterprises.com/blogs</loc>
+    <loc>https://www.afshaenterprises.com/blogs</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Local SEO Pages -->
   <url>
-    <loc>https://afshaenterprises.com/locations/delhi</loc>
+    <loc>https://www.afshaenterprises.com/locations/delhi</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://afshaenterprises.com/locations/mumbai</loc>
+    <loc>https://www.afshaenterprises.com/locations/mumbai</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://afshaenterprises.com/locations/bangalore</loc>
+    <loc>https://www.afshaenterprises.com/locations/bangalore</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Seeded Blog Pages -->
   <url>
-    <loc>https://afshaenterprises.com/blog/top-10-benefits-of-using-a-body-massager</loc>
+    <loc>https://www.afshaenterprises.com/blog/top-10-benefits-of-using-a-body-massager</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://afshaenterprises.com/blog/best-massager-for-back-pain-in-india</loc>
+    <loc>https://www.afshaenterprises.com/blog/best-massager-for-back-pain-in-india</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://afshaenterprises.com/blog/how-to-choose-a-handheld-massager</loc>
+    <loc>https://www.afshaenterprises.com/blog/how-to-choose-a-handheld-massager</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://afshaenterprises.com/blog/neck-pain-relief-tips-at-home</loc>
+    <loc>https://www.afshaenterprises.com/blog/neck-pain-relief-tips-at-home</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://afshaenterprises.com/blog/electric-vs-manual-massagers</loc>
+    <loc>https://www.afshaenterprises.com/blog/electric-vs-manual-massagers</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

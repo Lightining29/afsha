@@ -79,14 +79,14 @@ export default function LocalSEO() {
     return () => { mounted = false; };
   }, [cityKey]);
 
-  const pageUrl = `https://afshaenterprises.com/locations/${cityKey}`;
+  const pageUrl = `https://www.afshaenterprises.com/locations/${cityKey}`;
 
   // Structured Data
   const localBusinessSchema = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     'name': `Afsha Enterprises - Body Massagers in ${data.name}`,
-    'image': 'https://afshaenterprises.com/logo.png',
+    'image': 'https://www.afshaenterprises.com/logo.png',
     'telephone': '+91-9999999999',
     'url': pageUrl,
     'priceRange': '₹₹',
@@ -110,7 +110,7 @@ export default function LocalSEO() {
         '@type': 'ListItem',
         'position': 1,
         'name': 'Home',
-        'item': 'https://afshaenterprises.com'
+        'item': 'https://www.afshaenterprises.com/'
       },
       {
         '@type': 'ListItem',
@@ -133,7 +133,7 @@ export default function LocalSEO() {
         <meta property="og:description" content={data.description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={pageUrl} />
-        <meta property="og:image" content="https://afshaenterprises.com/masage.jpg" />
+        <meta property="og:image" content="https://www.afshaenterprises.com/masage.jpg" />
 
         {/* Structured Data */}
         <script type="application/ld+json">{JSON.stringify(localBusinessSchema)}</script>

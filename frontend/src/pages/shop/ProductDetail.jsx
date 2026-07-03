@@ -175,7 +175,7 @@ export default function ProductDetail() {
     '@type': 'Product',
     'name': product.name,
     'image': [
-      product.image ? (product.image.startsWith('http') ? product.image : `https://afshaenterprises.com${product.image}`) : 'https://afshaenterprises.com/masage.jpg'
+      product.image ? (product.image.startsWith('http') ? product.image : `https://www.afshaenterprises.com${product.image}`) : 'https://www.afshaenterprises.com/masage.jpg'
     ],
     'description': product.description,
     'brand': {
@@ -184,7 +184,7 @@ export default function ProductDetail() {
     },
     'offers': {
       '@type': 'Offer',
-      'url': `https://afshaenterprises.com/products/${product.slug}`,
+      'url': `https://www.afshaenterprises.com/products/${product.slug}`,
       'priceCurrency': 'INR',
       'price': finalPrice,
       'itemCondition': 'https://schema.org/NewCondition',
@@ -200,19 +200,19 @@ export default function ProductDetail() {
         '@type': 'ListItem',
         'position': 1,
         'name': 'Home',
-        'item': 'https://afshaenterprises.com'
+        'item': 'https://www.afshaenterprises.com/'
       },
       product.category ? {
         '@type': 'ListItem',
         'position': 2,
         'name': product.category.name,
-        'item': `https://afshaenterprises.com/category/${product.category.slug}`
+        'item': `https://www.afshaenterprises.com/category/${product.category.slug}`
       } : null,
       {
         '@type': 'ListItem',
         'position': product.category ? 3 : 2,
         'name': product.name,
-        'item': `https://afshaenterprises.com/products/${product.slug}`
+        'item': `https://www.afshaenterprises.com/products/${product.slug}`
       }
     ].filter(Boolean)
   };
@@ -222,14 +222,14 @@ export default function ProductDetail() {
       <Helmet>
         <title>{`${product.name} | Afsha Enterprises`}</title>
         <meta name="description" content={product.description.substring(0, 160)} />
-        <link rel="canonical" href={`https://afshaenterprises.com/products/${product.slug}`} />
+        <link rel="canonical" href={`https://www.afshaenterprises.com/products/${product.slug}`} />
         
         {/* Open Graph */}
         <meta property="og:title" content={`${product.name} | Afsha Enterprises`} />
         <meta property="og:description" content={product.description.substring(0, 160)} />
         <meta property="og:type" content="product" />
-        <meta property="og:url" content={`https://afshaenterprises.com/products/${product.slug}`} />
-        <meta property="og:image" content={product.image ? (product.image.startsWith('http') ? product.image : `https://afshaenterprises.com${product.image}`) : 'https://afshaenterprises.com/masage.jpg'} />
+        <meta property="og:url" content={`https://www.afshaenterprises.com/products/${product.slug}`} />
+        <meta property="og:image" content={product.image ? (product.image.startsWith('http') ? product.image : `https://www.afshaenterprises.com${product.image}`) : 'https://www.afshaenterprises.com/masage.jpg'} />
         
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />

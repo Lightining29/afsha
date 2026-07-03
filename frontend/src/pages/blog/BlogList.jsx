@@ -32,13 +32,13 @@ export default function BlogList() {
         <title>Health & Wellness Blog | Afsha Enterprises</title>
         <meta name="description" content="Read expert tips and insights on health, body massage benefits, pain relief tips at home, and buying guides for electric and handheld massagers." />
         <meta name="keywords" content="body massager benefits, electric vs manual massager, neck pain relief, back pain relief, handheld massagers" />
-        <link rel="canonical" href="https://afshaenterprises.com/blogs" />
+        <link rel="canonical" href="https://www.afshaenterprises.com/blogs" />
         {/* Open Graph */}
         <meta property="og:title" content="Health & Wellness Blog | Afsha Enterprises" />
         <meta property="og:description" content="Read expert tips and insights on health, body massage benefits, pain relief tips at home, and buying guides for electric and handheld massagers." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://afshaenterprises.com/blogs" />
-        <meta property="og:image" content="https://afshaenterprises.com/logo.png" />
+        <meta property="og:url" content="https://www.afshaenterprises.com/blogs" />
+        <meta property="og:image" content="https://www.afshaenterprises.com/logo.png" />
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Health & Wellness Blog | Afsha Enterprises" />

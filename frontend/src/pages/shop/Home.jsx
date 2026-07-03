@@ -27,13 +27,17 @@ const stats = [
   { icon: ShieldCheck, value: '100%', label: 'Secure Payments' },
 ];
 
+const siteTitle = 'Afsha Enterprises | Best Body Massagers in India';
+const siteDescription = 'Afsha Enterprises offers premium electric, handheld, neck, shoulder, foot, and pain relief body massagers with fast delivery across India.';
+const siteKeywords = 'Afsha Enterprises, Afsha Enterprises India, Afsha Enterprises body massager, best body massager in India, electric massager machine, handheld massager online, neck and shoulder massager, pain relief massager, foot massager machine, deep tissue massager';
+
 export default function Home() {
   const orgSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     'name': 'Afsha Enterprises',
-    'url': 'https://afshaenterprises.com',
-    'logo': 'https://afshaenterprises.com/logo.png',
+    'url': 'https://www.afshaenterprises.com/',
+    'logo': 'https://www.afshaenterprises.com/logo.png',
     'sameAs': [
       'https://www.facebook.com/afshaenterprises',
       'https://www.instagram.com/afshaenterprises',
@@ -50,10 +54,10 @@ export default function Home() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     'name': 'Afsha Enterprises',
-    'url': 'https://afshaenterprises.com',
+    'url': 'https://www.afshaenterprises.com/',
     'potentialAction': {
       '@type': 'SearchAction',
-      'target': 'https://afshaenterprises.com/search?q={search_term_string}',
+      'target': 'https://www.afshaenterprises.com/search?q={search_term_string}',
       'query-input': 'required name=search_term_string'
     }
   };
@@ -61,20 +65,26 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>Best Body Massager in India | Afsha Enterprises</title>
-        <meta name="description" content="Buy premium body massagers from Afsha Enterprises. Electric, handheld and pain relief massagers with fast delivery across India." />
-        <meta name="keywords" content="Best body massager in India, Electric massager machine, Handheld massager online, Neck and shoulder massager, Pain relief massager, Foot massager machine, Deep tissue massager" />
-        <link rel="canonical" href="https://afshaenterprises.com" />
+        <title>{siteTitle}</title>
+        <meta name="description" content={siteDescription} />
+        <meta name="keywords" content={siteKeywords} />
+        <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+        <meta name="author" content="Afsha Enterprises" />
+        <meta name="application-name" content="Afsha Enterprises" />
+        <link rel="canonical" href="https://www.afshaenterprises.com/" />
         {/* Open Graph */}
-        <meta property="og:title" content="Best Body Massager in India | Afsha Enterprises" />
-        <meta property="og:description" content="Buy premium body massagers from Afsha Enterprises. Electric, handheld and pain relief massagers with fast delivery across India." />
+        <meta property="og:site_name" content="Afsha Enterprises" />
+        <meta property="og:locale" content="en_IN" />
+        <meta property="og:title" content={siteTitle} />
+        <meta property="og:description" content={siteDescription} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://afshaenterprises.com" />
-        <meta property="og:image" content="https://afshaenterprises.com/logo.png" />
+        <meta property="og:url" content="https://www.afshaenterprises.com/" />
+        <meta property="og:image" content="https://www.afshaenterprises.com/logo.png" />
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Best Body Massager in India | Afsha Enterprises" />
-        <meta name="twitter:description" content="Buy premium body massagers from Afsha Enterprises. Electric, handheld and pain relief massagers with fast delivery across India." />
+        <meta name="twitter:title" content={siteTitle} />
+        <meta name="twitter:description" content={siteDescription} />
         
         {/* Structured Data */}
         <script type="application/ld+json">{JSON.stringify(orgSchema)}</script>

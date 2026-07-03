@@ -185,7 +185,7 @@ export default function BlogDetail() {
   }
 
   // Schema generation
-  const articleUrl = `https://afshaenterprises.com/blog/${blog.slug}`;
+  const articleUrl = `https://www.afshaenterprises.com/blog/${blog.slug}`;
   const publishDate = new Date(blog.publishedAt).toISOString();
   const modifiedDate = new Date(blog.updatedAt || blog.publishedAt).toISOString();
 
@@ -195,21 +195,21 @@ export default function BlogDetail() {
     'headline': blog.title,
     'description': blog.metaDescription,
     'image': [
-      blog.image ? `https://afshaenterprises.com${blog.image}` : 'https://afshaenterprises.com/masage.jpg'
+      blog.image ? `https://www.afshaenterprises.com${blog.image}` : 'https://www.afshaenterprises.com/masage.jpg'
     ],
     'datePublished': publishDate,
     'dateModified': modifiedDate,
     'author': {
       '@type': 'Organization',
       'name': 'Afsha Enterprises',
-      'url': 'https://afshaenterprises.com'
+      'url': 'https://www.afshaenterprises.com/'
     },
     'publisher': {
       '@type': 'Organization',
       'name': 'Afsha Enterprises',
       'logo': {
         '@type': 'ImageObject',
-        'url': 'https://afshaenterprises.com/logo.png'
+        'url': 'https://www.afshaenterprises.com/logo.png'
       }
     }
   };
@@ -222,13 +222,13 @@ export default function BlogDetail() {
         '@type': 'ListItem',
         'position': 1,
         'name': 'Home',
-        'item': 'https://afshaenterprises.com'
+        'item': 'https://www.afshaenterprises.com/'
       },
       {
         '@type': 'ListItem',
         'position': 2,
         'name': 'Blog',
-        'item': 'https://afshaenterprises.com/blogs'
+        'item': 'https://www.afshaenterprises.com/blogs'
       },
       {
         '@type': 'ListItem',
@@ -250,7 +250,7 @@ export default function BlogDetail() {
         <meta property="og:description" content={blog.metaDescription} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={articleUrl} />
-        <meta property="og:image" content={blog.image ? `https://afshaenterprises.com${blog.image}` : 'https://afshaenterprises.com/masage.jpg'} />
+        <meta property="og:image" content={blog.image ? `https://www.afshaenterprises.com${blog.image}` : 'https://www.afshaenterprises.com/masage.jpg'} />
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${blog.title} | Afsha Enterprises`} />

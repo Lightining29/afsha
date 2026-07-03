@@ -53,7 +53,7 @@ export default function CategoryProducts() {
     return () => { mounted = false; };
   }, [categorySlug]);
 
-  const canonicalUrl = `https://afshaenterprises.com/category/${categoryObj?.slug || categorySlug}`;
+  const canonicalUrl = `https://www.afshaenterprises.com/category/${categoryObj?.slug || categorySlug}`;
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -63,7 +63,7 @@ export default function CategoryProducts() {
         '@type': 'ListItem',
         'position': 1,
         'name': 'Home',
-        'item': 'https://afshaenterprises.com'
+        'item': 'https://www.afshaenterprises.com/'
       },
       {
         '@type': 'ListItem',
