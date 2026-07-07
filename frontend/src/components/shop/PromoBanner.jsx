@@ -53,17 +53,19 @@ export default function PromoBanner() {
 
         {/* Center: binary image from MongoDB */}
         <div className="promo-image">
-          <div className="promo-image-ring" />
-          {promoimg ? (
-            <img
-              src={promoimg}
-              alt="Skincare collection"
-            />
-          ) : (
-            <div style={{ color: '#999', textAlign: 'center', padding: '40px 20px' }}>
-              No image yet
-            </div>
-          )}
+          <div className="promo-image-wrapper">
+            <div className="promo-image-ring" />
+            {promoimg ? (
+              <img
+                src={promoimg}
+                alt="Skincare collection"
+              />
+            ) : (
+              <div style={{ color: '#999', textAlign: 'center', padding: '40px 20px' }}>
+                No image yet
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Right: stats */}

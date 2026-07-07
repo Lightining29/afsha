@@ -154,10 +154,12 @@
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
 }
-.fs-arrow:hover {
-  background: rgba(245, 158, 11, 0.3);
-  border-color: #f59e0b;
-  transform: scale(1.1);
+@media (hover: hover) {
+  .fs-arrow:hover {
+    background: rgba(245, 158, 11, 0.3);
+    border-color: #f59e0b;
+    transform: scale(1.1);
+  }
 }
 
 /* ── Product rail ── */
@@ -194,10 +196,12 @@
   transition: transform 0.28s, border-color 0.28s, box-shadow 0.28s;
   height: 100%;
 }
-.fs-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(245, 158, 11, 0.5);
-  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.2);
+@media (hover: hover) {
+  .fs-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(245, 158, 11, 0.5);
+    box-shadow: 0 12px 32px rgba(245, 158, 11, 0.2);
+  }
 }
 
 .fs-card-img-wrap {
@@ -212,7 +216,9 @@
   padding: 12px;
   transition: transform 0.4s;
 }
-.fs-card:hover .fs-card-img-wrap img { transform: scale(1.07); }
+@media (hover: hover) {
+  .fs-card:hover .fs-card-img-wrap img { transform: scale(1.07); }
+}
 
 .fs-card-badge {
   position: absolute;
@@ -271,9 +277,11 @@
   gap: 6px;
   transition: opacity 0.2s, transform 0.2s;
 }
-.fs-card-btn:hover:not(:disabled) {
-  opacity: 0.9;
-  transform: scale(1.03);
+@media (hover: hover) {
+  .fs-card-btn:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: scale(1.03);
+  }
 }
 .fs-card-btn:disabled {
   background: rgba(148,163,184,0.3);
@@ -282,14 +290,76 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .fs-header { gap: 16px; }
-  .fs-countdown { flex-wrap: wrap; }
-  .fs-title { font-size: 1.4rem; }
-  .fs-count-num { font-size: 1.15rem; }
-  .fs-count-block { min-width: 44px; padding: 5px 8px; }
-  .fs-card-link { flex: 0 0 180px; }
+  .fs-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .fs-title-group {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .fs-countdown {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .fs-countdown-label {
+    font-size: 0.85rem;
+    color: rgba(226, 232, 240, 0.8);
+  }
+  .fs-title {
+    font-size: 1.5rem;
+  }
+  .fs-count-num {
+    font-size: 1.25rem;
+  }
+  .fs-count-block {
+    min-width: 46px;
+    padding: 6px 10px;
+  }
+  .fs-card-link {
+    flex: 0 0 170px;
+  }
+  .fs-nav {
+    display: none;
+  }
+  .fs-rail {
+    padding: 4px 16px 8px;
+    gap: 12px;
+  }
 }
+
 @media (max-width: 480px) {
-  .fs-card-link { flex: 0 0 155px; }
-  .fs-nav { display: none; }
+  .fs-card-link {
+    flex: 0 0 145px;
+  }
+  .fs-card-badge {
+    top: 6px;
+    left: 6px;
+    font-size: 0.65rem;
+    padding: 2px 7px;
+  }
+  .fs-card-info {
+    padding: 8px 10px 6px;
+  }
+  .fs-card-name {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+  .fs-card-price {
+    font-size: 0.95rem;
+  }
+  .fs-card-original {
+    font-size: 0.75rem;
+  }
+  .fs-card-btn {
+    margin: 0 10px 10px;
+    width: calc(100% - 20px);
+    padding: 7px;
+  }
 }
