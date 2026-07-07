@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Droplets } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import GoogleSignInButton from '../../components/GoogleSignInButton';
+import { toastSuccess, toastError, toastInfo } from '../../utils/toast.js';
 import './Auth.css';
 
 export default function Register() {
@@ -21,9 +22,11 @@ export default function Register() {
     setLoading(true);
     try {
       const user = await loginWithGoogle(credential);
+      toastSuccess('Account created!', `Welcome, ${user.name}`);
       navigate(user.role === 'admin' ? '/admin' : '/account', { replace: true });
     } catch (err) {
       setError(err.message || 'Google registration failed');
+      toastError('Registration failed', err.message);
     } finally {
       setLoading(false);
     }
@@ -31,6 +34,7 @@ export default function Register() {
 
   const handleGoogleError = (err) => {
     setError(err.message || 'Google Sign-In failed');
+    toastError('Google Sign-In failed', err.message);
   };
 
   const handlePhotoChange = (e) => {
@@ -56,12 +60,15 @@ export default function Register() {
     try {
       const res = await register(name, email, password, photo);
       if (res?.requireVerification) {
+        toastInfo('Check your email', 'We sent a 6-digit verification code to your inbox.');
         navigate('/verify-otp', { state: { email } });
       } else {
+        toastSuccess('Account created!', 'Welcome to Afsha Enterprises.');
         navigate('/account');
       }
     } catch (err) {
       setError(err.message);
+      toastError('Registration failed', err.message);
     } finally {
       setLoading(false);
     }

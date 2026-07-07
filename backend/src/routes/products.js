@@ -4,6 +4,27 @@ import { enrichProduct } from '../utils/pricing.js';
 
 const router = express.Router();
 
+// Public: active flash sale products
+router.get('/flash-sale', async (req, res) => {
+  try {
+    const now = new Date();
+    const products = await Product.find({
+      flashSale: true,
+      flashSalePrice: { $gt: 0 },
+      $or: [
+        { flashSaleEndsAt: { $gt: now } },
+        { flashSaleEndsAt: null },
+      ],
+    })
+      .select('-imageData -imageContentType -images.data')
+      .populate('category', 'name slug')
+      .sort({ salesCount: -1 });
+    res.json(products.map(enrichProduct));
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.get('/', async (req, res) => {
   try {
     const { category, bestseller, limit } = req.query;
@@ -14,7 +35,7 @@ router.get('/', async (req, res) => {
     let query = Product.find(filter)
       .select('-imageData -imageContentType -images.data')
       .populate('category', 'name slug')
-      .sort({ createdAt: -1 });
+      .sort({ salesCount: -1, createdAt: -1 });
     if (limit) query = query.limit(parseInt(limit, 10));
 
     const products = await query;

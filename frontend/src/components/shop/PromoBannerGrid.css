@@ -1,0 +1,112 @@
+/* =========================================
+   PROMO BANNER GRID — Full-image ad banners
+   ========================================= */
+.promo-banner-section {
+  padding: 24px 0;
+  background: var(--neu-surface, #f8fafc);
+}
+
+/* ── Responsive grid by count ── */
+.promo-banner-grid {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+
+/* 1 banner → full width */
+.promo-banner-grid--1 {
+  grid-template-columns: 1fr;
+}
+
+/* 2 banners → side by side */
+.promo-banner-grid--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* 3 banners → 1 large + 2 stacked on right */
+.promo-banner-grid--3 {
+  grid-template-columns: 1.4fr 1fr;
+  grid-template-rows: auto auto;
+}
+.promo-banner-grid--3 .promo-banner-item:first-child {
+  grid-row: 1 / 3;
+}
+
+/* 4+ banners → 2×2 grid */
+.promo-banner-grid--4,
+.promo-banner-grid--5,
+.promo-banner-grid--6 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 900px) {
+  .promo-banner-grid--3 {
+    grid-template-columns: 1.4fr 1fr;
+  }
+  .promo-banner-grid--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .promo-banner-grid--5,
+  .promo-banner-grid--6 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── Individual banner item ── */
+.promo-banner-item {
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  /* subtle shadow */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  line-height: 0; /* remove inline gap below img */
+}
+
+.promo-banner-item:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+}
+
+.promo-banner-item:active {
+  transform: scale(0.99);
+}
+
+/* ── Banner image ── */
+.promo-banner-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.promo-banner-item:hover .promo-banner-img {
+  transform: scale(1.03);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .promo-banner-section { padding: 16px 0; }
+  .promo-banner-grid { gap: 10px; }
+
+  /* Force 1 column on mobile for 3+ banners */
+  .promo-banner-grid--3,
+  .promo-banner-grid--4,
+  .promo-banner-grid--5,
+  .promo-banner-grid--6 {
+    grid-template-columns: 1fr;
+  }
+  .promo-banner-grid--3 .promo-banner-item:first-child {
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .promo-banner-grid--2 {
+    grid-template-columns: 1fr;
+  }
+}

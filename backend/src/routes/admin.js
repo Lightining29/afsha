@@ -4,6 +4,7 @@ import Product from '../models/Product.js';
 import User from '../models/User.js';
 import Category from '../models/Category.js';
 import Banner from '../models/Banner.js';
+import PromoBanner from '../models/PromoBanner.js';
 import Contact from '../models/Contact.js';
 import Review from '../models/Review.js';
 import { protect, adminOnly } from '../middleware/auth.js';
@@ -85,8 +86,12 @@ router.get('/analytics', async (_req, res) => {
 });
 
 /* ─── PRODUCTS ───────────────────────────────────────────────────── */
-router.get('/products', async (_req, res) => {
+router.get('/products', async (req, res) => {
   try {
+    if (req.query.simple === 'true') {
+      const products = await Product.find({}, 'name slug').sort({ name: 1 });
+      return res.json(products);
+    }
     const products = await Product.find()
       .select('-imageData -imageContentType -images.data') // never send binary to listing
       .populate('category', 'name slug')
@@ -585,6 +590,55 @@ router.put(
   }
 );
 
+/* ─── FLASH SALE ─────────────────────────────────────────────────── */
+
+// GET all products with their flash sale status
+router.get('/flash-sale', async (_req, res) => {
+  try {
+    const products = await Product.find()
+      .select('-imageData -imageContentType -images.data')
+      .populate('category', 'name slug')
+      .sort({ flashSale: -1, salesCount: -1 });
+    res.json(products.map(enrichProduct));
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// PATCH — enable/update flash sale on a product
+router.patch('/flash-sale/:id', async (req, res) => {
+  try {
+    const { flashSale, flashSalePrice, flashSaleEndsAt } = req.body;
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    if (flashSale !== undefined) product.flashSale = Boolean(flashSale);
+    if (flashSalePrice !== undefined) product.flashSalePrice = parseFloat(flashSalePrice);
+    if (flashSaleEndsAt !== undefined) {
+      product.flashSaleEndsAt = flashSaleEndsAt ? new Date(flashSaleEndsAt) : null;
+    }
+    await product.save();
+    res.json(enrichProduct(product));
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// DELETE — remove flash sale from a product
+router.delete('/flash-sale/:id', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    product.flashSale = false;
+    product.flashSalePrice = undefined;
+    product.flashSaleEndsAt = undefined;
+    await product.save();
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 /* ─── REVIEWS ───────────────────────────────────────────────────── */
 // Admin list of all reviews (newest first), with product name populated.
 router.get('/reviews', async (req, res) => {
@@ -611,6 +665,96 @@ router.delete('/reviews/:id', async (req, res) => {
     if (!review) return res.status(404).json({ message: 'Review not found' });
     await review.deleteOne();
     res.json({ message: 'Review deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/* ─── PROMO BANNERS ──────────────────────────────────────────────── */
+
+// List all promo banners (admin sees all, including inactive)
+router.get('/promo-banners', async (_req, res) => {
+  try {
+    const banners = await PromoBanner.find()
+      .select('-imageData -imageContentType')
+      .sort({ sortOrder: 1, createdAt: 1 });
+    const mapped = banners.map((b) => {
+      const obj = b.toObject();
+      const v = b.updatedAt ? b.updatedAt.getTime() : Date.now();
+      obj.imageUrl = `/api/images/promo-banner/${b._id}?v=${v}`;
+      return obj;
+    });
+    res.json(mapped);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Create a new promo banner (requires image upload)
+router.post('/promo-banners', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: 'Banner image is required' });
+    const { altText, linkType, linkValue, position, sortOrder, active } = req.body;
+
+    const banner = await PromoBanner.create({
+      imageData:        req.file.buffer,
+      imageContentType: req.file.mimetype,
+      altText:   altText   || '',
+      linkType:  linkType  || 'none',
+      linkValue: linkValue || '',
+      position:  position  || 'below_categories',
+      sortOrder: sortOrder !== undefined ? parseInt(sortOrder, 10) : 0,
+      active:    active !== undefined ? active !== 'false' : true,
+    });
+
+    const obj = banner.toObject();
+    delete obj.imageData;
+    delete obj.imageContentType;
+    const v = banner.updatedAt ? banner.updatedAt.getTime() : Date.now();
+    obj.imageUrl = `/api/images/promo-banner/${banner._id}?v=${v}`;
+    res.status(201).json(obj);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Update a promo banner (image optional)
+router.put('/promo-banners/:id', upload.single('image'), async (req, res) => {
+  try {
+    const banner = await PromoBanner.findById(req.params.id);
+    if (!banner) return res.status(404).json({ message: 'Banner not found' });
+
+    const { altText, linkType, linkValue, position, sortOrder, active } = req.body;
+    if (altText   !== undefined) banner.altText   = altText;
+    if (linkType  !== undefined) banner.linkType  = linkType;
+    if (linkValue !== undefined) banner.linkValue = linkValue;
+    if (position  !== undefined) banner.position  = position;
+    if (sortOrder !== undefined) banner.sortOrder = parseInt(sortOrder, 10);
+    if (active    !== undefined) banner.active    = active !== 'false';
+    if (req.file) {
+      banner.imageData        = req.file.buffer;
+      banner.imageContentType = req.file.mimetype;
+    }
+    banner.updatedAt = new Date();
+    await banner.save();
+
+    const obj = banner.toObject();
+    delete obj.imageData;
+    delete obj.imageContentType;
+    const v = banner.updatedAt.getTime();
+    obj.imageUrl = `/api/images/promo-banner/${banner._id}?v=${v}`;
+    res.json(obj);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Delete a promo banner
+router.delete('/promo-banners/:id', async (req, res) => {
+  try {
+    const banner = await PromoBanner.findByIdAndDelete(req.params.id);
+    if (!banner) return res.status(404).json({ message: 'Banner not found' });
+    res.json({ message: 'Banner deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

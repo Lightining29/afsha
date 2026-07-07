@@ -47,7 +47,21 @@ async function apiUpload(path, method, formData) {
 }
 
 /* ── Public ── */
-export async function fetchCategories() { return apiFetch('/categories'); }
+// In-memory cache for categories — avoids re-fetching on every navigation
+const _cache = { categories: null, categoriesAt: 0 };
+const CATEGORY_TTL = 60_000; // 60 seconds
+
+export async function fetchCategories() {
+  const now = Date.now();
+  if (_cache.categories && now - _cache.categoriesAt < CATEGORY_TTL) {
+    return _cache.categories;
+  }
+  const data = await apiFetch('/categories');
+  _cache.categories = data;
+  _cache.categoriesAt = now;
+  return data;
+}
+export function invalidateCategoryCache() { _cache.categories = null; }
 export async function fetchCategory(slug) { return apiFetch(`/categories/${slug}`); }
 export async function fetchProducts(params = {}) {
   const query = new URLSearchParams(params).toString();
@@ -160,8 +174,64 @@ export async function createOfflineSale(fields) {
 }
 
 /* ── Admin: Products ── */
-export async function fetchAdminProducts() { return apiFetch('/admin/products'); }
+export async function fetchAdminProducts(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  return apiFetch(`/admin/products${query ? `?${query}` : ''}`);
+}
 export async function fetchAdminCategories() { return apiFetch('/admin/categories'); }
+
+/* ── Flash Sale (public) ── */
+export async function fetchFlashSaleProducts() { return apiFetch('/products/flash-sale'); }
+
+/* ── Promo Banners (public) ── */
+export async function fetchPromoBanners(position) {
+  const q = position ? `?position=${position}` : '';
+  return apiFetch(`/promo-banners${q}`);
+}
+
+/* ── Flash Sale (admin) ── */
+export async function fetchAdminFlashSale() { return apiFetch('/admin/flash-sale'); }
+export async function updateAdminFlashSale(id, data) {
+  return apiFetch(`/admin/flash-sale/${id}`, { method: 'PATCH', body: JSON.stringify(data) });
+}
+export async function removeAdminFlashSale(id) {
+  return apiFetch(`/admin/flash-sale/${id}`, { method: 'DELETE' });
+}
+
+/* ── Promo Banners (admin) ── */
+export async function fetchAdminPromoBanners() { return apiFetch('/admin/promo-banners'); }
+
+export async function createAdminPromoBanner(fields, imageFile) {
+  const fd = new FormData();
+  Object.entries(fields).forEach(([k, v]) => {
+    if (v !== undefined && v !== null) fd.append(k, String(v));
+  });
+  if (imageFile) {
+    const compressed = await compressImage(imageFile);
+    fd.append('image', compressed);
+  }
+  return apiUpload('/admin/promo-banners', 'POST', fd);
+}
+
+export async function updateAdminPromoBanner(id, fields, imageFile) {
+  const fd = new FormData();
+  Object.entries(fields).forEach(([k, v]) => {
+    if (v !== undefined && v !== null) fd.append(k, String(v));
+  });
+  if (imageFile) {
+    const compressed = await compressImage(imageFile);
+    fd.append('image', compressed);
+  }
+  return apiUpload(`/admin/promo-banners/${id}`, 'PUT', fd);
+}
+
+export async function deleteAdminPromoBanner(id) {
+  return apiFetch(`/admin/promo-banners/${id}`, { method: 'DELETE' });
+}
+
+export async function patchAdminPromoBanner(id, data) {
+  return apiFetch(`/admin/promo-banners/${id}`, { method: 'PATCH', body: JSON.stringify(data) });
+}
 
 export async function submitContact(fields) { return apiFetch('/contact', { method: 'POST', body: JSON.stringify(fields) }); }
 export async function fetchAdminContacts() { return apiFetch('/admin/contacts'); }
@@ -175,7 +245,9 @@ export async function createAdminCategory(fields, imageFile) {
     const compressed = await compressImage(imageFile);
     fd.append('image', compressed);
   }
-  return apiUpload('/admin/categories', 'POST', fd);
+  const result = await apiUpload('/admin/categories', 'POST', fd);
+  invalidateCategoryCache();
+  return result;
 }
 
 export async function updateAdminCategory(id, fields, imageFile) {
@@ -185,11 +257,15 @@ export async function updateAdminCategory(id, fields, imageFile) {
     const compressed = await compressImage(imageFile);
     fd.append('image', compressed);
   }
-  return apiUpload(`/admin/categories/${id}`, 'PUT', fd);
+  const result = await apiUpload(`/admin/categories/${id}`, 'PUT', fd);
+  invalidateCategoryCache();
+  return result;
 }
 
 export async function deleteAdminCategory(id) {
-  return apiFetch(`/admin/categories/${id}`, { method: 'DELETE' });
+  const result = await apiFetch(`/admin/categories/${id}`, { method: 'DELETE' });
+  invalidateCategoryCache();
+  return result;
 }
 
 /**

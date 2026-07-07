@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { getProductPrice } from '../api';
+import { toastCart } from '../utils/toast.js';
 
 const CartContext = createContext(null);
 
@@ -8,6 +9,20 @@ export function CartProvider({ children }) {
   const [wishlist, setWishlist] = useState([]);
 
   const addToCart = useCallback((product) => {
+    setItems((prev) => {
+      const existing = prev.find((i) => i._id === product._id);
+      if (existing) {
+        return prev.map((i) =>
+          i._id === product._id ? { ...i, quantity: i.quantity + 1 } : i
+        );
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+    toastCart(product.name, null);
+  }, []);
+
+  // Silent version — no toast (used when the caller shows its own UI feedback)
+  const addToCartSilent = useCallback((product) => {
     setItems((prev) => {
       const existing = prev.find((i) => i._id === product._id);
       if (existing) {
@@ -56,6 +71,7 @@ export function CartProvider({ children }) {
         cartCount,
         cartTotal,
         addToCart,
+        addToCartSilent,
         removeFromCart,
         updateQuantity,
         clearCart,

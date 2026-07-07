@@ -3,6 +3,7 @@ import { X, Droplets } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { forgotPassword, resetPassword, changePassword } from '../api';
 import GoogleSignInButton from './GoogleSignInButton';
+import { toastSuccess, toastError, toastInfo } from '../utils/toast.js';
 import './LoginModal.css';
 
 export default function LoginModal({ onClose }) {
@@ -40,10 +41,12 @@ export default function LoginModal({ onClose }) {
     setMessage('');
     setLoading(true);
     try {
-      await loginWithGoogle(credential);
+      const u = await loginWithGoogle(credential);
+      toastSuccess('Welcome!', `Signed in as ${u.name}`);
       onClose();
     } catch (err) {
       setError(err.message || 'Google Sign-In failed');
+      toastError('Google Sign-In failed', err.message);
     } finally {
       setLoading(false);
     }
@@ -51,6 +54,7 @@ export default function LoginModal({ onClose }) {
 
   const handleGoogleError = (err) => {
     setError(err.message || 'Google Sign-In failed');
+    toastError('Google Sign-In failed', err.message);
   };
 
   const handleSubmit = async (e) => {
@@ -61,51 +65,48 @@ export default function LoginModal({ onClose }) {
 
     try {
       if (mode === 'login') {
-        await login(email, password);
+        const u = await login(email, password);
+        toastSuccess('Welcome back!', `Signed in as ${u.name}`);
         onClose();
       } else if (mode === 'register') {
         const res = await register(name, email, password);
         if (res?.requireVerification) {
-          setMessage('Account created! An OTP has been sent to your email to verify your account.');
-          // Redirect standard verification to traditional login/OTP flow
-          setTimeout(() => {
-            onClose();
-          }, 3000);
+          toastInfo('Check your email', 'A verification code has been sent to your inbox.');
+          setMessage('Account created! Check your email for the OTP.');
+          setTimeout(() => onClose(), 2500);
         } else {
-          // Logged in automatically (e.g. if auto-verify for specific emails)
+          toastSuccess('Account created!', 'Welcome to Afsha Enterprises.');
           onClose();
         }
       } else if (mode === 'forgot') {
         if (forgotStep === 1) {
           const res = await forgotPassword(email);
+          toastInfo('Code sent!', res.message || 'Check your email for the reset code.');
           setMessage(res.message || 'Verification code sent to your email.');
           setForgotStep(2);
         } else {
-          const res = await resetPassword(email, code, newPassword);
-          // Logging in user using the returned auth token and data from reset response
-          // We can just log them in using the standard login since we know the new password
+          await resetPassword(email, code, newPassword);
           await login(email, newPassword);
-          setMessage('Password reset successful! Logging you in...');
-          setTimeout(() => {
-            onClose();
-          }, 1500);
+          toastSuccess('Password reset!', 'You have been signed in with your new password.');
+          setTimeout(() => onClose(), 1200);
         }
       } else if (mode === 'setup-password') {
         if (newPassword !== confirmPassword) {
+          toastError('Passwords do not match', 'Please make sure both fields match.');
           return setError('Passwords do not match');
         }
         if (newPassword.length < 6) {
+          toastError('Password too short', 'Password must be at least 6 characters.');
           return setError('Password must be at least 6 characters');
         }
         await changePassword('', newPassword);
-        setMessage('Password saved successfully!');
+        toastSuccess('Password saved!', 'You can now sign in with email and password.');
         setRequirePasswordSetup(false);
-        setTimeout(() => {
-          onClose();
-        }, 1500);
+        setTimeout(() => onClose(), 1200);
       }
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
+      toastError('Error', err.message || 'Something went wrong.');
     } finally {
       setLoading(false);
     }

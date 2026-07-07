@@ -232,3 +232,92 @@ button {
     padding: 0 16px;
   }
 }
+
+/* =========================================
+   SWEETALERT2 — App Toast Styles
+   ========================================= */
+
+/* Base toast */
+.app-toast.swal2-popup {
+  border-radius: 14px !important;
+  padding: 14px 18px !important;
+  font-family: var(--font-sans, 'Inter', sans-serif) !important;
+  font-size: 0.9rem !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08) !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+  max-width: 340px !important;
+  min-width: 260px !important;
+}
+
+.app-toast-title.swal2-title {
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+.app-toast-body.swal2-html-container {
+  font-size: 0.82rem !important;
+  color: #475569 !important;
+  margin: 2px 0 0 !important;
+  text-align: left !important;
+}
+
+/* Cart toast accent */
+.app-toast--cart.swal2-popup {
+  border-left: 4px solid #2563eb !important;
+}
+
+.app-toast-cart-btn.swal2-confirm {
+  border-radius: 8px !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  padding: 7px 14px !important;
+  margin-top: 6px !important;
+}
+
+/* Push / FCM toast accent */
+.app-toast--push.swal2-popup {
+  border-left: 4px solid #8b5cf6 !important;
+}
+
+.app-toast-push-btn.swal2-confirm {
+  border-radius: 8px !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  padding: 7px 14px !important;
+  margin-top: 6px !important;
+}
+
+/* Buy Now dialog */
+.app-toast-buynow.swal2-popup {
+  border-radius: 20px !important;
+  padding: 28px 24px 24px !important;
+  max-width: 340px !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18) !important;
+}
+
+.app-toast-buynow-confirm.swal2-confirm {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  padding: 11px 22px !important;
+  font-size: 0.92rem !important;
+}
+
+.app-toast-buynow-cancel.swal2-cancel {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  padding: 11px 22px !important;
+  font-size: 0.92rem !important;
+}
+
+/* Progress bar colour override */
+.app-toast .swal2-timer-progress-bar {
+  background: #2563eb !important;
+}
+
+.app-toast--push .swal2-timer-progress-bar {
+  background: #8b5cf6 !important;
+}

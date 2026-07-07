@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Droplets, KeyRound } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { toastSuccess, toastError, toastInfo } from '../../utils/toast.js';
 import './Auth.css';
 
 export default function VerifyOtp() {
@@ -12,10 +13,7 @@ export default function VerifyOtp() {
   const [email, setEmail] = useState(location.state?.email || '');
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
-  
-  // Resend cooldown timer
   const [countdown, setCountdown] = useState(0);
 
   useEffect(() => {
@@ -42,9 +40,11 @@ export default function VerifyOtp() {
     setLoading(true);
     try {
       const user = await verifyOtp(email, code);
+      toastSuccess('Email verified!', 'Welcome to Afsha Enterprises.');
       navigate(user.role === 'admin' ? '/admin' : '/account', { replace: true });
     } catch (err) {
       setError(err.message || 'Verification failed');
+      toastError('Verification failed', err.message);
     } finally {
       setLoading(false);
     }
@@ -53,15 +53,14 @@ export default function VerifyOtp() {
   const handleResend = async () => {
     if (countdown > 0) return;
     setError('');
-    setSuccess('');
     setLoading(true);
-    
     try {
       await resendOtp(email);
-      setSuccess('Verification code resent successfully!');
-      setCountdown(60); // 60 seconds cooldown
+      toastInfo('Code sent!', 'Check your email for the new verification code.');
+      setCountdown(60);
     } catch (err) {
       setError(err.message || 'Failed to resend code');
+      toastError('Resend failed', err.message);
     } finally {
       setLoading(false);
     }
@@ -77,7 +76,6 @@ export default function VerifyOtp() {
 
         <form className="auth-form" onSubmit={handleSubmit}>
           {error && <div className="auth-error">{error}</div>}
-          {success && <div className="auth-error" style={{ background: '#ECFDF5', color: '#059669' }}>{success}</div>}
 
           <div className="form-group">
             <label htmlFor="email">Email Address</label>

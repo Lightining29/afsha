@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { formatPrice, getProductPrice, addToWishlist, removeFromWishlist } from '../../api';
+import { toastWishlist } from '../../utils/toast.js';
 import './ProductCard.css';
 
 export default function ProductCard({ product, onWishlistRemove }) {
@@ -18,6 +19,7 @@ export default function ProductCard({ product, onWishlistRemove }) {
       return;
     }
     toggleWishlist(product);
+    toastWishlist(!wished);
     try {
       if (wished) {
         await removeFromWishlist(product._id);
@@ -26,7 +28,7 @@ export default function ProductCard({ product, onWishlistRemove }) {
         await addToWishlist(product._id);
       }
     } catch {
-      toggleWishlist(product);
+      toggleWishlist(product); // revert on error
     }
   };
 

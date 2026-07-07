@@ -21,9 +21,14 @@ const productSchema = new mongoose.Schema(
     rating: { type: Number, default: 4.5, min: 0, max: 5 },
     reviewCount: { type: Number, default: 0 },
     bestseller: { type: Boolean, default: false },
+    salesCount: { type: Number, default: 0, min: 0, index: true },
     stockQuantity: { type: Number, default: 50, min: 0 },
     discountPercent: { type: Number, default: 0, min: 0, max: 100 },
     inStock: { type: Boolean, default: true },
+    // Flash Sale
+    flashSale:        { type: Boolean, default: false, index: true },
+    flashSalePrice:   { type: Number },
+    flashSaleEndsAt:  { type: Date },
   },
   { timestamps: true }
 );

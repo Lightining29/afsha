@@ -21,6 +21,7 @@ import settingsRoutes from './src/routes/settings.js';
 import Banner from './src/models/Banner.js';
 import compression from 'compression';
 import blogRoutes from './src/routes/blogs.js';
+import { promoBannersPublic, promoBannersAdmin } from './src/routes/promoBanners.js';
 import Product from './src/models/Product.js';
 import Category from './src/models/Category.js';
 import Blog from './src/models/Blog.js';
@@ -66,6 +67,8 @@ app.use('/api/images', imageRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/blogs', blogRoutes);
+app.use('/api/promo-banners', promoBannersPublic);
+app.use('/api/admin/promo-banners', promoBannersAdmin);
 
 // Razorpay checkout endpoints
 app.post('/api/create-order', async (req, res) => {

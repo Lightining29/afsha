@@ -14,8 +14,10 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-import ProductCard from '../../components/product/ProductCard';
 import ReviewSection from '../../components/shop/ReviewSection';
+import ProductRow from '../../components/shop/ProductRow';
+import { useRecentlyViewed } from '../../hooks/useRecentlyViewed';
+import { toastWishlist, toastSuccess } from '../../utils/toast.js';
 import './ProductDetail.css';
 
 export default function ProductDetail() {
@@ -23,50 +25,50 @@ export default function ProductDetail() {
   const navigate = useNavigate();
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
   const { isAuthenticated } = useAuth();
-  const [product, setProduct] = useState(null);
-  const [related, setRelated] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [quantity, setQuantity] = useState(1);
+  const [product, setProduct]     = useState(null);
+  const [similar, setSimilar]     = useState([]);
+  const [alsoLike, setAlsoLike]   = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [quantity, setQuantity]   = useState(1);
   const [cartAdded, setCartAdded] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [copied, setCopied] = useState(false);
 
-  // Load product, then load related products from the same category.
+  const { list: recentlyViewed, track } = useRecentlyViewed(product?._id);
+
+  // Load product + category products
   useEffect(() => {
     let mounted = true;
     setLoading(true);
     setProduct(null);
-    setRelated([]);
+    setSimilar([]);
+    setAlsoLike([]);
 
     fetchProduct(slug)
       .then(async (data) => {
         if (!mounted) return;
         setProduct(data);
-        // Fetch related items from the same category (up to 5, current excluded below).
+        track(data); // record in recently viewed
+
         const catId = data.category?._id;
         if (catId) {
           try {
-            const list = await fetchProducts({ category: catId, limit: '5' });
-            if (mounted) {
-              setRelated(
-                (Array.isArray(list) ? list : [])
-                  .filter((p) => p._id !== data._id)
-                  .slice(0, 4)
-              );
-            }
+            const list = await fetchProducts({ category: catId, limit: '10' });
+            const others = (Array.isArray(list) ? list : []).filter((p) => p._id !== data._id);
+            // Similar Products — first 4
+            if (mounted) setSimilar(others.slice(0, 4));
+            // You May Also Like — next 4 (different from Similar)
+            if (mounted) setAlsoLike(others.slice(4, 8));
           } catch {
-            /* related is best-effort */
+            /* best-effort */
           }
         }
       })
-      .catch(() => {
-        if (mounted) navigate('/');
-      })
-      .finally(() => {
-        if (mounted) setLoading(false);
-      });
+      .catch(() => { if (mounted) navigate('/'); })
+      .finally(() => { if (mounted) setLoading(false); });
 
     return () => { mounted = false; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, navigate]);
 
   useEffect(() => {
@@ -114,6 +116,7 @@ export default function ProductDetail() {
 
   const handleWishlist = async () => {
     toggleWishlist(product);
+    toastWishlist(!wished);
     if (isAuthenticated) {
       try {
         if (wished) {
@@ -137,16 +140,17 @@ export default function ProductDetail() {
     if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
       try {
         await navigator.share(shareData);
-      } catch (err) {
-        console.error('Error sharing:', err);
+      } catch {
+        // user cancelled — no error toast needed
       }
     } else {
       try {
         await navigator.clipboard.writeText(window.location.href);
         setCopied(true);
+        toastSuccess('Link Copied!', 'Product link copied to clipboard.');
         setTimeout(() => setCopied(false), 2000);
-      } catch (err) {
-        console.error('Failed to copy link:', err);
+      } catch {
+        // clipboard blocked
       }
     }
   };
@@ -479,25 +483,42 @@ export default function ProductDetail() {
         <ReviewSection product={product} />
 
         {/* Related Products (same category) */}
-        {related.length > 0 && (
-          <section className="related-products-section">
-            <div className="related-header">
-              <div>
-                <p className="section-label">You may also like</p>
-                <h2 className="section-title inline">
-                  Related <span className="serif-italic">Products</span>
-                </h2>
-              </div>
-              <Link to="/" className="btn btn-secondary related-view-all">View All →</Link>
-            </div>
-            <div className="products-grid">
-              {related.map((p) => (
-                <ProductCard key={p._id} product={p} />
-              ))}
-            </div>
-          </section>
-        )}
       </div>
+
+      {/* ── You May Also Like ── */}
+      <ProductRow
+        label="Just For You"
+        title="You May Also"
+        italic="Like"
+        products={alsoLike}
+        loading={false}
+        accentColor="#10b981"
+        viewAllHref={product.category ? `/category/${product.category.slug}` : '#'}
+      />
+
+      {/* ── Similar Products ── */}
+      <ProductRow
+        label="Same Category"
+        title="Similar"
+        italic="Products"
+        products={similar}
+        loading={false}
+        accentColor="#3b82f6"
+        viewAllHref={product.category ? `/category/${product.category.slug}` : '#'}
+      />
+
+      {/* ── Recently Viewed ── */}
+      {recentlyViewed.length > 0 && (
+        <ProductRow
+          label="Your History"
+          title="Recently"
+          italic="Viewed"
+          products={recentlyViewed}
+          loading={false}
+          accentColor="#f59e0b"
+        />
+      )}
+
       <Footer />
     </>
   );

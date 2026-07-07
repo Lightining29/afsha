@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { checkout, verifyPayment, formatPrice, getProductPrice } from '../../api';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import { toastError } from '../../utils/toast.js';
 import './Checkout.css';
 import '../auth/Auth.css';
 
@@ -75,7 +76,9 @@ export default function CheckoutPage() {
           clearCart();
           navigate(`/checkout/success?orderId=${result.orderId}`);
         } catch (err) {
-          setError(err.message || 'Payment verification failed.');
+          const msg = err.message || 'Payment verification failed.';
+          setError(msg);
+          toastError('Verification failed', msg);
           setLoading(false);
         }
       },
@@ -83,7 +86,9 @@ export default function CheckoutPage() {
     });
 
     rzp.on('payment.failed', (resp) => {
-      setError(resp?.error?.description || 'Payment failed.');
+      const msg = resp?.error?.description || 'Payment failed.';
+      setError(msg);
+      toastError('Payment failed', msg);
       setLoading(false);
     });
 
@@ -103,6 +108,7 @@ export default function CheckoutPage() {
       openRazorpay(result);
     } catch (err) {
       setError(err.message);
+      toastError('Checkout failed', err.message);
       setLoading(false);
     }
   };

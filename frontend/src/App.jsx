@@ -24,6 +24,8 @@ import AdminContacts from './pages/admin/AdminContacts';
 import AdminStock from './pages/admin/AdminStock';
 import AdminReviews from './pages/admin/AdminReviews';
 import AdminOfflineSale from './pages/admin/AdminOfflineSale';
+import AdminFlashSale from './pages/admin/AdminFlashSale';
+import AdminPromoBanners from './pages/admin/AdminPromoBanners';
 import Contact from './pages/Contact';
 import BlogList from './pages/blog/BlogList';
 import BlogDetail from './pages/blog/BlogDetail';
@@ -179,6 +181,8 @@ function App() {
           <Route path="contacts" element={<AdminContacts />} />
           <Route path="reviews" element={<AdminReviews />} />
           <Route path="offline-sale" element={<AdminOfflineSale />} />
+          <Route path="flash-sale" element={<AdminFlashSale />} />
+          <Route path="promo-banners" element={<AdminPromoBanners />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

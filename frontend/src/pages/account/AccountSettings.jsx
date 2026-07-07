@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { changePassword } from '../../api';
+import { toastSuccess, toastError } from '../../utils/toast.js';
 import './AccountSettings.css';
 
 export default function AccountSettings() {
@@ -14,16 +15,12 @@ export default function AccountSettings() {
   const [stateVal, setStateVal] = useState(user?.state || '');
   const [zipCode, setZipCode] = useState(user?.zipCode || '');
 
-  const [profileError, setProfileError] = useState('');
-  const [profileSuccess, setProfileSuccess] = useState('');
   const [profileLoading, setProfileLoading] = useState(false);
 
   // Password change states
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -39,22 +36,12 @@ export default function AccountSettings() {
 
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
-    setProfileError('');
-    setProfileSuccess('');
     setProfileLoading(true);
-
     try {
-      await updateProfile({
-        name,
-        phone,
-        address,
-        city,
-        state: stateVal,
-        zipCode
-      });
-      setProfileSuccess('Profile details saved successfully!');
+      await updateProfile({ name, phone, address, city, state: stateVal, zipCode });
+      toastSuccess('Profile saved!', 'Your profile details have been updated.');
     } catch (err) {
-      setProfileError(err.message || 'Failed to update profile details');
+      toastError('Update failed', err.message || 'Failed to update profile details');
     } finally {
       setProfileLoading(false);
     }
@@ -62,25 +49,21 @@ export default function AccountSettings() {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-
     if (newPassword !== confirmPassword) {
-      return setError('Passwords do not match');
+      return toastError('Passwords do not match', 'Please make sure both passwords are the same.');
     }
     if (newPassword.length < 6) {
-      return setError('Password must be at least 6 characters long');
+      return toastError('Password too short', 'Password must be at least 6 characters long.');
     }
-
     setLoading(true);
     try {
       await changePassword(currentPassword, newPassword);
-      setSuccess('Password updated successfully!');
+      toastSuccess('Password updated!', 'Your password has been changed successfully.');
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (err) {
-      setError(err.message || 'Failed to update password');
+      toastError('Update failed', err.message || 'Failed to update password');
     } finally {
       setLoading(false);
     }
@@ -100,8 +83,6 @@ export default function AccountSettings() {
         )}
 
         <form onSubmit={handleProfileSubmit} className="settings-form">
-          {profileError && <div className="settings-error">{profileError}</div>}
-          {profileSuccess && <div className="settings-success">{profileSuccess}</div>}
 
           <div className="form-group">
             <label htmlFor="settings-name">Full Name</label>
@@ -187,8 +168,6 @@ export default function AccountSettings() {
         )}
 
         <form onSubmit={handlePasswordSubmit} className="settings-form">
-          {error && <div className="settings-error">{error}</div>}
-          {success && <div className="settings-success">{success}</div>}
 
           {!user?.googleId && (
             <div className="form-group">

@@ -6,9 +6,13 @@ import Hero from '../../components/shop/Hero';
 import TrustBar from '../../components/shop/TrustBar';
 import Categories from '../../components/shop/Categories';
 import AdsBanner from '../../components/shop/AdsBanner';
+import FlashSaleBanner from '../../components/shop/FlashSaleBanner';
+import PromoBannerGrid from '../../components/shop/PromoBannerGrid';
 import PromoBanner from '../../components/shop/PromoBanner';
 import AllProducts from '../../components/shop/AllProducts';
 import Testimonials from '../../components/shop/Testimonials';
+import HomeRecommendations from '../../components/shop/HomeRecommendations';
+import RecentlyViewedRow from '../../components/shop/RecentlyViewedRow';
 import Footer from '../../components/layout/Footer';
 import '../../styles/animations.css';
 import './Home.css';
@@ -95,15 +99,29 @@ export default function Home() {
       {/* Ads banner grid right after hero */}
       <AdsBanner />
 
+      {/* Flash Sale — only renders when active sales exist */}
+      <FlashSaleBanner />
+
+      {/* Promo banners — above categories */}
+      <PromoBannerGrid position="above_categories" />
+
       {/* Categories manages its own section + padding */}
       <Categories />
 
+      {/* Promo banners — below categories */}
+      <PromoBannerGrid position="below_categories" />
+
+      {/* Recently Viewed — above all products */}
+      <RecentlyViewedRow />
 
       <section className="section home-section reveal">
         <div className="container">
           <AllProducts />
         </div>
       </section>
+
+      {/* Smart recommendation rows (Recommended For You + Customers Also Bought) */}
+      <HomeRecommendations />
 
       <section className="section home-section reveal">
         <div className="container">

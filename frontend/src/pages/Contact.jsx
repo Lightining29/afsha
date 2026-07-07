@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Mail, MapPin, Phone, Send } from 'lucide-react';
 import { submitContact } from '../api';
+import { toastSuccess, toastError } from '../utils/toast.js';
 import './Contact.css';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
-  const [status, setStatus] = useState(null);
   const [saving, setSaving] = useState(false);
 
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -15,13 +15,12 @@ export default function Contact() {
     setSaving(true);
     try {
       await submitContact(form);
-      setStatus({ type: 'success', msg: 'Message sent. We will reply within 24 hours.' });
+      toastSuccess('Message sent!', "We'll reply within 24 hours.");
       setForm({ name: '', email: '', subject: '', message: '' });
-    } catch (err) {
-      setStatus({ type: 'error', msg: 'Failed to send message. Please try again.' });
+    } catch {
+      toastError('Failed to send', 'Please try again or email us directly.');
     } finally {
       setSaving(false);
-      setTimeout(() => setStatus(null), 4000);
     }
   };
 
@@ -37,7 +36,6 @@ export default function Contact() {
       <div className="container contact-wrapper">
         <div className="contact-grid">
           <div className="card contact-form">
-            {status && <div className={`contact-notice ${status.type}`}>{status.msg}</div>}
             <form onSubmit={handleSubmit} className="form">
               <div className="form-row">
                 <div className="form-col">

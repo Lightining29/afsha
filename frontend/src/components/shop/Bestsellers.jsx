@@ -26,7 +26,7 @@ export default function Bestsellers() {
               Our <span className="serif-italic">Bestsellers</span>
             </h2>
           </div>
-          <a href="#bestsellers" className="btn btn-secondary view-all">
+          <a href="#all-products" className="btn btn-secondary view-all">
             View All Products →
           </a>
         </div>

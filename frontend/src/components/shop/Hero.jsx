@@ -1,39 +1,25 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, Truck, ShieldCheck, Star, Headphones } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, ShieldCheck, Star, Headphones, ShoppingBag, Zap, CheckCircle2 } from 'lucide-react';
+import { toastBuyNow } from '../../utils/toast.js';
+import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
+import { fetchProducts, formatPrice, getProductPrice } from '../../api';
 import './Hero.css';
-
-const HERO_IMAGE_URL = '/hi.jpg';
-
-// Inline SVG placeholder shown if the product photo is missing.
-const PLACEHOLDER_SVG =
-  'data:image/svg+xml;utf8,' +
-  encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
-       <defs>
-         <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-           <stop offset="0%" stop-color="#1e3a8a"/>
-           <stop offset="100%" stop-color="#0f172a"/>
-         </linearGradient>
-       </defs>
-       <rect width="600" height="800" fill="url(#g)"/>
-       <g fill="none" stroke="#60a5fa" stroke-width="6" opacity="0.6">
-         <rect x="210" y="240" width="180" height="320" rx="40"/>
-         <circle cx="300" cy="200" r="60"/>
-       </g>
-       <text x="300" y="640" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#dbeafe">Massager Photo</text>
-       <text x="300" y="684" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="#93c5fd">Add public/masage.jpg</text>
-     </svg>`
-  );
 
 const trustStats = [
   { icon: Star, value: '4.9', label: 'Avg. Rating' },
   { icon: ShieldCheck, value: '100%', label: 'Secure Pay' },
-   { icon: Headphones, value: '', label: '24/7 Support' },
+  { icon: Headphones, value: '24/7', label: 'Support' },
 ];
 
 export default function Hero() {
   const [scrollY, setScrollY] = useState(0);
-  const [imgSrc, setImgSrc] = useState(HERO_IMAGE_URL);
+  const [hairRemover, setHairRemover] = useState(null);
+  const [imgError, setImgError] = useState(false);
+  const { addToCart, addToCartSilent } = useCart();
+  const { isAuthenticated, setShowLoginModal } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
@@ -41,6 +27,47 @@ export default function Hero() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Fetch body hair remover product
+  useEffect(() => {
+    fetchProducts()
+      .then((data) => {
+        if (Array.isArray(data)) {
+          const found = data.find((p) =>
+            /hair.remover|hair.removal|epilat|ipl|wax/i.test(p.name)
+          );
+          if (found) setHairRemover(found);
+          else if (data.length > 0) {
+            const fallback = data.find((p) => !/massager/i.test(p.name)) || data[0];
+            setHairRemover(fallback);
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleBuyNow = (e) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+    if (!hairRemover) return;
+
+    addToCartSilent(hairRemover);
+
+    toastBuyNow(
+      {
+        name: hairRemover.name,
+        price: formatPrice(getProductPrice(hairRemover)),
+        imgSrc: !imgError ? hairRemover.image : null,
+      },
+      navigate
+    );
+  };
+
+  const finalPrice = hairRemover ? getProductPrice(hairRemover) : null;
+  const hasDiscount = hairRemover?.discountPercent > 0;
 
   const parallaxStyle = {
     '--scroll-y': `${Math.min(scrollY * 0.1, 28)}px`,
@@ -59,22 +86,22 @@ export default function Hero() {
         <div className="hero-content animate-in">
           <span className="hero-eyebrow">
             <span className="hero-eyebrow-dot" />
-            New Arrival · Percussive Wellness
+            New Arrival · Smooth Skin Wellness
           </span>
 
           <h1 className="hero-title">
-            Restore Your Body,
+            Silky Smooth Skin,
             <br />
-            <span className="hero-title-highlight">Recharge Your Day.</span>
+            <span className="hero-title-highlight">Effortlessly at Home.</span>
           </h1>
 
           <p className="hero-desc">
-            Meet the Glowora percussive massager — 9 attachments, deep-tissue relief,
-            whisper-quiet power, and 6 hours of battery. Engineered for everyday recovery.
+            Say goodbye to salon trips. Our Body Hair Remover delivers painless,
+            long-lasting results — gentle on all skin types, built for everyday use.
           </p>
 
           <div className="hero-actions">
-            <a href="#bestsellers" className="hero-cta-primary">
+            <a href="#all-products" className="hero-cta-primary">
               Shop Now <ArrowRight size={18} />
             </a>
             <a href="#categories" className="hero-cta-ghost">
@@ -95,30 +122,99 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* RIGHT — featured product */}
+        {/* RIGHT — Body Hair Remover product card */}
         <div className="hero-visual animate-in" style={{ animationDelay: '0.15s' }}>
-          <div className="hero-product-stage">
-            <img
-              src={imgSrc}
-              alt="Glowora percussive wellness massager"
-              className="hero-product-image"
-              onError={() => setImgSrc(PLACEHOLDER_SVG)}
-            />
+          <div className="hero-product-card">
 
-            {/* floating glass chips */}
-            <div className="hero-chip hero-chip-discount">
-              <span className="hero-chip-value">-25%</span>
-              <span className="hero-chip-label">Launch Offer</span>
+            {/* Product image area */}
+            <div className="hero-product-img-wrap">
+              {hairRemover && !imgError ? (
+                <img
+                  src={hairRemover.image}
+                  alt={hairRemover.name || 'Body Hair Remover'}
+                  className="hero-product-image"
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <div className="hero-product-img-placeholder">
+                  <Zap size={48} color="#60a5fa" />
+                  <span>Body Hair Remover</span>
+                </div>
+              )}
+
+              {/* Discount badge */}
+              {hasDiscount && (
+                <div className="hero-product-badge">
+                  -{hairRemover.discountPercent}% OFF
+                </div>
+              )}
+
+              {/* Rating chip */}
+              <div className="hero-product-rating-chip">
+                <Star size={13} fill="#fbbf24" color="#fbbf24" />
+                <span>{hairRemover?.rating ?? '4.8'}</span>
+                <span className="hero-product-rating-count">
+                  ({hairRemover?.reviewCount ?? '1,200'}+)
+                </span>
+              </div>
             </div>
 
-            <div className="hero-chip hero-chip-rating">
-              <span className="hero-chip-stars">★★★★★</span>
-              <span className="hero-chip-count">2,300+ reviews</span>
-            </div>
+            {/* Product info */}
+            <div className="hero-product-info">
+              <p className="hero-product-label">Body Hair Remover</p>
+              <h3 className="hero-product-name">
+                {hairRemover?.name ?? 'Smooth Body Hair Remover'}
+              </h3>
 
-            <div className="hero-chip hero-chip-price">
-              <span className="hero-chip-price-old">₹6,999</span>
-              <span className="hero-chip-price-new">₹5,249</span>
+              <ul className="hero-product-features">
+                <li><CheckCircle2 size={14} /> Painless &amp; gentle on skin</li>
+                <li><CheckCircle2 size={14} /> Use anywhere on the body</li>
+                <li><CheckCircle2 size={14} /> Long-lasting smooth results</li>
+              </ul>
+
+              <div className="hero-product-price-row">
+                <span className="hero-product-price">
+                  {finalPrice ? formatPrice(finalPrice) : '₹999.00'}
+                </span>
+                {hasDiscount && (
+                  <span className="hero-product-price-old">
+                    {formatPrice(hairRemover.price)}
+                  </span>
+                )}
+                {hasDiscount && (
+                  <span className="hero-product-save">
+                    Save {formatPrice(hairRemover.price - finalPrice)}
+                  </span>
+                )}
+              </div>
+
+              <div className="hero-product-actions">
+                <button
+                  className="hero-buy-btn"
+                  onClick={handleBuyNow}
+                  disabled={hairRemover?.inStock === false}
+                  aria-label="Buy now"
+                >
+                  <ShoppingBag size={17} /> Buy Now
+                </button>
+
+                {hairRemover?.slug ? (
+                  <Link
+                    to={`/products/${hairRemover.slug}`}
+                    className="hero-view-btn"
+                  >
+                    View Details
+                  </Link>
+                ) : (
+                  <a href="#all-products" className="hero-view-btn">
+                    View Details
+                  </a>
+                )}
+              </div>
+
+              {hairRemover?.inStock === false && (
+                <p className="hero-out-of-stock">Currently out of stock</p>
+              )}
             </div>
 
             <div className="hero-product-glow" />

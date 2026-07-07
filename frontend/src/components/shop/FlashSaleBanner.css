@@ -1,0 +1,295 @@
+/* =========================================
+   FLASH SALE BANNER — Storefront
+   ========================================= */
+.flash-sale-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  padding: 36px 0 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background glow */
+.flash-sale-banner::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: -60px;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.25), transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: fs-glow-drift 8s ease-in-out infinite;
+}
+.flash-sale-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: -60px;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.2), transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: fs-glow-drift 10s ease-in-out infinite reverse;
+}
+@keyframes fs-glow-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(30px, 20px); }
+}
+
+/* ── Header row ── */
+.fs-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 0 24px;
+  max-width: 1280px;
+  margin: 0 auto 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.fs-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+
+.fs-icon-pulse {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.55);
+  animation: fs-icon-pulse 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes fs-icon-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.55); }
+  50%       { box-shadow: 0 0 36px rgba(245, 158, 11, 0.9); }
+}
+
+.fs-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #f59e0b;
+  margin: 0 0 2px;
+}
+.fs-title {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  line-height: 1;
+}
+
+/* ── Countdown ── */
+.fs-countdown {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+.fs-countdown-label {
+  font-size: 0.78rem;
+  color: rgba(226, 232, 240, 0.7);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.fs-countdown-blocks {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fs-count-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 6px 12px;
+  min-width: 52px;
+}
+.fs-count-num {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.fs-count-unit {
+  font-size: 0.65rem;
+  color: rgba(226,232,240,0.6);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+.fs-count-sep {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #f59e0b;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+/* ── Arrow nav ── */
+.fs-nav {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.fs-arrow {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.fs-arrow:hover {
+  background: rgba(245, 158, 11, 0.3);
+  border-color: #f59e0b;
+  transform: scale(1.1);
+}
+
+/* ── Product rail ── */
+.fs-rail {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 24px 8px;
+  max-width: 1280px;
+  margin: 0 auto;
+  scrollbar-width: none;
+  position: relative;
+  z-index: 1;
+}
+.fs-rail::-webkit-scrollbar { display: none; }
+
+/* ── Flash product card ── */
+.fs-card-link {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.fs-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.28s, border-color 0.28s, box-shadow 0.28s;
+  height: 100%;
+}
+.fs-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.2);
+}
+
+.fs-card-img-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  background: rgba(255,255,255,0.05);
+  overflow: hidden;
+}
+.fs-card-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  padding: 12px;
+  transition: transform 0.4s;
+}
+.fs-card:hover .fs-card-img-wrap img { transform: scale(1.07); }
+
+.fs-card-badge {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.fs-card-info {
+  padding: 12px 14px 8px;
+  flex: 1;
+}
+.fs-card-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fs-card-prices {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.fs-card-price {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fbbf24;
+}
+.fs-card-original {
+  font-size: 0.8rem;
+  color: rgba(148,163,184,0.7);
+  text-decoration: line-through;
+}
+.fs-card-btn {
+  margin: 0 14px 14px;
+  width: calc(100% - 28px);
+  padding: 9px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  gap: 6px;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.fs-card-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: scale(1.03);
+}
+.fs-card-btn:disabled {
+  background: rgba(148,163,184,0.3);
+  cursor: not-allowed;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .fs-header { gap: 16px; }
+  .fs-countdown { flex-wrap: wrap; }
+  .fs-title { font-size: 1.4rem; }
+  .fs-count-num { font-size: 1.15rem; }
+  .fs-count-block { min-width: 44px; padding: 5px 8px; }
+  .fs-card-link { flex: 0 0 180px; }
+}
+@media (max-width: 480px) {
+  .fs-card-link { flex: 0 0 155px; }
+  .fs-nav { display: none; }
+}

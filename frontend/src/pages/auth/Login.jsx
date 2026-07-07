@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Droplets } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import GoogleSignInButton from '../../components/GoogleSignInButton';
+import { toastError, toastSuccess } from '../../utils/toast.js';
 import './Auth.css';
 
 export default function Login() {
@@ -20,9 +21,11 @@ export default function Login() {
     setLoading(true);
     try {
       const user = await loginWithGoogle(credential);
+      toastSuccess('Welcome back!', `Signed in as ${user.name}`);
       navigate(user.role === 'admin' ? '/admin' : from, { replace: true });
     } catch (err) {
       setError(err.message || 'Google login failed');
+      toastError('Google login failed', err.message);
     } finally {
       setLoading(false);
     }
@@ -30,6 +33,7 @@ export default function Login() {
 
   const handleGoogleError = (err) => {
     setError(err.message || 'Google Sign-In failed');
+    toastError('Google Sign-In failed', err.message);
   };
 
   const handleSubmit = async (e) => {
@@ -38,12 +42,14 @@ export default function Login() {
     setLoading(true);
     try {
       const user = await login(email, password);
+      toastSuccess('Welcome back!', `Signed in as ${user.name}`);
       navigate(user.role === 'admin' ? '/admin' : from, { replace: true });
     } catch (err) {
       if (err.data?.requireVerification) {
         navigate('/verify-otp', { state: { email: err.data.email } });
       } else {
         setError(err.message);
+        toastError('Sign in failed', err.message);
       }
     } finally {
       setLoading(false);

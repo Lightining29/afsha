@@ -4,6 +4,7 @@ import { CheckCircle, Mail } from 'lucide-react';
 import { fetchOrder, formatPrice } from '../../api';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import { toastSuccess, toastError } from '../../utils/toast.js';
 import './Checkout.css';
 
 export default function CheckoutSuccess() {
@@ -12,10 +13,11 @@ export default function CheckoutSuccess() {
   const [order, setOrder] = useState(null);
 
   useEffect(() => {
+    toastSuccess('Payment successful! 🎉', 'Your order has been confirmed.');
     if (orderId) {
       fetchOrder(orderId)
         .then(setOrder)
-        .catch(() => {});
+        .catch(() => toastError('Could not load order', 'Your payment went through — check Order History.'));
     }
   }, [orderId]);
 

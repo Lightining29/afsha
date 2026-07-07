@@ -26,8 +26,8 @@ export default function AllProducts() {
       <div className="container">
         <div className="bestsellers-header">
           <div>
-            <p className="section-label">Catalog</p>
-            <h2 className="section-title inline">All <span className="serif-italic">Products</span></h2>
+            <p className="section-label">Top Picks</p>
+            <h2 className="section-title inline">All <span className="serif-italic">Bestsellers</span></h2>
           </div>
           <div style={{ alignSelf: 'center', color: '#6B7C8D' }}>{products.length} Products</div>
         </div>

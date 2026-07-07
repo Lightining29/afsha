@@ -3,11 +3,17 @@ import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { formatPrice, getProductPrice } from '../../api';
+import { toastInfo } from '../../utils/toast.js';
 import './Cart.css';
 
 export default function Cart() {
   const { items, cartTotal, removeFromCart, updateQuantity } = useCart();
   const { isAuthenticated, setShowLoginModal } = useAuth();
+
+  const handleRemove = (item) => {
+    removeFromCart(item._id);
+    toastInfo('Item removed', `${item.name} removed from cart.`);
+  };
 
   if (items.length === 0) {
     return (
@@ -55,7 +61,7 @@ export default function Cart() {
                 </span>
                 <button
                   className="cart-item-remove"
-                  onClick={() => removeFromCart(item._id)}
+                  onClick={() => handleRemove(item)}
                   aria-label="Remove item"
                 >
                   <Trash2 size={18} />

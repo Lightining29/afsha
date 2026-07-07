@@ -222,7 +222,7 @@
   margin-top: 2px;
 }
 
-/* ---- Right: featured product stage ---- */
+/* ---- Right: product card ---- */
 .hero-visual {
   position: relative;
   display: flex;
@@ -232,118 +232,249 @@
   transform: translateY(var(--scroll-y, 0px));
 }
 
-.hero-product-stage {
+.hero-product-card {
   position: relative;
-  width: min(100%, 440px);
-  aspect-ratio: 3 / 4;
+  width: min(100%, 420px);
   border-radius: 28px;
-  overflow: hidden;
   background:
-    radial-gradient(circle at 50% 40%, rgba(59, 130, 246, 0.25), transparent 60%),
-    linear-gradient(160deg, rgba(30, 58, 138, 0.4), rgba(15, 23, 42, 0.7));
-  border: 1px solid rgba(96, 165, 250, 0.25);
+    radial-gradient(circle at 50% 20%, rgba(59, 130, 246, 0.18), transparent 60%),
+    linear-gradient(160deg, rgba(20, 40, 80, 0.55), rgba(10, 18, 38, 0.85));
+  border: 1px solid rgba(96, 165, 250, 0.28);
   box-shadow:
-    0 30px 70px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(96, 165, 250, 0.1),
-    0 0 80px rgba(59, 130, 246, 0.25);
-  backdrop-filter: blur(10px);
+    0 30px 70px rgba(0, 0, 0, 0.55),
+    0 0 80px rgba(59, 130, 246, 0.2);
+  backdrop-filter: blur(14px);
+  overflow: hidden;
 }
 
-.hero-product-image {
+/* Product image section */
+.hero-product-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-product-img-wrap .hero-product-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 24px;
   display: block;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Floating glass chips */
-.hero-chip {
-  position: absolute;
+.hero-product-card:hover .hero-product-image {
+  transform: scale(1.06);
+}
+
+.hero-product-img-placeholder {
   display: flex;
   flex-direction: column;
-  padding: 10px 14px;
-  border-radius: 14px;
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(96, 165, 250, 0.3);
-  color: #f1f5f9;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-  animation: chip-float 5s ease-in-out infinite;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  height: 100%;
+  color: rgba(148, 163, 184, 0.7);
+  font-size: 0.9rem;
+  padding: 40px;
 }
 
-.hero-chip-discount {
-  top: 20px;
-  left: 20px;
-  animation-delay: 0s;
-}
-
-.hero-chip-value {
-  font-family: var(--font-serif);
-  font-size: 1.3rem;
+/* Discount badge */
+.hero-product-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  font-size: 0.75rem;
   font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45);
+}
+
+/* Rating chip */
+.hero-product-rating-chip {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  backdrop-filter: blur(10px);
+  color: #f1f5f9;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.hero-product-rating-count {
+  color: rgba(148, 163, 184, 0.8);
+  font-weight: 400;
+}
+
+/* Info section */
+.hero-product-info {
+  padding: 22px 24px 26px;
+  border-top: 1px solid rgba(96, 165, 250, 0.15);
+}
+
+.hero-product-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: #60a5fa;
+  margin: 0 0 6px;
+}
+
+.hero-product-name {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0 0 14px;
+  line-height: 1.3;
+}
+
+.hero-product-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.hero-product-features li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.83rem;
+  color: rgba(203, 213, 225, 0.9);
+}
+
+.hero-product-features li svg {
+  color: #34d399;
+  flex-shrink: 0;
+}
+
+.hero-product-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.hero-product-price {
+  font-family: var(--font-serif);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #fff;
   line-height: 1;
 }
 
-.hero-chip-label {
-  font-size: 0.7rem;
-  color: rgba(226, 232, 240, 0.8);
-  margin-top: 3px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.hero-chip-rating {
-  top: 20px;
-  right: 20px;
-  align-items: flex-end;
-  animation-delay: -1.5s;
-}
-
-.hero-chip-stars {
-  color: #fbbf24;
-  letter-spacing: 2px;
-  font-size: 0.85rem;
-}
-
-.hero-chip-count {
-  font-size: 0.72rem;
-  color: rgba(226, 232, 240, 0.8);
-  margin-top: 2px;
-}
-
-.hero-chip-price {
-  bottom: 20px;
-  left: 20px;
-  flex-direction: row;
-  align-items: baseline;
-  gap: 10px;
-  animation-delay: -3s;
-}
-
-.hero-chip-price-old {
-  font-size: 0.9rem;
-  color: rgba(148, 163, 184, 0.85);
+.hero-product-price-old {
+  font-size: 1rem;
+  color: rgba(148, 163, 184, 0.7);
   text-decoration: line-through;
 }
 
-.hero-chip-price-new {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
+.hero-product-save {
+  font-size: 0.78rem;
   font-weight: 700;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.hero-product-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.hero-buy-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 20px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.22s, box-shadow 0.22s, background 0.22s;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45);
 }
 
-@keyframes chip-float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
+.hero-buy-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(59, 130, 246, 0.6);
 }
 
-/* Soft glow behind product */
+.hero-buy-btn.added {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.45);
+}
+
+.hero-buy-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.hero-view-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  text-decoration: none;
+  transition: background 0.22s, border-color 0.22s, transform 0.22s;
+  white-space: nowrap;
+}
+
+.hero-view-btn:hover {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(96, 165, 250, 0.5);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.hero-out-of-stock {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  color: #f87171;
+  text-align: center;
+}
+
+/* Soft glow behind card */
 .hero-product-glow {
   position: absolute;
   inset: -40px;
-  background: radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.35), transparent 65%);
+  background: radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.3), transparent 65%);
   filter: blur(40px);
   z-index: -1;
   pointer-events: none;
@@ -363,8 +494,8 @@
     grid-template-columns: 1fr;
     gap: 40px;
   }
-  .hero-visual { order: -1; min-height: 400px; }
-  .hero-product-stage { max-width: 360px; }
+  .hero-visual { order: -1; min-height: auto; }
+  .hero-product-card { max-width: 400px; margin: 0 auto; }
   .hero-content { max-width: none; }
 }
 
@@ -374,7 +505,10 @@
   .hero-actions { flex-direction: column; align-items: stretch; }
   .hero-cta-primary, .hero-cta-ghost { justify-content: center; }
   .hero-stats { gap: 18px; }
-  .hero-product-stage { max-width: 300px; }
-  .hero-chip-value { font-size: 1.1rem; }
-  .hero-chip-price-new { font-size: 1.25rem; }
+  .hero-product-card { max-width: 100%; }
+  .hero-product-name { font-size: 1.05rem; }
+  .hero-product-price { font-size: 1.4rem; }
+  .hero-buy-btn, .hero-view-btn { padding: 12px 14px; font-size: 0.88rem; }
 }
+
+/* ---- SweetAlert2 Hero Popup — styles moved to src/styles/index.css ---- */

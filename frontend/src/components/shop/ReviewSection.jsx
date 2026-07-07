@@ -9,6 +9,7 @@ import {
   deleteReview,
 } from '../../api';
 import { useAuth } from '../../context/AuthContext';
+import { toastSuccess, toastError, confirmDialog } from '../../utils/toast.js';
 import './ReviewSection.css';
 
 const MAX_PHOTOS = 4;
@@ -131,13 +132,16 @@ export default function ReviewSection({ product }) {
         const hasNew = newFiles.length > 0;
         const opts = hasNew ? {} : { deleteIndices: [...removedIndices] };
         await updateReview(myReview._id, { rating, comment }, newFiles, opts);
+        toastSuccess('Review updated!', 'Your review has been saved.');
       } else {
         await createReview({ productId: product._id, rating, comment }, newFiles);
+        toastSuccess('Review submitted!', 'Thank you for your feedback.');
       }
       setEditing(false);
       await Promise.all([loadReviews(), loadMyReview()]);
       resetForm();
     } catch (err) {
+      toastError('Submission failed', err.message);
       setError(err.message);
     } finally {
       setSubmitting(false);
@@ -145,14 +149,21 @@ export default function ReviewSection({ product }) {
   };
 
   const handleDelete = async () => {
-    if (!myReview || !confirm('Delete your review?')) return;
+    if (!myReview) return;
+    const result = await confirmDialog(
+      'Delete your review?',
+      'This action cannot be undone.',
+      'Yes, delete it'
+    );
+    if (!result.isConfirmed) return;
     try {
       await deleteReview(myReview._id);
       setMyReview(null);
       resetForm();
       loadReviews();
+      toastSuccess('Review deleted', 'Your review has been removed.');
     } catch (err) {
-      setError(err.message);
+      toastError('Delete failed', err.message);
     }
   };
 

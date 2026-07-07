@@ -1,6 +1,7 @@
 import express from 'express';
 import Product from '../models/Product.js';
 import Banner from '../models/Banner.js';
+import PromoBanner from '../models/PromoBanner.js';
 import Category from '../models/Category.js';
 import User from '../models/User.js';
 import Review from '../models/Review.js';
@@ -91,6 +92,24 @@ router.get('/banner/promo', async (_req, res) => {
   }
 });
 
+
+/**
+ * GET /api/images/promo-banner/:id
+ * Serve a promotional banner image
+ */
+router.get('/promo-banner/:id', async (req, res) => {
+  try {
+    const banner = await PromoBanner.findById(req.params.id).select('imageData imageContentType');
+    if (!banner || !banner.imageData) {
+      return res.status(404).json({ message: 'Image not found' });
+    }
+    res.set('Content-Type', banner.imageContentType || 'image/jpeg');
+    res.set('Cache-Control', 'public, max-age=31536000, immutable');
+    res.send(banner.imageData);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 /**
  * GET /api/images/category/:id

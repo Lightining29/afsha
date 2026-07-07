@@ -6,6 +6,7 @@ import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { HelmetProvider } from 'react-helmet-async';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import './styles/index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(

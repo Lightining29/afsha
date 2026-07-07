@@ -1,5 +1,14 @@
 export function getFinalPrice(product) {
   const price = product.price ?? 0;
+  const now = new Date();
+  // Flash sale price takes priority when active and not expired
+  if (
+    product.flashSale &&
+    product.flashSalePrice > 0 &&
+    (!product.flashSaleEndsAt || new Date(product.flashSaleEndsAt) > now)
+  ) {
+    return product.flashSalePrice;
+  }
   const discount = product.discountPercent ?? 0;
   if (discount > 0) {
     return Math.round(price * (1 - discount / 100) * 100) / 100;
@@ -9,6 +18,13 @@ export function getFinalPrice(product) {
 
 export function enrichProduct(product) {
   const obj = product.toObject ? product.toObject({ virtuals: true }) : { ...product };
+  const now = new Date();
+  // Determine if flash sale is still active
+  const flashActive =
+    obj.flashSale &&
+    obj.flashSalePrice > 0 &&
+    (!obj.flashSaleEndsAt || new Date(obj.flashSaleEndsAt) > now);
+  obj.flashSaleActive = flashActive;
   obj.finalPrice = getFinalPrice(obj);
   obj.inStock = (obj.stockQuantity ?? 0) > 0;
   // Expose image as a URL path — never send raw binary to clients

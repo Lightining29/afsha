@@ -55,6 +55,7 @@ export async function fulfillOrder(order) {
     if (product) {
       product.stockQuantity = Math.max(0, product.stockQuantity - item.quantity);
       product.inStock = product.stockQuantity > 0;
+      product.salesCount = (product.salesCount || 0) + item.quantity;
       await product.save();
     }
   }

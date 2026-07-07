@@ -1,18 +1,28 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Grid2x2 } from 'lucide-react';
 import './CategoryCard.css';
 
 export default function CategoryCard({ category }) {
   const count = category.productCount ?? 0;
+  const imgSrc = category.imageUrl || category.image || null;
+  const [imgFailed, setImgFailed] = useState(!imgSrc);
 
   return (
     <Link to={`/category/${category.slug || category._id}`} className="category-card">
       <div className="category-image-wrap">
-        <img
-          src={category.imageUrl || category.image}
-          alt={category.name}
-          loading="lazy"
-        />
+        {!imgFailed ? (
+          <img
+            src={imgSrc}
+            alt={category.name}
+            loading="lazy"
+            onError={() => setImgFailed(true)}
+          />
+        ) : (
+          <div className="category-img-fallback">
+            <Grid2x2 size={36} />
+          </div>
+        )}
         <div className="category-overlay" />
       </div>
       <div className="category-info">

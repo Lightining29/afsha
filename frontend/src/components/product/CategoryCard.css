@@ -2,3 +2,14 @@
    CATEGORY CARD — Premium (standalone)
    Actual styles live in Categories.css
    ========================================= */
+
+/* ---- Image fallback (no image / broken image) ---- */
+.category-img-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+  color: #93c5fd;
+}

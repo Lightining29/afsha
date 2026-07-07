@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, User, ShoppingBag, Menu, X } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { toastSuccess } from '../../utils/toast.js';
 import './Navbar.css';
 
 const navLinks = [
@@ -111,7 +112,7 @@ export default function Navbar() {
                     {isAdmin && (
                       <Link to="/admin" onClick={() => setUserMenuOpen(false)}>Admin Panel</Link>
                     )}
-                    <button onClick={() => { logout(); setUserMenuOpen(false); navigate('/'); }}>
+                    <button onClick={() => { logout(); setUserMenuOpen(false); navigate('/'); toastSuccess('Signed out', 'You have been signed out successfully.'); }}>
                       Sign Out
                     </button>
                   </>
@@ -119,7 +120,7 @@ export default function Navbar() {
                   <>
                     <Link to="/login" onClick={() => setUserMenuOpen(false)}>Sign In</Link>
                     <Link to="/register" onClick={() => setUserMenuOpen(false)}>Register</Link>
-                    <Link to="/razorpay-checkout" onClick={() => setUserMenuOpen(false)}>Razorpay Demo</Link>
+
                   </>
                 )}
               </div>
