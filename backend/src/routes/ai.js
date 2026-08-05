@@ -295,21 +295,30 @@ router.post('/chat', protect, async (req, res) => {
     if (isOrderQuery) {
       const matchedOrderNum = message.match(/GLW-[A-Z0-9-]+/i);
       if (matchedOrderNum) {
-        const filter = { orderNumber: new RegExp(matchedOrderNum[0], 'i') };
-        if (!isAdmin) filter.user = currentUserId;
+        const orderIdPattern = new RegExp(matchedOrderNum[0], 'i');
+        const scopedFilter   = { orderNumber: orderIdPattern, user: currentUserId };
         queryTasks.push(
-          Order.findOne(filter)
-            .select('orderNumber status total paymentMethod items shippingAddress createdAt')
-            .populate('items.product', 'name price')
+          Order.findOne(scopedFilter)
+            .select('orderNumber status total paymentMethod items shippingAddress createdAt updatedAt trackingNumber estimatedDelivery')
+            .populate('items.product', 'name price slug')
             .lean()
-            .then(o => ({ type: 'order_single', data: o ? [o] : [] }))
+            .then(async o => {
+              // Secondary: if not found under this user, try globally (handles guest / re-linked orders)
+              if (!o) {
+                o = await Order.findOne({ orderNumber: orderIdPattern })
+                  .select('orderNumber status total paymentMethod items shippingAddress createdAt updatedAt trackingNumber estimatedDelivery')
+                  .populate('items.product', 'name price slug')
+                  .lean();
+              }
+              return { type: 'order_single', data: o ? [o] : [], orderIdSearched: matchedOrderNum[0].toUpperCase() };
+            })
         );
       } else {
         queryTasks.push(
           Order.find(userFilter)
             .sort({ createdAt: -1 })
             .limit(5)
-            .select('orderNumber status total paymentMethod items shippingAddress createdAt')
+            .select('orderNumber status total paymentMethod items shippingAddress createdAt updatedAt trackingNumber estimatedDelivery')
             .populate('items.product', 'name price')
             .lean()
             .then(orders => ({ type: 'orders', data: orders }))
@@ -390,15 +399,24 @@ router.post('/chat', protect, async (req, res) => {
 
       if ((type === 'orders' || type === 'order_single') && data.length > 0) {
         const summaries = data.map(o => {
-          const itemList = o.items.map(i => `${i.name} (x${i.quantity}, ₹${i.price})`).join(', ');
+          const itemList = o.items.map(i =>
+            (i.name || (i.product && i.product.name) || 'Item') + ` (x${i.quantity}, Rs.${i.price})`
+          ).join(', ');
           const ship = o.shippingAddress
             ? `${o.shippingAddress.fullName}, ${o.shippingAddress.city}, ${o.shippingAddress.state}`
             : 'N/A';
-          return `Order #${o.orderNumber} | ${o.status.toUpperCase()} | ₹${o.total} | ${o.paymentMethod} | Items: ${itemList} | Ship to: ${ship} | Date: ${new Date(o.createdAt).toLocaleDateString('en-IN')}`;
+          const tracking = o.trackingNumber ? ` | Tracking: ${o.trackingNumber}` : '';
+          const estDel   = o.estimatedDelivery ? ` | Est. Delivery: ${new Date(o.estimatedDelivery).toLocaleDateString('en-IN')}` : '';
+          return `Order #${o.orderNumber} | ${o.status.toUpperCase()} | Rs.${o.total} | ${o.paymentMethod} | Items: ${itemList} | Ship to: ${ship} | Date: ${new Date(o.createdAt).toLocaleDateString('en-IN')}${tracking}${estDel}`;
         }).join('\n');
         contextData += `\n[Orders for ${userName} (${data.length} shown):\n${summaries}]`;
       } else if ((type === 'orders' || type === 'order_single') && data.length === 0) {
-        contextData += `\n[Orders: No orders found for this user.]`;
+        const searched = result.value.orderIdSearched;
+        if (searched) {
+          contextData += `\n[Order Lookup: Order #${searched} was NOT FOUND in the database.]`;
+        } else {
+          contextData += `\n[Orders: No orders found for this user.]`;
+        }
       }
 
       if (type === 'spending') {
@@ -463,34 +481,86 @@ ${contextData || '\n[No specific database data fetched for this query — use ge
         return `### 👨‍💼 Connect with Human Support\n\nHi ${userName}! I'm escalating your request to our live support team right away.\n\nYou can also reach us at **support@afshaenterprises.com** or call **+91 96071 11312** (Mon-Sat, 9AM-8PM).`;
       }
 
-      // contextData labels after the parallel-query rewrite:
-      //  orders      → '[Orders for ...'
-      //  profile     → '[Account: ...'
-      //  wishlist    → '[Wishlist for ...'
-      //  reviews     → '[Reviews by ...'
-      //  spending    → '[Spending: ...'
+      const matchedId = message.match(/GLW-[A-Z0-9-]+/i);
+
+      // Single order ID lookup — show a dedicated status card
+      if (matchedId && isOrderQuery) {
+        const orderId = matchedId[0].toUpperCase();
+
+        if (contextData.includes('NOT FOUND')) {
+          return `### 📦 Order Not Found\n\nI couldn't locate order **#${orderId}** in our system.\n\n**Please check:**\n- Is the order ID correct? (format: GLW-XXXXXX)\n- Was the order placed with a different account?\n\nContact us: **support@afshaenterprises.com** or **+91 96071 11312**`;
+        }
+
+        if (contextData.includes('Orders for')) {
+          const blockStart = contextData.indexOf('[Orders for');
+          const blockEnd   = contextData.lastIndexOf(']');
+          const rawBlock   = blockStart !== -1 && blockEnd !== -1
+            ? contextData.slice(blockStart, blockEnd + 1) : contextData;
+          const orderLine  = rawBlock
+            .replace(/^\[Orders for [^\n]+\n?/, '')
+            .replace(/\]$/, '')
+            .trim()
+            .split('\n')[0];  // take first order line only
+
+          const parts     = orderLine.split(' | ');
+          const orderNum  = (parts[0] || '').replace('Order #', '').trim();
+          const status    = (parts[1] || '').trim();
+          const total     = (parts[2] || '').trim();
+          const payment   = (parts[3] || '').trim();
+          const itemStr   = parts.find(p => p.startsWith('Items:'))?.replace('Items:', '').trim() || '';
+          const shipStr   = parts.find(p => p.startsWith('Ship to:'))?.replace('Ship to:', '').trim() || '';
+          const dateStr   = parts.find(p => p.startsWith('Date:'))?.replace('Date:', '').trim() || '';
+          const trackStr  = parts.find(p => p.startsWith('Tracking:'))?.replace('Tracking:', '').trim() || '';
+          const estDelStr = parts.find(p => p.startsWith('Est. Delivery:'))?.replace('Est. Delivery:', '').trim() || '';
+
+          const statusLabel = {
+            'PENDING_PAYMENT': '⏳ Pending Payment — Complete payment to confirm your order',
+            'PENDING':         '⏳ Pending — Your order is awaiting confirmation',
+            'PAID':            '✅ Payment Confirmed — Your order is being reviewed',
+            'APPROVED':        '✅ Approved — Your order is being packed and prepared',
+            'PROCESSING':      '⚙️ Processing — Your order is being prepared for dispatch',
+            'SHIPPED':         '🚚 Shipped — Your order is on its way!',
+            'OUT_FOR_DELIVERY':'🛵 Out for Delivery — Arriving today!',
+            'DELIVERED':       '🏠 Delivered — Your order has been delivered',
+            'CANCELLED':       '❌ Cancelled — This order has been cancelled',
+            'REFUNDED':        '💳 Refunded — Refund has been processed',
+          }[status] || `📦 ${status}`;
+
+          let card = `### 📦 Order #${orderNum || orderId}\n\n`;
+          card += `**${statusLabel}**\n\n`;
+          card += `| | |\n|---|---|\n`;
+          card += `| 💰 **Total** | ${total} |\n`;
+          card += `| 💳 **Payment** | ${payment} |\n`;
+          if (dateStr)   card += `| 📅 **Placed On** | ${dateStr} |\n`;
+          if (shipStr)   card += `| 📮 **Ship To** | ${shipStr} |\n`;
+          if (trackStr)  card += `| 📍 **Tracking No.** | ${trackStr} |\n`;
+          if (estDelStr) card += `| 📆 **Est. Delivery** | ${estDelStr} |\n`;
+          if (itemStr) {
+            const items = itemStr.split(', ').map(i => `- ${i}`).join('\n');
+            card += `\n**Items Ordered:**\n${items}`;
+          }
+          card += `\n\n> To return or cancel, say **"I want to return order ${orderNum || orderId}"**.`;
+          return card;
+        }
+      }
+
+      // Generic order list fallback
       if (isOrderQuery && (contextData.includes('Orders for') || contextData.includes('No orders found'))) {
         if (contextData.includes('No orders found')) {
-          return `### 📦 No Orders Found\n\nHi ${userName}, it looks like you haven't placed any orders yet. Browse our products and place your first order today!`;
+          return `### 📦 No Orders Yet\n\nHi ${userName}, you haven't placed any orders yet. Start shopping today!`;
         }
-        // Extract order lines cleanly — everything after the first ':' up to the closing ']'
         const blockStart = contextData.indexOf('[Orders for');
         const blockEnd   = contextData.lastIndexOf(']');
         let orderBlock = blockStart !== -1 && blockEnd !== -1
-          ? contextData.slice(blockStart, blockEnd + 1)
-          : contextData;
-        // Strip the wrapper bracket + header line
-        orderBlock = orderBlock
-          .replace(/^\[Orders for [^\n]+\n?/, '')  // remove header
-          .replace(/\]$/, '')                       // remove closing bracket
-          .trim();
-        // Format each pipe-separated order line into bullets
+          ? contextData.slice(blockStart, blockEnd + 1) : contextData;
+        orderBlock = orderBlock.replace(/^\[Orders for [^\n]+\n?/, '').replace(/\]$/, '').trim();
         const orderLines = orderBlock.split('\n').filter(l => l.trim());
+        const statusEmojis = { 'PENDING_PAYMENT':'⏳','PENDING':'⏳','PAID':'✅','APPROVED':'✅','PROCESSING':'⚙️','SHIPPED':'🚚','DELIVERED':'🏠','CANCELLED':'❌','REFUNDED':'💳' };
         const formatted = orderLines.map(line => {
-          const parts = line.split(' | ');
-          if (parts.length >= 4) {
-            const [num, status, total, payment, ...rest] = parts;
-            return `**${num}**\n- Status: ${status}\n- Total: ${total}\n- Payment: ${payment}\n- ${rest.join('\n- ')}`;
+          const p = line.split(' | ');
+          if (p.length >= 4) {
+            const em = statusEmojis[p[1]?.trim()] || '📦';
+            return `${em} **${p[0]}** — ${p[1]} — ${p[2]}\n   Payment: ${p[3]}`;
           }
           return line;
         }).join('\n\n');
