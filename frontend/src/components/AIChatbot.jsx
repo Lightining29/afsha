@@ -117,45 +117,90 @@ export default function AIChatbot() {
       const headers = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      // ── FAST PATH: GLW- order ID detected — call dedicated DB endpoint, skip AI ──
-      const glwMatch = query.match(/GLW-[A-Z0-9-]+/i);
-      if (glwMatch && token) {
-        const orderId = glwMatch[0].toUpperCase();
+      // ── ORDER FAST PATH: use existing /api/orders/my — no AI, no new endpoints ──
+      const glwMatch  = query.match(/GLW-[A-Z0-9-]+/i);
+      const lower2    = query.toLowerCase();
+      const isOrderQ  = glwMatch || lower2.includes('order') || lower2.includes('track') || lower2.includes('purchase') || lower2.includes('bought') || lower2.includes('latest order') || lower2.includes('my order');
+
+      if (isOrderQ && token) {
         try {
-          const orderRes = await fetch(`/api/ai/order/${encodeURIComponent(orderId)}`, { headers });
-          const orderData = await orderRes.json();
+          const ordRes  = await fetch('/api/orders/my', { headers });
+          if (ordRes.ok) {
+            const orders = await ordRes.json(); // array of orders
 
-          let orderCard = '';
-          if (orderData.success && orderData.found && orderData.order) {
-            const o = orderData.order;
-            const ship = o.shippingAddress
-              ? `${o.shippingAddress.name}, ${o.shippingAddress.city}, ${o.shippingAddress.state}`
-              : 'N/A';
-            orderCard  = `### 📦 Order #${o.orderNumber}\n\n`;
-            orderCard += `**${o.statusLabel}**\n\n`;
-            orderCard += `| | |\n|---|---|\n`;
-            orderCard += `| 💰 **Total** | ₹${o.total} |\n`;
-            orderCard += `| 💳 **Payment** | ${o.paymentMethod} |\n`;
-            if (o.placedOn)          orderCard += `| 📅 **Placed On** | ${o.placedOn} |\n`;
-            if (o.shippingAddress)   orderCard += `| 📮 **Ship To** | ${ship} |\n`;
-            if (o.trackingNumber)    orderCard += `| 📍 **Tracking** | ${o.trackingNumber} |\n`;
-            if (o.estimatedDelivery) orderCard += `| 📆 **Est. Delivery** | ${o.estimatedDelivery} |\n`;
-            if (o.items?.length > 0) {
-              const itemList = o.items.map(i => `- ${i.name} (x${i.quantity}) — ₹${i.price}`).join('\n');
-              orderCard += `\n**Items Ordered:**\n${itemList}`;
+            const statusLabels = {
+              pending_payment:  '⏳ Pending Payment — Please complete your payment',
+              pending:          '⏳ Pending — Awaiting confirmation',
+              paid:             '✅ Payment Confirmed — Order is being reviewed',
+              approved:         '✅ Approved — Being packed & prepared',
+              processing:       '⚙️ Processing — Being prepared for dispatch',
+              shipped:          '🚚 Shipped — On the way!',
+              out_for_delivery: '🛵 Out for Delivery — Arriving today!',
+              delivered:        '🏠 Delivered — Successfully delivered',
+              cancelled:        '❌ Cancelled',
+              refunded:         '💳 Refunded',
+            };
+
+            const buildCard = (o) => {
+              const statusKey   = (o.status || '').toLowerCase().replace(/ /g, '_');
+              const statusLabel = statusLabels[statusKey] || `📦 ${(o.status || '').toUpperCase()}`;
+              const ship        = o.shippingAddress
+                ? `${o.shippingAddress.fullName || ''}, ${o.shippingAddress.city || ''}, ${o.shippingAddress.state || ''}`.replace(/^,\s*|,\s*$/g, '')
+                : null;
+              const placedOn    = o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN') : null;
+              const estDel      = o.estimatedDelivery ? new Date(o.estimatedDelivery).toLocaleDateString('en-IN') : null;
+
+              let card  = `### 📦 Order #${o.orderNumber}\n\n`;
+              card     += `**${statusLabel}**\n\n`;
+              card     += `| | |\n|---|---|\n`;
+              card     += `| 💰 **Total** | ₹${o.total} |\n`;
+              card     += `| 💳 **Payment** | ${o.paymentMethod || 'N/A'} |\n`;
+              if (placedOn)         card += `| 📅 **Placed On** | ${placedOn} |\n`;
+              if (ship)             card += `| 📮 **Ship To** | ${ship} |\n`;
+              if (o.trackingNumber) card += `| 📍 **Tracking** | ${o.trackingNumber} |\n`;
+              if (estDel)           card += `| 📆 **Est. Delivery** | ${estDel} |\n`;
+              if (o.items?.length > 0) {
+                const itemLines = o.items.map(i => `- ${i.name || 'Item'} (x${i.quantity}) — ₹${i.price}`).join('\n');
+                card += `\n**Items Ordered:**\n${itemLines}`;
+              }
+              card += `\n\n> To return or cancel this order, say **"I want to return order ${o.orderNumber}"**.`;
+              return card;
+            };
+
+            let card = '';
+
+            if (glwMatch) {
+              // specific order ID lookup
+              const searchId = glwMatch[0].toUpperCase();
+              const found    = orders.find(o => (o.orderNumber || '').toUpperCase() === searchId);
+              if (found) {
+                card = buildCard(found);
+              } else {
+                card = `### 📦 Order Not Found\n\nI couldn't find order **#${searchId}** under your account.\n\n- Double-check the order ID\n- Make sure you're logged in with the correct account\n- Contact us: **support@afshaenterprises.com** | **+91 96071 11312**`;
+              }
+            } else if (orders.length === 0) {
+              card = `### 📦 No Orders Yet, ${name}\n\nYou haven't placed any orders yet. Start shopping and your orders will appear here!`;
+            } else {
+              // show last 3 orders
+              const recent = orders.slice(0, 3);
+              const statusEmojis = { pending_payment:'⏳', pending:'⏳', paid:'✅', approved:'✅', processing:'⚙️', shipped:'🚚', out_for_delivery:'🛵', delivered:'🏠', cancelled:'❌', refunded:'💳' };
+              const lines = recent.map(o => {
+                const sk = (o.status || '').toLowerCase().replace(/ /g,'_');
+                const em = statusEmojis[sk] || '📦';
+                const dt = o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN') : '';
+                return `${em} **#${o.orderNumber}** — ${(o.status||'').toUpperCase()} — ₹${o.total} — ${dt}`;
+              }).join('\n');
+              card = `### 📦 Your Recent Orders, ${name}\n\n${lines}\n\n> Share an order ID (e.g. \`GLW-XXXXXX\`) for full tracking details.`;
             }
-            orderCard += `\n\n> To return or cancel, say **"I want to return order ${o.orderNumber}"**.`;
-          } else if (orderData.success && !orderData.found) {
-            orderCard = `### 📦 Order Not Found\n\nI couldn't find order **#${orderId}** in our system.\n\n- Double-check the order ID (format: GLW-XXXXXX)\n- Make sure you're logged in with the correct account\n- Contact us: **support@afshaenterprises.com** or **+91 96071 11312**`;
-          }
 
-          if (orderCard) {
-            setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: orderCard, timestamp: new Date().toISOString() }]);
-            setIsLoading(false);
-            return;
+            if (card) {
+              setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: card, timestamp: new Date().toISOString() }]);
+              setIsLoading(false);
+              return;
+            }
           }
         } catch (_) {
-          // order lookup failed — fall through to normal AI chat
+          // fall through to AI chat
         }
       }
 
