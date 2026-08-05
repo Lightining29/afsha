@@ -293,8 +293,10 @@
 .buy-now-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
-  padding: 7px 16px;
+  padding: 0 14px;
+  align-self: stretch;
   border-radius: 8px;
   background: #1a1a1a;
   color: #fff;
