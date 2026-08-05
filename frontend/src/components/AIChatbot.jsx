@@ -55,19 +55,19 @@ export default function AIChatbot() {
     if (lower.includes('human') || lower.includes('agent') || lower.includes('representative')) {
       return `### 👨‍💼 Connect with Human Support\n\nI've logged your request for our live customer support team!\n\nYou can reach us at **support@afshaenterprises.com** or call **+91 96071 11312** (Mon-Sat, 9AM-8PM).`;
     }
-    if (lower.includes('order') || lower.includes('status') || lower.includes('track') || /glw-[a-z0-9-]+/i.test(lower)) {
+    if (lower.includes('order') || lower.includes('status') || lower.includes('track') || lower.includes('purchase') || lower.includes('bought') || /glw-[a-z0-9-]+/i.test(lower)) {
       const matched = queryText.match(/GLW-[A-Z0-9-]+/i);
-      if (matched) {
-        return `### 📦 Order #${matched[0].toUpperCase()}\n\nFetching live status — please hold on. If this takes a moment, try refreshing or contact our support team!`;
+      if (user) {
+        const orderId = matched ? ` for **#${matched[0].toUpperCase()}**` : '';
+        return `### 📦 Your Orders, ${name}\n\nI'm looking up your order${orderId} right now. If you don't see a response in a moment, you can view all your orders directly here:\n\n👉 **[My Account → Order History](/account/orders)**\n\nOr share your **Order ID** (e.g. \`GLW-XXXXXX\`) and I'll pull up the details!`;
       }
-      return user
-        ? `### 📦 Your Orders, ${name}\n\nPlease wait while I fetch your latest orders from the server...`
-        : `### 📦 Order Tracking\n\nPlease **log in** to your account to view your order history and live tracking updates.`;
+      return `### 📦 Order Tracking\n\nPlease **log in** to your account to view your order history and live tracking updates.`;
     }
-    if (lower.includes('wishlist') || lower.includes('wish list') || lower.includes('saved item')) {
-      return user
-        ? `### 💖 Your Wishlist, ${name}\n\nPlease wait while I load your saved items...`
-        : `### 💖 Wishlist\n\nPlease **log in** to view your saved wishlist items.`;
+    if (lower.includes('wishlist') || lower.includes('wish list') || lower.includes('saved item') || lower.includes('favourite') || lower.includes('favorite')) {
+      if (user) {
+        return `### 💖 Your Wishlist, ${name}\n\nI'm loading your saved items now. If it takes a moment, you can view your full wishlist here:\n\n👉 **[My Account → Wishlist](/wishlist)**`;
+      }
+      return `### 💖 Wishlist\n\nPlease **log in** to view your saved wishlist items.`;
     }
     if (lower.includes('my account') || lower.includes('my profile') || lower.includes('my email') || lower.includes('my phone') || lower.includes('my address') || lower.includes('my info') || lower.includes('my detail')) {
       if (user) {

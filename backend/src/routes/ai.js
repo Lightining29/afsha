@@ -469,12 +469,32 @@ ${contextData || '\n[No specific database data fetched for this query — use ge
       //  wishlist    → '[Wishlist for ...'
       //  reviews     → '[Reviews by ...'
       //  spending    → '[Spending: ...'
-      if (isOrderQuery && (contextData.includes('Orders for') || contextData.includes('Orders:'))) {
-        const hasOrders = !contextData.includes('No orders found');
-        if (hasOrders) {
-          return `### 📦 Your Orders, ${userName}\n\n${contextData.replace(/\[Orders for [^\]]*\]/gs, m => m.replace(/\[Orders for [^:]+:\n?/, '').replace(/\]$/, '')).trim()}\n\n> Need to return or cancel an order? Just let me know!`;
+      if (isOrderQuery && (contextData.includes('Orders for') || contextData.includes('No orders found'))) {
+        if (contextData.includes('No orders found')) {
+          return `### 📦 No Orders Found\n\nHi ${userName}, it looks like you haven't placed any orders yet. Browse our products and place your first order today!`;
         }
-        return `### 📦 No Orders Found\n\nHi ${userName}, it looks like you haven't placed any orders yet. Browse our products and place your first order today!`;
+        // Extract order lines cleanly — everything after the first ':' up to the closing ']'
+        const blockStart = contextData.indexOf('[Orders for');
+        const blockEnd   = contextData.lastIndexOf(']');
+        let orderBlock = blockStart !== -1 && blockEnd !== -1
+          ? contextData.slice(blockStart, blockEnd + 1)
+          : contextData;
+        // Strip the wrapper bracket + header line
+        orderBlock = orderBlock
+          .replace(/^\[Orders for [^\n]+\n?/, '')  // remove header
+          .replace(/\]$/, '')                       // remove closing bracket
+          .trim();
+        // Format each pipe-separated order line into bullets
+        const orderLines = orderBlock.split('\n').filter(l => l.trim());
+        const formatted = orderLines.map(line => {
+          const parts = line.split(' | ');
+          if (parts.length >= 4) {
+            const [num, status, total, payment, ...rest] = parts;
+            return `**${num}**\n- Status: ${status}\n- Total: ${total}\n- Payment: ${payment}\n- ${rest.join('\n- ')}`;
+          }
+          return line;
+        }).join('\n\n');
+        return `### 📦 Your Orders, ${userName}\n\n${formatted}\n\n> Need to track, return, or cancel an order? Just ask!`;
       }
 
       if (isWishlistQuery && contextData.includes('Wishlist for')) {
