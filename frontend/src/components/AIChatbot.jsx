@@ -6,10 +6,14 @@ import './AIChatbot.css';
 export default function AIChatbot() {
   const { user } = useAuth();
 
+  const isAdmin = user?.role === 'admin';
+
   const makeWelcome = (u) => ({
     id: 'welcome',
     sender: 'bot',
-    text: u
+    text: u?.role === 'admin'
+      ? `👑 Welcome, **${u.name?.split(' ')[0] || 'Admin'}**! You're in **Admin Mode**.\n\nI can show you new orders, pending approvals, revenue, analytics and more. What would you like to check?`
+      : u
       ? `Hello **${u.name?.split(' ')[0] || 'there'}**! 👋 I'm **AfshaBot**, your 24/7 AI Shopping Assistant.\n\nI've already loaded your account details — just ask me anything about your orders, wishlist, account and more!`
       : `Hello! 👋 I'm **AfshaBot**, your 24/7 AI Shopping Assistant. How can I help you today?`,
     timestamp: new Date().toISOString(),
@@ -117,9 +121,106 @@ export default function AIChatbot() {
       const headers = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
+      // ── ADMIN FAST PATH: fetch all orders from /api/admin/orders ─────────────
+      const lower2     = query.toLowerCase();
+      const isAdminUser = user?.role === 'admin';
+      const isAdminOrderQ = isAdminUser && (
+        lower2.includes('new order') || lower2.includes('pending') ||
+        lower2.includes('approved') || lower2.includes('paid order') ||
+        lower2.includes('all order') || lower2.includes('today order') ||
+        lower2.includes('recent order') || lower2.includes('incoming') ||
+        lower2.includes('order list') || lower2.includes('show order') ||
+        lower2.includes('revenue') || lower2.includes('analytics') ||
+        lower2.includes('sales') || lower2.includes('total revenue') ||
+        lower2.includes('how many order') || lower2.includes('order count')
+      );
+
+      if (isAdminOrderQ) {
+        try {
+          const adminToken = localStorage.getItem('glowora_token');
+          const adminHeaders = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` };
+          const adminRes = await fetch('/api/admin/orders', { headers: adminHeaders });
+          if (adminRes.ok) {
+            const allOrders = await adminRes.json();
+
+            // Filter: paid/approved = successful payment orders
+            const PAID_STATUSES = ['paid', 'approved', 'processing', 'shipped', 'out_for_delivery', 'delivered'];
+            const paidOrders   = allOrders.filter(o => PAID_STATUSES.includes((o.status||'').toLowerCase().replace(/ /g,'_')));
+            const newOrders    = allOrders.filter(o => ['paid','approved'].includes((o.status||'').toLowerCase()));
+            const pendingOrders = allOrders.filter(o => ['pending','pending_payment'].includes((o.status||'').toLowerCase().replace(/ /g,'_')));
+
+            // Revenue calc
+            const totalRevenue = paidOrders.reduce((s, o) => s + (Number(o.total)||0), 0);
+            const todayStr     = new Date().toDateString();
+            const todayOrders  = allOrders.filter(o => new Date(o.createdAt).toDateString() === todayStr);
+            const todayRevenue = todayOrders.filter(o => PAID_STATUSES.includes((o.status||'').toLowerCase().replace(/ /g,'_'))).reduce((s,o) => s+(Number(o.total)||0), 0);
+
+            const statusEmojis = { pending_payment:'⏳', pending:'⏳', paid:'✅', approved:'✅', processing:'⚙️', shipped:'🚚', out_for_delivery:'🛵', delivered:'🏠', cancelled:'❌', refunded:'💳' };
+
+            let adminCard = '';
+
+            // Revenue / analytics query
+            if (lower2.includes('revenue') || lower2.includes('analytics') || lower2.includes('sales')) {
+              const statusBreakdown = {};
+              allOrders.forEach(o => { const s=(o.status||'unknown').toLowerCase(); statusBreakdown[s]=(statusBreakdown[s]||0)+1; });
+              const bLines = Object.entries(statusBreakdown).map(([s,c]) => {
+                const em = statusEmojis[s.replace(/ /g,'_')] || '📦';
+                return `${em} ${s.charAt(0).toUpperCase()+s.slice(1)}: **${c}**`;
+              }).join('\n');
+              adminCard  = `### 📊 Store Analytics\n\n`;
+              adminCard += `| | |\n|---|---|\n`;
+              adminCard += `| 🛒 **Total Orders** | ${allOrders.length} |\n`;
+              adminCard += `| ✅ **Paid Orders** | ${paidOrders.length} |\n`;
+              adminCard += `| 🆕 **New (Paid/Approved)** | ${newOrders.length} |\n`;
+              adminCard += `| ⏳ **Pending Payment** | ${pendingOrders.length} |\n`;
+              adminCard += `| 📅 **Today's Orders** | ${todayOrders.length} |\n`;
+              adminCard += `| 💸 **Total Revenue** | ₹${totalRevenue.toLocaleString('en-IN')} |\n`;
+              adminCard += `| 📆 **Today's Revenue** | ₹${todayRevenue.toLocaleString('en-IN')} |\n`;
+              adminCard += `\n**Order Breakdown:**\n${bLines}`;
+
+            // New / pending approval orders
+            } else if (lower2.includes('new order') || lower2.includes('incoming') || lower2.includes('approved') || lower2.includes('paid order') || lower2.includes('pending')) {
+              const showOrders = lower2.includes('pending') ? pendingOrders : newOrders;
+              const label      = lower2.includes('pending') ? '⏳ Pending Payment Orders' : '🆕 New Orders (Paid & Approved)';
+              if (showOrders.length === 0) {
+                adminCard = `### ${label}\n\nNo orders in this category right now.`;
+              } else {
+                const rows = showOrders.slice(0, 15).map(o => {
+                  const em      = statusEmojis[(o.status||'').toLowerCase().replace(/ /g,'_')] || '📦';
+                  const cust    = o.user?.name || o.shippingAddress?.fullName || 'Guest';
+                  const email   = o.user?.email || '-';
+                  const items   = (o.items||[]).length;
+                  const dt      = o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN') : '-';
+                  return `${em} **#${o.orderNumber}** | ${cust} | ₹${o.total} | ${items} item(s) | ${dt}`;
+                }).join('\n');
+                adminCard  = `### ${label} (${showOrders.length} total)\n\n${rows}`;
+                if (showOrders.length > 15) adminCard += `\n\n_Showing 15 of ${showOrders.length}. Visit Admin Panel for full list._`;
+              }
+
+            // All orders / today's orders
+            } else {
+              const showOrders = lower2.includes('today') ? todayOrders : allOrders.slice(0, 10);
+              const label      = lower2.includes('today') ? `📅 Today's Orders (${todayOrders.length})` : `📋 All Orders (${allOrders.length} total, showing 10)`;
+              const rows = showOrders.map(o => {
+                const em   = statusEmojis[(o.status||'').toLowerCase().replace(/ /g,'_')] || '📦';
+                const cust = o.user?.name || o.shippingAddress?.fullName || 'Guest';
+                const dt   = o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN') : '-';
+                return `${em} **#${o.orderNumber}** | ${cust} | ₹${o.total} | ${(o.status||'').toUpperCase()} | ${dt}`;
+              }).join('\n');
+              adminCard = `### ${label}\n\n${rows || 'No orders found.'}`;
+            }
+
+            if (adminCard) {
+              setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: adminCard, timestamp: new Date().toISOString() }]);
+              setIsLoading(false);
+              return;
+            }
+          }
+        } catch (_) { /* fall through */ }
+      }
+
       // ── ORDER FAST PATH: use existing /api/orders/my — no AI, no new endpoints ──
       const glwMatch  = query.match(/GLW-[A-Z0-9-]+/i);
-      const lower2    = query.toLowerCase();
       const isSpendingQ = lower2.includes('spent') || lower2.includes('spending') || lower2.includes('total spend') || lower2.includes('how much') || lower2.includes('expenditure') || lower2.includes('total amount') || lower2.includes('money spent');
       const isOrderQ  = glwMatch || isSpendingQ || lower2.includes('order') || lower2.includes('track') || lower2.includes('purchase') || lower2.includes('bought') || lower2.includes('latest order') || lower2.includes('my order');
 
@@ -300,29 +401,38 @@ export default function AIChatbot() {
     return { __html: formatted };
   };
 
-  // Quick-action chips — personalised for logged-in users
+  // Quick-action chips — personalised by role
+  const adminChips = [
+    { label: '🆕 New Orders',       icon: <Package size={13} />,     msg: 'Show new orders with successful payment' },
+    { label: '⏳ Pending Payment',   icon: null,                       msg: 'Show pending payment orders' },
+    { label: '📊 Analytics',         icon: <ShoppingBag size={13} />, msg: 'Show store analytics and revenue' },
+    { label: '📅 Today Orders',      icon: null,                       msg: 'Show today orders' },
+    { label: '📋 All Orders',        icon: null,                       msg: 'Show all orders' },
+    { label: '💸 Revenue',           icon: null,                       msg: 'Show total revenue and sales analytics' },
+  ];
+
   const userChips = [
     { label: 'Track my order', icon: <Package size={13} />, msg: 'Track my latest order' },
-    { label: 'My wishlist', icon: <Heart size={13} />, msg: 'Show my wishlist' },
-    { label: 'My account', icon: <User size={13} />, msg: 'Show my account details' },
-    { label: 'My reviews', icon: <Star size={13} />, msg: 'Show my reviews' },
-    { label: 'Spending', icon: <ShoppingBag size={13} />, msg: 'How much have I spent?' },
-    { label: 'Shipping', icon: <Truck size={13} />, msg: 'What are the shipping timelines?' },
-    { label: 'Returns', icon: null, msg: '🔄 Returns policy' },
+    { label: 'My wishlist',    icon: <Heart size={13} />,   msg: 'Show my wishlist' },
+    { label: 'My account',    icon: <User size={13} />,     msg: 'Show my account details' },
+    { label: 'My reviews',    icon: <Star size={13} />,     msg: 'Show my reviews' },
+    { label: 'Spending',      icon: <ShoppingBag size={13} />, msg: 'How much have I spent?' },
+    { label: 'Shipping',      icon: <Truck size={13} />,    msg: 'What are the shipping timelines?' },
+    { label: 'Returns',       icon: null,                   msg: '🔄 Returns policy' },
   ];
 
   const guestChips = [
-    { label: 'Orders', icon: <Package size={13} />, msg: 'Order status' },
-    { label: 'Shipping', icon: <Truck size={13} />, msg: 'Shipping timelines' },
-    { label: 'Returns', icon: null, msg: 'Return & exchange policy' },
-    { label: 'Refunds', icon: null, msg: 'Refund policy' },
-    { label: 'Warranty', icon: null, msg: '🛡️ Warranty policy' },
-    { label: 'Payments', icon: null, msg: 'Payment methods' },
-    { label: 'Coupons', icon: null, msg: '🎟️ Coupons and discounts' },
+    { label: 'Orders',   icon: <Package size={13} />,     msg: 'Order status' },
+    { label: 'Shipping', icon: <Truck size={13} />,       msg: 'Shipping timelines' },
+    { label: 'Returns',  icon: null,                      msg: 'Return & exchange policy' },
+    { label: 'Refunds',  icon: null,                      msg: 'Refund policy' },
+    { label: 'Warranty', icon: null,                      msg: '🛡️ Warranty policy' },
+    { label: 'Payments', icon: null,                      msg: 'Payment methods' },
+    { label: 'Coupons',  icon: null,                      msg: '🎟️ Coupons and discounts' },
     { label: 'Products', icon: <ShoppingBag size={13} />, msg: 'Product recommendations' },
   ];
 
-  const chips = user ? userChips : guestChips;
+  const chips = isAdmin ? adminChips : user ? userChips : guestChips;
 
   return (
     <div className="ai-chatbot-widget">
@@ -349,7 +459,9 @@ export default function AIChatbot() {
                 <h4>AfshaBot AI <Sparkles size={13} color="#FFD700" /></h4>
                 <div className="ai-bot-status">
                   <span className="ai-status-dot"></span>
-                  {user
+                  {isAdmin
+                    ? <span>👑 Admin: <strong>{user.name?.split(' ')[0]}</strong></span>
+                    : user
                     ? <span>Logged in as <strong>{user.name?.split(' ')[0]}</strong></span>
                     : '24/7 Online Support'}
                 </div>
