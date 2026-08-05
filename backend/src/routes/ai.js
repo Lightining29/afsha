@@ -2,6 +2,9 @@ import express from 'express';
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 import Category from '../models/Category.js';
+import User from '../models/User.js';
+import Review from '../models/Review.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -211,131 +214,246 @@ async function getAIResponse(provider, reqApiKey, systemPrompt, userPrompt, fall
 }
 
 // -------------------------------------------------------------------------
-// 1. AI CHATBOT ROUTE (24/7 Support with Human Escalation)
+// 1. AI CHATBOT ROUTE (24/7 Support — JWT Authenticated, Role-Scoped DB Access)
 // -------------------------------------------------------------------------
-router.post('/chat', async (req, res) => {
+
+/**
+ * Strips all private/sensitive fields from a plain object before it is
+ * included in the AI context string.  This ensures that passwords, OTP
+ * hashes, raw image buffers and internal Mongoose fields are NEVER sent
+ * to any AI provider.
+ */
+function sanitize(obj) {
+  if (!obj) return obj;
+  const PRIVATE_KEYS = new Set([
+    'password', 'otpHash', 'otpExpires', 'otpCooldownUntil',
+    'photoData', 'photoContentType', 'razorpaySignature',
+    '__v', 'googleId',
+  ]);
+  const plain = typeof obj.toObject === 'function' ? obj.toObject() : { ...obj };
+  for (const key of PRIVATE_KEYS) delete plain[key];
+  return plain;
+}
+
+router.post('/chat', protect, async (req, res) => {
   try {
-    const { message = '', conversationHistory = [], userId, provider, apiKey } = req.body;
+    const { message = '', conversationHistory = [], provider, apiKey } = req.body;
     const lower = message.toLowerCase().trim();
 
-    // Check query intent across 8 core topics
-    const isHumanRequest = lower.includes('human') || lower.includes('agent') || lower.includes('person') || lower.includes('representative') || lower.includes('talk to someone') || lower.includes('support team') || lower.includes('call');
-    const isOrderQuery = lower.includes('order') || lower.includes('status') || lower.includes('track') || /glw-[a-z0-9-]+/i.test(lower);
-    const isShippingQuery = lower.includes('ship') || lower.includes('delivery') || lower.includes('pincode') || lower.includes('how long') || lower.includes('courier');
-    const isReturnQuery = lower.includes('return') || lower.includes('exchange') || lower.includes('policy');
-    const isRefundQuery = lower.includes('refund') || lower.includes('money back') || lower.includes('bank') || lower.includes('wallet');
-    const isWarrantyQuery = lower.includes('warranty') || lower.includes('guarantee') || lower.includes('damage') || lower.includes('broken') || lower.includes('defective');
-    const isPaymentQuery = lower.includes('payment') || lower.includes('razorpay') || lower.includes('cod') || lower.includes('card') || lower.includes('upi') || lower.includes('pay');
-    const isCouponQuery = lower.includes('coupon') || lower.includes('code') || lower.includes('discount') || lower.includes('promo') || lower.includes('voucher');
-    const isProductQuery = lower.includes('product') || lower.includes('buy') || lower.includes('price') || lower.includes('stock') || lower.includes('recommend') || lower.includes('skincare') || lower.includes('makeup') || lower.includes('best') || lower.includes('ingredient');
+    // ── Authenticated user (auto-identified from JWT, never from request body) ──
+    const currentUserId = req.user.id;
+    const currentUserRole = req.user.role || 'user';
+    const isAdmin = currentUserRole === 'admin';
 
-    const shouldEscalate = isHumanRequest || lower.includes('complaint') || lower.includes('urgent') || lower.includes('fraud');
+    // Fetch the full user record (safe fields only) for personalisation
+    const currentUser = await User.findById(currentUserId)
+      .select('name email phone address city state zipCode role wishlist isVerified createdAt');
 
+    if (!currentUser) {
+      return res.status(401).json({ success: false, message: 'User account not found.' });
+    }
+
+    const userName = currentUser.name?.split(' ')[0] || 'there';
+
+    // ── Intent detection ──────────────────────────────────────────────────────
+    const isHumanRequest    = lower.includes('human') || lower.includes('agent') || lower.includes('representative') || lower.includes('talk to someone') || lower.includes('support team') || lower.includes('call');
+    const isOrderQuery      = lower.includes('order') || lower.includes('status') || lower.includes('track') || lower.includes('purchase') || lower.includes('bought') || lower.includes('last month') || lower.includes('how many orders') || /glw-[a-z0-9-]+/i.test(lower);
+    const isShippingQuery   = lower.includes('ship') || lower.includes('delivery') || lower.includes('courier') || lower.includes('tracking number') || lower.includes('how long') || lower.includes('deliver');
+    const isWishlistQuery   = lower.includes('wishlist') || lower.includes('wish list') || lower.includes('saved item') || lower.includes('favourite') || lower.includes('favorite');
+    const isProfileQuery    = lower.includes('my account') || lower.includes('my profile') || lower.includes('my email') || lower.includes('my phone') || lower.includes('my address') || lower.includes('my info') || lower.includes('my detail');
+    const isReturnQuery     = lower.includes('return') || lower.includes('exchange') || lower.includes('replace') || lower.includes('replacement');
+    const isRefundQuery     = lower.includes('refund') || lower.includes('money back');
+    const isWarrantyQuery   = lower.includes('warranty') || lower.includes('guarantee') || lower.includes('damage') || lower.includes('broken') || lower.includes('defective');
+    const isPaymentQuery    = lower.includes('payment') || lower.includes('razorpay') || lower.includes('cod') || lower.includes('upi') || lower.includes('pay');
+    const isCouponQuery     = lower.includes('coupon') || lower.includes('discount') || lower.includes('promo') || lower.includes('voucher') || lower.includes('offer');
+    const isProductQuery    = lower.includes('product') || lower.includes('buy') || lower.includes('price') || lower.includes('stock') || lower.includes('recommend') || lower.includes('skincare') || lower.includes('makeup') || lower.includes('best') || lower.includes('ingredient') || lower.includes('category') || lower.includes('brand');
+    const isReviewQuery     = lower.includes('review') || lower.includes('rating') || lower.includes('my review') || lower.includes('feedback') || lower.includes('i reviewed');
+    const isSpendingQuery   = lower.includes('how much') && (lower.includes('spent') || lower.includes('spend'));
+    const shouldEscalate    = isHumanRequest || lower.includes('complaint') || lower.includes('urgent') || lower.includes('fraud');
+
+    // ── Authorised database queries ───────────────────────────────────────────
+    // SECURITY: all customer queries are scoped to currentUserId.
+    //           Admin queries may be unrestricted.
     let contextData = '';
 
-    // Order lookup
+    // 1. Orders
     if (isOrderQuery) {
       const matchedOrderNum = message.match(/GLW-[A-Z0-9-]+/i);
-      let order = null;
+      let orders = [];
 
       if (matchedOrderNum) {
-        order = await Order.findOne({ orderNumber: new RegExp(matchedOrderNum[0], 'i') }).populate('items.product');
-      } else if (userId) {
-        order = await Order.findOne({ user: userId }).sort({ createdAt: -1 }).populate('items.product');
+        // Specific order lookup — customer can only see their own
+        const filter = { orderNumber: new RegExp(matchedOrderNum[0], 'i') };
+        if (!isAdmin) filter.user = currentUserId;
+        const o = await Order.findOne(filter).populate('items.product', 'name price slug');
+        if (o) orders = [o];
       } else {
-        const latestOrders = await Order.find({}).sort({ createdAt: -1 }).limit(1);
-        if (latestOrders.length > 0) order = latestOrders[0];
+        // Latest orders for this user (or all for admin)
+        const filter = isAdmin ? {} : { user: currentUserId };
+        orders = await Order.find(filter).sort({ createdAt: -1 }).limit(5).populate('items.product', 'name price slug');
       }
 
-      if (order) {
-        const itemNames = order.items.map(i => `${i.name} (x${i.quantity})`).join(', ');
-        contextData += `\n[Database Context: Found Order #${order.orderNumber}. Status: ${order.status.toUpperCase()}. Total: ₹${order.total}. Items: ${itemNames}. Delivery Estimate: 3 business days.]`;
+      if (orders.length > 0) {
+        const orderSummaries = orders.map(o => {
+          const itemList = o.items.map(i => `${i.name} (x${i.quantity}, ₹${i.price})`).join(', ');
+          const shipping = o.shippingAddress
+            ? `${o.shippingAddress.fullName}, ${o.shippingAddress.address}, ${o.shippingAddress.city}, ${o.shippingAddress.state} - ${o.shippingAddress.zip}`
+            : 'N/A';
+          return `Order #${o.orderNumber} | Status: ${o.status.toUpperCase()} | Total: ₹${o.total} | Payment: ${o.paymentMethod} | Items: ${itemList} | Shipping to: ${shipping} | Placed on: ${new Date(o.createdAt).toLocaleDateString('en-IN')}`;
+        }).join('\n');
+        const totalOrders = await Order.countDocuments(isAdmin ? {} : { user: currentUserId });
+        contextData += `\n[Order Data for ${userName}: ${totalOrders} total order(s).\n${orderSummaries}]`;
       } else {
-        contextData += `\n[Database Context: No specific order ID provided or found. Ask customer for their Order ID starting with GLW-.]`;
+        contextData += `\n[Order Data: No orders found for this user.]`;
       }
     }
 
-    // Product search lookup
-    if (isProductQuery || lower.length > 2) {
-      const keywords = lower.split(' ').filter(w => w.length > 3 && !['what', 'where', 'when', 'how', 'this', 'that', 'have'].includes(w));
+    // 2. Spending summary
+    if (isSpendingQuery) {
+      const filter = isAdmin ? {} : { user: currentUserId };
+      const agg = await Order.aggregate([
+        { $match: { ...filter, user: currentUser._id, status: { $in: ['paid', 'approved', 'shipped'] } } },
+        { $group: { _id: null, total: { $sum: '$total' }, count: { $sum: 1 } } },
+      ]);
+      const totalSpent = agg[0]?.total || 0;
+      const orderCount = agg[0]?.count || 0;
+      contextData += `\n[Spending Summary for ${userName}: ₹${totalSpent.toFixed(2)} spent across ${orderCount} completed order(s).]`;
+    }
+
+    // 3. Wishlist
+    if (isWishlistQuery) {
+      await currentUser.populate('wishlist', 'name price slug rating stockQuantity');
+      if (currentUser.wishlist?.length > 0) {
+        const wl = currentUser.wishlist.map(p => `${p.name} — ₹${p.price} (${p.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'})`).join(', ');
+        contextData += `\n[Wishlist for ${userName} (${currentUser.wishlist.length} item(s)): ${wl}]`;
+      } else {
+        contextData += `\n[Wishlist for ${userName}: Empty — no items saved to wishlist.]`;
+      }
+    }
+
+    // 4. Profile / Account info
+    if (isProfileQuery) {
+      const safe = sanitize(currentUser);
+      const profileSummary = `Name: ${safe.name}, Email: ${safe.email}, Phone: ${safe.phone || 'not set'}, Address: ${[safe.address, safe.city, safe.state, safe.zipCode].filter(Boolean).join(', ') || 'not set'}, Member since: ${new Date(safe.createdAt).toLocaleDateString('en-IN')}`;
+      contextData += `\n[Account Info for ${userName}: ${profileSummary}]`;
+    }
+
+    // 5. My reviews
+    if (isReviewQuery) {
+      const filter = isAdmin ? {} : { user: currentUserId };
+      const reviews = await Review.find(filter).populate('product', 'name slug').sort({ createdAt: -1 }).limit(5);
+      if (reviews.length > 0) {
+        const reviewList = reviews.map(r => `${r.product?.name || 'Unknown Product'} — ${r.rating}⭐ — "${r.comment || 'No comment'}"`).join('\n');
+        contextData += `\n[Reviews by ${userName}:\n${reviewList}]`;
+      } else {
+        contextData += `\n[Reviews by ${userName}: No reviews submitted yet.]`;
+      }
+    }
+
+    // 6. Products & Categories
+    if (isProductQuery || (!isOrderQuery && !isWishlistQuery && !isProfileQuery && !isReviewQuery && lower.length > 2)) {
+      const keywords = lower.split(' ').filter(w => w.length > 3 && !['what', 'where', 'when', 'how', 'this', 'that', 'have', 'show', 'tell', 'about', 'your'].includes(w));
       let products = [];
 
       if (keywords.length > 0) {
         const searchRegex = new RegExp(keywords.join('|'), 'i');
-        products = await Product.find({ $or: [{ name: searchRegex }, { description: searchRegex }] }).limit(4);
+        products = await Product.find({ $or: [{ name: searchRegex }, { description: searchRegex }] }).limit(5).select('name price rating stockQuantity slug bestseller');
       }
       if (products.length === 0) {
-        products = await Product.find({ bestseller: true }).limit(4);
+        products = await Product.find({ bestseller: true }).limit(5).select('name price rating stockQuantity slug bestseller');
       }
 
       if (products.length > 0) {
-        const prodList = products.map(p => `- ${p.name} (Price: ₹${p.price}, Rating: ⭐${p.rating || 4.5}, In Stock: ${p.stockQuantity > 0 ? 'Yes' : 'No'}, Slug: /product/${p.slug})`).join('\n');
-        contextData += `\n[Database Context: Available Products in Store:\n${prodList}]`;
+        const prodList = products.map(p => `- ${p.name} (₹${p.price}, ⭐${p.rating || 4.5}, ${p.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'}, /product/${p.slug})`).join('\n');
+        contextData += `\n[Products available:\n${prodList}]`;
+      }
+
+      // Categories
+      const categories = await Category.find({}).select('name slug').limit(10);
+      if (categories.length > 0) {
+        contextData += `\n[Product categories: ${categories.map(c => c.name).join(', ')}]`;
       }
     }
 
-    const systemPrompt = `You are "AfshaBot", the friendly 24/7 AI Customer Support Specialist for Afsha Enterprises e-commerce.
-Assist customers across 8 topics: Orders, Shipping, Returns, Refunds, Warranty, Payments, Coupons, Product Questions.
-If confidence is low or customer asks for a human, offer to escalate to a live support agent.
-${contextData}`;
+    // 7. Shipping details from latest order
+    if (isShippingQuery && !contextData.includes('Order Data')) {
+      const filter = isAdmin ? {} : { user: currentUserId };
+      const latestShipped = await Order.findOne({ ...filter, status: { $in: ['shipped', 'approved'] } }).sort({ createdAt: -1 });
+      if (latestShipped?.shippingAddress) {
+        const s = latestShipped.shippingAddress;
+        contextData += `\n[Latest Shipped Order for ${userName}: #${latestShipped.orderNumber} | Status: ${latestShipped.status.toUpperCase()} | Shipping to: ${s.fullName}, ${s.address}, ${s.city}, ${s.state} - ${s.zip} | Phone: ${s.phone}]`;
+      }
+    }
 
+    // ── System prompt ─────────────────────────────────────────────────────────
+    const systemPrompt = `You are "AfshaBot", the friendly 24/7 AI Customer Support Specialist for Afsha Enterprises.
+The customer you are helping right now is: ${userName} (Role: ${currentUserRole}).
+Always greet them by their first name. Never ask for their email, User ID, or Order ID — you already have their data below.
+Help them with: Orders & Tracking, Shipping, Returns, Refunds, Warranty, Payments, Coupons, Products.
+All answers must be based on the real data provided below. Do not make up order numbers, amounts or product details.
+If the data shows no results, tell the customer clearly (e.g. "You have no orders yet").
+${contextData || '\n[No specific database data fetched for this query — use general store knowledge.]'}`;
+
+    // ── Fallback responses (no AI key available) ──────────────────────────────
     const fallbackFn = async () => {
       if (shouldEscalate) {
-        return `### 👨‍💼 Connect with Human Support\n\nI understand you would like to speak directly with a live support representative! \n\nI have created a high-priority support ticket for our customer care team. You can also reach our live desk directly at **support@afshaenterprises.com** or call **+91 96071 11312** (Mon-Sat, 9AM-8PM).`;
+        return `### 👨‍💼 Connect with Human Support\n\nHi ${userName}! I'm escalating your request to our live support team right away.\n\nYou can also reach us at **support@afshaenterprises.com** or call **+91 96071 11312** (Mon-Sat, 9AM-8PM).`;
       }
 
-      if (isOrderQuery) {
-        if (contextData.includes('Found Order #')) {
-          const match = contextData.match(/Found Order #(.*)\. Status: (.*)\. Total: (.*)\. Items: (.*)\./);
-          if (match) {
-            return `### 📦 Order Status Update\n\nYour order **#${match[1]}** is currently **${match[2]}**.\n\n- **Items:** ${match[4]}\n- **Total Paid:** ${match[3]}\n- **Estimated Delivery:** 3 Business Days via Express Courier.\n\nNeed to update your shipping address or change items? Let me know!`;
-          }
+      if (isOrderQuery && contextData.includes('Order Data')) {
+        const orderLines = contextData.match(/Order #(GLW-[^\|]+)\| Status: (\w+)/i);
+        if (orderLines) {
+          return `### 📦 Your Orders, ${userName}\n\n${contextData.replace(/\[.*?\n?/g, '').replace(/\]/g, '')}\n\n> Need to return or cancel an order? Just let me know!`;
         }
-        return `### 📦 Order Lookup\n\nI can check your order status right away! Please share your **Order ID** (e.g. \`GLW-XXXXXX\`) or login to your account to view live tracking updates.`;
+        return `### 📦 No Orders Found\n\nHi ${userName}, it looks like you haven't placed any orders yet. Browse our products and place your first order today!`;
+      }
+
+      if (isWishlistQuery && contextData.includes('Wishlist for')) {
+        return `### 💖 Your Wishlist, ${userName}\n\n${contextData.replace(/\[.*?:\s*/g, '').replace(/\]/g, '')}\n\nReady to add any of these to your cart?`;
+      }
+
+      if (isProfileQuery && contextData.includes('Account Info')) {
+        return `### 👤 Your Account Details\n\n${contextData.replace(/\[Account Info for [^:]+:\s*/g, '').replace(/\]/g, '')}`;
+      }
+
+      if (isReviewQuery && contextData.includes('Reviews by')) {
+        return `### ⭐ Your Reviews\n\n${contextData.replace(/\[Reviews by [^:]+:\n?/g, '').replace(/\]/g, '')}`;
       }
 
       if (isShippingQuery) {
-        return `### 🚚 Shipping & Delivery Timelines\n\n- **Standard Delivery:** 3-5 business days across India (FREE on orders > ₹499).\n- **Express Shipping:** 1-2 business days in select metro cities.\n- **Order Tracking:** Live SMS & Email tracking link sent automatically upon dispatch!`;
+        return `### 🚚 Shipping & Delivery\n\n- **Standard Delivery:** 3–5 business days across India (FREE on orders above ₹499).\n- **Express Shipping:** 1–2 business days in select metro cities.\n- You'll receive a live tracking link via SMS & Email once your order is dispatched!`;
       }
 
       if (isReturnQuery) {
-        return `### 🔄 30-Day Return Policy\n\n- **30-Day Guarantee:** Return unopened or gently used items within 30 days.\n- **Free Pickup:** We arrange doorstep pickup from your location.\n- **Easy Start:** Go to **Account > Orders** and tap *Return Item*.`;
+        return `### 🔄 Return & Exchange Policy\n\n- **30-Day Returns:** Return unopened or gently used items within 30 days of delivery.\n- **Free Pickup:** We arrange a doorstep pickup at no cost.\n- **Start a Return:** Go to **My Account → Orders** and tap *Return Item*.`;
       }
 
       if (isRefundQuery) {
-        return `### 💳 Refund Processing\n\n- **Refund Timeline:** Money is credited back to your original payment method (Bank/UPI/Card) within 3-5 business days after product pickup.\n- **Instant Credit:** Wallet/Store Credit is issued instantly upon approval!`;
+        return `### 💳 Refund Policy\n\nRefunds are processed within **3–5 business days** to your original payment method after we receive the returned item.`;
       }
 
       if (isWarrantyQuery) {
-        return `### 🛡️ Product Warranty & Guarantee\n\n- **100% Authentic:** All Afsha Enterprises products come with a 1-year authentic quality guarantee.\n- **Defective/Damaged:** If an item arrives damaged, we provide instant 100% free replacement! Contact us within 48 hours of delivery.`;
+        return `### 🛡️ Warranty & Guarantee\n\nAll Afsha Enterprises products carry a **1-Year Quality Guarantee**. If anything arrives damaged, contact us within **48 hours** for a free replacement!`;
       }
 
       if (isPaymentQuery) {
-        return `### 💳 Payment Methods & Security\n\n- We accept **Razorpay (Credit/Debit Cards, NetBanking)**, **UPI (Google Pay, PhonePe, Paytm)**, and **Cash on Delivery (COD)**.\n- All online transactions use 256-bit SSL encryption.`;
+        return `### 💳 Payment Methods\n\nWe accept **Razorpay (Cards, NetBanking)**, **UPI (Google Pay, PhonePe, Paytm)**, and **Cash on Delivery (COD)**. All transactions are 256-bit SSL encrypted.`;
       }
 
       if (isCouponQuery) {
-        return `### 🎟️ Coupons & Discounts\n\n- Use code **WELCOME10** for 10% off your first purchase!\n- Use code **DIWALI50** for flat 50% off on festive collections.\n- Enter your promo code at checkout!`;
+        return `### 🎟️ Coupons & Discounts\n\n- **WELCOME10** — 10% off your first order!\n- **DIWALI50** — Flat 50% off on festive collections.\n\nEnter your code at checkout to apply.`;
       }
 
-      if (isProductQuery || contextData.includes('Available Products')) {
-        if (contextData.includes('Available Products')) {
-          const lines = contextData.split('\n').filter(l => l.startsWith('- '));
-          if (lines.length > 0) {
-            const formatted = lines.map(l => {
-              const nameMatch = l.match(/- (.*?) \(Price: (.*?), Rating: (.*?), In Stock: (.*?), Slug: (.*?)\)/);
-              if (nameMatch) {
-                return `- **[${nameMatch[1]}](${nameMatch[5]})** — ${nameMatch[2]} | ${nameMatch[3]} ⭐ (${nameMatch[4] === 'Yes' ? 'In Stock' : 'Out of Stock'})`;
-              }
-              return l;
-            }).join('\n');
-            return `### 🛍️ Featured Afsha Enterprises Products\n\nHere are top product recommendations curated for you:\n\n${formatted}\n\nFeel free to ask for specific product features or recommendations!`;
-          }
-        }
-        return `### 🛍️ Product Information\n\nAfsha Enterprises offers 100% authentic premium quality products! Tell me what product or category you're looking for!`;
+      if (isProductQuery && contextData.includes('Products available')) {
+        const lines = contextData.split('\n').filter(l => l.startsWith('- '));
+        const formatted = lines.map(l => {
+          const m = l.match(/- (.*?) \(₹(.*?), (.*?), (.*?), (.*?)\)/);
+          return m ? `- **[${m[1]}](${m[5]})** — ₹${m[2]} | ${m[3]} | ${m[4]}` : l;
+        }).join('\n');
+        return `### 🛍️ Products for You, ${userName}\n\n${formatted}\n\nWant more recommendations? Just ask!`;
       }
 
-      return `Hello! 👋 I'm **AfshaBot**, your 24/7 AI Assistant. \n\nI can help you with:\n- 📦 **Orders** & Tracking\n- 🚚 **Shipping** & Timelines\n- 🔄 **Returns** & 💳 **Refunds**\n- 🛡️ **Warranty** & 💳 **Payments**\n- 🎟️ **Coupons** & 🛍️ **Product Questions**\n\nHow can I help you today?`;
+      return `Hello ${userName}! 👋 I'm **AfshaBot**, your 24/7 AI Shopping Assistant.\n\nI can help you with:\n- 📦 **Your Orders** & Live Tracking\n- 💖 **Your Wishlist**\n- 👤 **Your Account**\n- 🚚 **Shipping** & Timelines\n- 🔄 **Returns** & 💳 **Refunds**\n- 🛡️ **Warranty** & 🎟️ **Coupons**\n- 🛍️ **Product Recommendations**\n\nHow can I help you today?`;
     };
 
     const reply = await getAIResponse(provider, apiKey, systemPrompt, message, fallbackFn);
@@ -344,6 +462,7 @@ ${contextData}`;
       success: true,
       message: reply,
       escalateToHuman: shouldEscalate,
+      userGreeting: userName,
       providerUsed: provider || 'built-in-ai',
     });
   } catch (err) {
