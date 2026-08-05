@@ -5,13 +5,12 @@ import PromoBanner from '../models/PromoBanner.js';
 import Category from '../models/Category.js';
 import User from '../models/User.js';
 import Review from '../models/Review.js';
-import { compressToWebP } from '../utils/imageCompressor.js';
 
 const router = express.Router();
 
 /**
  * GET /api/images/product/:id
- * Serve a product's primary cover image converted to compressed WebP.
+ * Serve a product's primary (cover) binary image.
  */
 router.get('/product/:id', async (req, res) => {
   try {
@@ -19,10 +18,9 @@ router.get('/product/:id', async (req, res) => {
     if (!product || !product.imageData) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    const webp = await compressToWebP(product.imageData);
-    res.set('Content-Type', webp.contentType);
+    res.set('Content-Type', product.imageContentType || 'image/jpeg');
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
-    res.send(webp.data);
+    res.send(product.imageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -30,7 +28,7 @@ router.get('/product/:id', async (req, res) => {
 
 /**
  * GET /api/images/product/:id/:index
- * Serve a specific product gallery image converted to compressed WebP.
+ * Serve a specific product image by position (0-based).
  */
 router.get('/product/:id/:index', async (req, res) => {
   try {
@@ -47,10 +45,9 @@ router.get('/product/:id/:index', async (req, res) => {
     if (!slot || !slot.data) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    const webp = await compressToWebP(slot.data);
-    res.set('Content-Type', webp.contentType);
+    res.set('Content-Type', slot.contentType || 'image/jpeg');
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
-    res.send(webp.data);
+    res.send(slot.data);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -58,7 +55,6 @@ router.get('/product/:id/:index', async (req, res) => {
 
 /**
  * GET /api/images/banner/hero
- * Serve the hero banner image converted to compressed WebP.
  */
 router.get('/banner/hero', async (_req, res) => {
   try {
@@ -66,10 +62,9 @@ router.get('/banner/hero', async (_req, res) => {
     if (!banner || !banner.imageData) {
       return res.status(404).json({ message: 'No hero image set' });
     }
-    const webp = await compressToWebP(banner.imageData, 1600, 82);
-    res.set('Content-Type', webp.contentType);
+    res.set('Content-Type', banner.imageContentType || 'image/jpeg');
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
-    res.send(webp.data);
+    res.send(banner.imageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -77,7 +72,6 @@ router.get('/banner/hero', async (_req, res) => {
 
 /**
  * GET /api/images/banner/promo
- * Serve the promo section image converted to compressed WebP.
  */
 router.get('/banner/promo', async (_req, res) => {
   try {
@@ -85,10 +79,9 @@ router.get('/banner/promo', async (_req, res) => {
     if (!banner || !banner.promoImageData) {
       return res.status(404).json({ message: 'No promo image set' });
     }
-    const webp = await compressToWebP(banner.promoImageData, 1600, 82);
-    res.set('Content-Type', webp.contentType);
+    res.set('Content-Type', banner.promoImageContentType || 'image/jpeg');
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
-    res.send(webp.data);
+    res.send(banner.promoImageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -96,7 +89,6 @@ router.get('/banner/promo', async (_req, res) => {
 
 /**
  * GET /api/images/promo-banner/:id
- * Serve a promotional banner image converted to compressed WebP.
  */
 router.get('/promo-banner/:id', async (req, res) => {
   try {
@@ -104,10 +96,9 @@ router.get('/promo-banner/:id', async (req, res) => {
     if (!banner || !banner.imageData) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    const webp = await compressToWebP(banner.imageData, 1400, 80);
-    res.set('Content-Type', webp.contentType);
+    res.set('Content-Type', banner.imageContentType || 'image/jpeg');
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
-    res.send(webp.data);
+    res.send(banner.imageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -115,7 +106,6 @@ router.get('/promo-banner/:id', async (req, res) => {
 
 /**
  * GET /api/images/category/:id
- * Serve a category's image converted to compressed WebP.
  */
 router.get('/category/:id', async (req, res) => {
   try {
@@ -123,10 +113,9 @@ router.get('/category/:id', async (req, res) => {
     if (!category || !category.imageData) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    const webp = await compressToWebP(category.imageData, 800, 80);
-    res.set('Content-Type', webp.contentType);
+    res.set('Content-Type', category.imageContentType || 'image/jpeg');
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
-    res.send(webp.data);
+    res.send(category.imageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -134,7 +123,6 @@ router.get('/category/:id', async (req, res) => {
 
 /**
  * GET /api/images/user/:id
- * Serve a user's binary profile photo converted to compressed WebP.
  */
 router.get('/user/:id', async (req, res) => {
   try {
@@ -142,10 +130,9 @@ router.get('/user/:id', async (req, res) => {
     if (!user || !user.photoData) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    const webp = await compressToWebP(user.photoData, 400, 80);
-    res.set('Content-Type', webp.contentType);
+    res.set('Content-Type', user.photoContentType || 'image/jpeg');
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
-    res.send(webp.data);
+    res.send(user.photoData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -153,7 +140,6 @@ router.get('/user/:id', async (req, res) => {
 
 /**
  * GET /api/images/review/:id/:index
- * Serve a review photo converted to compressed WebP.
  */
 router.get('/review/:id/:index', async (req, res) => {
   try {
@@ -168,10 +154,9 @@ router.get('/review/:id/:index', async (req, res) => {
     if (!slot || !slot.data) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    const webp = await compressToWebP(slot.data, 1000, 80);
-    res.set('Content-Type', webp.contentType);
+    res.set('Content-Type', slot.contentType || 'image/jpeg');
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
-    res.send(webp.data);
+    res.send(slot.data);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
