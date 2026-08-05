@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Upload, X, ImagePlus } from 'lucide-react';
+import { Upload, X, ImagePlus, Sparkles, RefreshCw } from 'lucide-react';
 import { fetchAdminCategories, createProduct, updateProduct, fetchAdminProducts } from '../../api';
 import '../../styles/Panel.css';
 import '../auth/Auth.css';
@@ -18,6 +18,10 @@ const emptyForm = {
   stockQuantity: 50,
   discountPercent: 0,
   bestseller: false,
+  badge: '',
+  isTrending: false,
+  isNewArrival: false,
+  isLimitedEdition: false,
 };
 
 export default function AdminProductForm() {
@@ -36,6 +40,37 @@ export default function AdminProductForm() {
   const [removedIndices, setRemovedIndices] = useState(new Set());
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
+
+  const handleAIDescription = async () => {
+    if (!form.name.trim()) {
+      setError('Please enter a Product Name first to generate AI Description.');
+      return;
+    }
+    setAiGenerating(true);
+    setError('');
+    try {
+      const res = await fetch('/api/ai/generate-description', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          features: form.description || 'Premium quality e-commerce product',
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.data) {
+        const fullDesc = `${data.data.description}\n\nKey Highlights:\n${data.data.bulletPoints.join('\n')}`;
+        setForm((prev) => ({ ...prev, description: fullDesc }));
+      } else {
+        throw new Error(data.message || 'AI Generation failed');
+      }
+    } catch (err) {
+      setError(`AI Description Error: ${err.message}`);
+    } finally {
+      setAiGenerating(false);
+    }
+  };
 
   // Existing images still visible = original minus removed ones.
   const keptOriginals = originalUrls
@@ -63,7 +98,11 @@ export default function AdminProductForm() {
             category: p.category?._id || p.category,
             stockQuantity: p.stockQuantity,
             discountPercent: p.discountPercent || 0,
-            bestseller: p.bestseller,
+            bestseller: p.bestseller || false,
+            badge: p.badge || '',
+            isTrending: p.isTrending || false,
+            isNewArrival: p.isNewArrival || false,
+            isLimitedEdition: p.isLimitedEdition || false,
           });
           // Prefer the multi-image array; fall back to the primary URL.
           const imgs = Array.isArray(p.images) ? p.images : [];
@@ -146,6 +185,10 @@ export default function AdminProductForm() {
         stockQuantity: parseInt(form.stockQuantity, 10),
         discountPercent: parseInt(form.discountPercent, 10) || 0,
         bestseller: form.bestseller,
+        badge: form.badge || '',
+        isTrending: form.isTrending,
+        isNewArrival: form.isNewArrival,
+        isLimitedEdition: form.isLimitedEdition,
       };
 
       if (isEdit) {
@@ -186,13 +229,36 @@ export default function AdminProductForm() {
             </div>
 
             <div className="apf-group">
-              <label>Description *</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <label style={{ margin: 0 }}>Description *</label>
+                <button
+                  type="button"
+                  onClick={handleAIDescription}
+                  disabled={aiGenerating}
+                  style={{
+                    background: 'linear-gradient(135deg, #1A2B3C 0%, #E94057 100%)',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '4px 10px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                  }}
+                >
+                  {aiGenerating ? <RefreshCw size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                  {aiGenerating ? 'Generating...' : 'AI Generate Description & SEO'}
+                </button>
+              </div>
               <textarea
                 value={form.description}
                 onChange={update('description')}
                 required
-                rows={4}
-                placeholder="Describe the product benefits…"
+                rows={5}
+                placeholder="Describe the product benefits or click AI Generate..."
               />
             </div>
 
@@ -228,10 +294,56 @@ export default function AdminProductForm() {
                 <label>Discount (%)</label>
                 <input type="number" min="0" max="100" value={form.discountPercent} onChange={update('discountPercent')} />
               </div>
-              <div className="apf-group apf-check">
+              <div className="apf-group">
+                <label>Preset Product Badge</label>
+                <select
+                  value={form.badge}
+                  onChange={(e) => setForm((prev) => ({ ...prev, badge: e.target.value }))}
+                >
+                  <option value="">Auto / System Default</option>
+                  <option value="Top Rated">⭐ Top Rated</option>
+                  <option value="Trending">🔥 Trending</option>
+                  <option value="Bestseller">⭐ Bestseller</option>
+                  <option value="New Arrival">✨ New Arrival</option>
+                  <option value="Limited Edition">💎 Limited Edition</option>
+                  <option value="Flash Deal">⚡ Flash Deal</option>
+                  <option value="Natural Care">🍃 Natural Care</option>
+                  <option value="1-Year Warranty">🛡️ 1-Year Warranty</option>
+                  <option value="VIP Exclusive">👑 VIP Exclusive</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="apf-group" style={{ marginTop: 12 }}>
+              <label>Custom Badge Text (Optional)</label>
+              <input
+                type="text"
+                value={form.badge}
+                onChange={update('badge')}
+                placeholder="e.g. 50% Off Today, Organic Pure..."
+              />
+            </div>
+
+            <div className="apf-group" style={{ marginTop: 14 }}>
+              <label style={{ fontWeight: 800, color: '#E94057', fontSize: 13, marginBottom: 8, display: 'block' }}>
+                <Sparkles size={14} inline /> Extra Feature Badges
+              </label>
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                <label className="apf-checkbox-label">
+                  <input type="checkbox" checked={form.isTrending} onChange={update('isTrending')} />
+                  <span>🔥 Trending</span>
+                </label>
                 <label className="apf-checkbox-label">
                   <input type="checkbox" checked={form.bestseller} onChange={update('bestseller')} />
-                  <span>Mark as Bestseller</span>
+                  <span>⭐ Bestseller</span>
+                </label>
+                <label className="apf-checkbox-label">
+                  <input type="checkbox" checked={form.isNewArrival} onChange={update('isNewArrival')} />
+                  <span>✨ New</span>
+                </label>
+                <label className="apf-checkbox-label">
+                  <input type="checkbox" checked={form.isLimitedEdition} onChange={update('isLimitedEdition')} />
+                  <span>💎 Limited</span>
                 </label>
               </div>
             </div>

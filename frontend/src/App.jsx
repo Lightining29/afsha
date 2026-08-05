@@ -26,6 +26,10 @@ import AdminReviews from './pages/admin/AdminReviews';
 import AdminOfflineSale from './pages/admin/AdminOfflineSale';
 import AdminFlashSale from './pages/admin/AdminFlashSale';
 import AdminPromoBanners from './pages/admin/AdminPromoBanners';
+import AdminAIBannerGenerator from './pages/admin/AdminAIBannerGenerator';
+import AdminAIEmailGenerator from './pages/admin/AdminAIEmailGenerator';
+import AdminAIImageEnhancer from './pages/admin/AdminAIImageEnhancer';
+import AIChatbot from './components/AIChatbot';
 import Contact from './pages/Contact';
 import BlogList from './pages/blog/BlogList';
 import BlogDetail from './pages/blog/BlogDetail';
@@ -183,9 +187,13 @@ function App() {
           <Route path="offline-sale" element={<AdminOfflineSale />} />
           <Route path="flash-sale" element={<AdminFlashSale />} />
           <Route path="promo-banners" element={<AdminPromoBanners />} />
+          <Route path="ai-banner-generator" element={<AdminAIBannerGenerator />} />
+          <Route path="ai-email-generator" element={<AdminAIEmailGenerator />} />
+          <Route path="ai-image-enhancer" element={<AdminAIImageEnhancer />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <AIChatbot />
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
     </>
   );

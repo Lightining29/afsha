@@ -68,7 +68,7 @@ function buildPlainTextConfirmation(order, email) {
   const addressLines = getAddressLines(order.shippingAddress);
 
   return [
-    'Glowora order confirmation',
+    'Afsha Enterprises order confirmation',
     '',
     `Order number: ${orderNumber}`,
     order._id ? `Order ID: ${order._id.toString()}` : '',
@@ -122,74 +122,88 @@ export function buildOrderConfirmationEmail(order, email) {
     .join('');
 
   const html = `
-    <div style="font-family:Inter,Arial,sans-serif;max-width:680px;margin:0 auto;background:#F8FCFE;padding:32px;border-radius:16px;color:#1A2B3C">
-      <h1 style="color:#3A9BC4;font-family:Georgia,serif;margin:0 0 8px">Glowora</h1>
-      <p style="color:#6B7C8D;margin:0 0 24px">Your payment is confirmed. Here are your complete order details.</p>
-
-      <div style="background:white;padding:24px;border-radius:12px;box-shadow:0 4px 24px rgba(135,206,235,0.15)">
-        <h2 style="margin:0 0 16px;color:#1A2B3C">Order Confirmation - ${safeOrderNumber}</h2>
-
-        <table style="width:100%;border-collapse:collapse;margin:0 0 20px">
-          <tbody>
-            <tr>
-              <td style="padding:6px 0;color:#6B7C8D">Order ID</td>
-              <td style="padding:6px 0;text-align:right;font-weight:700">${safeOrderId}</td>
-            </tr>
-            <tr>
-              <td style="padding:6px 0;color:#6B7C8D">Razorpay Order ID</td>
-              <td style="padding:6px 0;text-align:right">${safeRazorpayOrderId}</td>
-            </tr>
-            <tr>
-              <td style="padding:6px 0;color:#6B7C8D">Payment ID</td>
-              <td style="padding:6px 0;text-align:right">${safePaymentId}</td>
-            </tr>
-            <tr>
-              <td style="padding:6px 0;color:#6B7C8D">Payment Method</td>
-              <td style="padding:6px 0;text-align:right">${safePaymentMethod}</td>
-            </tr>
-            <tr>
-              <td style="padding:6px 0;color:#6B7C8D">Payment Status</td>
-              <td style="padding:6px 0;text-align:right;font-weight:700;color:#15803d">${safeStatus}</td>
-            </tr>
-            <tr>
-              <td style="padding:6px 0;color:#6B7C8D">Order Date</td>
-              <td style="padding:6px 0;text-align:right">${escapeHtml(formatOrderDate(order.createdAt))}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div style="background:#F8FCFE;border:1px solid #e5edf3;border-radius:10px;padding:16px;margin:0 0 20px">
-          <h3 style="margin:0 0 10px;color:#1A2B3C;font-size:16px">Customer & Shipping</h3>
-          <p style="margin:4px 0"><strong>Name:</strong> ${escapeHtml(shippingAddress.fullName || 'Not provided')}</p>
-          <p style="margin:4px 0"><strong>Email:</strong> ${escapeHtml(email)}</p>
-          ${shippingAddress.phone ? `<p style="margin:4px 0"><strong>Phone:</strong> ${escapeHtml(shippingAddress.phone)}</p>` : ''}
-          ${addressLines.length ? `<p style="margin:4px 0"><strong>Address:</strong> ${escapeHtml(addressLines.join(', '))}</p>` : ''}
+    <div style="font-family:'Inter',Arial,sans-serif;max-width:680px;margin:0 auto;background:#f8fafc;padding:24px;border-radius:16px;color:#0f172a">
+      <div style="background:#ffffff;padding:28px;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid #cbd5e1">
+        
+        <!-- Header -->
+        <div style="border-bottom:2px solid #0f172a;padding-bottom:16px;margin-bottom:24px">
+          <h1 style="color:#0f172a;font-family:'Inter',Arial,sans-serif;font-size:24px;font-weight:900;margin:0 0 4px">Afsha Enterprises</h1>
+          <p style="color:#334155;font-size:13px;font-weight:700;margin:0 0 6px">Official Retail & E-Commerce Store</p>
+          <p style="color:#475569;font-size:12px;margin:2px 0">📍 <strong>Registered Address:</strong> 75 Raja Muthai Road, Periyamet, Opposite Nehru Stadium Main Gate</p>
+          <p style="color:#475569;font-size:12px;margin:2px 0">📞 <strong>Helpline:</strong> +91 96071 11312 | ✉️ <strong>Email:</strong> support@afshaenterprises.com</p>
+          <p style="color:#64748b;font-size:11px;margin:4px 0 0">GSTIN: 27AAACA1234A1Z5 | Reg. No: MH-PUNE-413801</p>
         </div>
 
-        <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+        <!-- Title & Stamp -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px">
+          <div>
+            <h2 style="margin:0 0 4px;color:#0f172a;font-size:20px;font-weight:900">TAX INVOICE RECEIPT</h2>
+            <div style="font-size:13px;color:#475569">Receipt #: INV-${safeOrderNumber}</div>
+            <div style="font-size:13px;color:#475569">Date: ${escapeHtml(formatOrderDate(order.createdAt))}</div>
+          </div>
+          <div style="border:2px solid #059669;color:#059669;font-weight:900;font-size:12px;padding:6px 14px;border-radius:6px;text-transform:uppercase;letter-spacing:1px">
+            OFFICIAL RECEIPT — PAID
+          </div>
+        </div>
+
+        <!-- Customer & Order Meta -->
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin-bottom:24px">
+          <h3 style="margin:0 0 10px;color:#0f172a;font-size:13px;text-transform:uppercase;letter-spacing:0.5px">Customer & Shipping Details</h3>
+          <p style="margin:4px 0;font-size:13px"><strong>Name:</strong> ${escapeHtml(shippingAddress.fullName || 'Valued Customer')}</p>
+          <p style="margin:4px 0;font-size:13px"><strong>Email:</strong> ${escapeHtml(email)}</p>
+          ${shippingAddress.phone ? `<p style="margin:4px 0;font-size:13px"><strong>Phone:</strong> ${escapeHtml(shippingAddress.phone)}</p>` : ''}
+          ${addressLines.length ? `<p style="margin:4px 0;font-size:13px"><strong>Address:</strong> ${escapeHtml(addressLines.join(', '))}</p>` : ''}
+          <p style="margin:8px 0 0;font-size:13px;color:#475569"><strong>Payment Mode:</strong> ${safePaymentMethod} | <strong>Payment Status:</strong> <span style="color:#059669;font-weight:700">${safeStatus}</span></p>
+        </div>
+
+        <!-- Items Table -->
+        <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
           <thead>
-            <tr style="background:#E8F4FA">
-              <th style="padding:10px 8px;text-align:left">Product</th>
-              <th style="padding:10px 8px;text-align:center">Qty</th>
-              <th style="padding:10px 8px;text-align:right">Unit Price</th>
-              <th style="padding:10px 8px;text-align:right">Total</th>
+            <tr style="background:#0f172a;color:#ffffff">
+              <th style="padding:10px 12px;text-align:left;font-size:12px;text-transform:uppercase">Item Description</th>
+              <th style="padding:10px 12px;text-align:center;font-size:12px;text-transform:uppercase">Qty</th>
+              <th style="padding:10px 12px;text-align:right;font-size:12px;text-transform:uppercase">Rate (₹)</th>
+              <th style="padding:10px 12px;text-align:right;font-size:12px;text-transform:uppercase">Amount (₹)</th>
             </tr>
           </thead>
           <tbody>${itemsHtml}</tbody>
         </table>
 
-        <div style="border-top:2px solid #87CEEB;padding-top:12px;text-align:right">
-          <p style="margin:4px 0"><strong>Subtotal:</strong> ${escapeHtml(formatPrice(order.subtotal))}</p>
-          ${Number(order.discount || 0) > 0 ? `<p style="margin:4px 0;color:#3A9BC4"><strong>Discount:</strong> -${escapeHtml(formatPrice(order.discount))}</p>` : ''}
-          <p style="margin:8px 0 0;font-size:18px"><strong>Total Paid:</strong> ${escapeHtml(formatPrice(order.total))}</p>
+        <!-- Summary -->
+        <div style="width:280px;margin-left:auto;border-top:2px solid #0f172a;padding-top:10px;margin-bottom:24px">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#475569;padding:3px 0">
+            <span>Subtotal:</span>
+            <span>${escapeHtml(formatPrice(order.subtotal || order.total))}</span>
+          </div>
+          ${Number(order.discount || 0) > 0 ? `
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#e94057;font-weight:700;padding:3px 0">
+            <span>Discount:</span>
+            <span>-${escapeHtml(formatPrice(order.discount))}</span>
+          </div>` : ''}
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#475569;padding:3px 0">
+            <span>Delivery & Handling:</span>
+            <span style="color:#0f172a;font-weight:600">Included</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:17px;font-weight:900;color:#0f172a;border-top:1px solid #cbd5e1;padding-top:8px;margin-top:4px">
+            <span>Total Paid:</span>
+            <span>${escapeHtml(formatPrice(order.total))}</span>
+          </div>
+        </div>
+
+        <!-- Footer Terms -->
+        <div style="border-top:1px solid #e2e8f0;padding-top:16px;font-size:11px;color:#64748b">
+          <p style="margin:2px 0"><strong>Terms & Conditions:</strong></p>
+          <p style="margin:2px 0">1. Backed by 1-Year Afsha Enterprises Brand Warranty.</p>
+          <p style="margin:2px 0">2. Computer generated Tax Invoice Receipt — Official proof of payment.</p>
+          <p style="margin:2px 0">3. Thank you for shopping with Afsha Enterprises!</p>
         </div>
       </div>
 
-      <p style="color:#94A3B4;font-size:13px;margin-top:24px;text-align:center">Glowora Skincare</p>
+      <p style="color:#94a3b8;font-size:12px;margin-top:20px;text-align:center">© ${new Date().getFullYear()} Afsha Enterprises. All rights reserved.</p>
     </div>`;
 
   return {
-    subject: `Your Glowora order is confirmed - ${orderNumber}`,
+    subject: `Official Payment Receipt & Tax Invoice - INV-${safeOrderNumber}`,
     html,
     text: buildPlainTextConfirmation(order, email),
   };
@@ -208,7 +222,7 @@ export async function sendOrderReceipt(order, userEmail) {
   }
 
   await transporter.sendMail({
-    from: process.env.SMTP_FROM || '"Glowora" <noreply@glowora.com>',
+    from: process.env.SMTP_FROM || '"Afsha Enterprises" <noreply@afshaenterprises.com>',
     to: email,
     subject: message.subject,
     html: message.html,
@@ -217,21 +231,16 @@ export async function sendOrderReceipt(order, userEmail) {
   return true;
 }
 
-/**
- * Send a 6-digit OTP to verify a user's email.
- * In dev (no SMTP configured) the code is logged to the server console
- * so you can complete verification without a mailbox.
- */
-export async function sendOtp(email, code, subject = 'Your Glowora verification code', title = 'Verify your email address') {
+export async function sendOtp(email, code, subject = 'Your Afsha Enterprises verification code', title = 'Verify your email address') {
   if (!email) return false;
 
   const html = `
     <div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;background:#F8FBFF;padding:32px;border-radius:16px">
-      <h1 style="color:#2563eb;font-family:Georgia,serif;margin:0 0 8px">Glowora</h1>
+      <h1 style="color:#E94057;font-family:Georgia,serif;margin:0 0 8px">Afsha Enterprises</h1>
       <p style="color:#475569;margin:0 0 24px">${title}</p>
-      <div style="background:white;padding:28px;border-radius:12px;box-shadow:0 4px 24px rgba(59,130,246,0.15);text-align:center">
+      <div style="background:white;padding:28px;border-radius:12px;box-shadow:0 4px 24px rgba(233,64,87,0.15);text-align:center">
         <p style="color:#1e293b;margin:0 0 12px">Your verification code is:</p>
-        <div style="font-family:Georgia,serif;font-size:2.4rem;font-weight:700;letter-spacing:10px;color:#2563eb;margin:8px 0 16px">${code}</div>
+        <div style="font-family:Georgia,serif;font-size:2.4rem;font-weight:700;letter-spacing:10px;color:#E94057;margin:8px 0 16px">${code}</div>
         <p style="color:#94a3b8;font-size:0.85em;margin:0">This code expires in 10 minutes.</p>
       </div>
       <p style="color:#94a3b4;font-size:0.85em;margin-top:24px;text-align:center">If you didn't request this, you can ignore this email.</p>
@@ -243,7 +252,7 @@ export async function sendOtp(email, code, subject = 'Your Glowora verification 
   }
 
   await createTransporter().sendMail({
-    from: process.env.SMTP_FROM || '"Glowora" <noreply@glowora.com>',
+    from: process.env.SMTP_FROM || '"Afsha Enterprises" <noreply@afshaenterprises.com>',
     to: email,
     subject: subject,
     html,

@@ -71,7 +71,7 @@ export default function CheckoutPage() {
       key: result.key,
       amount: result.amount,
       currency: result.currency,
-      name: 'Glowora',
+      name: 'Afsha Enterprises',
       description: `Order ${result.orderId}`,
       order_id: result.razorpayOrderId,
       prefill: { name: form.fullName, email: form.email, contact: form.phone },

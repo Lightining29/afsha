@@ -68,7 +68,7 @@ export default function RazorpayCheckoutTest() {
         key: RAZORPAY_KEY_ID,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: 'Glowora Standard Checkout',
+        name: 'Afsha Enterprises Checkout',
         description: 'Test Razorpay Integration',
         order_id: orderData.order_id,
         handler: async (response) => {

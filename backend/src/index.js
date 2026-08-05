@@ -18,6 +18,7 @@ import imageRoutes from './routes/images.js';
 import contactRoutes from './routes/contact.js';
 import stockRoutes from './routes/stock.js';
 import settingsRoutes from './routes/settings.js';
+import aiRoutes from './routes/ai.js';
 import { promoBannersPublic, promoBannersAdmin } from './routes/promoBanners.js';
 import Banner from './models/Banner.js';
 import Razorpay from 'razorpay';
@@ -62,6 +63,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/ai', aiRoutes);
 app.use('/api/promo-banners', promoBannersPublic);
 app.use('/api/admin/promo-banners', promoBannersAdmin);
 

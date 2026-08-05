@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, PlusCircle, LogOut, Home, Mail, Boxes, Menu, X, Star, Zap, Image } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, PlusCircle, LogOut, Home, Mail, Boxes, Menu, X, Star, Zap, Image, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import '../../styles/Panel.css';
 
@@ -27,10 +27,14 @@ export default function AdminLayout() {
     navigate('/');
   };
 
-  const sidebarClass = `panel-sidebar dark ${menuOpen ? 'open' : ''}`;
-  const sidebarStyle = { background: 'linear-gradient(180deg, #1A2B3C 0%, #2A3F54 100%)', border: 'none' };
-  const headerStyle = { borderColor: 'rgba(255,255,255,0.1)' };
-  const navItemStyle = { color: 'rgba(255,255,255,0.7)' };
+  const sidebarClass = `panel-sidebar ${menuOpen ? 'open' : ''}`;
+  const sidebarStyle = {
+    background: 'linear-gradient(180deg, #FFF0F5 0%, #FFD1DC 50%, #FFB7C5 100%)',
+    borderRight: '1px solid #F4ACB7',
+    boxShadow: '4px 0 24px rgba(244, 172, 183, 0.25)',
+  };
+  const headerStyle = { borderColor: 'rgba(15, 23, 42, 0.15)' };
+  const navItemStyle = { color: '#0f172a', fontWeight: 700 };
 
   return (
     <div className="panel-layout" style={{ minHeight: '100vh' }}>
@@ -58,7 +62,7 @@ export default function AdminLayout() {
       <aside className={sidebarClass} style={sidebarStyle}>
         <div className="panel-sidebar-header" style={headerStyle}>
           <img src="/logo.png" alt="Afsha Enterprises" className="admin-sidebar-logo" />
-          <p style={{ color: 'rgba(255,255,255,0.6)' }}>{user?.name}</p>
+          <p style={{ color: '#0f172a', fontWeight: 800 }}>{user?.name}</p>
         </div>
         <nav className="panel-nav">
           <NavLink to="/admin" end style={navItemStyle} onClick={() => setMenuOpen(false)}>
@@ -90,6 +94,15 @@ export default function AdminLayout() {
           </NavLink>
           <NavLink to="/admin/promo-banners" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <Image size={18} /> Promo Banners
+          </NavLink>
+          <NavLink to="/admin/ai-banner-generator" style={navItemStyle} onClick={() => setMenuOpen(false)}>
+            <Sparkles size={18} color="#d97706" /> AI Banner Generator
+          </NavLink>
+          <NavLink to="/admin/ai-email-generator" style={navItemStyle} onClick={() => setMenuOpen(false)}>
+            <Mail size={18} color="#059669" /> AI Email Generator
+          </NavLink>
+          <NavLink to="/admin/ai-image-enhancer" style={navItemStyle} onClick={() => setMenuOpen(false)}>
+            <Image size={18} color="#e11d48" /> AI Image Enhancer
           </NavLink>
           <NavLink to="/admin/products/new" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <PlusCircle size={18} /> Add Product

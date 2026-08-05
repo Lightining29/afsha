@@ -32,6 +32,21 @@ export default function ProductCard({ product, onWishlistRemove }) {
     }
   };
 
+  const getBadgeClass = (badgeName) => {
+    if (!badgeName) return 'badge-custom';
+    const lower = badgeName.toLowerCase();
+    if (lower.includes('natural') || lower.includes('organic')) return 'badge-natural';
+    if (lower.includes('warranty')) return 'badge-warranty';
+    if (lower.includes('limited')) return 'badge-limited';
+    if (lower.includes('flash')) return 'badge-flash';
+    if (lower.includes('vip')) return 'badge-vip';
+    if (lower.includes('top rated') || lower.includes('rated')) return 'badge-toprated';
+    if (lower.includes('bestseller') || lower.includes('best seller')) return 'badge-bestseller';
+    if (lower.includes('trending') || lower.includes('hot')) return 'badge-trending';
+    if (lower.includes('new')) return 'badge-new';
+    return 'badge-custom';
+  };
+
   return (
     <Link to={`/products/${product.slug}`} className="product-card-link">
       <div className="product-card">
@@ -41,9 +56,35 @@ export default function ProductCard({ product, onWishlistRemove }) {
             alt={product.name}
             loading="lazy"
           />
-          {hasDiscount && (
-            <span className="discount-badge">-{product.discountPercent}%</span>
-          )}
+          <div className="product-badges-stack">
+            {hasDiscount && (
+              <span className="product-badge-chip badge-discount">-{product.discountPercent}% OFF</span>
+            )}
+            {product.isTrending && (
+              <span className="product-badge-chip badge-trending">🔥 Trending</span>
+            )}
+            {product.isBestseller && (
+              <span className="product-badge-chip badge-bestseller">⭐ Bestseller</span>
+            )}
+            {product.isNewArrival && (
+              <span className="product-badge-chip badge-new">✨ New</span>
+            )}
+            {product.isLimitedEdition && (
+              <span className="product-badge-chip badge-limited">💎 Limited</span>
+            )}
+            {product.badge && (
+              <span className={`product-badge-chip ${getBadgeClass(product.badge)}`}>
+                ✨ {product.badge}
+              </span>
+            )}
+            {!hasDiscount && !product.isTrending && !product.isBestseller && !product.isNewArrival && !product.isLimitedEdition && !product.badge && (
+              (product.rating || 5) >= 4.5 ? (
+                <span className="product-badge-chip badge-toprated">⭐ Top Rated</span>
+              ) : (
+                <span className="product-badge-chip badge-premium">✨ Quality Tested</span>
+              )
+            )}
+          </div>
           <button
             className={`wishlist-btn ${wished ? 'active' : ''}`}
             onClick={(e) => {

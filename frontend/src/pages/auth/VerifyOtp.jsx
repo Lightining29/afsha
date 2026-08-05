@@ -70,7 +70,7 @@ export default function VerifyOtp() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-logo">
-          <Droplets size={28} /> Glowora
+          <img src="/logo.png" alt="Afsha Enterprises" style={{ height: 32, objectFit: 'contain' }} /> Afsha Enterprises
         </div>
         <p className="auth-subtitle">Verify your email address</p>
 

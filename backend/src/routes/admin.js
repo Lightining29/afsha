@@ -10,6 +10,7 @@ import Review from '../models/Review.js';
 import { protect, adminOnly } from '../middleware/auth.js';
 import { upload } from '../middleware/upload.js';
 import { enrichProduct } from '../utils/pricing.js';
+import { sendOrderReceipt } from '../services/email.js';
 
 const router = express.Router();
 router.use(protect, adminOnly);
@@ -108,6 +109,7 @@ router.post('/products', upload.array('images', 5), async (req, res) => {
     const {
       name, description, price, originalPrice,
       category, stockQuantity, discountPercent, bestseller,
+      badge, isTrending, isNewArrival, isLimitedEdition,
     } = req.body;
 
     if (!name || !description || !price || !category) {
@@ -125,6 +127,7 @@ router.post('/products', upload.array('images', 5), async (req, res) => {
     const images = req.files.map((f) => ({ data: f.buffer, contentType: f.mimetype }));
 
     const qty = parseInt(stockQuantity ?? 50, 10);
+    const isBest = bestseller === 'true' || bestseller === true;
     const product = await Product.create({
       name,
       slug,
@@ -137,7 +140,12 @@ router.post('/products', upload.array('images', 5), async (req, res) => {
       category,
       stockQuantity: qty,
       discountPercent: parseInt(discountPercent ?? 0, 10),
-      bestseller: bestseller === 'true' || bestseller === true,
+      bestseller: isBest,
+      badge: badge || '',
+      isTrending: isTrending === 'true' || isTrending === true,
+      isBestseller: isBest,
+      isNewArrival: isNewArrival === 'true' || isNewArrival === true,
+      isLimitedEdition: isLimitedEdition === 'true' || isLimitedEdition === true,
       inStock: qty > 0,
     });
 
@@ -152,12 +160,18 @@ router.put('/products/:id', upload.array('images', 5), async (req, res) => {
   try {
     const updateData = { ...req.body };
 
-    // Parse numeric fields sent as form strings
+    // Parse numeric & boolean fields sent as form strings
     if (updateData.price) updateData.price = parseFloat(updateData.price);
     if (updateData.originalPrice) updateData.originalPrice = parseFloat(updateData.originalPrice);
     if (updateData.stockQuantity !== undefined) updateData.stockQuantity = parseInt(updateData.stockQuantity, 10);
     if (updateData.discountPercent !== undefined) updateData.discountPercent = parseInt(updateData.discountPercent, 10);
-    if (updateData.bestseller !== undefined) updateData.bestseller = updateData.bestseller === 'true' || updateData.bestseller === true;
+    if (updateData.bestseller !== undefined) {
+      updateData.bestseller = updateData.bestseller === 'true' || updateData.bestseller === true;
+      updateData.isBestseller = updateData.bestseller;
+    }
+    if (updateData.isTrending !== undefined) updateData.isTrending = updateData.isTrending === 'true' || updateData.isTrending === true;
+    if (updateData.isNewArrival !== undefined) updateData.isNewArrival = updateData.isNewArrival === 'true' || updateData.isNewArrival === true;
+    if (updateData.isLimitedEdition !== undefined) updateData.isLimitedEdition = updateData.isLimitedEdition === 'true' || updateData.isLimitedEdition === true;
 
     // Strip image-control fields — they're handled below, not passed to findByIdAndUpdate.
     // deleteImageIndex may arrive as a single string (one value) or an array
@@ -433,6 +447,12 @@ router.post('/orders/offline', async (req, res) => {
       },
     });
 
+    if (customerEmail) {
+      await sendOrderReceipt(order, customerEmail);
+      order.receiptSent = true;
+      await order.save();
+    }
+
     res.status(201).json(order);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -447,6 +467,10 @@ router.patch('/orders/:id/approve', async (req, res) => {
       return res.status(400).json({ message: 'Only paid orders can be approved' });
     }
     order.status = 'approved';
+    if (!order.receiptSent && order.shippingAddress?.email) {
+      await sendOrderReceipt(order, order.shippingAddress.email);
+      order.receiptSent = true;
+    }
     await order.save();
     res.json(order);
   } catch (err) {
@@ -462,6 +486,10 @@ router.patch('/orders/:id/ship', async (req, res) => {
       return res.status(400).json({ message: 'Only approved orders can be shipped' });
     }
     order.status = 'shipped';
+    if (!order.receiptSent && order.shippingAddress?.email) {
+      await sendOrderReceipt(order, order.shippingAddress.email);
+      order.receiptSent = true;
+    }
     await order.save();
     res.json(order);
   } catch (err) {

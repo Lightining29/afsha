@@ -120,7 +120,7 @@ export default function LoginModal({ onClose }) {
         </button>
 
         <div className="modal-logo">
-          <Droplets size={28} /> Glowora
+          <img src="/logo.png" alt="Afsha Enterprises" style={{ height: 32, objectFit: 'contain' }} /> Afsha Enterprises
         </div>
 
         {mode === 'login' && (

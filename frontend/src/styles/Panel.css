@@ -37,29 +37,24 @@
   width: 100%;
   padding: 14px 24px;
   font-size: 0.95rem;
-  color: var(--text-muted);
+  color: #0f172a;
+  font-weight: 700;
   transition: all 0.2s;
   text-align: left;
 }
 
 .panel-nav a:hover,
 .panel-nav button:hover {
-  background: var(--off-white);
-  color: var(--rose-gold);
+  background: rgba(255, 255, 255, 0.5);
+  color: #000000;
 }
 
 .panel-nav a.active {
-  background: linear-gradient(90deg, var(--rose-gold-light), transparent);
-  color: var(--rose-gold);
-  font-weight: 600;
-  border-right: 3px solid var(--rose-gold);
-}
-
-.panel-sidebar.dark .panel-nav a.active,
-.panel-sidebar.dark .panel-nav a.active {
-  background: rgba(59, 130, 246, 0.15);
-  color: var(--rose-gold-light);
-  border-right-color: var(--rose-gold-light);
+  background: linear-gradient(90deg, #FFCAD4, #FFF0F5);
+  color: #000000;
+  font-weight: 800;
+  border-right: 4px solid #E94057;
+  box-shadow: 0 4px 12px rgba(233, 64, 87, 0.15);
 }
 
 .panel-content {

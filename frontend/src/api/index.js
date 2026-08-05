@@ -411,7 +411,13 @@ export async function deleteAdminReview(id) {
 }
 
 /* ── Helpers ── */
-export function formatPrice(price) { return `₹${Number(price).toFixed(2)}`; }
+export function formatPrice(price) {
+  const num = Number(price || 0);
+  if (Number.isInteger(num)) {
+    return `₹${num.toLocaleString('en-IN')}`;
+  }
+  return `₹${num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
 export function getProductPrice(product) { return product.finalPrice ?? product.price; }
 
 export function getStatusLabel(status) {

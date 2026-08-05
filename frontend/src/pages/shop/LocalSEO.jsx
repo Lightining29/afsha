@@ -34,7 +34,7 @@ const CITY_DATA = {
     testimonial: '“Living in Mumbai means long hours in locals and cars. This handheld massager from Afsha Enterprises is a lifesaver. Highly recommend the wellness category!” – Priya Sharma, Mumbai',
     faqs: [
       { q: 'Where is your service center in Mumbai?', a: 'We handle all warranty claims directly with free pickup and replacement services in Mumbai.' },
-      { q: 'Is delivery free in Mumbai?', a: 'Yes, we provide free shipping on all orders above ₹499 in Mumbai.' }
+      { q: 'How fast is delivery in Mumbai?', a: 'We provide fast express courier delivery across all locations in Mumbai.' }
     ]
   },
   bangalore: {
