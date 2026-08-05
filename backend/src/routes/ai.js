@@ -245,6 +245,97 @@ function sanitize(obj) {
   return plain;
 }
 
+// -------------------------------------------------------------------------
+// DEDICATED ORDER LOOKUP — no AI, pure MongoDB direct query
+// GET /api/ai/order/:orderId
+// -------------------------------------------------------------------------
+router.get('/order/:orderId', protect, async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    if (!orderId || !/^GLW-/i.test(orderId)) {
+      return res.status(400).json({ success: false, message: 'Invalid order ID format. Expected GLW-XXXXXX.' });
+    }
+
+    const currentUserId = req.user.id;
+    const isAdmin = req.user.role === 'admin';
+    const pattern  = new RegExp(orderId.replace(/[-]/g, '[\\-]?'), 'i');
+
+    // 1. Try scoped to this user first
+    let order = await Order.findOne({ orderNumber: pattern, user: currentUserId })
+      .select('orderNumber status total paymentMethod items shippingAddress createdAt updatedAt trackingNumber estimatedDelivery')
+      .populate('items.product', 'name price slug')
+      .lean();
+
+    // 2. If not found under this user, try global (handles guest orders / re-linked accounts)
+    if (!order) {
+      order = await Order.findOne({ orderNumber: pattern })
+        .select('orderNumber status total paymentMethod items shippingAddress createdAt updatedAt trackingNumber estimatedDelivery')
+        .populate('items.product', 'name price slug')
+        .lean();
+    }
+
+    if (!order) {
+      return res.json({
+        success: true,
+        found: false,
+        orderId: orderId.toUpperCase(),
+        message: `Order #${orderId.toUpperCase()} was not found in our system. Please check the order ID or contact support.`,
+      });
+    }
+
+    // Build clean item list
+    const items = (order.items || []).map(i => ({
+      name:     i.name || i.product?.name || 'Product',
+      quantity: i.quantity,
+      price:    i.price,
+    }));
+
+    const statusLabels = {
+      pending_payment:  '⏳ Pending Payment',
+      pending:          '⏳ Pending',
+      paid:             '✅ Payment Confirmed',
+      approved:         '✅ Approved — Being Packed',
+      processing:       '⚙️ Processing',
+      shipped:          '🚚 Shipped — On the Way!',
+      out_for_delivery: '🛵 Out for Delivery',
+      delivered:        '🏠 Delivered',
+      cancelled:        '❌ Cancelled',
+      refunded:         '💳 Refunded',
+    };
+
+    const statusKey   = (order.status || '').toLowerCase().replace(/ /g, '_');
+    const statusLabel = statusLabels[statusKey] || `📦 ${order.status?.toUpperCase() || 'UNKNOWN'}`;
+
+    return res.json({
+      success:  true,
+      found:    true,
+      order: {
+        orderNumber:       order.orderNumber,
+        status:            order.status,
+        statusLabel,
+        total:             order.total,
+        paymentMethod:     order.paymentMethod,
+        placedOn:          order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN') : null,
+        lastUpdated:       order.updatedAt ? new Date(order.updatedAt).toLocaleDateString('en-IN') : null,
+        trackingNumber:    order.trackingNumber || null,
+        estimatedDelivery: order.estimatedDelivery ? new Date(order.estimatedDelivery).toLocaleDateString('en-IN') : null,
+        shippingAddress:   order.shippingAddress ? {
+          name:    order.shippingAddress.fullName,
+          address: order.shippingAddress.address,
+          city:    order.shippingAddress.city,
+          state:   order.shippingAddress.state,
+          zip:     order.shippingAddress.zip,
+          phone:   order.shippingAddress.phone,
+        } : null,
+        items,
+      },
+    });
+  } catch (err) {
+    console.error('[AfshaBot] Order lookup error:', err.message);
+    return res.status(500).json({ success: false, message: 'Failed to fetch order details. Please try again.' });
+  }
+});
+
 router.post('/chat', protect, async (req, res) => {
   try {
     const { message = '', conversationHistory = [], provider, apiKey } = req.body;

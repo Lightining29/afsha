@@ -113,11 +113,53 @@ export default function AIChatbot() {
     setIsLoading(true);
 
     try {
-      // Always send JWT if available — backend uses it to auto-identify the user
       const token = localStorage.getItem('glowora_token');
       const headers = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
+      // ── FAST PATH: GLW- order ID detected — call dedicated DB endpoint, skip AI ──
+      const glwMatch = query.match(/GLW-[A-Z0-9-]+/i);
+      if (glwMatch && token) {
+        const orderId = glwMatch[0].toUpperCase();
+        try {
+          const orderRes = await fetch(`/api/ai/order/${encodeURIComponent(orderId)}`, { headers });
+          const orderData = await orderRes.json();
+
+          let orderCard = '';
+          if (orderData.success && orderData.found && orderData.order) {
+            const o = orderData.order;
+            const ship = o.shippingAddress
+              ? `${o.shippingAddress.name}, ${o.shippingAddress.city}, ${o.shippingAddress.state}`
+              : 'N/A';
+            orderCard  = `### 📦 Order #${o.orderNumber}\n\n`;
+            orderCard += `**${o.statusLabel}**\n\n`;
+            orderCard += `| | |\n|---|---|\n`;
+            orderCard += `| 💰 **Total** | ₹${o.total} |\n`;
+            orderCard += `| 💳 **Payment** | ${o.paymentMethod} |\n`;
+            if (o.placedOn)          orderCard += `| 📅 **Placed On** | ${o.placedOn} |\n`;
+            if (o.shippingAddress)   orderCard += `| 📮 **Ship To** | ${ship} |\n`;
+            if (o.trackingNumber)    orderCard += `| 📍 **Tracking** | ${o.trackingNumber} |\n`;
+            if (o.estimatedDelivery) orderCard += `| 📆 **Est. Delivery** | ${o.estimatedDelivery} |\n`;
+            if (o.items?.length > 0) {
+              const itemList = o.items.map(i => `- ${i.name} (x${i.quantity}) — ₹${i.price}`).join('\n');
+              orderCard += `\n**Items Ordered:**\n${itemList}`;
+            }
+            orderCard += `\n\n> To return or cancel, say **"I want to return order ${o.orderNumber}"**.`;
+          } else if (orderData.success && !orderData.found) {
+            orderCard = `### 📦 Order Not Found\n\nI couldn't find order **#${orderId}** in our system.\n\n- Double-check the order ID (format: GLW-XXXXXX)\n- Make sure you're logged in with the correct account\n- Contact us: **support@afshaenterprises.com** or **+91 96071 11312**`;
+          }
+
+          if (orderCard) {
+            setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: orderCard, timestamp: new Date().toISOString() }]);
+            setIsLoading(false);
+            return;
+          }
+        } catch (_) {
+          // order lookup failed — fall through to normal AI chat
+        }
+      }
+
+      // ── NORMAL PATH: send to AI chat route ───────────────────────────────────
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers,
@@ -126,7 +168,6 @@ export default function AIChatbot() {
           conversationHistory: messages.slice(-5),
           provider: provider === 'auto' ? undefined : provider,
           apiKey: apiKey || undefined,
-          // NOTE: userId is intentionally NOT sent — user is identified server-side via JWT
         }),
       });
 
@@ -135,42 +176,21 @@ export default function AIChatbot() {
 
       if (res.ok && contentType.includes('application/json')) {
         const data = await res.json();
-        if (data.success && data.message) {
-          botReply = data.message;
-        }
+        if (data.success && data.message) botReply = data.message;
       } else if (res.status === 401) {
-        // Backend requires login for this endpoint
-        botReply = `### 🔐 Please Log In\n\nTo get personalised support (orders, wishlist, account info), please **log in** to your account first. I can still help with general questions without logging in!`;
+        botReply = `### 🔐 Please Log In\n\nTo get personalised support (orders, wishlist, account info), please **log in** to your account first.`;
       }
 
-      if (!botReply) {
-        botReply = getClientSideBotReply(query);
-      }
+      if (!botReply) botReply = getClientSideBotReply(query);
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          sender: 'bot',
-          text: botReply,
-          timestamp: new Date().toISOString(),
-        },
-      ]);
+      setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: botReply, timestamp: new Date().toISOString() }]);
     } catch (err) {
-      const fallbackReply = getClientSideBotReply(query);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          sender: 'bot',
-          text: fallbackReply,
-          timestamp: new Date().toISOString(),
-        },
-      ]);
+      setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: getClientSideBotReply(query), timestamp: new Date().toISOString() }]);
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleClearChat = () => {
     setMessages([makeWelcome(user)]);
