@@ -133,6 +133,8 @@ export default function Hero() {
                   src={hairRemover.image}
                   alt={hairRemover.name || 'Body Hair Remover'}
                   className="hero-product-image"
+                  fetchpriority="high"
+                  decoding="async"
                   onError={() => setImgError(true)}
                 />
               ) : (

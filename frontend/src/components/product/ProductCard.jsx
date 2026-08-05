@@ -55,6 +55,7 @@ export default function ProductCard({ product, onWishlistRemove }) {
             src={product.image}
             alt={product.name}
             loading="lazy"
+            decoding="async"
           />
           <div className="product-badges-stack">
             {hasDiscount && (

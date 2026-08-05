@@ -217,6 +217,8 @@ export default function ProductDetail() {
                     src={mainImage}
                     alt={product.name}
                     className={`product-image-main ${is360Mode ? 'rotating-360' : ''}`}
+                    fetchpriority="high"
+                    decoding="async"
                   />
 
                   {/* Magnifying Glass Zoom Overlay */}
