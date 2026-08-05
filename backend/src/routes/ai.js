@@ -51,11 +51,15 @@ async function callGemini(apiKey, systemPrompt, userPrompt) {
   throw lastErr || new Error('Gemini API calls failed');
 }
 
-// Helper: Call OpenRouter Flagship High Models API (GPT-4o, Claude 3.5 Sonnet, DeepSeek R1, Llama 3.3 70B)
+// Helper: Call OpenRouter — best fast models for customer support chat
 async function callOpenRouter(apiKey, systemPrompt, userPrompt) {
-  // Use only the two fastest / cheapest OpenRouter models
+  // Priority order: fastest + smartest models on OpenRouter
+  //  1. google/gemini-2.5-flash       — fastest, highest quality flash model
+  //  2. anthropic/claude-3.5-haiku    — best Anthropic fast model, great for support
+  //  3. openai/gpt-4o-mini            — reliable GPT fallback
   const openRouterModels = [
-    'google/gemini-2.0-flash-001',
+    'google/gemini-2.5-flash',
+    'anthropic/claude-3.5-haiku',
     'openai/gpt-4o-mini',
   ];
   let lastErr = null;
@@ -67,8 +71,8 @@ async function callOpenRouter(apiKey, systemPrompt, userPrompt) {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://glowora.store',
-          'X-Title': 'Afsha Enterprises AI',
+          'HTTP-Referer': 'https://afshaenterprises.com',
+          'X-Title': 'Afsha Enterprises AI Chatbot',
         },
         body: JSON.stringify({
           model,
@@ -77,24 +81,30 @@ async function callOpenRouter(apiKey, systemPrompt, userPrompt) {
             { role: 'user', content: userPrompt },
           ],
           max_tokens: 1500,
+          temperature: 0.3,  // Lower = more factual / less creative (ideal for support)
         }),
       });
 
-      const response = await withTimeout(fetchPromise);
+      const response = await withTimeout(fetchPromise, 10000);
       if (response.ok) {
         const data = await response.json();
         const text = data.choices?.[0]?.message?.content;
-        if (text) return text;
+        if (text) {
+          console.log(`[AfshaBot] OpenRouter responded via ${model}`);
+          return text;
+        }
       } else {
         const errText = await response.text();
         lastErr = new Error(`OpenRouter ${model} (${response.status}): ${errText}`);
+        console.warn(`[AfshaBot] ${lastErr.message}`);
       }
     } catch (e) {
       lastErr = e;
+      console.warn(`[AfshaBot] OpenRouter ${model} error: ${e.message}`);
     }
   }
 
-  throw lastErr || new Error('OpenRouter API calls failed');
+  throw lastErr || new Error('All OpenRouter models failed');
 }
 
 // Helper: Call HuggingFace High Models API (Llama 3.3 70B, DeepSeek R1, Qwen 2.5 72B, Mixtral 8x7B)
@@ -176,28 +186,29 @@ async function getAIResponse(provider, reqApiKey, systemPrompt, userPrompt, fall
   const openRouterKey = reqApiKey || process.env.OPENROUTER_API_KEY;
   const hfKey = reqApiKey || process.env.HUGGINGFACE_API_KEY;
 
-  // HuggingFace is excluded from auto-selection (too slow for chat)
+  // Auto-selection priority for chat: OpenRouter first (best model access),
+  // then Gemini direct, then HuggingFace (excluded from auto — too slow).
   const effProvider = provider && provider !== 'auto'
     ? provider
+    : process.env.OPENROUTER_API_KEY   // OpenRouter first — best fast models
+    ? 'openrouter'
     : process.env.GEMINI_API_KEY
     ? 'gemini'
-    : process.env.OPENROUTER_API_KEY
-    ? 'openrouter'
     : 'fallback';
-
-  if (effProvider === 'gemini' && geminiKey) {
-    try {
-      return await callGemini(geminiKey, systemPrompt, userPrompt);
-    } catch (err) {
-      console.warn('Gemini high model call failed, trying fallbacks:', err.message);
-    }
-  }
 
   if (effProvider === 'openrouter' && openRouterKey) {
     try {
       return await callOpenRouter(openRouterKey, systemPrompt, userPrompt);
     } catch (err) {
-      console.warn('OpenRouter high model call failed, trying fallbacks:', err.message);
+      console.warn('[AfshaBot] OpenRouter failed, falling back to Gemini:', err.message);
+    }
+  }
+
+  if ((effProvider === 'gemini' || effProvider === 'openrouter') && geminiKey) {
+    try {
+      return await callGemini(geminiKey, systemPrompt, userPrompt);
+    } catch (err) {
+      console.warn('[AfshaBot] Gemini failed, falling back to built-in:', err.message);
     }
   }
 
@@ -205,7 +216,7 @@ async function getAIResponse(provider, reqApiKey, systemPrompt, userPrompt, fall
     try {
       return await callHuggingFace(hfKey, `${systemPrompt}\n${userPrompt}`);
     } catch (err) {
-      console.warn('HuggingFace high model call failed, trying fallbacks:', err.message);
+      console.warn('[AfshaBot] HuggingFace failed:', err.message);
     }
   }
 
@@ -508,7 +519,11 @@ ${contextData || '\n[No specific database data fetched for this query — use ge
       return `Hello ${userName}! 👋 I'm **AfshaBot**, your 24/7 AI Shopping Assistant.\n\nI can help you with:\n- 📦 **Your Orders** & Live Tracking\n- 💖 **Your Wishlist**\n- 👤 **Your Account**\n- 🚚 **Shipping** & Timelines\n- 🔄 **Returns** & 💳 **Refunds**\n- 🛡️ **Warranty** & 🎟️ **Coupons**\n- 🛍️ **Product Recommendations**\n\nHow can I help you today?`;
     };
 
-    const reply = await getAIResponse(provider, apiKey, systemPrompt, message, fallbackFn);
+    // Always prefer OpenRouter for chat (best fast model access).
+    // If the client didn't explicitly choose a provider, override to openrouter.
+    const chatProvider = (provider && provider !== 'auto') ? provider
+      : process.env.OPENROUTER_API_KEY ? 'openrouter' : provider;
+    const reply = await getAIResponse(chatProvider, apiKey, systemPrompt, message, fallbackFn);
 
     return res.json({
       success: true,
