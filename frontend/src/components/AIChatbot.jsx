@@ -83,9 +83,6 @@ export default function AIChatbot() {
     if (lower.includes('ship') || lower.includes('delivery') || lower.includes('courier')) {
       return `### 🚚 Shipping & Delivery\n\n- **Standard:** 3–5 business days across India (FREE above ₹499).\n- **Express:** 1–2 business days in metro cities.\n- Tracking link sent via SMS & Email after dispatch!`;
     }
-    if (lower.includes('return') || lower.includes('exchange')) {
-      return `### 🔄 Return & Exchange Policy\n\n- **30-Day Returns** on unopened or gently used items.\n- **Free doorstep pickup** arranged by us.\n- Start via **My Account → Orders → Return Item**.`;
-    }
     if (lower.includes('refund') || lower.includes('money back')) {
       return `### 💳 Refund Policy\n\nRefunds are processed within **3–5 business days** to your original payment method.`;
     }
@@ -98,7 +95,7 @@ export default function AIChatbot() {
     if (lower.includes('coupon') || lower.includes('discount') || lower.includes('promo')) {
       return `### 🎟️ Coupons & Discounts\n\n- **WELCOME10** — 10% off your first order!\n- **DIWALI50** — Flat 50% off on festive collections.`;
     }
-    return `Hello ${name}! 👋 I'm **AfshaBot**, your 24/7 AI Shopping Assistant.\n\nI can help you with:\n- 📦 **Your Orders** & Live Tracking\n- 💖 **Your Wishlist**\n- 👤 **Your Account**\n- 🚚 **Shipping** & Timelines\n- 🔄 **Returns** & 💳 **Refunds**\n- 🛡️ **Warranty** & 🎟️ **Coupons**\n- 🛍️ **Product Recommendations**`;
+    return `Hello ${name}! 👋 I'm **AfshaBot**, your 24/7 AI Shopping Assistant.\n\nI can help you with:\n- 📦 **Your Orders** & Live Tracking\n- 💖 **Your Wishlist**\n- 👤 **Your Account**\n- 🚚 **Shipping** & Timelines\n- 💳 **Refunds**\n- 🛡️ **Warranty** & 🎟️ **Coupons**\n- 🛍️ **Product Recommendations**`;
   };
 
   const handleSend = async (textToSend) => {
@@ -265,7 +262,7 @@ export default function AIChatbot() {
                 const itemLines = o.items.map(i => `- ${i.name || 'Item'} (x${i.quantity}) — ₹${i.price}`).join('\n');
                 card += `\n**Items Ordered:**\n${itemLines}`;
               }
-              card += `\n\n> To return or cancel this order, say **"I want to return order ${o.orderNumber}"**.`;
+              card += `\n\n> For support or assistance with order #${o.orderNumber}, contact **support@afshaenterprises.com**.`;
               return card;
             };
 
@@ -418,13 +415,11 @@ export default function AIChatbot() {
     { label: 'My reviews',    icon: <Star size={13} />,     msg: 'Show my reviews' },
     { label: 'Spending',      icon: <ShoppingBag size={13} />, msg: 'How much have I spent?' },
     { label: 'Shipping',      icon: <Truck size={13} />,    msg: 'What are the shipping timelines?' },
-    { label: 'Returns',       icon: null,                   msg: '🔄 Returns policy' },
   ];
 
   const guestChips = [
     { label: 'Orders',   icon: <Package size={13} />,     msg: 'Order status' },
     { label: 'Shipping', icon: <Truck size={13} />,       msg: 'Shipping timelines' },
-    { label: 'Returns',  icon: null,                      msg: 'Return & exchange policy' },
     { label: 'Refunds',  icon: null,                      msg: 'Refund policy' },
     { label: 'Warranty', icon: null,                      msg: '🛡️ Warranty policy' },
     { label: 'Payments', icon: null,                      msg: 'Payment methods' },
