@@ -53,14 +53,14 @@ async function callGemini(apiKey, systemPrompt, userPrompt) {
 
 // Helper: Call OpenRouter — best fast models for customer support chat
 async function callOpenRouter(apiKey, systemPrompt, userPrompt) {
-  // Priority order: fastest + smartest models on OpenRouter
-  //  1. google/gemini-2.5-flash       — fastest, highest quality flash model
-  //  2. anthropic/claude-3.5-haiku    — best Anthropic fast model, great for support
-  //  3. openai/gpt-4o-mini            — reliable GPT fallback
+  // Confirmed working OpenRouter model IDs (tested against OpenRouter API)
+  //  1. google/gemini-2.0-flash-001      — fastest, highest throughput
+  //  2. openai/gpt-4o-mini               — reliable GPT fallback
+  //  3. anthropic/claude-3-haiku-20240307 — fast Claude fallback
   const openRouterModels = [
-    'google/gemini-2.5-flash',
-    'anthropic/claude-3.5-haiku',
+    'google/gemini-2.0-flash-001',
     'openai/gpt-4o-mini',
+    'anthropic/claude-3-haiku-20240307',
   ];
   let lastErr = null;
 
@@ -463,24 +463,37 @@ ${contextData || '\n[No specific database data fetched for this query — use ge
         return `### 👨‍💼 Connect with Human Support\n\nHi ${userName}! I'm escalating your request to our live support team right away.\n\nYou can also reach us at **support@afshaenterprises.com** or call **+91 96071 11312** (Mon-Sat, 9AM-8PM).`;
       }
 
-      if (isOrderQuery && contextData.includes('Order Data')) {
-        const orderLines = contextData.match(/Order #(GLW-[^\|]+)\| Status: (\w+)/i);
-        if (orderLines) {
-          return `### 📦 Your Orders, ${userName}\n\n${contextData.replace(/\[.*?\n?/g, '').replace(/\]/g, '')}\n\n> Need to return or cancel an order? Just let me know!`;
+      // contextData labels after the parallel-query rewrite:
+      //  orders      → '[Orders for ...'
+      //  profile     → '[Account: ...'
+      //  wishlist    → '[Wishlist for ...'
+      //  reviews     → '[Reviews by ...'
+      //  spending    → '[Spending: ...'
+      if (isOrderQuery && (contextData.includes('Orders for') || contextData.includes('Orders:'))) {
+        const hasOrders = !contextData.includes('No orders found');
+        if (hasOrders) {
+          return `### 📦 Your Orders, ${userName}\n\n${contextData.replace(/\[Orders for [^\]]*\]/gs, m => m.replace(/\[Orders for [^:]+:\n?/, '').replace(/\]$/, '')).trim()}\n\n> Need to return or cancel an order? Just let me know!`;
         }
         return `### 📦 No Orders Found\n\nHi ${userName}, it looks like you haven't placed any orders yet. Browse our products and place your first order today!`;
       }
 
       if (isWishlistQuery && contextData.includes('Wishlist for')) {
-        return `### 💖 Your Wishlist, ${userName}\n\n${contextData.replace(/\[.*?:\s*/g, '').replace(/\]/g, '')}\n\nReady to add any of these to your cart?`;
+        const empty = contextData.includes('Empty');
+        if (empty) return `### 💖 Your Wishlist, ${userName}\n\nYour wishlist is currently empty. Start saving products you love by tapping the ❤️ icon on any product page!`;
+        const wlContent = contextData.replace(/\[Wishlist for [^:]+:\s*/g, '').replace(/\]$/, '').trim();
+        return `### 💖 Your Wishlist, ${userName}\n\n${wlContent}\n\nReady to add any of these to your cart?`;
       }
 
-      if (isProfileQuery && contextData.includes('Account Info')) {
-        return `### 👤 Your Account Details\n\n${contextData.replace(/\[Account Info for [^:]+:\s*/g, '').replace(/\]/g, '')}`;
+      if (isProfileQuery && contextData.includes('Account:')) {
+        const profileContent = contextData.replace(/\[Account:\s*/g, '').replace(/\]$/, '').trim();
+        return `### 👤 Your Account Details, ${userName}\n\n${profileContent}`;
       }
 
       if (isReviewQuery && contextData.includes('Reviews by')) {
-        return `### ⭐ Your Reviews\n\n${contextData.replace(/\[Reviews by [^:]+:\n?/g, '').replace(/\]/g, '')}`;
+        const noReviews = contextData.includes('None submitted');
+        if (noReviews) return `### ⭐ Your Reviews, ${userName}\n\nYou haven't submitted any reviews yet. After your next purchase, share your feedback to help other customers!`;
+        const reviewContent = contextData.replace(/\[Reviews by [^:]+:\n?/g, '').replace(/\]$/, '').trim();
+        return `### ⭐ Your Reviews\n\n${reviewContent}`;
       }
 
       if (isShippingQuery) {

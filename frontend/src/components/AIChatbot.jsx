@@ -69,10 +69,12 @@ export default function AIChatbot() {
         ? `### 💖 Your Wishlist, ${name}\n\nPlease wait while I load your saved items...`
         : `### 💖 Wishlist\n\nPlease **log in** to view your saved wishlist items.`;
     }
-    if (lower.includes('my account') || lower.includes('my profile')) {
-      return user
-        ? `### 👤 Your Account, ${name}\n\nFetching your account details...`
-        : `### 👤 Account\n\nPlease **log in** to view your account information.`;
+    if (lower.includes('my account') || lower.includes('my profile') || lower.includes('my email') || lower.includes('my phone') || lower.includes('my address') || lower.includes('my info') || lower.includes('my detail')) {
+      if (user) {
+        const addressParts = [user.address, user.city, user.state, user.zipCode].filter(Boolean);
+        return `### 👤 Your Account Details, ${name}\n\n- **Name:** ${user.name || 'Not set'}\n- **Email:** ${user.email || 'Not set'}\n- **Phone:** ${user.phone || 'Not set'}\n- **Address:** ${addressParts.length > 0 ? addressParts.join(', ') : 'Not set'}\n- **Account Status:** ${user.isVerified ? '✅ Verified' : '⚠️ Not verified'}\n\nWant to update your details? Visit **My Account → Profile Settings**.`;
+      }
+      return `### 👤 Account\n\nPlease **log in** to view your account information.`;
     }
     if (lower.includes('ship') || lower.includes('delivery') || lower.includes('courier')) {
       return `### 🚚 Shipping & Delivery\n\n- **Standard:** 3–5 business days across India (FREE above ₹499).\n- **Express:** 1–2 business days in metro cities.\n- Tracking link sent via SMS & Email after dispatch!`;
