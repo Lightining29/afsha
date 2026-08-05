@@ -466,7 +466,79 @@ router.post('/chat', protect, async (req, res) => {
       contextData += `\n[Account: Name: ${safe.name}, Email: ${safe.email}, Phone: ${safe.phone || 'not set'}, Address: ${[safe.address, safe.city, safe.state, safe.zipCode].filter(Boolean).join(', ') || 'not set'}, Member since: ${new Date(safe.createdAt).toLocaleDateString('en-IN')}]`;
     }
 
-    // ── System prompt ─────────────────────────────────────────────────────────
+    // ── Helper: build an order status card from contextData ───────────────────
+    // Used both for the fast-path return AND the AI fallback.
+    const buildOrderCard = (orderId) => {
+      if (contextData.includes('NOT FOUND')) {
+        return `### 📦 Order Not Found\n\nI couldn't locate order **#${orderId}** in our system.\n\n**Please check:**\n- Is the order ID correct? (format: GLW-XXXXXX)\n- Was the order placed with a different account?\n\nContact us: **support@afshaenterprises.com** or **+91 96071 11312**`;
+      }
+
+      if (!contextData.includes('Orders for')) return null;
+
+      const blockStart = contextData.indexOf('[Orders for');
+      const blockEnd   = contextData.lastIndexOf(']');
+      const rawBlock   = blockStart !== -1 && blockEnd !== -1
+        ? contextData.slice(blockStart, blockEnd + 1) : contextData;
+      const orderLine  = rawBlock
+        .replace(/^\[Orders for [^\n]+\n?/, '')
+        .replace(/\]$/, '')
+        .trim()
+        .split('\n')[0];
+
+      const parts     = orderLine.split(' | ');
+      if (parts.length < 2) return null;
+
+      const orderNum  = (parts[0] || '').replace('Order #', '').trim();
+      const status    = (parts[1] || '').trim();
+      const total     = (parts[2] || '').trim();
+      const payment   = (parts[3] || '').trim();
+      const itemStr   = parts.find(p => p.startsWith('Items:'))?.replace('Items:', '').trim() || '';
+      const shipStr   = parts.find(p => p.startsWith('Ship to:'))?.replace('Ship to:', '').trim() || '';
+      const dateStr   = parts.find(p => p.startsWith('Date:'))?.replace('Date:', '').trim() || '';
+      const trackStr  = parts.find(p => p.startsWith('Tracking:'))?.replace('Tracking:', '').trim() || '';
+      const estDelStr = parts.find(p => p.startsWith('Est. Delivery:'))?.replace('Est. Delivery:', '').trim() || '';
+
+      const statusLabel = {
+        'PENDING_PAYMENT': '⏳ Pending Payment — Please complete payment to confirm your order',
+        'PENDING':         '⏳ Pending — Your order is awaiting confirmation',
+        'PAID':            '✅ Payment Confirmed — Your order is being reviewed',
+        'APPROVED':        '✅ Approved — Your order is being packed and prepared for dispatch',
+        'PROCESSING':      '⚙️ Processing — Your order is being prepared',
+        'SHIPPED':         '🚚 Shipped — Your order is on its way!',
+        'OUT_FOR_DELIVERY':'🛵 Out for Delivery — Arriving today!',
+        'DELIVERED':       '🏠 Delivered — Your order has been delivered successfully',
+        'CANCELLED':       '❌ Cancelled — This order has been cancelled',
+        'REFUNDED':        '💳 Refunded — Your refund has been processed',
+      }[status] || `📦 ${status}`;
+
+      let card = `### 📦 Order #${orderNum || orderId}\n\n`;
+      card += `**${statusLabel}**\n\n`;
+      card += `| | |\n|---|---|\n`;
+      if (total)     card += `| 💰 **Total** | ${total} |\n`;
+      if (payment)   card += `| 💳 **Payment** | ${payment} |\n`;
+      if (dateStr)   card += `| 📅 **Placed On** | ${dateStr} |\n`;
+      if (shipStr)   card += `| 📮 **Ship To** | ${shipStr} |\n`;
+      if (trackStr)  card += `| 📍 **Tracking No.** | ${trackStr} |\n`;
+      if (estDelStr) card += `| 📆 **Est. Delivery** | ${estDelStr} |\n`;
+      if (itemStr) {
+        const items = itemStr.split(', ').map(i => `- ${i}`).join('\n');
+        card += `\n**Items Ordered:**\n${items}`;
+      }
+      card += `\n\n> To return or cancel, say **"I want to return order ${orderNum || orderId}"**.`;
+      return card;
+    };
+
+    // ── FAST PATH: Order ID lookup — return DB result directly, skip AI ───────
+    // This guarantees order tracking works even when all AI providers are down.
+    const matchedOrderId = message.match(/GLW-[A-Z0-9-]+/i);
+    if (matchedOrderId && isOrderQuery && contextData) {
+      const card = buildOrderCard(matchedOrderId[0].toUpperCase());
+      if (card) {
+        return res.json({ success: true, message: card, source: 'database' });
+      }
+    }
+
+
     const systemPrompt = `You are "AfshaBot", the friendly 24/7 AI Customer Support Specialist for Afsha Enterprises.
 The customer you are helping right now is: ${userName} (Role: ${currentUserRole}).
 Always greet them by their first name. Never ask for their email, User ID, or Order ID — you already have their data below.
