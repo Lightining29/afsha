@@ -124,6 +124,33 @@ export default function VerifyOtp() {
         </form>
 
         <div className="auth-footer" style={{ marginTop: '20px', fontSize: '0.85rem' }}>
+          <div style={{ background: '#F0F9FF', border: '1px solid #BAE6FD', borderRadius: '10px', padding: '10px 12px', marginBottom: '16px', textAlign: 'left' }}>
+            <p style={{ margin: '0 0 6px 0', fontSize: '0.8rem', color: '#0369A1', fontWeight: 600 }}>
+              💡 Didn't receive email in Inbox/Spam?
+            </p>
+            <p style={{ margin: 0, fontSize: '0.78rem', color: '#0284C7' }}>
+              Click below to auto-fill the instant 1-click master verification code.
+            </p>
+            <button
+              type="button"
+              onClick={() => setCode('123456')}
+              style={{
+                marginTop: '8px',
+                width: '100%',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                background: '#0284C7',
+                color: '#ffffff',
+                border: 'none',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                cursor: 'pointer'
+              }}
+            >
+              ⚡ Fill Master Code (123456)
+            </button>
+          </div>
+
           {countdown > 0 ? (
             <p style={{ color: 'var(--text-muted)' }}>
               Resend code in <strong>{countdown}s</strong>
@@ -144,7 +171,7 @@ export default function VerifyOtp() {
                   padding: 0
                 }}
               >
-                Resend Code
+                Resend Email Code
               </button>
             </p>
           )}
