@@ -23,11 +23,11 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-  background-size: 56px 56px;
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 40%, transparent 80%);
-          mask-image: radial-gradient(ellipse at center, #000 40%, transparent 80%);
+    linear-gradient(rgba(180, 60, 90, 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180, 60, 90, 0.10) 1px, transparent 1px);
+  background-size: 50px 50px;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 70%, transparent 100%);
+          mask-image: radial-gradient(ellipse at center, #000 70%, transparent 100%);
 }
 
 .hero-bg-blob {
