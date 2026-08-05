@@ -246,16 +246,22 @@ export async function sendOtp(email, code, subject = 'Your Afsha Enterprises ver
       <p style="color:#94a3b4;font-size:0.85em;margin-top:24px;text-align:center">If you didn't request this, you can ignore this email.</p>
     </div>`;
 
-  if (!createTransporter()) {
+  const transporter = createTransporter();
+  if (!transporter) {
     console.log(`[Email Demo] OTP for ${email} → ${code} (Subject: ${subject})`);
     return true;
   }
 
-  await createTransporter().sendMail({
-    from: process.env.SMTP_FROM || '"Afsha Enterprises" <noreply@afshaenterprises.com>',
-    to: email,
-    subject: subject,
-    html,
-  });
-  return true;
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM || '"Afsha Enterprises" <noreply@afshaenterprises.com>',
+      to: email,
+      subject: subject,
+      html,
+    });
+    return true;
+  } catch (err) {
+    console.error(`[SMTP Warning] Failed to send OTP to ${email}:`, err.message);
+    return false;
+  }
 }

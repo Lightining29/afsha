@@ -61,7 +61,7 @@ export default function Register() {
       const res = await register(name, email, password, photo);
       if (res?.requireVerification) {
         toastInfo('Check your email', 'We sent a 6-digit verification code to your inbox.');
-        navigate('/verify-otp', { state: { email } });
+        navigate(`/verify-otp?email=${encodeURIComponent(email)}`, { state: { email } });
       } else {
         toastSuccess('Account created!', 'Welcome to Afsha Enterprises.');
         navigate('/account');

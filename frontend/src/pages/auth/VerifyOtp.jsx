@@ -10,7 +10,9 @@ export default function VerifyOtp() {
   const navigate = useNavigate();
   const { verifyOtp, resendOtp } = useAuth();
 
-  const [email, setEmail] = useState(location.state?.email || '');
+  const searchParams = new URLSearchParams(location.search);
+  const emailFromQuery = searchParams.get('email');
+  const [email, setEmail] = useState(emailFromQuery || location.state?.email || '');
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);

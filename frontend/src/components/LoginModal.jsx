@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Droplets } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { forgotPassword, resetPassword, changePassword } from '../api';
@@ -7,6 +8,7 @@ import { toastSuccess, toastError, toastInfo } from '../utils/toast.js';
 import './LoginModal.css';
 
 export default function LoginModal({ onClose }) {
+  const navigate = useNavigate();
   const { login, register, loginWithGoogle, requirePasswordSetup, setRequirePasswordSetup } = useAuth();
   const [mode, setMode] = useState(requirePasswordSetup ? 'setup-password' : 'login');
   const [email, setEmail] = useState('');
@@ -71,9 +73,9 @@ export default function LoginModal({ onClose }) {
       } else if (mode === 'register') {
         const res = await register(name, email, password);
         if (res?.requireVerification) {
-          toastInfo('Check your email', 'A verification code has been sent to your inbox.');
-          setMessage('Account created! Check your email for the OTP.');
-          setTimeout(() => onClose(), 2500);
+          toastInfo('Verification Code Sent', 'Redirecting to OTP verification page...');
+          onClose();
+          navigate(`/verify-otp?email=${encodeURIComponent(email)}`, { state: { email } });
         } else {
           toastSuccess('Account created!', 'Welcome to Afsha Enterprises.');
           onClose();

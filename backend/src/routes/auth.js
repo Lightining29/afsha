@@ -37,12 +37,20 @@ function userResponse(user, token) {
 // Helper to generate and send OTP
 async function generateAndSendOtp(user) {
   const code = Math.floor(100000 + Math.random() * 900000).toString();
-  const salt = await bcrypt.genSalt(12);
+  const salt = await bcrypt.genSalt(10);
   user.otpHash = await bcrypt.hash(code, salt);
   user.otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
   user.otpCooldownUntil = new Date(Date.now() + 60 * 1000); // 1 minute
   await user.save();
-  await sendOtp(user.email, code);
+
+  console.log(`\n==============================================`);
+  console.log(`[OTP VERIFICATION CODE] User: ${user.email} | Code: ${code}`);
+  console.log(`==============================================\n`);
+
+  // Dispatch email in background without blocking response
+  sendOtp(user.email, code).catch((err) => {
+    console.error('[OTP EMAIL WARNING] Async email dispatch failed:', err?.message || err);
+  });
 }
 
 router.post('/register', upload.single('photo'), async (req, res) => {
