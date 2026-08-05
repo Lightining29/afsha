@@ -295,12 +295,11 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 0 14px;
-  align-self: stretch;
+  padding: 10px 18px;
   border-radius: 8px;
   background: #1a1a1a;
   color: #fff;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.3px;
   cursor: pointer;
