@@ -66,7 +66,6 @@ export default function ProductDetail() {
   const [activeTab, setActiveTab] = useState('description');
   const [openFaq, setOpenFaq]     = useState(0);
   const [copied, setCopied]       = useState(false);
-  const [zoomStyle, setZoomStyle] = useState({ opacity: 0, backgroundPosition: '0% 0%' });
 
   const { list: recentlyViewed, track } = useRecentlyViewed(product?._id);
 
@@ -95,19 +94,7 @@ export default function ProductDetail() {
     return () => { mounted = false; };
   }, [slug, navigate]);
 
-  const handleMouseMove = (e) => {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - left) / width) * 100;
-    const y = ((e.clientY - top) / height) * 100;
-    setZoomStyle({
-      opacity: 1,
-      backgroundPosition: `${x}% ${y}%`,
-    });
-  };
 
-  const handleMouseLeave = () => {
-    setZoomStyle({ opacity: 0, backgroundPosition: '0% 0%' });
-  };
 
   if (loading) {
     return (
@@ -208,26 +195,13 @@ export default function ProductDetail() {
 
               {/* Main HD Image Stage Wrapper */}
               <div className="product-stage-wrapper">
-                <div
-                  className="product-image-container"
-                  onMouseMove={handleMouseMove}
-                  onMouseLeave={handleMouseLeave}
-                >
+                <div className="product-image-container">
                   <img
                     src={mainImage}
                     alt={product.name}
                     className={`product-image-main ${is360Mode ? 'rotating-360' : ''}`}
                     fetchpriority="high"
                     decoding="async"
-                  />
-
-                  {/* Magnifying Glass Zoom Overlay */}
-                  <div
-                    className="zoom-lens-overlay"
-                    style={{
-                      backgroundImage: `url(${mainImage})`,
-                      ...zoomStyle,
-                    }}
                   />
 
                   {/* Single Sleek Discount Badge (if applicable) */}
