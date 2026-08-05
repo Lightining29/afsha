@@ -120,7 +120,8 @@ export default function AIChatbot() {
       // ── ORDER FAST PATH: use existing /api/orders/my — no AI, no new endpoints ──
       const glwMatch  = query.match(/GLW-[A-Z0-9-]+/i);
       const lower2    = query.toLowerCase();
-      const isOrderQ  = glwMatch || lower2.includes('order') || lower2.includes('track') || lower2.includes('purchase') || lower2.includes('bought') || lower2.includes('latest order') || lower2.includes('my order');
+      const isSpendingQ = lower2.includes('spent') || lower2.includes('spending') || lower2.includes('total spend') || lower2.includes('how much') || lower2.includes('expenditure') || lower2.includes('total amount') || lower2.includes('money spent');
+      const isOrderQ  = glwMatch || isSpendingQ || lower2.includes('order') || lower2.includes('track') || lower2.includes('purchase') || lower2.includes('bought') || lower2.includes('latest order') || lower2.includes('my order');
 
       if (isOrderQ && token) {
         try {
@@ -169,8 +170,50 @@ export default function AIChatbot() {
 
             let card = '';
 
-            if (glwMatch) {
-              // specific order ID lookup
+            // ── Spending summary ────────────────────────────────────────────
+            if (isSpendingQ) {
+              const PAID_STATUSES = new Set(['paid','approved','processing','shipped','out_for_delivery','delivered']);
+              const paidOrders    = orders.filter(o => PAID_STATUSES.has((o.status||'').toLowerCase().replace(/ /g,'_')));
+              const cancelledCnt  = orders.filter(o => ['cancelled','refunded'].includes((o.status||'').toLowerCase())).length;
+              const totalSpent    = paidOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+              const avgOrder      = paidOrders.length > 0 ? (totalSpent / paidOrders.length).toFixed(2) : 0;
+              const biggest       = paidOrders.length > 0 ? paidOrders.reduce((max, o) => (Number(o.total) > Number(max.total) ? o : max), paidOrders[0]) : null;
+
+              // Count payment methods
+              const pmCount = {};
+              paidOrders.forEach(o => { const pm = o.paymentMethod || 'Unknown'; pmCount[pm] = (pmCount[pm] || 0) + 1; });
+              const favPM = Object.entries(pmCount).sort((a,b) => b[1]-a[1])[0]?.[0] || 'N/A';
+
+              // Status breakdown
+              const statusCount = {};
+              orders.forEach(o => {
+                const s = (o.status || 'unknown').toLowerCase();
+                statusCount[s] = (statusCount[s] || 0) + 1;
+              });
+              const statusLines = Object.entries(statusCount)
+                .map(([s, c]) => {
+                  const em = { pending_payment:'⏳', pending:'⏳', paid:'✅', approved:'✅', processing:'⚙️', shipped:'🚚', out_for_delivery:'🛵', delivered:'🏠', cancelled:'❌', refunded:'💳' }[s.replace(/ /g,'_')] || '📦';
+                  return `${em} ${s.charAt(0).toUpperCase()+s.slice(1)}: **${c}**`;
+                }).join('\n');
+
+              if (orders.length === 0) {
+                card = `### 💰 Your Spending Summary, ${name}\n\nYou haven't placed any orders yet. Start shopping today!`;
+              } else {
+                card  = `### 💰 Your Spending Summary, ${name}\n\n`;
+                card += `| | |\n|---|---|\n`;
+                card += `| 🛒 **Total Orders** | ${orders.length} |\n`;
+                card += `| ✅ **Paid Orders** | ${paidOrders.length} |\n`;
+                card += `| 💸 **Total Spent** | ₹${totalSpent.toLocaleString('en-IN')} |\n`;
+                card += `| 📊 **Avg Order Value** | ₹${Number(avgOrder).toLocaleString('en-IN')} |\n`;
+                if (biggest) card += `| 🏆 **Biggest Purchase** | #${biggest.orderNumber} — ₹${biggest.total} |\n`;
+                card += `| 💳 **Fav Payment** | ${favPM} |\n`;
+                if (cancelledCnt > 0) card += `| ❌ **Cancelled/Refunded** | ${cancelledCnt} |\n`;
+                card += `\n**Order Breakdown:**\n${statusLines}`;
+                card += `\n\n> Ask me about a specific order by sharing its ID, e.g. \`GLW-XXXXXX\`.`;
+              }
+
+            // ── Specific order ID lookup ────────────────────────────────────
+            } else if (glwMatch) {
               const searchId = glwMatch[0].toUpperCase();
               const found    = orders.find(o => (o.orderNumber || '').toUpperCase() === searchId);
               if (found) {
@@ -178,10 +221,13 @@ export default function AIChatbot() {
               } else {
                 card = `### 📦 Order Not Found\n\nI couldn't find order **#${searchId}** under your account.\n\n- Double-check the order ID\n- Make sure you're logged in with the correct account\n- Contact us: **support@afshaenterprises.com** | **+91 96071 11312**`;
               }
+
+            // ── No orders yet ───────────────────────────────────────────────
             } else if (orders.length === 0) {
               card = `### 📦 No Orders Yet, ${name}\n\nYou haven't placed any orders yet. Start shopping and your orders will appear here!`;
+
+            // ── Recent orders list ──────────────────────────────────────────
             } else {
-              // show last 3 orders
               const recent = orders.slice(0, 3);
               const statusEmojis = { pending_payment:'⏳', pending:'⏳', paid:'✅', approved:'✅', processing:'⚙️', shipped:'🚚', out_for_delivery:'🛵', delivered:'🏠', cancelled:'❌', refunded:'💳' };
               const lines = recent.map(o => {
