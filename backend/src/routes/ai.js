@@ -8,31 +8,33 @@ import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
+// ── Performance helper: abort slow AI requests after `ms` milliseconds ──────
+function withTimeout(promise, ms = 8000) {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error(`AI request timed out after ${ms}ms`)), ms)
+  );
+  return Promise.race([promise, timeout]);
+}
+
 // Helper: Call Google Gemini High Models API
 async function callGemini(apiKey, systemPrompt, userPrompt) {
-  const geminiModels = ['gemini-2.5-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'];
+  // Use only the two fastest Gemini models — avoids waterfall latency
+  const geminiModels = ['gemini-2.5-flash', 'gemini-1.5-flash'];
   let lastErr = null;
 
   for (const model of geminiModels) {
     try {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-      const response = await fetch(url, {
+      const fetchPromise = fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [
-            {
-              role: 'user',
-              parts: [{ text: `${systemPrompt}\n\nUser Request: ${userPrompt}` }],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 2000,
-          },
+          contents: [{ role: 'user', parts: [{ text: `${systemPrompt}\n\nUser Request: ${userPrompt}` }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 1500 },
         }),
       });
 
+      const response = await withTimeout(fetchPromise);
       if (response.ok) {
         const data = await response.json();
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -46,31 +48,27 @@ async function callGemini(apiKey, systemPrompt, userPrompt) {
     }
   }
 
-  throw lastErr || new Error('Gemini API calls failed across high models');
+  throw lastErr || new Error('Gemini API calls failed');
 }
 
 // Helper: Call OpenRouter Flagship High Models API (GPT-4o, Claude 3.5 Sonnet, DeepSeek R1, Llama 3.3 70B)
 async function callOpenRouter(apiKey, systemPrompt, userPrompt) {
+  // Use only the two fastest / cheapest OpenRouter models
   const openRouterModels = [
-    'openai/gpt-4o',
-    'anthropic/claude-3.5-sonnet',
-    'deepseek/deepseek-r1',
     'google/gemini-2.0-flash-001',
-    'meta-llama/llama-3.3-70b-instruct',
     'openai/gpt-4o-mini',
   ];
   let lastErr = null;
 
   for (const model of openRouterModels) {
     try {
-      const url = 'https://openrouter.ai/api/v1/chat/completions';
-      const response = await fetch(url, {
+      const fetchPromise = fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
           'HTTP-Referer': 'https://glowora.store',
-          'X-Title': 'Glowora High AI Suite',
+          'X-Title': 'Afsha Enterprises AI',
         },
         body: JSON.stringify({
           model,
@@ -78,9 +76,11 @@ async function callOpenRouter(apiKey, systemPrompt, userPrompt) {
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt },
           ],
+          max_tokens: 1500,
         }),
       });
 
+      const response = await withTimeout(fetchPromise);
       if (response.ok) {
         const data = await response.json();
         const text = data.choices?.[0]?.message?.content;
@@ -94,7 +94,7 @@ async function callOpenRouter(apiKey, systemPrompt, userPrompt) {
     }
   }
 
-  throw lastErr || new Error('OpenRouter API calls failed across high models');
+  throw lastErr || new Error('OpenRouter API calls failed');
 }
 
 // Helper: Call HuggingFace High Models API (Llama 3.3 70B, DeepSeek R1, Qwen 2.5 72B, Mixtral 8x7B)
@@ -176,14 +176,13 @@ async function getAIResponse(provider, reqApiKey, systemPrompt, userPrompt, fall
   const openRouterKey = reqApiKey || process.env.OPENROUTER_API_KEY;
   const hfKey = reqApiKey || process.env.HUGGINGFACE_API_KEY;
 
+  // HuggingFace is excluded from auto-selection (too slow for chat)
   const effProvider = provider && provider !== 'auto'
     ? provider
     : process.env.GEMINI_API_KEY
     ? 'gemini'
     : process.env.OPENROUTER_API_KEY
     ? 'openrouter'
-    : process.env.HUGGINGFACE_API_KEY
-    ? 'huggingface'
     : 'fallback';
 
   if (effProvider === 'gemini' && geminiKey) {
@@ -271,118 +270,171 @@ router.post('/chat', protect, async (req, res) => {
     const isSpendingQuery   = lower.includes('how much') && (lower.includes('spent') || lower.includes('spend'));
     const shouldEscalate    = isHumanRequest || lower.includes('complaint') || lower.includes('urgent') || lower.includes('fraud');
 
-    // ── Authorised database queries ───────────────────────────────────────────
-    // SECURITY: all customer queries are scoped to currentUserId.
+    // ── Authorised database queries — run concurrently, scoped to user ────────
+    // SECURITY: customer queries are always scoped to currentUserId.
     //           Admin queries may be unrestricted.
     let contextData = '';
+    const userFilter = isAdmin ? {} : { user: currentUserId };
+
+    // Build an array of only the queries that this message actually needs,
+    // then fire them all at once with Promise.allSettled (no sequential waiting).
+    const queryTasks = [];
 
     // 1. Orders
     if (isOrderQuery) {
       const matchedOrderNum = message.match(/GLW-[A-Z0-9-]+/i);
-      let orders = [];
-
       if (matchedOrderNum) {
-        // Specific order lookup — customer can only see their own
         const filter = { orderNumber: new RegExp(matchedOrderNum[0], 'i') };
         if (!isAdmin) filter.user = currentUserId;
-        const o = await Order.findOne(filter).populate('items.product', 'name price slug');
-        if (o) orders = [o];
+        queryTasks.push(
+          Order.findOne(filter)
+            .select('orderNumber status total paymentMethod items shippingAddress createdAt')
+            .populate('items.product', 'name price')
+            .lean()
+            .then(o => ({ type: 'order_single', data: o ? [o] : [] }))
+        );
       } else {
-        // Latest orders for this user (or all for admin)
-        const filter = isAdmin ? {} : { user: currentUserId };
-        orders = await Order.find(filter).sort({ createdAt: -1 }).limit(5).populate('items.product', 'name price slug');
-      }
-
-      if (orders.length > 0) {
-        const orderSummaries = orders.map(o => {
-          const itemList = o.items.map(i => `${i.name} (x${i.quantity}, ₹${i.price})`).join(', ');
-          const shipping = o.shippingAddress
-            ? `${o.shippingAddress.fullName}, ${o.shippingAddress.address}, ${o.shippingAddress.city}, ${o.shippingAddress.state} - ${o.shippingAddress.zip}`
-            : 'N/A';
-          return `Order #${o.orderNumber} | Status: ${o.status.toUpperCase()} | Total: ₹${o.total} | Payment: ${o.paymentMethod} | Items: ${itemList} | Shipping to: ${shipping} | Placed on: ${new Date(o.createdAt).toLocaleDateString('en-IN')}`;
-        }).join('\n');
-        const totalOrders = await Order.countDocuments(isAdmin ? {} : { user: currentUserId });
-        contextData += `\n[Order Data for ${userName}: ${totalOrders} total order(s).\n${orderSummaries}]`;
-      } else {
-        contextData += `\n[Order Data: No orders found for this user.]`;
+        queryTasks.push(
+          Order.find(userFilter)
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .select('orderNumber status total paymentMethod items shippingAddress createdAt')
+            .populate('items.product', 'name price')
+            .lean()
+            .then(orders => ({ type: 'orders', data: orders }))
+        );
       }
     }
 
     // 2. Spending summary
     if (isSpendingQuery) {
-      const filter = isAdmin ? {} : { user: currentUserId };
-      const agg = await Order.aggregate([
-        { $match: { ...filter, user: currentUser._id, status: { $in: ['paid', 'approved', 'shipped'] } } },
-        { $group: { _id: null, total: { $sum: '$total' }, count: { $sum: 1 } } },
-      ]);
-      const totalSpent = agg[0]?.total || 0;
-      const orderCount = agg[0]?.count || 0;
-      contextData += `\n[Spending Summary for ${userName}: ₹${totalSpent.toFixed(2)} spent across ${orderCount} completed order(s).]`;
+      queryTasks.push(
+        Order.aggregate([
+          { $match: { user: currentUser._id, status: { $in: ['paid', 'approved', 'shipped'] } } },
+          { $group: { _id: null, total: { $sum: '$total' }, count: { $sum: 1 } } },
+        ]).then(agg => ({ type: 'spending', data: agg }))
+      );
     }
 
     // 3. Wishlist
     if (isWishlistQuery) {
-      await currentUser.populate('wishlist', 'name price slug rating stockQuantity');
-      if (currentUser.wishlist?.length > 0) {
-        const wl = currentUser.wishlist.map(p => `${p.name} — ₹${p.price} (${p.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'})`).join(', ');
-        contextData += `\n[Wishlist for ${userName} (${currentUser.wishlist.length} item(s)): ${wl}]`;
-      } else {
-        contextData += `\n[Wishlist for ${userName}: Empty — no items saved to wishlist.]`;
+      queryTasks.push(
+        User.findById(currentUserId)
+          .select('wishlist')
+          .populate('wishlist', 'name price stockQuantity slug')
+          .lean()
+          .then(u => ({ type: 'wishlist', data: u?.wishlist || [] }))
+      );
+    }
+
+    // 4. Reviews
+    if (isReviewQuery) {
+      queryTasks.push(
+        Review.find(userFilter)
+          .sort({ createdAt: -1 })
+          .limit(5)
+          .select('rating comment createdAt')
+          .populate('product', 'name')
+          .lean()
+          .then(reviews => ({ type: 'reviews', data: reviews }))
+      );
+    }
+
+    // 5. Products & Categories — only when explicitly asked (NOT a catch-all)
+    if (isProductQuery) {
+      const keywords = lower.split(' ').filter(w =>
+        w.length > 3 && !['what', 'where', 'when', 'how', 'this', 'that', 'have', 'show', 'tell', 'about', 'your'].includes(w)
+      );
+      const searchRegex = keywords.length > 0 ? new RegExp(keywords.join('|'), 'i') : null;
+
+      queryTasks.push(
+        Promise.all([
+          searchRegex
+            ? Product.find({ $or: [{ name: searchRegex }, { description: searchRegex }] })
+                .limit(5).select('name price rating stockQuantity slug').lean()
+            : Product.find({ bestseller: true }).limit(5).select('name price rating stockQuantity slug').lean(),
+          Category.find({}).limit(10).select('name').lean(),
+        ]).then(([products, categories]) => ({ type: 'products', data: { products, categories } }))
+      );
+    }
+
+    // 6. Shipping — only if not already covered by orders
+    if (isShippingQuery && !isOrderQuery) {
+      queryTasks.push(
+        Order.findOne({ ...userFilter, status: { $in: ['shipped', 'approved'] } })
+          .sort({ createdAt: -1 })
+          .select('orderNumber status shippingAddress')
+          .lean()
+          .then(o => ({ type: 'shipping', data: o }))
+      );
+    }
+
+    // Run all queries concurrently
+    const results = await Promise.allSettled(queryTasks);
+
+    // Process results into contextData
+    for (const result of results) {
+      if (result.status !== 'fulfilled') continue;
+      const { type, data } = result.value;
+
+      if ((type === 'orders' || type === 'order_single') && data.length > 0) {
+        const summaries = data.map(o => {
+          const itemList = o.items.map(i => `${i.name} (x${i.quantity}, ₹${i.price})`).join(', ');
+          const ship = o.shippingAddress
+            ? `${o.shippingAddress.fullName}, ${o.shippingAddress.city}, ${o.shippingAddress.state}`
+            : 'N/A';
+          return `Order #${o.orderNumber} | ${o.status.toUpperCase()} | ₹${o.total} | ${o.paymentMethod} | Items: ${itemList} | Ship to: ${ship} | Date: ${new Date(o.createdAt).toLocaleDateString('en-IN')}`;
+        }).join('\n');
+        contextData += `\n[Orders for ${userName} (${data.length} shown):\n${summaries}]`;
+      } else if ((type === 'orders' || type === 'order_single') && data.length === 0) {
+        contextData += `\n[Orders: No orders found for this user.]`;
+      }
+
+      if (type === 'spending') {
+        const totalSpent = data[0]?.total || 0;
+        const count = data[0]?.count || 0;
+        contextData += `\n[Spending: ₹${totalSpent.toFixed(2)} across ${count} completed order(s).]`;
+      }
+
+      if (type === 'wishlist') {
+        if (data.length > 0) {
+          const wl = data.map(p => `${p.name} — ₹${p.price} (${p.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'})`).join(', ');
+          contextData += `\n[Wishlist for ${userName} (${data.length} item(s)): ${wl}]`;
+        } else {
+          contextData += `\n[Wishlist for ${userName}: Empty.]`;
+        }
+      }
+
+      if (type === 'reviews') {
+        if (data.length > 0) {
+          const list = data.map(r => `${r.product?.name || 'Product'} — ${r.rating}⭐ — "${r.comment || 'No comment'}"`).join('\n');
+          contextData += `\n[Reviews by ${userName}:\n${list}]`;
+        } else {
+          contextData += `\n[Reviews by ${userName}: None submitted yet.]`;
+        }
+      }
+
+      if (type === 'products') {
+        const { products, categories } = data;
+        if (products.length > 0) {
+          const prodList = products.map(p => `- ${p.name} (₹${p.price}, ⭐${p.rating || 4.5}, ${p.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'}, /product/${p.slug})`).join('\n');
+          contextData += `\n[Products:\n${prodList}]`;
+        }
+        if (categories.length > 0) {
+          contextData += `\n[Categories: ${categories.map(c => c.name).join(', ')}]`;
+        }
+      }
+
+      if (type === 'shipping' && data?.shippingAddress) {
+        const s = data.shippingAddress;
+        contextData += `\n[Latest shipped order #${data.orderNumber}: ${s.fullName}, ${s.address}, ${s.city}, ${s.state} - ${s.zip}]`;
       }
     }
 
-    // 4. Profile / Account info
+    // Profile is built from the already-fetched currentUser — no extra DB call
     if (isProfileQuery) {
       const safe = sanitize(currentUser);
-      const profileSummary = `Name: ${safe.name}, Email: ${safe.email}, Phone: ${safe.phone || 'not set'}, Address: ${[safe.address, safe.city, safe.state, safe.zipCode].filter(Boolean).join(', ') || 'not set'}, Member since: ${new Date(safe.createdAt).toLocaleDateString('en-IN')}`;
-      contextData += `\n[Account Info for ${userName}: ${profileSummary}]`;
-    }
-
-    // 5. My reviews
-    if (isReviewQuery) {
-      const filter = isAdmin ? {} : { user: currentUserId };
-      const reviews = await Review.find(filter).populate('product', 'name slug').sort({ createdAt: -1 }).limit(5);
-      if (reviews.length > 0) {
-        const reviewList = reviews.map(r => `${r.product?.name || 'Unknown Product'} — ${r.rating}⭐ — "${r.comment || 'No comment'}"`).join('\n');
-        contextData += `\n[Reviews by ${userName}:\n${reviewList}]`;
-      } else {
-        contextData += `\n[Reviews by ${userName}: No reviews submitted yet.]`;
-      }
-    }
-
-    // 6. Products & Categories
-    if (isProductQuery || (!isOrderQuery && !isWishlistQuery && !isProfileQuery && !isReviewQuery && lower.length > 2)) {
-      const keywords = lower.split(' ').filter(w => w.length > 3 && !['what', 'where', 'when', 'how', 'this', 'that', 'have', 'show', 'tell', 'about', 'your'].includes(w));
-      let products = [];
-
-      if (keywords.length > 0) {
-        const searchRegex = new RegExp(keywords.join('|'), 'i');
-        products = await Product.find({ $or: [{ name: searchRegex }, { description: searchRegex }] }).limit(5).select('name price rating stockQuantity slug bestseller');
-      }
-      if (products.length === 0) {
-        products = await Product.find({ bestseller: true }).limit(5).select('name price rating stockQuantity slug bestseller');
-      }
-
-      if (products.length > 0) {
-        const prodList = products.map(p => `- ${p.name} (₹${p.price}, ⭐${p.rating || 4.5}, ${p.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'}, /product/${p.slug})`).join('\n');
-        contextData += `\n[Products available:\n${prodList}]`;
-      }
-
-      // Categories
-      const categories = await Category.find({}).select('name slug').limit(10);
-      if (categories.length > 0) {
-        contextData += `\n[Product categories: ${categories.map(c => c.name).join(', ')}]`;
-      }
-    }
-
-    // 7. Shipping details from latest order
-    if (isShippingQuery && !contextData.includes('Order Data')) {
-      const filter = isAdmin ? {} : { user: currentUserId };
-      const latestShipped = await Order.findOne({ ...filter, status: { $in: ['shipped', 'approved'] } }).sort({ createdAt: -1 });
-      if (latestShipped?.shippingAddress) {
-        const s = latestShipped.shippingAddress;
-        contextData += `\n[Latest Shipped Order for ${userName}: #${latestShipped.orderNumber} | Status: ${latestShipped.status.toUpperCase()} | Shipping to: ${s.fullName}, ${s.address}, ${s.city}, ${s.state} - ${s.zip} | Phone: ${s.phone}]`;
-      }
+      contextData += `\n[Account: Name: ${safe.name}, Email: ${safe.email}, Phone: ${safe.phone || 'not set'}, Address: ${[safe.address, safe.city, safe.state, safe.zipCode].filter(Boolean).join(', ') || 'not set'}, Member since: ${new Date(safe.createdAt).toLocaleDateString('en-IN')}]`;
     }
 
     // ── System prompt ─────────────────────────────────────────────────────────
