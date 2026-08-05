@@ -1,12 +1,31 @@
-import sharp from 'sharp';
+let sharpInstance = null;
+let sharpAttempted = false;
+
+async function getSharp() {
+  if (sharpAttempted) return sharpInstance;
+  sharpAttempted = true;
+  try {
+    const mod = await import('sharp');
+    sharpInstance = mod.default || mod;
+  } catch (err) {
+    console.warn('[ImageCompressor Warning] Sharp native binary not available on this platform, serving raw image buffer safely:', err.message);
+    sharpInstance = null;
+  }
+  return sharpInstance;
+}
 
 /**
- * Automatically converts and compresses any input image buffer into WebP format.
- * - Max dimension: 1200px (maintains ratio)
- * - Format: WebP (75-85% smaller file size, crisp 1080p visual fidelity)
+ * Safely converts and compresses input image buffer into WebP format.
+ * - If sharp is present and native binaries match: converts to WebP (~80% smaller)
+ * - If sharp binary is missing or fails on Linux host: safely falls back to original buffer without crashing server
  */
 export async function compressToWebP(inputBuffer, maxDimension = 1200, quality = 80) {
   if (!inputBuffer || !Buffer.isBuffer(inputBuffer)) {
+    return { data: inputBuffer, contentType: 'image/jpeg' };
+  }
+
+  const sharp = await getSharp();
+  if (!sharp) {
     return { data: inputBuffer, contentType: 'image/jpeg' };
   }
 
@@ -26,7 +45,7 @@ export async function compressToWebP(inputBuffer, maxDimension = 1200, quality =
       contentType: 'image/webp',
     };
   } catch (err) {
-    console.error('[ImageCompressor Warning] Fallback to raw buffer:', err.message);
+    console.warn('[ImageCompressor Warning] Sharp compression skipped, serving raw buffer:', err.message);
     return { data: inputBuffer, contentType: 'image/jpeg' };
   }
 }
