@@ -676,6 +676,65 @@ export default function AIChatbot() {
         }
       }
 
+      // ── PRODUCT DATABASE FAST-PATH (Cheapest / Low Price / Top Products / Price Lookup) ──
+      const isCheapQ = lower2.includes('sasta') || lower2.includes('cheap') || lower2.includes('less price') || lower2.includes('low price') || lower2.includes('kam price') || lower2.includes('budget') || lower2.includes('kam daam');
+      const isTopQ   = lower2.includes('top') || lower2.includes('best') || lower2.includes('bestseller') || lower2.includes('trending') || lower2.includes('popular') || lower2.includes('sabse achha') || lower2.includes('heroine');
+      const isProductSearchQ = isCheapQ || isTopQ || lower2.includes('product') || lower2.includes('price') || lower2.includes('daam') || lower2.includes('kitne ka') || lower2.includes('item');
+
+      if (isProductSearchQ) {
+        try {
+          const prodRes = await fetch('/api/products');
+          if (prodRes.ok) {
+            const allProducts = await prodRes.json();
+            if (Array.isArray(allProducts) && allProducts.length > 0) {
+
+              // 1. Cheapest / Less price products query
+              if (isCheapQ) {
+                const sortedCheap = [...allProducts].sort((a,b) => (a.finalPrice||a.price) - (b.finalPrice||b.price)).slice(0, 5);
+                const cheapRows = sortedCheap.map(p => {
+                  const pPrice = p.finalPrice || p.flashSalePrice || p.price;
+                  return `- 🌸 **[${p.name}](/products/${p.slug})** — Bas **₹${pPrice}** me 💖✨`;
+                }).join('\n');
+
+                const cheapCard = `### 🛍️ Sabse Saste & Budget-Friendly Products! 💖✨\n\nAapke liye database se sabse kam price wale super cute products:\n\n${cheapRows}\n\nSasta product hai khareed lo fast! 💕🛒`;
+                setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: cheapCard, timestamp: new Date().toISOString() }]);
+                setIsLoading(false);
+                return;
+              }
+
+              // 2. Top / Bestseller products query
+              if (isTopQ) {
+                const sortedTop = [...allProducts].sort((a,b) => (b.salesCount||0) - (a.salesCount||0) || (b.rating||0) - (a.rating||0)).slice(0, 5);
+                const topRows = sortedTop.map(p => {
+                  const pPrice = p.finalPrice || p.flashSalePrice || p.price;
+                  return `- 🏆 **[${p.name}](/products/${p.slug})** — Bas **₹${pPrice}** me (Rating ⭐ ${p.rating||4.8}) ✨`;
+                }).join('\n');
+
+                const topCard = `### 👑 Top Bestseller Products! 💃✨\n\nYe humare store ke sabse hit aur super-bestselling products hain:\n\n${topRows}\n\nInhe try karke aap ekdum heroine lagogi! 🥰💖`;
+                setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: topCard, timestamp: new Date().toISOString() }]);
+                setIsLoading(false);
+                return;
+              }
+
+              // 3. Product price search or detail lookup query
+              const matches = allProducts.filter(p => p.name.toLowerCase().includes(lower2) || p.slug.toLowerCase().includes(lower2));
+              const displayProds = matches.length > 0 ? matches.slice(0, 5) : allProducts.slice(0, 5);
+
+              const prodRows = displayProds.map(p => {
+                const pPrice = p.finalPrice || p.flashSalePrice || p.price;
+                return `- 💖 **[${p.name}](/products/${p.slug})** — Bas **₹${pPrice}** me! ✨`;
+              }).join('\n');
+
+              const prodCard = `### 🛍️ Product Details & Prices! 🌸✨\n\nDatabase se direct live details:\n\n${prodRows}\n\nJaldi se buy kar lo, kya pata iska price badh jaye! 💕🛍️`;
+              setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: prodCard, timestamp: new Date().toISOString() }]);
+              setIsLoading(false);
+              return;
+            }
+          }
+        } catch (_) { /* fall through to AI */ }
+      }
+
+
       // ── NORMAL PATH: send to AI chat route ───────────────────────────────────
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
