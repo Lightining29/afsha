@@ -410,9 +410,7 @@ export default function AIChatbot() {
     if (lower.includes('ship') || lower.includes('delivery') || lower.includes('courier')) {
       return `### 🚚 Shipping & Delivery\n\n- **Standard:** 3–5 business days across India (FREE above ₹499).\n- **Express:** 1–2 business days in metro cities.\n- Tracking link sent via SMS & Email after dispatch!`;
     }
-    if (lower.includes('refund') || lower.includes('money back')) {
-      return `### 💳 No Refund Policy\n\nWe have a **Strict No-Refund Policy**. However, if your product arrives damaged or defective, we provide a **100% Free Replacement** within 48 hours! 🛡️✨`;
-    }
+
 
     if (lower.includes('warranty') || lower.includes('guarantee') || lower.includes('broken') || lower.includes('damaged')) {
       return `### 🛡️ Warranty & Guarantee\n\nAll products carry a **1-Year Quality Guarantee**. Damaged on arrival? Contact us within **48 hours** for a free replacement!`;
@@ -775,19 +773,13 @@ export default function AIChatbot() {
           ]
         },
         {
-          keywords: ['return', 'replace', 'replacement', 'damaged', 'broken', 'wapas', 'refund', 'money back'],
-          replies: [
-            `Attention bestie! 🌸 Humari store par **No Refund Policy** hai. Lekin agar parcel damaged ya defective mile to 48 hours me **100% Free Replacement** milega! 🛡️💖`,
-            `Humari policy ke according **Refund Available Nahi Hai**, par damage case me hum instant **Free Replacement** bhejte hain! 💕✨`
-          ]
-        },
-        {
           keywords: ['cart', 'checkout', 'bag'],
           replies: [
             `Aapke cart me cute products waiting hain! 🛒 Fast checkout kar lo price change hone se pehle! 💖`,
             `Top right me shopping bag button par click karke aap apna cart review kar sakte ho! 🛍️✨`
           ]
         },
+
         {
           keywords: ['how to use', 'kaise use', 'kaise chalaye', 'pain', 'dard', 'ipl', 'hair remover', 'use'],
           replies: [
