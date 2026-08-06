@@ -53,7 +53,7 @@ export default function AIChatbot() {
 
       if (speed > 1.6) {
         setMascotMood('dizzy');
-        setSpeechBubble('🌀 Whoa, so fast! dizzy dizzy~');
+        setSpeechBubble('🌀 Are mujhe chakkar aa rhe hai! 💫');
         if (dizzyTimeout) clearTimeout(dizzyTimeout);
         dizzyTimeout = setTimeout(() => {
           setMascotMood('happy');
@@ -82,7 +82,7 @@ export default function AIChatbot() {
     checkNight();
   }, []);
 
-  // ── Product Detail Page Recurring Speech Rotator (3 Seconds) ─────────────────
+  // ── Product Detail Page Recurring Speech Rotator (2 Seconds) ─────────────────
   useEffect(() => {
     const isProductPage = location.pathname.startsWith('/products/') || location.pathname.startsWith('/product/');
     if (!isProductPage || isOpen || mascotMood === 'crying' || mascotMood === 'dizzy') return;
@@ -116,9 +116,10 @@ export default function AIChatbot() {
     };
 
     rotateProductMsgs();
-    const timer = setInterval(rotateProductMsgs, 3000);
+    const timer = setInterval(rotateProductMsgs, 2000);
     return () => clearInterval(timer);
   }, [location.pathname, isOpen]);
+
 
 
   // ── Auto Offer & Cute Activity Speech Rotator (General Browsing) ─────────────

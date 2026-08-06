@@ -67,7 +67,7 @@
 /* Floating Speech Bubble Above Mascot */
 .ai-cute-speech-bubble {
   position: absolute;
-  bottom: 78px;
+  bottom: 84px;
   right: 0;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(12px);
@@ -78,11 +78,15 @@
   font-size: 0.78rem;
   font-weight: 700;
   color: #1F151B;
-  white-space: nowrap;
+  white-space: normal;
+  max-width: 215px;
+  text-align: center;
+  line-height: 1.35;
   cursor: pointer;
   animation: speech-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 10000;
 }
+
 
 .ai-cute-speech-bubble::after {
   content: '';
@@ -476,12 +480,16 @@
   }
 
   .ai-cute-speech-bubble {
-    bottom: 90px;
+    bottom: 96px;
     right: 0;
-    font-size: 0.8rem;
-    padding: 9px 15px;
-    max-width: calc(100vw - 32px);
+    font-size: 0.76rem;
+    padding: 8px 12px;
+    max-width: 195px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.32;
   }
+
 
   .ai-fab-badge {
     top: -5px;
