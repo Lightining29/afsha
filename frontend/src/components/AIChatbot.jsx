@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bot, X, Send, Sparkles, Package, Truck, ShoppingBag, Trash2, User, Heart, Star } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './AIChatbot.css';
 
 export default function AIChatbot() {
   const { user } = useAuth();
   const isAdmin = user?.role === 'admin';
+  const location = useLocation();
 
   const makeWelcome = (u) => ({
     id: 'welcome',
@@ -98,21 +100,115 @@ export default function AIChatbot() {
     return () => clearInterval(interval);
   }, [isOpen, mascotMood]);
 
-  // ── Admin Order Alerts ────────────────────────────────────────────────────────
+  // ── Track Navigation & Multiple Product Views (Confused Mascot Reaction) ────
+  const prevPathRef = useRef(location.pathname);
+  const productViewCountRef = useRef(0);
+
+  useEffect(() => {
+    const prev = prevPathRef.current;
+    const current = location.pathname;
+    prevPathRef.current = current;
+
+    const wasOnProductPage = prev.startsWith('/products/') || prev.startsWith('/product/');
+    const isStillOnProductPage = current.startsWith('/products/') || current.startsWith('/product/');
+
+    // Increment product view counter if visiting a product page
+    if (isStillOnProductPage) {
+      productViewCountRef.current += 1;
+
+      // If customer has viewed 3 or more products, mascot acts confused
+      if (productViewCountRef.current >= 3) {
+        setMascotMood('confused');
+        setSpeechBubble('🤔 Kya aapko koi madad chahiye?');
+
+        const resetConfusedTimer = setTimeout(() => {
+          setMascotMood('happy');
+          setSpeechBubble('✨ Let me know if you need help finding the best deal!');
+        }, 8000);
+
+        return () => clearTimeout(resetConfusedTimer);
+      }
+    }
+
+    // Reaction when customer exits a product page without buying
+    if (wasOnProductPage && !isStillOnProductPage) {
+      setMascotMood('crying');
+      setSpeechBubble('😭 Aapko ye product pasand nhi aaya kya?');
+
+      const msg2Timer = setTimeout(() => {
+        setSpeechBubble('😭 Kya product jyada mehenga hai?');
+      }, 4500);
+
+      const resetTimer = setTimeout(() => {
+        setMascotMood('happy');
+        setSpeechBubble('✨ Tap me for secret discount codes!');
+      }, 9500);
+
+      return () => {
+        clearTimeout(msg2Timer);
+        clearTimeout(resetTimer);
+      };
+    }
+  }, [location.pathname]);
+
+  // ── Admin Automatic Database Order & Pending Orders Monitor ─────────────────
+  const prevOrderCountRef = useRef(0);
+
   useEffect(() => {
     if (!isAdmin) return;
-    const alertTimer = setInterval(() => {
-      setSpeechBubble('📦 Yay Admin! New order activity detected!');
-    }, 25000);
-    return () => clearInterval(alertTimer);
+
+    const checkAdminOrdersFromDb = async () => {
+      try {
+        const adminToken = localStorage.getItem('glowora_token');
+        if (!adminToken) return;
+
+        const res = await fetch('/api/admin/orders', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+          }
+        });
+
+        if (!res.ok) return;
+        const allOrders = await res.json();
+        if (!Array.isArray(allOrders)) return;
+
+        // Check for new incoming orders
+        if (prevOrderCountRef.current > 0 && allOrders.length > prevOrderCountRef.current) {
+          const newest = allOrders[0];
+          setSpeechBubble(`📦 New Order Alert! Order #${newest?.orderNumber || 'New'} detected!`);
+        }
+        prevOrderCountRef.current = allOrders.length;
+
+        // Check for pending / unshipped orders
+        const pendingOrUnshipped = allOrders.filter(o => {
+          const s = (o.status || '').toLowerCase().replace(/ /g, '_');
+          return ['pending', 'pending_payment', 'paid', 'approved', 'processing'].includes(s);
+        });
+
+        if (pendingOrUnshipped.length > 0) {
+          const pendingNums = pendingOrUnshipped.slice(0, 3).map(o => `#${o.orderNumber}`).join(', ');
+          setSpeechBubble(`⚠️ Admin Alert: ${pendingOrUnshipped.length} order(s) pending approval or shipping! (${pendingNums})`);
+        }
+      } catch (err) {
+        // silent catch
+      }
+    };
+
+    checkAdminOrdersFromDb();
+    const interval = setInterval(checkAdminOrdersFromDb, 20000);
+    return () => clearInterval(interval);
   }, [isAdmin]);
+
 
   // Mascot Image Mapping
   const getMascotImage = () => {
     if (mascotMood === 'sleeping') return '/cute-girl-sleeping.png';
     if (mascotMood === 'crying') return '/cute-girl-crying.png';
+    if (mascotMood === 'confused') return '/cute-girl-confused.png';
     return '/cute-girl-happy.png';
   };
+
 
 
   // Re-personalise the welcome message when auth state changes

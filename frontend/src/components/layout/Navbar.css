@@ -7,24 +7,25 @@
   position: sticky;
   top: 0;
   z-index: 200;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 245, 248, 0.88);
   backdrop-filter: saturate(200%) blur(24px);
   -webkit-backdrop-filter: saturate(200%) blur(24px);
-  border-bottom: 1px solid rgba(233, 64, 87, 0.08);
+  border-bottom: 1px solid rgba(255, 92, 138, 0.15);
   transition: box-shadow 0.35s ease, background 0.35s ease, border-color 0.35s ease;
 }
 
-/* Subtle gradient accent line at top */
+/* Cute strawberry rose gradient accent line at top */
 .navbar::before {
   content: '';
   position: absolute;
   inset: 0 0 auto 0;
-  height: 2px;
-  background: linear-gradient(90deg, #E94057 0%, #F27121 40%, #3B82F6 75%, #E94057 100%);
+  height: 3px;
+  background: linear-gradient(90deg, #FF5C8A 0%, #FF7597 35%, #FFB3C6 70%, #FF5C8A 100%);
   background-size: 200% 100%;
   animation: gradient-slide 4s linear infinite;
-  opacity: 0.7;
+  opacity: 0.95;
 }
+
 
 @keyframes gradient-slide {
   0%   { background-position: 0% 50%; }

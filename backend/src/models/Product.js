@@ -38,4 +38,11 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Compound database indexes for high-speed sub-millisecond query execution
+productSchema.index({ category: 1, salesCount: -1 });
+productSchema.index({ bestseller: 1, salesCount: -1 });
+productSchema.index({ flashSale: 1, flashSaleEndsAt: 1 });
+productSchema.index({ createdAt: -1 });
+
 export default mongoose.model('Product', productSchema);
+

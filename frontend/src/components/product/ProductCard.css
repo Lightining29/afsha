@@ -15,11 +15,11 @@
 
 .product-card {
   background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 22px;
+  border: 1px solid #FFD6E0;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 26px rgba(255, 92, 138, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   position: relative;
   height: 100%;
   display: flex;
@@ -31,7 +31,8 @@
 
 .product-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-color: #FF7597;
+  box-shadow: 0 14px 36px rgba(255, 92, 138, 0.2);
 }
 
 /* Image Wrap */
@@ -39,12 +40,13 @@
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: #f8fafc;
+  background: radial-gradient(circle at 50% 50%, #ffffff 40%, #FFF0F4 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
+
 
 .product-image-wrap img {
   width: 100%;
@@ -207,21 +209,22 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 5px 10px;
-  border-radius: 6px;
-  background: #1a1a1a;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #FF5C8A 0%, #E94057 100%);
   color: #ffffff;
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-size: 0.74rem;
+  font-weight: 700;
   letter-spacing: 0.2px;
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 14px rgba(255, 92, 138, 0.32);
   white-space: nowrap;
   border: none;
   outline: none;
 }
+
 
 .product-card .buy-now-btn svg {
   width: 11px;

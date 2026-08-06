@@ -2,20 +2,21 @@
    FOOTER — Luxury Dark Navy & Rose Gold Theme
    ========================================= */
 .footer {
-  background: linear-gradient(180deg, #0f172a 0%, #0b1120 50%, #070a12 100%);
-  color: rgba(248, 250, 252, 0.8);
+  background: linear-gradient(180deg, #231720 0%, #1a1018 50%, #120910 100%);
+  color: rgba(255, 245, 248, 0.85);
   position: relative;
   overflow: hidden;
-  border-top: 3px solid #E94057;
+  border-top: 3px solid #FF5C8A;
   font-family: 'Inter', system-ui, sans-serif;
 }
 
 /* Trust Highlights Strip */
 .footer-trust-strip {
-  background: rgba(15, 23, 42, 0.95);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(35, 23, 32, 0.95);
+  border-bottom: 1px solid rgba(255, 214, 224, 0.12);
   padding: 24px 0;
 }
+
 
 .trust-strip-container {
   display: grid;

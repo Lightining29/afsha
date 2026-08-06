@@ -66,11 +66,43 @@ export async function fetchCategories() {
 }
 export function invalidateCategoryCache() { _cache.categories = null; }
 export async function fetchCategory(slug) { return apiFetch(`/categories/${slug}`); }
+// In-memory client product cache for instant navigation & page loads
+const _productCache = new Map();
+const PRODUCT_CACHE_TTL = 30_000; // 30 seconds
+
 export async function fetchProducts(params = {}) {
   const query = new URLSearchParams(params).toString();
-  return apiFetch(`/products${query ? `?${query}` : ''}`);
+  const cacheKey = `products_${query}`;
+  const cached = _productCache.get(cacheKey);
+  const now = Date.now();
+
+  if (cached && now - cached.at < PRODUCT_CACHE_TTL) {
+    return cached.data;
+  }
+
+  const data = await apiFetch(`/products${query ? `?${query}` : ''}`);
+  _productCache.set(cacheKey, { data, at: now });
+  return data;
 }
-export async function fetchProduct(slug) { return apiFetch(`/products/${slug}`); }
+
+export async function fetchProduct(slug) {
+  const cacheKey = `product_slug_${slug}`;
+  const cached = _productCache.get(cacheKey);
+  const now = Date.now();
+
+  if (cached && now - cached.at < PRODUCT_CACHE_TTL) {
+    return cached.data;
+  }
+
+  const data = await apiFetch(`/products/${slug}`);
+  _productCache.set(cacheKey, { data, at: now });
+  return data;
+}
+
+export function invalidateProductCache() {
+  _productCache.clear();
+}
+
 export async function fetchBlogs() { return apiFetch('/blogs'); }
 export async function fetchBlog(slug) { return apiFetch(`/blogs/${slug}`); }
 
