@@ -24,12 +24,13 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(180, 60, 90, 0.10) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(180, 60, 90, 0.10) 1px, transparent 1px);
-  background-size: 50px 50px;
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 70%, transparent 100%);
-          mask-image: radial-gradient(ellipse at center, #000 70%, transparent 100%);
+    linear-gradient(rgba(233, 64, 87, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 64, 87, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 60%, transparent 100%);
+          mask-image: radial-gradient(ellipse at center, #000 60%, transparent 100%);
 }
+
 
 .hero-bg-blob {
   position: absolute;
@@ -460,11 +461,11 @@
   justify-content: center;
   padding: 13px 16px;
   border-radius: 14px;
-  background: #f8fafc;
-  color: #1A2B3C;
+  background: rgba(255, 240, 243, 0.8);
+  color: #E94057;
   font-size: 0.88rem;
   font-weight: 700;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid rgba(233, 64, 87, 0.25);
   text-decoration: none;
   transition: background 0.22s, border-color 0.22s, transform 0.22s, color 0.22s;
   white-space: nowrap;
@@ -476,6 +477,7 @@
   color: #E94057;
   transform: translateY(-2px);
 }
+
 
 .hero-out-of-stock {
   margin-top: 10px;
