@@ -62,8 +62,8 @@ export default function Footer() {
             </p>
             <div className="footer-contact-details">
               <p><MapPin size={15} color="#E94057" inline /> 75 Raja Muthai Road, Periyamet, Opposite Nehru Stadium Main Gate</p>
-              <p><Phone size={15} color="#10B981" inline /> +91 96071 11312</p>
-              <p><Mail size={15} color="#3B82F6" inline /> support@afshaenterprises.com</p>
+              <p><Phone size={15} color="#10B981" inline /> +91 8073786650</p>
+              <p><Mail size={15} color="#3B82F6" inline /> reazafsha0@gmail.com</p>
             </div>
             <div className="footer-social">
               <a
@@ -85,7 +85,7 @@ export default function Footer() {
                 <Youtube size={18} />
               </a>
               <a
-                href="https://wa.me/919607111312"
+                href="https://wa.me/918073786650"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-social-btn whatsapp"
