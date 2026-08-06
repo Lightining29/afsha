@@ -5,7 +5,6 @@ import './AIChatbot.css';
 
 export default function AIChatbot() {
   const { user } = useAuth();
-
   const isAdmin = user?.role === 'admin';
 
   const makeWelcome = (u) => ({
@@ -20,6 +19,9 @@ export default function AIChatbot() {
   });
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const [mascotMood, setMascotMood] = useState('happy'); // 'happy' | 'crying' | 'sleeping' | 'dizzy'
+  const [speechBubble, setSpeechBubble] = useState('✨ Use code WELCOME10 for 10% OFF!');
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem('glowora_ai_chat_history');
     if (saved) {
@@ -30,8 +32,88 @@ export default function AIChatbot() {
   const [inputMsg, setInputMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [provider, setProvider] = useState('auto');
-  const [apiKey, setApiKey] = useState('');
   const chatEndRef = useRef(null);
+
+  // ── Scroll velocity tracking for Dizzy reaction ──────────────────────────────
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let lastTime = Date.now();
+    let dizzyTimeout = null;
+
+    const handleScroll = () => {
+      const now = Date.now();
+      const dt = Math.max(now - lastTime, 16);
+      const dy = Math.abs(window.scrollY - lastScrollY);
+      const speed = dy / dt; // velocity in px/ms
+
+      lastScrollY = window.scrollY;
+      lastTime = now;
+
+      if (speed > 1.6) {
+        setMascotMood('dizzy');
+        setSpeechBubble('🌀 Whoa, so fast! dizzy dizzy~');
+        if (dizzyTimeout) clearTimeout(dizzyTimeout);
+        dizzyTimeout = setTimeout(() => {
+          setMascotMood('happy');
+          setSpeechBubble('✨ Tap me for beauty secrets!');
+        }, 3000);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (dizzyTimeout) clearTimeout(dizzyTimeout);
+    };
+  }, []);
+
+  // ── Night Time Sleepy Reaction (10 PM to 6 AM) ──────────────────────────────
+  useEffect(() => {
+    const checkNight = () => {
+      const hour = new Date().getHours();
+      const isNight = hour >= 22 || hour < 6;
+      if (isNight && mascotMood !== 'dizzy') {
+        setMascotMood('sleeping');
+        setSpeechBubble("💤 Yawn~ It's late! Want sweet dreams & beauty deals?");
+      }
+    };
+    checkNight();
+  }, []);
+
+  // ── Auto Offer Speech Bubble Rotator ─────────────────────────────────────────
+  const speechPrompts = [
+    "✨ Use code WELCOME10 for 10% OFF!",
+    "🌸 Smooth skin secrets await! Tap me!",
+    "💖 Free express shipping on orders above ₹499!",
+    "🎟️ Looking for secret discount coupons?",
+    "⚡ Bestseller Hair Remover is in stock!"
+  ];
+
+  useEffect(() => {
+    if (isOpen || mascotMood === 'dizzy' || mascotMood === 'sleeping') return;
+    const interval = setInterval(() => {
+      const randomPrompt = speechPrompts[Math.floor(Math.random() * speechPrompts.length)];
+      setSpeechBubble(randomPrompt);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [isOpen, mascotMood]);
+
+  // ── Admin Order Alerts ────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!isAdmin) return;
+    const alertTimer = setInterval(() => {
+      setSpeechBubble('📦 Yay Admin! New order activity detected!');
+    }, 25000);
+    return () => clearInterval(alertTimer);
+  }, [isAdmin]);
+
+  // Mascot Image Mapping
+  const getMascotImage = () => {
+    if (mascotMood === 'sleeping') return '/cute-girl-sleeping.png';
+    if (mascotMood === 'crying') return '/cute-girl-crying.png';
+    return '/cute-girl-happy.png';
+  };
+
 
   // Re-personalise the welcome message when auth state changes
   const prevUserId = useRef(null);
@@ -262,7 +344,8 @@ export default function AIChatbot() {
                 const itemLines = o.items.map(i => `- ${i.name || 'Item'} (x${i.quantity}) — ₹${i.price}`).join('\n');
                 card += `\n**Items Ordered:**\n${itemLines}`;
               }
-              card += `\n\n> For support or assistance with order #${o.orderNumber}, contact **support@afshaenterprises.com**.`;
+              card += `\n\n> For support or assistance with order #${o.orderNumber}, contact **reazafsha0@gmail.com**.`;
+
               return card;
             };
 
@@ -431,13 +514,33 @@ export default function AIChatbot() {
 
   return (
     <div className="ai-chatbot-widget">
-      {/* Floating Action Button */}
+      {/* Floating Auto-Offer / Reaction Speech Bubble */}
+      {!isOpen && speechBubble && (
+        <div className="ai-cute-speech-bubble" onClick={() => setIsOpen(true)}>
+          <span>{speechBubble}</span>
+        </div>
+      )}
+
+      {/* Floating Action Button — Full Body Mascot */}
       <button
-        className="ai-chatbot-fab"
+        className={`ai-chatbot-fab ai-mascot-fab mood-${mascotMood}`}
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle 24/7 AI Customer Assistant"
+        aria-label="Toggle 24/7 AI Cute Assistant"
       >
-        {isOpen ? <X size={26} /> : <Bot size={26} />}
+        {isOpen ? (
+          <X size={26} color="#E94057" />
+        ) : (
+          <div className="ai-mascot-avatar-wrap">
+            <img
+              src={getMascotImage()}
+              alt="Cute AI Mascot"
+              className={`ai-mascot-img ${mascotMood}`}
+            />
+            {mascotMood === 'sleeping' && <span className="ai-mascot-badge sleep">💤</span>}
+            {mascotMood === 'dizzy' && <span className="ai-mascot-badge dizzy">🌀</span>}
+            {mascotMood === 'crying' && <span className="ai-mascot-badge cry">😭</span>}
+          </div>
+        )}
         {!isOpen && <span className="ai-fab-badge">24/7 AI</span>}
       </button>
 
@@ -447,8 +550,8 @@ export default function AIChatbot() {
           {/* Header */}
           <div className="ai-chat-header">
             <div className="ai-chat-header-info">
-              <div className="ai-bot-avatar">
-                <Sparkles size={22} color="#ffffff" />
+              <div className="ai-bot-avatar cute-header-avatar">
+                <img src={getMascotImage()} alt="Afsha Mascot" className="ai-header-mascot-img" />
               </div>
               <div className="ai-bot-details">
                 <h4>AfshaBot AI <Sparkles size={13} color="#FFD700" /></h4>
@@ -458,10 +561,11 @@ export default function AIChatbot() {
                     ? <span>👑 Admin: <strong>{user.name?.split(' ')[0]}</strong></span>
                     : user
                     ? <span>Logged in as <strong>{user.name?.split(' ')[0]}</strong></span>
-                    : '24/7 Online Support'}
+                    : '24/7 Cute AI Online'}
                 </div>
               </div>
             </div>
+
 
             <div className="ai-chat-header-actions">
               <button
