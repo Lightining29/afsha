@@ -146,19 +146,32 @@ export default function AIChatbot() {
           .then(prod => {
             if (prod && prod.price) {
               const displayPrice = prod.finalPrice || prod.flashSalePrice || prod.price;
-              const priceMsgs = [
-                `🛍️ Wow! Ye product bas ₹${displayPrice} me mil raha hai! Perfect deal ✨`,
-                `🛍️ Only ₹${displayPrice}! Great price for this cute item 🌸`,
-                `🛍️ Yay! Best price alert: ₹${displayPrice}! Add to cart fast! 🛒`
+              const productPageMsgs = [
+                `🛍️ Sasta product hai khareed lo! Bas ₹${displayPrice} me 💖✨`,
+                `😱 Kya pata iska price badh jaye! Fast buy kar lo 🛍️💕`,
+                `💖 Ye product bahut achha hai! Highly recommended ✨🌸`,
+                `✨ Isse aapki skin ekdum clean ho jayegi! 🥰💖`,
+                `👑 Aap ekdum heroine lagogi / hero lagoge! 💃✨💕`,
+                `🥰 Aap pehle se itne sundar ho, aur sundar ho jaoge! 💖✨🌸`,
+                `🛍️ Wow! Ye product bas ₹${displayPrice} me mil raha hai! Add to cart fast! 🛒💖`
               ];
               setMascotMood('shopping');
-              setSpeechBubble(priceMsgs[Math.floor(Math.random() * priceMsgs.length)]);
+              setSpeechBubble(productPageMsgs[Math.floor(Math.random() * productPageMsgs.length)]);
             }
           })
           .catch(() => {
+            const defaultProductPageMsgs = [
+              `🛍️ Sasta product hai khareed lo! 💖✨`,
+              `😱 Kya pata iska price badh jaye! Fast buy kar lo 🛍️💕`,
+              `💖 Ye product bahut achha hai! Highly recommended ✨🌸`,
+              `✨ Isse aapki skin ekdum clean ho jayegi! 🥰💖`,
+              `👑 Aap ekdum heroine lagogi / hero lagoge! 💃✨💕`,
+              `🥰 Aap pehle se itne sundar ho, aur sundar ho jaoge! 💖✨🌸`
+            ];
             setMascotMood('shopping');
-            setSpeechBubble('🛍️ Wow! Look at this cute item! Perfect deal ✨');
+            setSpeechBubble(defaultProductPageMsgs[Math.floor(Math.random() * defaultProductPageMsgs.length)]);
           });
+
       }
 
       // If customer has viewed 3 or more products, mascot acts confused
