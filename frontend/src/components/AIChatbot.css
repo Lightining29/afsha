@@ -45,12 +45,15 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(1.22);
+  object-position: center 25%;
   transition: transform 0.3s ease;
 }
 
 .ai-mascot-img.dizzy {
   animation: mascot-spin-dizzy 0.6s linear infinite;
 }
+
 
 .ai-mascot-badge {
   position: absolute;
@@ -460,15 +463,60 @@
   cursor: not-allowed;
 }
 
+@media (max-width: 768px) {
+  .ai-chatbot-fab {
+    width: 76px;
+    height: 76px;
+    border-width: 2.5px;
+  }
+
+  .ai-mascot-img {
+    transform: scale(1.32);
+    object-position: center 22%;
+  }
+
+  .ai-cute-speech-bubble {
+    bottom: 90px;
+    right: 0;
+    font-size: 0.8rem;
+    padding: 9px 15px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .ai-fab-badge {
+    top: -5px;
+    right: -5px;
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+}
+
 @media (max-width: 480px) {
   .ai-chatbot-widget {
     bottom: 16px;
     right: 16px;
   }
+
+  .ai-chatbot-fab {
+    width: 80px;
+    height: 80px;
+  }
+
+  .ai-mascot-img {
+    transform: scale(1.4);
+    object-position: center 20%;
+  }
+
+  .ai-cute-speech-bubble {
+    bottom: 94px;
+    right: 0;
+  }
+
   .ai-chatbot-modal {
     right: 16px;
-    bottom: 84px;
+    bottom: 92px;
     width: calc(100vw - 32px);
     height: 520px;
   }
 }
+
