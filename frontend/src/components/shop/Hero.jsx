@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Star, ArrowRight, ShieldCheck, Truck, RefreshCw, CheckCircle2, Zap, Sparkles } from 'lucide-react';
+import { ShoppingBag, Star, ArrowRight, ShieldCheck, Truck, RefreshCw, CheckCircle2, Zap, Sparkles, Headphones } from 'lucide-react';
+
 
 import { toastBuyNow } from '../../utils/toast.js';
 import { useCart } from '../../context/CartContext';
