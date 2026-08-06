@@ -183,7 +183,7 @@
   overflow: hidden;
 }
 
-.price-current {
+.product-card .price-current {
   font-size: 0.82rem;
   font-weight: 800;
   color: #E94057;
@@ -192,7 +192,7 @@
   letter-spacing: -0.2px;
 }
 
-.price-original {
+.product-card .price-original {
   font-size: 0.7rem;
   color: #94a3b8;
   text-decoration: line-through;
@@ -201,7 +201,7 @@
 }
 
 /* ── Buy Now Button ─────────────────────────────── */
-.buy-now-btn {
+.product-card .buy-now-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -222,22 +222,22 @@
   outline: none;
 }
 
-.buy-now-btn svg {
+.product-card .buy-now-btn svg {
   width: 11px;
   height: 11px;
 }
 
-.buy-now-btn:hover:not(:disabled) {
+.product-card .buy-now-btn:hover:not(:disabled) {
   background: #333333;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-.buy-now-btn:active:not(:disabled) {
+.product-card .buy-now-btn:active:not(:disabled) {
   transform: scale(0.96);
 }
 
-.buy-now-btn:disabled {
+.product-card .buy-now-btn:disabled {
   background: #cbd5e1;
   color: #64748b;
   cursor: not-allowed;
@@ -251,55 +251,56 @@
     padding: 2px;
   }
 
-  .product-info {
+  .product-card .product-info {
     padding: 8px 6px 8px;
   }
 
-  .product-name {
+  .product-card .product-name {
     font-size: 0.85rem;
     line-height: 1.25;
     margin-bottom: 4px;
   }
 
-  .product-rating {
+  .product-card .product-rating {
     font-size: 0.7rem;
     margin-bottom: 6px;
   }
 
-  .product-bottom {
+  .product-card .product-bottom {
     gap: 4px;
   }
 
-  .price-current {
-    font-size: 0.72rem !important;
-    font-weight: 800 !important;
+  .product-card .price-current {
+    font-size: 0.72rem;
+    font-weight: 800;
   }
 
-  .price-original {
-    font-size: 0.62rem !important;
+  .product-card .price-original {
+    font-size: 0.62rem;
   }
 
-  .buy-now-btn {
-    padding: 4px 7px !important;
-    font-size: 0.62rem !important;
-    border-radius: 5px !important;
-    gap: 2px !important;
-    flex-shrink: 0 !important;
+  .product-card .buy-now-btn {
+    padding: 4px 7px;
+    font-size: 0.62rem;
+    border-radius: 5px;
+    gap: 2px;
+    flex-shrink: 0;
   }
 
-  .buy-now-btn svg {
-    width: 10px !important;
-    height: 10px !important;
+  .product-card .buy-now-btn svg {
+    width: 10px;
+    height: 10px;
   }
 }
 
 @media (max-width: 360px) {
-  .price-current {
-    font-size: 0.68rem !important;
+  .product-card .price-current {
+    font-size: 0.68rem;
   }
 
-  .buy-now-btn {
-    padding: 3px 5px !important;
-    font-size: 0.58rem !important;
+  .product-card .buy-now-btn {
+    padding: 3px 5px;
+    font-size: 0.58rem;
   }
 }
+

@@ -440,3 +440,38 @@
 .customer-photo-item:hover {
   transform: scale(1.05);
 }
+
+/* ── Mobile: larger price display ── */
+@media (max-width: 768px) {
+  .price-section {
+    width: 100%;
+    padding: 16px 20px;
+    gap: 12px;
+    border-radius: 16px;
+    box-sizing: border-box;
+  }
+
+  .price-section .price-current {
+    font-size: 2.8rem !important;
+    font-weight: 900 !important;
+    line-height: 1;
+    color: #1A2B3C;
+  }
+
+  .price-section .price-original {
+    font-size: 1.25rem !important;
+  }
+
+  .discount-percent,
+  .discount-percent-badge {
+    font-size: 0.95rem;
+    padding: 5px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .price-section .price-current {
+    font-size: 2.4rem !important;
+  }
+}
+
