@@ -57,7 +57,7 @@ export default function AIChatbot() {
     const name = user?.name?.split(' ')[0] || 'there';
 
     if (lower.includes('human') || lower.includes('agent') || lower.includes('representative')) {
-      return `### 👨‍💼 Connect with Human Support\n\nI've logged your request for our live customer support team!\n\nYou can reach us at **support@afshaenterprises.com** or call **+91 96071 11312** (Mon-Sat, 9AM-8PM).`;
+      return `### 👨‍💼 Connect with Human Support\n\nI've logged your request for our live customer support team!\n\nYou can reach us at **reazafsha0@gmail.com** or call **+91 8073786650** (Mon-Sat, 9AM-8PM).`;
     }
     if (lower.includes('order') || lower.includes('status') || lower.includes('track') || lower.includes('purchase') || lower.includes('bought') || /glw-[a-z0-9-]+/i.test(lower)) {
       const matched = queryText.match(/GLW-[A-Z0-9-]+/i);
@@ -317,7 +317,7 @@ export default function AIChatbot() {
               if (found) {
                 card = buildCard(found);
               } else {
-                card = `### 📦 Order Not Found\n\nI couldn't find order **#${searchId}** under your account.\n\n- Double-check the order ID\n- Make sure you're logged in with the correct account\n- Contact us: **support@afshaenterprises.com** | **+91 96071 11312**`;
+                card = `### 📦 Order Not Found\n\nI couldn't find order **#${searchId}** under your account.\n\n- Double-check the order ID\n- Make sure you're logged in with the correct account\n- Contact us: **reazafsha0@gmail.com** | **+91 8073786650**`;
               }
 
             // ── No orders yet ───────────────────────────────────────────────
