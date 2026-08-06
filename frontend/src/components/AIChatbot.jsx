@@ -13,12 +13,13 @@ export default function AIChatbot() {
     id: 'welcome',
     sender: 'bot',
     text: u?.role === 'admin'
-      ? `👑 Welcome, **${u.name?.split(' ')[0] || 'Admin'}**! You're in **Admin Mode**.\n\nI can show you new orders, pending approvals, revenue, analytics and more. What would you like to check?`
+      ? `👑 Welcome Boss, **${u.name?.split(' ')[0] || 'Admin'}**! (**Admin Mode Active**)\n\nMain aapki official Store Admin Assistant hoon! Direct database queries se details dekhne ke liye mujhse poochhiye:\n\n- 📊 **"store summary"** ya **"revenue"** — Total sales, revenue & order breakdown\n- 🆕 **"new orders"** ya **"pending"** — Unshipped & pending approval orders\n- 📅 **"today sales"** — Today's orders & live revenue\n- 🏆 **"bestsellers"** — Top selling products & inventory levels\n- 📋 **"all orders"** — Customer purchase history`
       : u
       ? `Hello **${u.name?.split(' ')[0] || 'there'}**! 👋 I'm **AfshaBot**, your 24/7 AI Shopping Assistant.\n\nI've already loaded your account details — just ask me anything about your orders, wishlist, account and more!`
       : `Hello! 👋 I'm **AfshaBot**, your 24/7 AI Shopping Assistant. How can I help you today?`,
     timestamp: new Date().toISOString(),
   });
+
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -455,8 +456,12 @@ export default function AIChatbot() {
         lower2.includes('order list') || lower2.includes('show order') ||
         lower2.includes('revenue') || lower2.includes('analytics') ||
         lower2.includes('sales') || lower2.includes('total revenue') ||
-        lower2.includes('how many order') || lower2.includes('order count')
+        lower2.includes('how many order') || lower2.includes('order count') ||
+        lower2.includes('store summary') || lower2.includes('business') ||
+        lower2.includes('admin help') || lower2.includes('admin command') ||
+        lower2.includes('boss') || lower2.includes('bestseller stats')
       );
+
 
       if (isAdminOrderQ) {
         try {
