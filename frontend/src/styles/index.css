@@ -65,8 +65,7 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background: linear-gradient(180deg, #FFF0F3 0%, #FFFFFF 20%, #FFF5F7 60%, #FFFFFF 100%);
-  background-attachment: fixed;
+  background: var(--white);
   color: var(--text-dark);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -74,7 +73,6 @@ body {
   overflow-x: hidden;
   max-width: 100vw;
 }
-
 
 img {
   max-width: 100%;
