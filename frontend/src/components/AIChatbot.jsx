@@ -735,8 +735,60 @@ export default function AIChatbot() {
             `Aww! Main bhi aapko bahut pasand karti hoon bestie! 🥰💖 Forever cute shopping partners! ✨`,
             `Sending you big cute hugs & hearts! 💕✨🌸`
           ]
+        },
+
+        // ── SHOPPING SPECIFIC QA FEED ──────────────────────────────────────
+        {
+          keywords: ['quality', 'achha hai', 'safe', 'skin', 'genuine', 'original', 'review', 'rating'],
+          replies: [
+            `Ji bilkul! 🌸 Humare saare products 100% genuine aur dermatologically safe hain. Isse aapki skin ekdum clean & glowing ho jayegi! ✨💖`,
+            `Highly recommended by customers! ✨ 100% original quality hai. Aap ekdum heroine lagoge ise use karke! 💃💕`
+          ]
+        },
+        {
+          keywords: ['buy', 'order kaise', 'how to order', 'kharidna', 'purchase', 'process'],
+          replies: [
+            `Bahut easy hai! 🛍️ Bas kisi bhi product par click karke **Add to Cart** ya **Buy Now** dabayein aur checkout par details fill kijiye! 💕`,
+            `Bas pasandida product select karein, **Buy Now** dabayein aur apna address enter kijiye! Parcel aapke ghar pahunch jayega! 🚚✨`
+          ]
+        },
+        {
+          keywords: ['cod', 'cash on delivery', 'payment', 'pay', 'upi', 'gpay', 'phonepe', 'card'],
+          replies: [
+            `Ji haan! Cash on Delivery (COD) aur Online Payment (UPI, Cards, GPay, PhonePe) sabhi options available hain! 💳✨`,
+            `Aap COD se delivery ke waqt payment kar sakte ho ya UPI se instant pay kar sakte ho! SSL 256-bit safe checkout hai! 💖`
+          ]
+        },
+        {
+          keywords: ['delivery', 'kab aayega', 'kitne din', 'ship', 'courier', 'time'],
+          replies: [
+            `Standard delivery me 3-5 days lagte hain! Metro cities me express delivery 1-2 days me ho jaati hai 🚚📦`,
+            `Order dispatch hote hi SMS & Email par live tracking link aa jayega! Aap apne parcel ka exact location track kar sakte ho! 🛵✨`
+          ]
+        },
+        {
+          keywords: ['discount', 'coupon', 'offer', 'sale', 'code', 'promo', 'off'],
+          replies: [
+            `Use code **WELCOME10** for 10% OFF on your first order! 🎁 Aur saare bestseller items par already huge discount chal raha hai! 💖`,
+            `Flash Sale is LIVE! ⚡ Sasta product hai khareed lo fast, kya pata iska price badh jaye! 🛍️💕`
+          ]
+        },
+        {
+          keywords: ['return', 'replace', 'replacement', 'damaged', 'broken', 'wapas', 'refund'],
+          replies: [
+            `Agar parcel damaged ya broken aaye to tension mat lo! 🛡️ 48 hours ke andar hume contact kijiye, hum free replacement bhej denge! 💕`,
+            `100% Customer Satisfaction Guarantee! 🌸 Any issue? Fast 3-5 days me refund/replacement issue ho jata hai! ✨`
+          ]
+        },
+        {
+          keywords: ['cart', 'checkout', 'bag'],
+          replies: [
+            `Aapke cart me cute products waiting hain! 🛒 Fast checkout kar lo price change hone se pehle! 💖`,
+            `Top right me shopping bag button par click karke aap apna cart review kar sakte ho! 🛍️✨`
+          ]
         }
       ];
+
 
       for (const feed of dailyFeedList) {
         if (feed.keywords.some(kw => lower2.includes(kw))) {
