@@ -124,27 +124,27 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 12px;
-  color: #475569;
-  background: rgba(248, 250, 252, 0.9);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 999px;
+  color: #FF5C8A;
+  background: #ffffff;
+  border: 1.5px solid #FFD1DC;
   cursor: pointer;
   position: relative;
   transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 14px rgba(255, 92, 138, 0.12);
 }
 
 .icon-btn:hover {
   color: #E94057;
-  background: #fff;
-  border-color: rgba(233, 64, 87, 0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(233, 64, 87, 0.14), 0 1px 3px rgba(0, 0, 0, 0.06);
+  background: #FFF0F4;
+  border-color: #FF7597;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 18px rgba(255, 92, 138, 0.25);
 }
 
 .icon-btn:active {
   transform: translateY(0) scale(0.96);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(255, 92, 138, 0.15);
 }
 
 /* ---- Expandable search ---- */
@@ -153,7 +153,7 @@
   align-items: center;
   gap: 6px;
   padding: 0;
-  border-radius: 12px;
+  border-radius: 999px;
   background: transparent;
   transition: background 0.25s ease, box-shadow 0.25s ease, padding 0.25s ease, border-color 0.25s ease;
 }
@@ -173,11 +173,11 @@
 }
 
 .nav-search.open {
-  background: #fff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(233, 64, 87, 0.15);
-  padding: 3px 6px 3px 12px;
-  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 6px 24px rgba(255, 92, 138, 0.16);
+  border: 1.5px solid #FFD1DC;
+  padding: 3px 6px 3px 14px;
+  border-radius: 999px;
 }
 
 .nav-search.open input {
@@ -192,18 +192,18 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: linear-gradient(135deg, #E94057, #F27121);
+  background: linear-gradient(135deg, #FF5C8A 0%, #E94057 100%);
   color: #fff;
-  font-size: 0.6rem;
+  font-size: 0.62rem;
   font-weight: 800;
   min-width: 18px;
   height: 18px;
-  border-radius: 50%;
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 3px;
-  box-shadow: 0 0 0 2px #fff, 0 2px 8px rgba(233, 64, 87, 0.4);
+  padding: 0 4px;
+  box-shadow: 0 0 0 2px #fff, 0 3px 10px rgba(255, 92, 138, 0.45);
   animation: badge-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -224,12 +224,12 @@
   top: calc(100% + 10px);
   right: 0;
   background: #ffffff;
-  border-radius: 18px;
-  box-shadow: 0 20px 60px rgba(30, 41, 59, 0.15), 0 4px 16px rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(255, 92, 138, 0.18), 0 4px 16px rgba(0, 0, 0, 0.04);
   min-width: 210px;
   padding: 8px;
   z-index: 300;
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1.5px solid #FFD1DC;
   animation: dropdown-in 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -242,8 +242,8 @@
   padding: 10px 12px 10px;
   font-weight: 700;
   font-size: 0.875rem;
-  color: #0f172a;
-  border-bottom: 1px solid #f1f5f9;
+  color: #1F151B;
+  border-bottom: 1px solid #FFF0F4;
   margin-bottom: 6px;
   letter-spacing: -0.01em;
 }
@@ -256,9 +256,9 @@
   text-align: left;
   padding: 9px 12px;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #475569;
-  border-radius: 10px;
+  border-radius: 999px;
   transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
   font-family: var(--font-sans);
   background: none;
@@ -269,8 +269,8 @@
 
 .user-dropdown a:hover,
 .user-dropdown button:hover {
-  background: rgba(233, 64, 87, 0.06);
-  color: #E94057;
+  background: #FFF0F4;
+  color: #FF5C8A;
   transform: translateX(3px);
 }
 
@@ -279,48 +279,65 @@
   .nav-links {
     display: none;
     position: fixed;
-    top: 70px;
+    top: 68px;
     left: 12px;
     right: 12px;
     flex-direction: column;
     align-items: stretch;
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(24px);
-    padding: 12px;
-    gap: 4px;
-    border-radius: 20px;
-    border: 1px solid rgba(233, 64, 87, 0.1);
-    box-shadow: 0 20px 60px rgba(30, 41, 59, 0.14), 0 4px 16px rgba(0,0,0,0.06);
+    padding: 14px;
+    gap: 6px;
+    border-radius: 24px;
+    border: 2px solid #FFD1DC;
+    box-shadow: 0 20px 60px rgba(255, 92, 138, 0.2), 0 4px 16px rgba(0,0,0,0.04);
     z-index: 199;
-    animation: dropdown-in 0.22s ease;
+    animation: dropdown-in 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .nav-links.open { display: flex; }
 
   .nav-links a {
-    padding: 13px 16px;
-    font-size: 0.95rem;
-    border-radius: 12px;
+    padding: 12px 18px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #1F151B;
+    background: rgba(255, 240, 244, 0.6);
+    border-radius: 999px;
+    text-align: center;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 209, 220, 0.4);
+  }
+
+  .nav-links a:hover,
+  .nav-links a:active {
+    background: linear-gradient(135deg, #FF5C8A 0%, #E94057 100%);
+    color: #ffffff;
+    border-color: #FF5C8A;
+    box-shadow: 0 6px 18px rgba(255, 92, 138, 0.35);
+    transform: translateY(-1px);
   }
 
   .nav-links a::after { display: none; }
 
   .menu-toggle { display: flex; }
 
-  .nav-search.open input { width: 130px; }
-
-  .logo-img { height: 44px; }
+  .logo-img { height: 42px; }
 }
 
 @media (max-width: 560px) {
-  .navbar-inner { gap: 6px; }
-  .logo-img { height: 38px; }
+  .navbar-inner { gap: 6px; height: 62px; }
+  .logo-img { height: 36px; }
   .nav-search.open {
     position: absolute;
-    top: 70px;
+    top: 64px;
     left: 12px;
     right: 12px;
-    padding: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1.5px solid #FFD1DC;
+    border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(255, 92, 138, 0.18);
   }
   .nav-search.open input { width: 100%; flex: 1; }
 }
@@ -330,7 +347,7 @@
   padding: 0 !important;
   overflow: hidden;
   border-radius: 50% !important;
-  border: 2px solid rgba(233, 64, 87, 0.25) !important;
+  border: 2px solid #FF5C8A !important;
 }
 
 .navbar-avatar {

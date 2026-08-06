@@ -22,8 +22,8 @@ export default function AIChatbot() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [mascotMood, setMascotMood] = useState('happy'); // 'happy' | 'crying' | 'sleeping' | 'dizzy'
-  const [speechBubble, setSpeechBubble] = useState('✨ Use code WELCOME10 for 10% OFF!');
+  const [mascotMood, setMascotMood] = useState('happy'); // 'happy' | 'crying' | 'sleeping' | 'dizzy' | 'confused' | 'shy' | 'cooking' | 'drinking' | 'playing' | 'shopping'
+  const [speechBubble, setSpeechBubble] = useState('✨ Welcome to Afsha Store! Tap me anytime 🌸');
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem('glowora_ai_chat_history');
     if (saved) {
@@ -82,25 +82,46 @@ export default function AIChatbot() {
     checkNight();
   }, []);
 
-  // ── Auto Offer Speech Bubble Rotator ─────────────────────────────────────────
-  const speechPrompts = [
-    "✨ Use code WELCOME10 for 10% OFF!",
-    "🌸 Smooth skin secrets await! Tap me!",
-    "💖 Free express shipping on orders above ₹499!",
-    "🎟️ Looking for secret discount coupons?",
-    "⚡ Bestseller Hair Remover is in stock!"
+  // ── Auto Offer & Cute Activity Speech Rotator ───────────────────────────────
+  const cuteActivities = [
+    // Happy & Offers
+    { mood: 'happy',    text: '⚡ Bestseller Hair Remover is in stock!' },
+    { mood: 'happy',    text: '🌸 Smooth skin secrets await! Tap me!' },
+    { mood: 'happy',    text: '✨ Welcome to Afsha Store! Tap me anytime 🌸' },
+    { mood: 'happy',    text: '💖 Discover our cute beauty collection today!' },
+
+    // Boba / Drinking
+    { mood: 'drinking', text: '🧋 Slurp~ Sipping boba while finding sweet deals for you!' },
+    { mood: 'drinking', text: '🧋 Strawberry boba tea is my favourite! What is yours? 🍓' },
+    { mood: 'drinking', text: '🧋 Chill mode on~ Tap me to unlock secret deals! 🎟️' },
+
+    // Cooking
+    { mood: 'cooking',  text: '🍳 Cooking up fresh discount offers for you!' },
+    { mood: 'cooking',  text: '🍳 Yummy recipes & hot deals fresh out of the kitchen! 🧁' },
+    { mood: 'cooking',  text: '🍳 Baking special deals just for you today! 🍰' },
+
+    // Playing / Gaming
+    { mood: 'playing',  text: '🎮 Fun shopping time! Tap me anytime!' },
+    { mood: 'playing',  text: '🎮 Level up your beauty routine with our bestsellers! 🕹️' },
+    { mood: 'playing',  text: '🎮 High score unlocked! Discover top products 🛍️' },
+
+    // Shy
+    { mood: 'shy',      text: '🙈 Hihi~ Welcome to our cute shop! 🌸' },
+    { mood: 'shy',      text: '🙈 Aap kitne cute ho! Welcome to Afsha Store 💕' },
+    { mood: 'shy',      text: '🙈 Shy feel ho raha hai, par products bahut awesome hain! 💖' }
   ];
 
   useEffect(() => {
-    if (isOpen || mascotMood === 'dizzy' || mascotMood === 'sleeping') return;
+    if (isOpen || mascotMood === 'dizzy' || mascotMood === 'sleeping' || mascotMood === 'crying') return;
     const interval = setInterval(() => {
-      const randomPrompt = speechPrompts[Math.floor(Math.random() * speechPrompts.length)];
-      setSpeechBubble(randomPrompt);
-    }, 7000);
+      const randomActivity = cuteActivities[Math.floor(Math.random() * cuteActivities.length)];
+      setMascotMood(randomActivity.mood);
+      setSpeechBubble(randomActivity.text);
+    }, 7500);
     return () => clearInterval(interval);
   }, [isOpen, mascotMood]);
 
-  // ── Track Navigation & Multiple Product Views (Confused Mascot Reaction) ────
+  // ── Track Navigation, Product Page Load Price Alert & Exit Reactions ────────
   const prevPathRef = useRef(location.pathname);
   const productViewCountRef = useRef(0);
 
@@ -112,23 +133,50 @@ export default function AIChatbot() {
     const wasOnProductPage = prev.startsWith('/products/') || prev.startsWith('/product/');
     const isStillOnProductPage = current.startsWith('/products/') || current.startsWith('/product/');
 
-    // Increment product view counter if visiting a product page
+    // When customer opens product detail page & page loads
     if (isStillOnProductPage) {
       productViewCountRef.current += 1;
 
+      // Extract slug & try to fetch product price directly from API
+      const slugMatch = current.match(/\/(?:products|product)\/([^/]+)/);
+      if (slugMatch && slugMatch[1]) {
+        const slug = slugMatch[1];
+        fetch(`/api/products/${slug}`)
+          .then(res => res.json())
+          .then(prod => {
+            if (prod && prod.price) {
+              const displayPrice = prod.finalPrice || prod.flashSalePrice || prod.price;
+              const priceMsgs = [
+                `🛍️ Wow! Ye product bas ₹${displayPrice} me mil raha hai! Perfect deal ✨`,
+                `🛍️ Only ₹${displayPrice}! Great price for this cute item 🌸`,
+                `🛍️ Yay! Best price alert: ₹${displayPrice}! Add to cart fast! 🛒`
+              ];
+              setMascotMood('shopping');
+              setSpeechBubble(priceMsgs[Math.floor(Math.random() * priceMsgs.length)]);
+            }
+          })
+          .catch(() => {
+            setMascotMood('shopping');
+            setSpeechBubble('🛍️ Wow! Look at this cute item! Perfect deal ✨');
+          });
+      }
+
       // If customer has viewed 3 or more products, mascot acts confused
       if (productViewCountRef.current >= 3) {
-        setMascotMood('confused');
-        setSpeechBubble('🤔 Kya aapko koi madad chahiye?');
+        const confusedMsgs = [
+          '🤔 Kya aapko koi madad chahiye?',
+          '🤔 Kuch samajh nahi aaya? Mujhe batao, main help karungi! 💖',
+          '🤔 Confused between products? Ask me which one is best! ✨'
+        ];
+        const confusedTimer = setTimeout(() => {
+          setMascotMood('confused');
+          setSpeechBubble(confusedMsgs[Math.floor(Math.random() * confusedMsgs.length)]);
+        }, 3500);
 
-        const resetConfusedTimer = setTimeout(() => {
-          setMascotMood('happy');
-          setSpeechBubble('✨ Let me know if you need help finding the best deal!');
-        }, 8000);
-
-        return () => clearTimeout(resetConfusedTimer);
+        return () => clearTimeout(confusedTimer);
       }
     }
+
 
     // Reaction when customer exits a product page without buying
     if (wasOnProductPage && !isStillOnProductPage) {
@@ -141,7 +189,7 @@ export default function AIChatbot() {
 
       const resetTimer = setTimeout(() => {
         setMascotMood('happy');
-        setSpeechBubble('✨ Tap me for secret discount codes!');
+        setSpeechBubble('✨ Let me know if you need any help! 🌸');
       }, 9500);
 
       return () => {
@@ -150,6 +198,7 @@ export default function AIChatbot() {
       };
     }
   }, [location.pathname]);
+
 
   // ── Admin Automatic Database Order & Pending Orders Monitor ─────────────────
   const prevOrderCountRef = useRef(0);
@@ -201,13 +250,36 @@ export default function AIChatbot() {
   }, [isAdmin]);
 
 
-  // Mascot Image Mapping
+  // Mascot Image & Emoji Mapping
   const getMascotImage = () => {
     if (mascotMood === 'sleeping') return '/cute-girl-sleeping.png';
     if (mascotMood === 'crying') return '/cute-girl-crying.png';
     if (mascotMood === 'confused') return '/cute-girl-confused.png';
+    if (mascotMood === 'shy') return '/cute-girl-shy.png';
+    if (mascotMood === 'cooking') return '/cute-girl-cooking.png';
+    if (mascotMood === 'drinking') return '/cute-girl-drinking.png';
+    if (mascotMood === 'playing') return '/cute-girl-playing.png';
+    if (mascotMood === 'shopping') return '/cute-girl-shopping.png';
     return '/cute-girl-happy.png';
   };
+
+  const getMoodEmoji = () => {
+    const emojiMap = {
+      sleeping: '💤',
+      dizzy:    '🌀',
+      crying:   '😭',
+      confused: '🤔',
+      shy:      '🙈',
+      shopping: '🛍️',
+      cooking:  '🍳',
+      drinking: '🧋',
+      playing:  '🎮',
+      happy:    '✨'
+    };
+    return emojiMap[mascotMood] || '✨';
+  };
+
+
 
 
 
@@ -632,10 +704,9 @@ export default function AIChatbot() {
               alt="Cute AI Mascot"
               className={`ai-mascot-img ${mascotMood}`}
             />
-            {mascotMood === 'sleeping' && <span className="ai-mascot-badge sleep">💤</span>}
-            {mascotMood === 'dizzy' && <span className="ai-mascot-badge dizzy">🌀</span>}
-            {mascotMood === 'crying' && <span className="ai-mascot-badge cry">😭</span>}
+            <span className={`ai-mascot-badge ${mascotMood}`}>{getMoodEmoji()}</span>
           </div>
+
         )}
         {!isOpen && <span className="ai-fab-badge">24/7 AI</span>}
       </button>
