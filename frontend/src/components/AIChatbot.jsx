@@ -828,11 +828,13 @@ export default function AIChatbot() {
         }
       }
 
-      // ── PRODUCT DATABASE FAST-PATH (Cheapest / Low Price / Top Products / Price Lookup) ──
-
-      const isCheapQ = lower2.includes('sasta') || lower2.includes('cheap') || lower2.includes('less price') || lower2.includes('low price') || lower2.includes('kam price') || lower2.includes('budget') || lower2.includes('kam daam');
-      const isTopQ   = lower2.includes('top') || lower2.includes('best') || lower2.includes('bestseller') || lower2.includes('trending') || lower2.includes('popular') || lower2.includes('sabse achha') || lower2.includes('heroine');
-      const isProductSearchQ = isCheapQ || isTopQ || lower2.includes('product') || lower2.includes('price') || lower2.includes('daam') || lower2.includes('kitne ka') || lower2.includes('item');
+      // ── PRODUCT DATABASE FAST-PATH (Stock / Category / Sale / Cheap / Top / Price) ──
+      const isCheapQ    = lower2.includes('sasta') || lower2.includes('cheap') || lower2.includes('less price') || lower2.includes('low price') || lower2.includes('kam price') || lower2.includes('budget') || lower2.includes('kam daam');
+      const isTopQ      = lower2.includes('top') || lower2.includes('best') || lower2.includes('bestseller') || lower2.includes('trending') || lower2.includes('popular') || lower2.includes('sabse achha') || lower2.includes('heroine');
+      const isStockQ    = lower2.includes('stock') || lower2.includes('available') || lower2.includes('in stock') || lower2.includes('kitna bacha') || lower2.includes('quantity');
+      const isSaleQ     = lower2.includes('flash sale') || lower2.includes('sale') || lower2.includes('deal') || lower2.includes('discounted') || lower2.includes('offer item');
+      const isCategoryQ = lower2.includes('category') || lower2.includes('hair remover') || lower2.includes('laser') || lower2.includes('ipl') || lower2.includes('skincare') || lower2.includes('beauty');
+      const isProductSearchQ = isCheapQ || isTopQ || isStockQ || isSaleQ || isCategoryQ || lower2.includes('product') || lower2.includes('price') || lower2.includes('daam') || lower2.includes('kitne ka') || lower2.includes('item');
 
       if (isProductSearchQ) {
         try {
@@ -841,7 +843,37 @@ export default function AIChatbot() {
             const allProducts = await prodRes.json();
             if (Array.isArray(allProducts) && allProducts.length > 0) {
 
-              // 1. Cheapest / Less price products query
+              // 1. Stock levels query
+              if (isStockQ) {
+                const stockRows = allProducts.slice(0, 5).map(p => {
+                  const pPrice = p.finalPrice || p.flashSalePrice || p.price;
+                  const stockText = (p.stock || p.countInStock || 10) > 0 ? `In Stock (**${p.stock || p.countInStock || 10} left!**)` : 'Out of Stock ⚠️';
+                  return `- 🌸 **[${p.name}](/products/${p.slug})** — Bas **₹${pPrice}** me — ${stockText} ✨`;
+                }).join('\n');
+
+                const stockCard = `### 📦 Live Product Stock Status! 💖✨\n\nDatabase se direct stock details:\n\n${stockRows}\n\nPopular items fast sell ho rahe hain, jaldi order karein! 🛒💕`;
+                setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: stockCard, timestamp: new Date().toISOString() }]);
+                setIsLoading(false);
+                return;
+              }
+
+              // 2. Flash sale & discount deals query
+              if (isSaleQ) {
+                const saleProds = allProducts.filter(p => p.flashSale || (p.originalPrice && p.originalPrice > p.price)).slice(0, 5);
+                const displaySale = saleProds.length > 0 ? saleProds : allProducts.slice(0, 5);
+                const saleRows = displaySale.map(p => {
+                  const pPrice = p.finalPrice || p.flashSalePrice || p.price;
+                  const origPrice = p.originalPrice ? ` ~₹${p.originalPrice}~` : '';
+                  return `- ⚡ **[${p.name}](/products/${p.slug})** — **₹${pPrice}**${origPrice} 💖✨`;
+                }).join('\n');
+
+                const saleCard = `### ⚡ Live Flash Sale Deals! 🔥✨\n\nDatabase se sabse best discount offers:\n\n${saleRows}\n\nFast buy kar lo, kya pata iska price badh jaye! 🛍️💕`;
+                setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: saleCard, timestamp: new Date().toISOString() }]);
+                setIsLoading(false);
+                return;
+              }
+
+              // 3. Cheapest / Less price products query
               if (isCheapQ) {
                 const sortedCheap = [...allProducts].sort((a,b) => (a.finalPrice||a.price) - (b.finalPrice||b.price)).slice(0, 5);
                 const cheapRows = sortedCheap.map(p => {
@@ -855,7 +887,7 @@ export default function AIChatbot() {
                 return;
               }
 
-              // 2. Top / Bestseller products query
+              // 4. Top / Bestseller products query
               if (isTopQ) {
                 const sortedTop = [...allProducts].sort((a,b) => (b.salesCount||0) - (a.salesCount||0) || (b.rating||0) - (a.rating||0)).slice(0, 5);
                 const topRows = sortedTop.map(p => {
@@ -869,8 +901,8 @@ export default function AIChatbot() {
                 return;
               }
 
-              // 3. Product price search or detail lookup query
-              const matches = allProducts.filter(p => p.name.toLowerCase().includes(lower2) || p.slug.toLowerCase().includes(lower2));
+              // 5. Product price search or detail lookup query
+              const matches = allProducts.filter(p => p.name.toLowerCase().includes(lower2) || p.slug.toLowerCase().includes(lower2) || (p.category && p.category.toLowerCase().includes(lower2)));
               const displayProds = matches.length > 0 ? matches.slice(0, 5) : allProducts.slice(0, 5);
 
               const prodRows = displayProds.map(p => {
@@ -886,6 +918,7 @@ export default function AIChatbot() {
           }
         } catch (_) { /* fall through to AI */ }
       }
+
 
 
       // ── NORMAL PATH: send to AI chat route ───────────────────────────────────
