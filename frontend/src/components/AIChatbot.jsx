@@ -82,28 +82,25 @@ export default function AIChatbot() {
     checkNight();
   }, []);
 
-  // ── Product Detail Page Recurring Speech Rotator (2 Seconds) ─────────────────
+  // ── Product Detail Page Exact Sequential Message Rotator ─────────────────────
   useEffect(() => {
     const isProductPage = location.pathname.startsWith('/products/') || location.pathname.startsWith('/product/');
     if (!isProductPage || isOpen || mascotMood === 'crying' || mascotMood === 'dizzy') return;
 
-    let displayPrice = '';
-    const slugMatch = location.pathname.match(/\/(?:products|product)\/([^/]+)/);
-    if (slugMatch && slugMatch[1]) {
-      fetch(`/api/products/${slugMatch[1]}`)
-        .then(res => res.json())
-        .then(prod => {
-          if (prod && prod.price) {
-            displayPrice = prod.finalPrice || prod.flashSalePrice || prod.price;
-          }
-        })
-        .catch(() => {});
-    }
+    let stepTimer = null;
+    let intervalTimer = null;
 
-    const rotateProductMsgs = () => {
-      const pStr = displayPrice ? ` Bas ₹${displayPrice} me` : '';
-      const productMsgs = [
-        `🛍️ Sasta product hai khareed lo!${pStr} 💖✨`,
+    const slugMatch = location.pathname.match(/\/(?:products|product)\/([^/]+)/);
+    const slug = slugMatch ? slugMatch[1] : '';
+
+    const startSequence = (priceVal) => {
+      const pStr = priceVal ? ` Bas ₹${priceVal} me` : '';
+
+      // Step 1: Immediately show Message 1 for 4 seconds
+      setMascotMood('shopping');
+      setSpeechBubble(`🛍️ Sasta product hai khareed lo!${pStr} 💖✨`);
+
+      const remainingMsgs = [
         `😱 Kya pata iska price badh jaye! Fast buy kar lo 🛍️💕`,
         `💖 Ye product bahut achha hai! Highly recommended ✨🌸`,
         `✨ Isse aapki skin ekdum clean ho jayegi! 🥰💖`,
@@ -111,14 +108,40 @@ export default function AIChatbot() {
         `🥰 Aap pehle se itne sundar ho, aur sundar ho jaoge! 💖✨🌸`
       ];
 
-      setMascotMood('shopping');
-      setSpeechBubble(productMsgs[Math.floor(Math.random() * productMsgs.length)]);
+      let msgIndex = 0;
+
+      // Step 2: After 4 seconds, start 2-second rotation loop through remaining messages
+      stepTimer = setTimeout(() => {
+        setMascotMood('shopping');
+        setSpeechBubble(remainingMsgs[msgIndex]);
+
+        intervalTimer = setInterval(() => {
+          msgIndex = (msgIndex + 1) % remainingMsgs.length;
+          setMascotMood('shopping');
+          setSpeechBubble(remainingMsgs[msgIndex]);
+        }, 2000);
+
+      }, 4000);
     };
 
-    rotateProductMsgs();
-    const timer = setInterval(rotateProductMsgs, 2000);
-    return () => clearInterval(timer);
+    if (slug) {
+      fetch(`/api/products/${slug}`)
+        .then(res => res.json())
+        .then(prod => {
+          const price = prod?.finalPrice || prod?.flashSalePrice || prod?.price || '';
+          startSequence(price);
+        })
+        .catch(() => startSequence(''));
+    } else {
+      startSequence('');
+    }
+
+    return () => {
+      if (stepTimer) clearTimeout(stepTimer);
+      if (intervalTimer) clearInterval(intervalTimer);
+    };
   }, [location.pathname, isOpen]);
+
 
 
 
