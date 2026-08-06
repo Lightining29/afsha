@@ -543,9 +543,10 @@ export default function AIChatbot() {
       }
 
       // ── ORDER FAST PATH: use existing /api/orders/my — no AI, no new endpoints ──
-      const glwMatch  = query.match(/GLW-[A-Z0-9-]+/i);
+      const glwMatch   = query.match(/GLW-[A-Z0-9-]+/i);
       const isSpendingQ = lower2.includes('spent') || lower2.includes('spending') || lower2.includes('total spend') || lower2.includes('how much') || lower2.includes('expenditure') || lower2.includes('total amount') || lower2.includes('money spent');
-      const isOrderQ  = glwMatch || isSpendingQ || lower2.includes('order') || lower2.includes('track') || lower2.includes('purchase') || lower2.includes('bought') || lower2.includes('latest order') || lower2.includes('my order');
+      const isReceiptQ  = lower2.includes('receipt') || lower2.includes('invoice') || lower2.includes('bill') || lower2.includes('confirm') || lower2.includes('receipt');
+      const isOrderQ    = glwMatch || isSpendingQ || isReceiptQ || lower2.includes('order') || lower2.includes('track') || lower2.includes('purchase') || lower2.includes('bought') || lower2.includes('latest order') || lower2.includes('my order') || lower2.includes('product status');
 
       if (isOrderQ && token) {
         try {
@@ -575,20 +576,24 @@ export default function AIChatbot() {
               const placedOn    = o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN') : null;
               const estDel      = o.estimatedDelivery ? new Date(o.estimatedDelivery).toLocaleDateString('en-IN') : null;
 
-              let card  = `### 📦 Order #${o.orderNumber}\n\n`;
-              card     += `**${statusLabel}**\n\n`;
-              card     += `| | |\n|---|---|\n`;
-              card     += `| 💰 **Total** | ₹${o.total} |\n`;
-              card     += `| 💳 **Payment** | ${o.paymentMethod || 'N/A'} |\n`;
-              if (placedOn)         card += `| 📅 **Placed On** | ${placedOn} |\n`;
-              if (ship)             card += `| 📮 **Ship To** | ${ship} |\n`;
-              if (o.trackingNumber) card += `| 📍 **Tracking** | ${o.trackingNumber} |\n`;
+              let card  = `### 🧾 Digital Order Receipt & Status 💖\n\n`;
+              card     += `**Order Confirmation:** ✅ **Confirmed (#${o.orderNumber})**\n`;
+              card     += `**Current Status:** ${statusLabel}\n\n`;
+              card     += `| Order Information | Details |\n|---|---|\n`;
+              card     += `| 🧾 **Receipt No.** | #${o.orderNumber} |\n`;
+              card     += `| 💰 **Total Paid** | **₹${o.total}** |\n`;
+              card     += `| 💳 **Payment Method** | ${o.paymentMethod || 'N/A'} |\n`;
+              if (placedOn)         card += `| 📅 **Order Date** | ${placedOn} |\n`;
+              if (ship)             card += `| 📍 **Delivery Address** | ${ship} |\n`;
+              if (o.trackingNumber) card += `| 🚚 **Courier Tracking** | ${o.trackingNumber} |\n`;
               if (estDel)           card += `| 📆 **Est. Delivery** | ${estDel} |\n`;
+
               if (o.items?.length > 0) {
-                const itemLines = o.items.map(i => `- ${i.name || 'Item'} (x${i.quantity}) — ₹${i.price}`).join('\n');
-                card += `\n**Items Ordered:**\n${itemLines}`;
+                const itemLines = o.items.map(i => `- 🌸 **${i.name || 'Product'}** (Qty: ${i.quantity}) — **₹${i.price}**`).join('\n');
+                card += `\n**Purchased Product Details:**\n${itemLines}`;
               }
-              card += `\n\n> For support or assistance with order #${o.orderNumber}, contact **reazafsha0@gmail.com**.`;
+
+              card += `\n\n> 🌸 Thank you for shopping with Afsha Store! For queries, contact **reazafsha0@gmail.com** | **+91 8073786650**.`;
 
               return card;
             };
@@ -637,7 +642,7 @@ export default function AIChatbot() {
                 card += `\n\n> Ask me about a specific order by sharing its ID, e.g. \`GLW-XXXXXX\`.`;
               }
 
-            // ── Specific order ID lookup ────────────────────────────────────
+            // ── Specific order ID lookup or Receipt query ───────────────────
             } else if (glwMatch) {
               const searchId = glwMatch[0].toUpperCase();
               const found    = orders.find(o => (o.orderNumber || '').toUpperCase() === searchId);
@@ -647,9 +652,13 @@ export default function AIChatbot() {
                 card = `### 📦 Order Not Found\n\nI couldn't find order **#${searchId}** under your account.\n\n- Double-check the order ID\n- Make sure you're logged in with the correct account\n- Contact us: **reazafsha0@gmail.com** | **+91 8073786650**`;
               }
 
+            // ── Receipt or latest order query ──────────────────────────────
+            } else if (isReceiptQ && orders.length > 0) {
+              card = buildCard(orders[0]);
+
             // ── No orders yet ───────────────────────────────────────────────
             } else if (orders.length === 0) {
-              card = `### 📦 No Orders Yet, ${name}\n\nYou haven't placed any orders yet. Start shopping and your orders will appear here!`;
+              card = `### 📦 No Orders Yet, ${name}\n\nYou haven't placed any orders yet. Start shopping and your orders & receipts will appear here!`;
 
             // ── Recent orders list ──────────────────────────────────────────
             } else {
@@ -661,8 +670,9 @@ export default function AIChatbot() {
                 const dt = o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN') : '';
                 return `${em} **#${o.orderNumber}** — ${(o.status||'').toUpperCase()} — ₹${o.total} — ${dt}`;
               }).join('\n');
-              card = `### 📦 Your Recent Orders, ${name}\n\n${lines}\n\n> Share an order ID (e.g. \`GLW-XXXXXX\`) for full tracking details.`;
+              card = `### 📦 Your Recent Orders & Receipts, ${name}\n\n${lines}\n\n> Share an order ID (e.g. \`GLW-XXXXXX\`) or ask for **receipt** to view full invoice.`;
             }
+
 
             if (card) {
               setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: card, timestamp: new Date().toISOString() }]);
@@ -814,8 +824,23 @@ export default function AIChatbot() {
             `Humari support team 24/7 ready hai! 📞 Call us: **+91 8073786650** ya Email: **reazafsha0@gmail.com** (Mon-Sat 9AM-8PM) 💖`,
             `Koi bhi query ho, aap seedha hume email **reazafsha0@gmail.com** par bhej sakte ho! Instant response milega! ✨`
           ]
+        },
+        {
+          keywords: ['receipt', 'invoice', 'bill', 'receipt dikhao', 'order receipt'],
+          replies: [
+            `Aapka digital order receipt database me safe hai! 🧾 Type **receipt** ya apna **Order ID** (e.g. \`GLW-XXXXXX\`) share karein to full invoice card display ho jayega! 💖✨`,
+            `Hum har order ke liye digital receipt & invoice generate karte hain! 🛍️ Type **my order** or **receipt** to view your order receipt! 💕`
+          ]
+        },
+        {
+          keywords: ['confirm', 'order confirm', 'confirmation', 'status', 'product status'],
+          replies: [
+            `Aapka order successfully confirm ho gaya hai! ✅ Type **my order** ya share order ID to check live packing & shipping status! 📦✨`,
+            `Order confirmed! 🌸 Live packing, tracking & delivery status check karne ke liye type **my order**! 💕`
+          ]
         }
       ];
+
 
 
 
