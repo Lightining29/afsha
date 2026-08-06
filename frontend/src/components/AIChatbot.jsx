@@ -676,7 +676,79 @@ export default function AIChatbot() {
         }
       }
 
+      // ── DAILY CONVERSATION FUZZY QA FEED ENGINE ────────────────────────────
+      const dailyFeedList = [
+        {
+          keywords: ['hi', 'hello', 'hey', 'namaste', 'kaise ho', 'how are you', 'kaise h'],
+          replies: [
+            `Aapko dekh ke mera din ban gaya! 🥰 Main bilkul achhi hoon, aap batao kaise ho? Aaj kya buy kar rahe ho? 🌸✨`,
+            `Hello bestie! 💖 Main aapki cute shopping assistant hoon! Boliyena, aaj main aapki kya madad karun? ✨`,
+            `Namaste ji! 🥰 Super excited hoon aapko humare cute store me dekh ke! Tap me anytime for deals! ✨`
+          ]
+        },
+        {
+          keywords: ['kya kar rahe ho', 'kya chal raha hai', 'kya kar rhi ho', 'what are you doing', 'doing'],
+          replies: [
+            `Bas aapke liye super cute products aur best database deals dhoondh rahi hoon! 🛍️💖`,
+            `Sipping my favourite strawberry boba tea 🧋 aur aapke orders ke baare me soch rahi hoon! ✨`,
+            `Cooking fresh discount offers in my kitchen! 🍳🧁 Boliyena, kya help chahiye?`
+          ]
+        },
+        {
+          keywords: ['who are you', 'kaun ho', 'naam kya hai', 'your name', 'kon ho'],
+          replies: [
+            `Main hoon AfshaBot! 👧✨ Aapki cute 24/7 shopping bestie jo aapko heroine banane me madad karti hai 💕`,
+            `Mera naam AfshaBot hai! 🌸 Main Afsha Store ki official cute mascot assistant hoon 🥰`
+          ]
+        },
+        {
+          keywords: ['cute', 'sundar', 'pretty', 'sweet', 'pyari', 'beautiful'],
+          replies: [
+            `Aww thank you so much! 🙈 Par aap mujhse bhi zyada cute ho! 💕✨`,
+            `Hihi~ Sharma gayi main! 🙈 Aap pehle se itne sundar ho, humare products se aur heroine lagoge! 💃💖`
+          ]
+        },
+        {
+          keywords: ['good night', 'gn', 'so jao', 'night', 'shubh ratri'],
+          replies: [
+            `Goodnight bestie! 💤 Sweet dreams & glowing skin! Kal milte hain cute deals ke saath ✨🌙`,
+            `Yawn~ Night time ho gaya! So jao, kal subah fresh deals aapka wait kar rahi hain 💤💖`
+          ]
+        },
+        {
+          keywords: ['good morning', 'gm', 'subah'],
+          replies: [
+            `Good Morning bestie! 🌸 Aapka din ekdum glowing aur happy rahe ✨`,
+            `Subah ki pyaari greeting! ☕ Aaj ka din naye cute shopping deals se start karte hain! 💕`
+          ]
+        },
+        {
+          keywords: ['thank you', 'thanks', 'shukriya', 'dhanyawad', 'thanku'],
+          replies: [
+            `Aww most welcome bestie! 🥰 Main to humesha aapki help ke liye ready hoon! 💖`,
+            `Koi baat nahi ji! 💕 Shopping enjoy karo aur heroine jaise glow karo! ✨`
+          ]
+        },
+        {
+          keywords: ['love', 'pyar', 'like you', 'pyaar'],
+          replies: [
+            `Aww! Main bhi aapko bahut pasand karti hoon bestie! 🥰💖 Forever cute shopping partners! ✨`,
+            `Sending you big cute hugs & hearts! 💕✨🌸`
+          ]
+        }
+      ];
+
+      for (const feed of dailyFeedList) {
+        if (feed.keywords.some(kw => lower2.includes(kw))) {
+          const randomReply = feed.replies[Math.floor(Math.random() * feed.replies.length)];
+          setMessages(prev => [...prev, { id: (Date.now()+1).toString(), sender: 'bot', text: randomReply, timestamp: new Date().toISOString() }]);
+          setIsLoading(false);
+          return;
+        }
+      }
+
       // ── PRODUCT DATABASE FAST-PATH (Cheapest / Low Price / Top Products / Price Lookup) ──
+
       const isCheapQ = lower2.includes('sasta') || lower2.includes('cheap') || lower2.includes('less price') || lower2.includes('low price') || lower2.includes('kam price') || lower2.includes('budget') || lower2.includes('kam daam');
       const isTopQ   = lower2.includes('top') || lower2.includes('best') || lower2.includes('bestseller') || lower2.includes('trending') || lower2.includes('popular') || lower2.includes('sabse achha') || lower2.includes('heroine');
       const isProductSearchQ = isCheapQ || isTopQ || lower2.includes('product') || lower2.includes('price') || lower2.includes('daam') || lower2.includes('kitne ka') || lower2.includes('item');
