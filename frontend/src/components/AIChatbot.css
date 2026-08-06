@@ -70,22 +70,24 @@
   bottom: 84px;
   right: 0;
   background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
   border: 1.5px solid #FFD1DC;
-  box-shadow: 0 10px 28px rgba(255, 92, 138, 0.22), 0 2px 8px rgba(0, 0, 0, 0.06);
-  padding: 8px 14px;
-  border-radius: 18px;
-  font-size: 0.78rem;
+  box-shadow: 0 12px 32px rgba(255, 92, 138, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 0.85rem;
   font-weight: 700;
   color: #1F151B;
   white-space: normal;
-  max-width: 215px;
+  width: max-content;
+  max-width: 320px;
   text-align: center;
-  line-height: 1.35;
+  line-height: 1.4;
   cursor: pointer;
   animation: speech-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 10000;
 }
+
 
 
 .ai-cute-speech-bubble::after {
@@ -482,14 +484,14 @@
   .ai-cute-speech-bubble {
     bottom: 96px;
     right: 0;
-    font-size: 0.76rem;
-    padding: 8px 12px;
-    max-width: 195px;
+    font-size: 0.8rem;
+    padding: 9px 14px;
+    width: max-content;
+    max-width: calc(100vw - 36px);
     white-space: normal;
     text-align: center;
-    line-height: 1.32;
+    line-height: 1.38;
   }
-
 
   .ai-fab-badge {
     top: -5px;
@@ -516,8 +518,12 @@
   }
 
   .ai-cute-speech-bubble {
-    bottom: 94px;
+    bottom: 98px;
     right: 0;
+    font-size: 0.8rem;
+    padding: 8px 12px;
+    width: max-content;
+    max-width: calc(100vw - 32px);
   }
 
   .ai-chatbot-modal {
@@ -527,4 +533,5 @@
     height: 520px;
   }
 }
+
 
