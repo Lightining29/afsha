@@ -282,20 +282,21 @@
 }
 
 .price-current {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-dark);
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #E94057;
   line-height: 1.2;
   white-space: nowrap;
 }
 
 .price-original {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   text-decoration: line-through;
   line-height: 1.1;
   white-space: nowrap;
 }
+
 
 /* ── Buy Now Button ─────────────────────────────── */
 .buy-now-btn {
@@ -461,8 +462,8 @@
   }
 
   .price-current {
-    font-size: 0.72rem;
-    font-weight: 800;
+    font-size: 0.9rem;
+    font-weight: 900;
     color: #E94057;
     line-height: 1.15;
     white-space: nowrap;
@@ -470,7 +471,7 @@
   }
 
   .price-original {
-    font-size: 0.64rem;
+    font-size: 0.72rem;
     color: #94a3b8;
     line-height: 1.1;
     white-space: nowrap;
@@ -478,14 +479,14 @@
   }
 
   .buy-now-btn {
-    padding: 4px 7px;
-    font-size: 0.64rem;
-    font-weight: 600;
+    padding: 4px 8px;
+    font-size: 0.65rem;
     border-radius: 5px;
     gap: 2px;
     flex-shrink: 0;
     white-space: nowrap;
   }
+
 
   .buy-now-btn svg {
     width: 10px;
