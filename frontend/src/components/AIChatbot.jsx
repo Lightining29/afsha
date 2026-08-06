@@ -82,7 +82,46 @@ export default function AIChatbot() {
     checkNight();
   }, []);
 
-  // ── Auto Offer & Cute Activity Speech Rotator ───────────────────────────────
+  // ── Product Detail Page Recurring Speech Rotator ──────────────────────────────
+  useEffect(() => {
+    const isProductPage = location.pathname.startsWith('/products/') || location.pathname.startsWith('/product/');
+    if (!isProductPage || isOpen || mascotMood === 'crying' || mascotMood === 'dizzy') return;
+
+    let displayPrice = '';
+    const slugMatch = location.pathname.match(/\/(?:products|product)\/([^/]+)/);
+    if (slugMatch && slugMatch[1]) {
+      fetch(`/api/products/${slugMatch[1]}`)
+        .then(res => res.json())
+        .then(prod => {
+          if (prod && prod.price) {
+            displayPrice = prod.finalPrice || prod.flashSalePrice || prod.price;
+          }
+        })
+        .catch(() => {});
+    }
+
+    const rotateProductMsgs = () => {
+      const pStr = displayPrice ? ` Bas ₹${displayPrice} me` : '';
+      const productMsgs = [
+        `🛍️ Sasta product hai khareed lo!${pStr} 💖✨`,
+        `😱 Kya pata iska price badh jaye! Fast buy kar lo 🛍️💕`,
+        `💖 Ye product bahut achha hai! Highly recommended ✨🌸`,
+        `✨ Isse aapki skin ekdum clean ho jayegi! 🥰💖`,
+        `👑 Aap ekdum heroine lagogi / hero lagoge! 💃✨💕`,
+        `🥰 Aap pehle se itne sundar ho, aur sundar ho jaoge! 💖✨🌸`
+      ];
+
+      setMascotMood('shopping');
+      setSpeechBubble(productMsgs[Math.floor(Math.random() * productMsgs.length)]);
+    };
+
+    rotateProductMsgs();
+    const timer = setInterval(rotateProductMsgs, 5000);
+    return () => clearInterval(timer);
+  }, [location.pathname, isOpen]);
+
+  // ── Auto Offer & Cute Activity Speech Rotator (General Browsing) ─────────────
+
   const cuteActivities = [
     // Happy & Offers
     { mood: 'happy',    text: '⚡ Bestseller Hair Remover is in stock!' },
