@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, Star, Headphones, ShoppingBag, Zap, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, Star, ArrowRight, ShieldCheck, Truck, RefreshCw, CheckCircle2, Zap, Sparkles } from 'lucide-react';
+
 import { toastBuyNow } from '../../utils/toast.js';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
@@ -168,11 +169,12 @@ export default function Hero() {
                 {hairRemover?.name ?? 'Smooth Body Hair Remover'}
               </h3>
 
-              <ul className="hero-product-features">
-                <li><CheckCircle2 size={14} /> Painless &amp; gentle on skin</li>
-                <li><CheckCircle2 size={14} /> Use anywhere on the body</li>
-                <li><CheckCircle2 size={14} /> Long-lasting smooth results</li>
-              </ul>
+              <div className="hero-product-features-pills">
+                <span className="feature-pill"><Sparkles size={13} color="#E94057" /> Painless &amp; Gentle</span>
+                <span className="feature-pill"><Zap size={13} color="#F27121" /> Whole Body Use</span>
+                <span className="feature-pill"><CheckCircle2 size={13} color="#10b981" /> Long-Lasting Smooth</span>
+              </div>
+
 
               <div className="hero-product-price-row">
                 <span className="hero-product-price">
