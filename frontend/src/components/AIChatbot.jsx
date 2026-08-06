@@ -57,7 +57,7 @@ export default function AIChatbot() {
         if (dizzyTimeout) clearTimeout(dizzyTimeout);
         dizzyTimeout = setTimeout(() => {
           setMascotMood('happy');
-          setSpeechBubble('✨ Tap me for beauty secrets!');
+          setSpeechBubble('✨ Welcome! Tap me anytime 🌸');
         }, 3000);
       }
     };
@@ -82,7 +82,7 @@ export default function AIChatbot() {
     checkNight();
   }, []);
 
-  // ── Product Detail Page Recurring Speech Rotator ──────────────────────────────
+  // ── Product Detail Page Recurring Speech Rotator (3 Seconds) ─────────────────
   useEffect(() => {
     const isProductPage = location.pathname.startsWith('/products/') || location.pathname.startsWith('/product/');
     if (!isProductPage || isOpen || mascotMood === 'crying' || mascotMood === 'dizzy') return;
@@ -116,9 +116,10 @@ export default function AIChatbot() {
     };
 
     rotateProductMsgs();
-    const timer = setInterval(rotateProductMsgs, 5000);
+    const timer = setInterval(rotateProductMsgs, 3000);
     return () => clearInterval(timer);
   }, [location.pathname, isOpen]);
+
 
   // ── Auto Offer & Cute Activity Speech Rotator (General Browsing) ─────────────
 
