@@ -411,8 +411,9 @@ export default function AIChatbot() {
       return `### 🚚 Shipping & Delivery\n\n- **Standard:** 3–5 business days across India (FREE above ₹499).\n- **Express:** 1–2 business days in metro cities.\n- Tracking link sent via SMS & Email after dispatch!`;
     }
     if (lower.includes('refund') || lower.includes('money back')) {
-      return `### 💳 Refund Policy\n\nRefunds are processed within **3–5 business days** to your original payment method.`;
+      return `### 💳 No Refund Policy\n\nWe have a **Strict No-Refund Policy**. However, if your product arrives damaged or defective, we provide a **100% Free Replacement** within 48 hours! 🛡️✨`;
     }
+
     if (lower.includes('warranty') || lower.includes('guarantee') || lower.includes('broken') || lower.includes('damaged')) {
       return `### 🛡️ Warranty & Guarantee\n\nAll products carry a **1-Year Quality Guarantee**. Damaged on arrival? Contact us within **48 hours** for a free replacement!`;
     }
@@ -774,10 +775,10 @@ export default function AIChatbot() {
           ]
         },
         {
-          keywords: ['return', 'replace', 'replacement', 'damaged', 'broken', 'wapas', 'refund'],
+          keywords: ['return', 'replace', 'replacement', 'damaged', 'broken', 'wapas', 'refund', 'money back'],
           replies: [
-            `Agar parcel damaged ya broken aaye to tension mat lo! 🛡️ 48 hours ke andar hume contact kijiye, hum free replacement bhej denge! 💕`,
-            `100% Customer Satisfaction Guarantee! 🌸 Any issue? Fast 3-5 days me refund/replacement issue ho jata hai! ✨`
+            `Attention bestie! 🌸 Humari store par **No Refund Policy** hai. Lekin agar parcel damaged ya defective mile to 48 hours me **100% Free Replacement** milega! 🛡️💖`,
+            `Humari policy ke according **Refund Available Nahi Hai**, par damage case me hum instant **Free Replacement** bhejte hain! 💕✨`
           ]
         },
         {
@@ -786,8 +787,44 @@ export default function AIChatbot() {
             `Aapke cart me cute products waiting hain! 🛒 Fast checkout kar lo price change hone se pehle! 💖`,
             `Top right me shopping bag button par click karke aap apna cart review kar sakte ho! 🛍️✨`
           ]
+        },
+        {
+          keywords: ['how to use', 'kaise use', 'kaise chalaye', 'pain', 'dard', 'ipl', 'hair remover', 'use'],
+          replies: [
+            `Bahut easy & pain-free hai! 🌸 Skin clean karke IPL handset plug karein, intensity level select karein aur flash karein! ⚡ Zero pain! 💕`,
+            `100% Painless technology! ✨ Week me 2-3 times use karein, 4 weeks me permanent smooth & glowing skin mil jayegi! 💃💖`
+          ]
+        },
+        {
+          keywords: ['skin type', 'sensitive skin', 'face', 'body', 'bikini', 'underarms', 'safe'],
+          replies: [
+            `Ji bilkul! 🌸 Face, arms, legs, underarms aur bikini line — sabhi body parts par safe and gentle hai! ✨`,
+            `Sensitive skin friendly! 💕 Zero side-effects & dermatologist approved technology hai 🥰`
+          ]
+        },
+        {
+          keywords: ['stock', 'available', 'khatam', 'in stock', 'kitne bache'],
+          replies: [
+            `Popular items fast sell ho rahe hain! 🛍️ Abhi in stock hai, fast buy kar lo price badhne se pehle! 💖`,
+            `Stock limited hai bestie! ⚡ Cart me add karke instant order place kar lo 💕`
+          ]
+        },
+        {
+          keywords: ['cancel', 'cancellation', 'order cancel'],
+          replies: [
+            `Order place hone ke 2 hours ke andar aap My Account → Orders se cancel kar sakte hain! 📦✨`,
+            `Agar order dispatch nahi hua hai to support team +91 8073786650 par call karke cancel kara sakte hain! 💖`
+          ]
+        },
+        {
+          keywords: ['contact', 'number', 'email', 'help', 'customer care', 'support', 'phone'],
+          replies: [
+            `Humari support team 24/7 ready hai! 📞 Call us: **+91 8073786650** ya Email: **reazafsha0@gmail.com** (Mon-Sat 9AM-8PM) 💖`,
+            `Koi bhi query ho, aap seedha hume email **reazafsha0@gmail.com** par bhej sakte ho! Instant response milega! ✨`
+          ]
         }
       ];
+
 
 
       for (const feed of dailyFeedList) {
