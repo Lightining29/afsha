@@ -82,6 +82,17 @@ export default function ProductDetail() {
     return () => { mounted = false; };
   }, [slug, navigate]);
 
+  // A detail page is an intentional product view: begin fetching every gallery
+  // image immediately so switching thumbnails is instant.
+  useEffect(() => {
+    const images = Array.isArray(product?.images) && product.images.length
+      ? product.images
+      : [product?.image].filter(Boolean);
+    images.forEach((src) => {
+      const image = new Image();
+      image.src = src;
+    });
+  }, [product]);
 
 
   if (loading) {
@@ -158,7 +169,7 @@ export default function ProductDetail() {
                       onClick={() => setActiveImage(i)}
                       aria-label={`View image ${i + 1}`}
                     >
-                      <img src={src} alt={`${product.name} view ${i + 1}`} loading="lazy" decoding="async" />
+                      <img src={src} alt={`${product.name} view ${i + 1}`} decoding="async" />
                       <span className="thumb-idx">{i + 1}</span>
                     </button>
                   ))}
