@@ -27,7 +27,6 @@ pub.get('/', async (req, res) => {
       obj.imageUrl = `/api/images/promo-banner/${b._id}?v=${v}`;
       return obj;
     });
-    res.set('Cache-Control', 'public, max-age=30, s-maxage=60');
     res.json(mapped);
   } catch (err) {
     res.status(500).json({ message: err.message });

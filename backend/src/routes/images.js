@@ -24,7 +24,6 @@ router.get('/product/:id', async (req, res) => {
       return res.status(404).json({ message: 'Image not found' });
     }
     res.set('Content-Type', image.contentType || 'image/jpeg');
-    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(image.data);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -54,7 +53,6 @@ router.get('/product/:id/:index', async (req, res) => {
       return res.status(404).json({ message: 'Image not found' });
     }
     res.set('Content-Type', slot.contentType || 'image/jpeg');
-    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(slot.data);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -71,7 +69,6 @@ router.get('/banner/hero', async (_req, res) => {
       return res.status(404).json({ message: 'No hero image set' });
     }
     res.set('Content-Type', banner.imageContentType || 'image/jpeg');
-    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(banner.imageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -88,7 +85,6 @@ router.get('/banner/promo', async (_req, res) => {
       return res.status(404).json({ message: 'No promo image set' });
     }
     res.set('Content-Type', banner.promoImageContentType || 'image/jpeg');
-    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(banner.promoImageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -105,7 +101,6 @@ router.get('/promo-banner/:id', async (req, res) => {
       return res.status(404).json({ message: 'Image not found' });
     }
     res.set('Content-Type', banner.imageContentType || 'image/jpeg');
-    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(banner.imageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -122,7 +117,6 @@ router.get('/category/:id', async (req, res) => {
       return res.status(404).json({ message: 'Image not found' });
     }
     res.set('Content-Type', category.imageContentType || 'image/jpeg');
-    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(category.imageData);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -139,7 +133,6 @@ router.get('/user/:id', async (req, res) => {
       return res.status(404).json({ message: 'Image not found' });
     }
     res.set('Content-Type', user.photoContentType || 'image/jpeg');
-    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(user.photoData);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -163,7 +156,6 @@ router.get('/review/:id/:index', async (req, res) => {
       return res.status(404).json({ message: 'Image not found' });
     }
     res.set('Content-Type', slot.contentType || 'image/jpeg');
-    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(slot.data);
   } catch (err) {
     res.status(500).json({ message: err.message });

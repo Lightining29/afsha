@@ -19,7 +19,6 @@ import contactRoutes from './src/routes/contact.js';
 import stockRoutes from './src/routes/stock.js';
 import settingsRoutes from './src/routes/settings.js';
 import Banner from './src/models/Banner.js';
-import compression from 'compression';
 import blogRoutes from './src/routes/blogs.js';
 import { promoBannersPublic, promoBannersAdmin } from './src/routes/promoBanners.js';
 import Product from './src/models/Product.js';
@@ -50,10 +49,11 @@ const io = new Server(server, {
 });
 
 app.use(cors());
-app.use(compression({
-  threshold: 1024,
-  level: 6,
-}));
+app.set('etag', false);
+app.use((_req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  next();
+});
 
 app.post('/api/orders/webhook', express.raw({ type: 'application/json' }), razorpayWebhookHandler);
 app.post('/razorpay/webhook', express.raw({ type: 'application/json' }), razorpayWebhookHandler);

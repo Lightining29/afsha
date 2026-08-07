@@ -1,5 +1,3 @@
-import { compressImage } from '../utils/imageCompressor.js';
-
 const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://127.0.0.1:5000/api' : '/api');
 const API_ORIGIN = API_BASE.startsWith('http') ? new URL(API_BASE).origin : '';
 
@@ -64,58 +62,22 @@ async function apiUpload(path, method, formData) {
 }
 
 /* ── Public ── */
-// In-memory cache for categories — avoids re-fetching on every navigation
-const _cache = { categories: null, categoriesAt: 0 };
-const CATEGORY_TTL = 5 * 60_000; // Categories rarely change
-
 export async function fetchCategories() {
-  const now = Date.now();
-  if (_cache.categories && now - _cache.categoriesAt < CATEGORY_TTL) {
-    return _cache.categories;
-  }
-  const data = await apiFetch('/categories');
-  _cache.categories = data;
-  _cache.categoriesAt = now;
-  return data;
+  return apiFetch('/categories');
 }
-export function invalidateCategoryCache() { _cache.categories = null; }
+export function invalidateCategoryCache() {}
 export async function fetchCategory(slug) { return apiFetch(`/categories/${slug}`); }
-// In-memory client product cache for instant navigation & page loads
-const _productCache = new Map();
-const PRODUCT_CACHE_TTL = 30_000; // 30 seconds
 
 export async function fetchProducts(params = {}) {
   const query = new URLSearchParams(params).toString();
-  const cacheKey = `products_${query}`;
-  const cached = _productCache.get(cacheKey);
-  const now = Date.now();
-
-  if (cached && now - cached.at < PRODUCT_CACHE_TTL) {
-    return cached.data;
-  }
-
-  const data = await apiFetch(`/products${query ? `?${query}` : ''}`);
-  _productCache.set(cacheKey, { data, at: now });
-  return data;
+  return apiFetch(`/products${query ? `?${query}` : ''}`);
 }
 
 export async function fetchProduct(slug) {
-  const cacheKey = `product_slug_${slug}`;
-  const cached = _productCache.get(cacheKey);
-  const now = Date.now();
-
-  if (cached && now - cached.at < PRODUCT_CACHE_TTL) {
-    return cached.data;
-  }
-
-  const data = await apiFetch(`/products/${slug}`);
-  _productCache.set(cacheKey, { data, at: now });
-  return data;
+  return apiFetch(`/products/${slug}`);
 }
 
-export function invalidateProductCache() {
-  _productCache.clear();
-}
+export function invalidateProductCache() {}
 
 export async function fetchBlogs() { return apiFetch('/blogs'); }
 export async function fetchBlog(slug) { return apiFetch(`/blogs/${slug}`); }
@@ -133,8 +95,7 @@ export async function register(name, email, password, photoFile) {
   fd.append('email', email);
   fd.append('password', password);
   if (photoFile) {
-    const compressed = await compressImage(photoFile);
-    fd.append('photo', compressed);
+    fd.append('photo', photoFile);
   }
   return apiUpload('/auth/register', 'POST', fd);
 }
@@ -197,12 +158,10 @@ export async function updateAdminBanner(fields, heroImageFile, promoImageFile) {
     if (v !== undefined && v !== null) fd.append(k, v);
   });
   if (heroImageFile) {
-    const compressed = await compressImage(heroImageFile);
-    fd.append('image', compressed);
+    fd.append('image', heroImageFile);
   }
   if (promoImageFile) {
-    const compressed = await compressImage(promoImageFile);
-    fd.append('promoImage', compressed);
+    fd.append('promoImage', promoImageFile);
   }
   return apiUpload('/admin/banner', 'PUT', fd);
 }
@@ -256,8 +215,7 @@ export async function createAdminPromoBanner(fields, imageFile) {
     if (v !== undefined && v !== null) fd.append(k, String(v));
   });
   if (imageFile) {
-    const compressed = await compressImage(imageFile);
-    fd.append('image', compressed);
+    fd.append('image', imageFile);
   }
   return apiUpload('/admin/promo-banners', 'POST', fd);
 }
@@ -268,8 +226,7 @@ export async function updateAdminPromoBanner(id, fields, imageFile) {
     if (v !== undefined && v !== null) fd.append(k, String(v));
   });
   if (imageFile) {
-    const compressed = await compressImage(imageFile);
-    fd.append('image', compressed);
+    fd.append('image', imageFile);
   }
   return apiUpload(`/admin/promo-banners/${id}`, 'PUT', fd);
 }
@@ -291,8 +248,7 @@ export async function createAdminCategory(fields, imageFile) {
   const fd = new FormData();
   if (fields.name) fd.append('name', fields.name);
   if (imageFile) {
-    const compressed = await compressImage(imageFile);
-    fd.append('image', compressed);
+    fd.append('image', imageFile);
   }
   const result = await apiUpload('/admin/categories', 'POST', fd);
   invalidateCategoryCache();
@@ -303,8 +259,7 @@ export async function updateAdminCategory(id, fields, imageFile) {
   const fd = new FormData();
   if (fields.name) fd.append('name', fields.name);
   if (imageFile) {
-    const compressed = await compressImage(imageFile);
-    fd.append('image', compressed);
+    fd.append('image', imageFile);
   }
   const result = await apiUpload(`/admin/categories/${id}`, 'PUT', fd);
   invalidateCategoryCache();
@@ -327,8 +282,7 @@ export async function createProduct(fields, imageFiles = []) {
   Object.entries(fields).forEach(([k, v]) => {
     if (v !== undefined && v !== null) fd.append(k, String(v));
   });
-  const compressedFiles = await Promise.all(imageFiles.map(file => compressImage(file)));
-  compressedFiles.forEach((file) => fd.append('images', file));
+  imageFiles.forEach((file) => fd.append('images', file));
   return apiUpload('/admin/products', 'POST', fd);
 }
 
@@ -347,8 +301,7 @@ export async function updateProduct(id, fields, imageFiles = [], opts = {}) {
     if (v !== undefined && v !== null) fd.append(k, String(v));
   });
   if (imageFiles && imageFiles.length > 0) {
-    const compressedFiles = await Promise.all(imageFiles.map(file => compressImage(file)));
-    compressedFiles.forEach((file) => fd.append('images', file));
+    imageFiles.forEach((file) => fd.append('images', file));
   } else if (Array.isArray(deleteIndices) && deleteIndices.length > 0) {
     // Each index becomes a repeated form field; backend normalizes to an array.
     deleteIndices.forEach((i) => fd.append('deleteImageIndex', String(i)));
@@ -420,8 +373,7 @@ export async function createReview(fields, photoFiles = []) {
   fd.append('productId', fields.productId);
   fd.append('rating', String(fields.rating));
   if (fields.comment) fd.append('comment', String(fields.comment));
-  const compressedFiles = await Promise.all(photoFiles.map(file => compressImage(file)));
-  compressedFiles.forEach((file) => fd.append('photos', file));
+  photoFiles.forEach((file) => fd.append('photos', file));
   return apiUpload('/reviews', 'POST', fd);
 }
 
@@ -438,8 +390,7 @@ export async function updateReview(id, fields = {}, photoFiles = [], opts = {}) 
   if (fields.rating !== undefined) fd.append('rating', String(fields.rating));
   if (fields.comment !== undefined) fd.append('comment', String(fields.comment));
   if (photoFiles && photoFiles.length > 0) {
-    const compressedFiles = await Promise.all(photoFiles.map(file => compressImage(file)));
-    compressedFiles.forEach((file) => fd.append('photos', file));
+    photoFiles.forEach((file) => fd.append('photos', file));
   } else if (Array.isArray(deleteIndices) && deleteIndices.length > 0) {
     deleteIndices.forEach((i) => fd.append('deletePhotoIndex', String(i)));
   }

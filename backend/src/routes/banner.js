@@ -14,7 +14,6 @@ function buildImageUrls(banner) {
 // Public: get banner text config + versioned image URLs
 router.get('/', async (_req, res) => {
   try {
-    res.set('Cache-Control', 'public, max-age=30, s-maxage=60, stale-while-revalidate=120');
     let banner = await Banner.findOne({ singleton: true });
     if (!banner) {
       banner = await Banner.create({ singleton: true });

@@ -3,28 +3,9 @@ import Category from '../models/Category.js';
 import Product from '../models/Product.js';
 
 const router = express.Router();
-const categoryCache = new Map();
-const CATEGORY_CACHE_TTL_MS = 5 * 60_000;
-const CATEGORY_CACHE_CONTROL = 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400';
-
-function getCached(key) {
-  const entry = categoryCache.get(key);
-  return entry && Date.now() - entry.at < CATEGORY_CACHE_TTL_MS ? entry.data : null;
-}
-
-function setCached(key, data) {
-  categoryCache.set(key, { data, at: Date.now() });
-}
-
-export function invalidateCategoryServerCache() {
-  categoryCache.clear();
-}
 
 router.get('/', async (req, res) => {
   try {
-    res.set('Cache-Control', CATEGORY_CACHE_CONTROL);
-    const cached = getCached('all');
-    if (cached) return res.json(cached);
     // Single aggregation: fetch all categories + product counts in one DB round-trip
     const categories = await Category.aggregate([
       { $sort: { name: 1 } },
@@ -61,7 +42,6 @@ router.get('/', async (req, res) => {
       return c;
     });
 
-    setCached('all', mapped);
     res.json(mapped);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -70,10 +50,6 @@ router.get('/', async (req, res) => {
 
 router.get('/:slug', async (req, res) => {
   try {
-    res.set('Cache-Control', CATEGORY_CACHE_CONTROL);
-    const cacheKey = `slug:${req.params.slug}`;
-    const cached = getCached(cacheKey);
-    if (cached) return res.json(cached);
     const category = await Category.findOne({ slug: req.params.slug })
       .select('-imageData -imageContentType')
       .lean();
@@ -88,7 +64,6 @@ router.get('/:slug', async (req, res) => {
     const v = category.updatedAt ? category.updatedAt.getTime() : Date.now();
     obj.imageUrl = `/api/images/category/${category._id}?v=${v}`;
 
-    setCached(cacheKey, obj);
     res.json(obj);
   } catch (err) {
     res.status(500).json({ message: err.message });

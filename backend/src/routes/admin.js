@@ -11,7 +11,6 @@ import { protect, adminOnly } from '../middleware/auth.js';
 import { upload } from '../middleware/upload.js';
 import { enrichProduct } from '../utils/pricing.js';
 import { sendOrderReceipt } from '../services/email.js';
-import { invalidateCategoryServerCache } from './categories.js';
 
 const router = express.Router();
 router.use(protect, adminOnly);
@@ -321,7 +320,6 @@ router.post('/categories', upload.single('image'), async (req, res) => {
       category.imageContentType = req.file.mimetype;
     }
     await category.save();
-    invalidateCategoryServerCache();
 
     const obj = category.toObject();
     const v = category.updatedAt ? category.updatedAt.getTime() : Date.now();
@@ -351,7 +349,6 @@ router.put('/categories/:id', upload.single('image'), async (req, res) => {
     }
     category.updatedAt = new Date();
     await category.save();
-    invalidateCategoryServerCache();
 
     const obj = category.toObject();
     const v = category.updatedAt ? category.updatedAt.getTime() : Date.now();
@@ -370,7 +367,6 @@ router.delete('/categories/:id', async (req, res) => {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
     if (!category) return res.status(404).json({ message: 'Category not found' });
-    invalidateCategoryServerCache();
     res.json({ message: 'Category deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
