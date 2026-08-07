@@ -1,15 +1,22 @@
 import { Star, Zap } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { formatPrice, getProductPrice } from '../../api';
+import { fetchProduct, formatPrice, getProductPrice } from '../../api';
 import './ProductCard.css';
 
 export default function ProductCard({ product }) {
   const navigate   = useNavigate();
   const finalPrice = getProductPrice(product);
   const hasDiscount = product.discountPercent > 0;
+  const prefetchProduct = () => {
+    fetchProduct(product.slug).catch(() => {});
+    if (product.image) {
+      const image = new Image();
+      image.src = product.image;
+    }
+  };
 
   return (
-    <Link to={`/products/${product.slug}`} className="product-card-link">
+    <Link to={`/products/${product.slug}`} className="product-card-link" onPointerEnter={prefetchProduct} onFocus={prefetchProduct}>
       <div className="product-card">
 
         {/* ── Product Image ─────────────────────────── */}

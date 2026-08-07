@@ -30,7 +30,7 @@ export default function Hero() {
 
   // Fetch body hair remover product
   useEffect(() => {
-    fetchProducts()
+    fetchProducts({ limit: '12' })
       .then((data) => {
         if (Array.isArray(data)) {
           const found = data.find((p) =>

@@ -158,7 +158,7 @@ export default function ProductDetail() {
                       onClick={() => setActiveImage(i)}
                       aria-label={`View image ${i + 1}`}
                     >
-                      <img src={src} alt={`${product.name} view ${i + 1}`} />
+                      <img src={src} alt={`${product.name} view ${i + 1}`} loading="lazy" decoding="async" />
                       <span className="thumb-idx">{i + 1}</span>
                     </button>
                   ))}
