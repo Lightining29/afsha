@@ -1,10 +1,12 @@
-const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://127.0.0.1:5000/api' : '/api');
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 const API_ORIGIN = API_BASE.startsWith('http') ? new URL(API_BASE).origin : '';
 
-// API payloads use relative image paths. Resolve them to the API host when a
-// separately hosted frontend is configured through VITE_API_URL.
+// Keep /api/images/... paths relative so the Vite proxy (dev) or same-origin
+// server (prod) serves them — avoids cross-origin CORS issues with <img> tags.
 function resolveAssetUrls(value) {
   if (typeof value === 'string') {
+    // Never rewrite image paths — keep them relative for proxy/same-origin
+    if (value.startsWith('/api/images/')) return value;
     return API_ORIGIN && value.startsWith('/api/') ? `${API_ORIGIN}${value}` : value;
   }
   if (Array.isArray(value)) return value.map(resolveAssetUrls);

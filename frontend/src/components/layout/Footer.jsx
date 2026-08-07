@@ -6,6 +6,7 @@ import './Footer.css';
 export default function Footer() {
   const [email, setEmail] = useState('');
 
+  
   const handleSubscribe = (e) => {
     e.preventDefault();
     if (email) {
