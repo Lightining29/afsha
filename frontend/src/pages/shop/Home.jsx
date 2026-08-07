@@ -6,7 +6,7 @@ import Hero from '../../components/shop/Hero';
 import Categories from '../../components/shop/Categories';
 import AllProducts from '../../components/shop/AllProducts';
 import HomeRecommendations from '../../components/shop/HomeRecommendations';
-import RecentlyViewedRow from '../../components/shop/RecentlyViewedRow';
+
 import Footer from '../../components/layout/Footer';
 import './Home.css';
 
@@ -38,7 +38,7 @@ export default function Home() {
 
       <Categories />
 
-      <RecentlyViewedRow />
+
 
       <section className="section home-section">
         <div className="container">

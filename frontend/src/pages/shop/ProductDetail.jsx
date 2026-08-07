@@ -34,7 +34,7 @@ import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 
 import ProductCard from '../../components/product/ProductCard';
-import { useRecentlyViewed } from '../../hooks/useRecentlyViewed';
+
 import { toastWishlist, toastSuccess } from '../../utils/toast.js';
 import './ProductDetail.css';
 
@@ -60,7 +60,6 @@ export default function ProductDetail() {
   const [openFaq, setOpenFaq]     = useState(0);
   const [copied, setCopied]       = useState(false);
 
-  const { list: recentlyViewed, track } = useRecentlyViewed(product?._id);
 
   useEffect(() => {
     let mounted = true;
@@ -69,7 +68,6 @@ export default function ProductDetail() {
       .then(async (data) => {
         if (!mounted) return;
         setProduct(data);
-        track(data);
 
         const catId = data.category?._id;
         if (catId) {
