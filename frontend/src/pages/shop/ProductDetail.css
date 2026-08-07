@@ -99,14 +99,13 @@
 }
 
 .thumbnail-strip-item:hover {
-  border-color: #ffd1dc;
-  transform: translateY(-2px);
+  border-color: #cbd5e1;
 }
 
 .thumbnail-strip-item.active {
-  border-color: #E94057;
-  box-shadow: 0 4px 16px rgba(233, 64, 87, 0.25);
-  background: #fff0f5;
+  border-color: #0f172a;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: #f8fafc;
 }
 
 .thumb-idx {
@@ -127,28 +126,26 @@
   width: 100%;
   aspect-ratio: 1;
   background: #ffffff;
-  border-radius: 24px;
-  border: 1px solid #ffd1dc;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 12px 36px rgba(244, 172, 183, 0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .product-stage-discount-badge {
   position: absolute;
-  top: 16px;
-  left: 16px;
-  background: linear-gradient(135deg, #E94057 0%, #FF758C 100%);
+  top: 12px;
+  left: 12px;
+  background: #0f172a;
   color: #ffffff;
   font-size: 12px;
-  font-weight: 800;
-  padding: 6px 14px;
-  border-radius: 20px;
-  box-shadow: 0 4px 14px rgba(233, 64, 87, 0.3);
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
   z-index: 5;
-  letter-spacing: 0.5px;
 }
 
 .product-image-main {

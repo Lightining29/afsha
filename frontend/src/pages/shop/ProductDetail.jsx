@@ -210,28 +210,6 @@ export default function ProductDetail() {
                   )}
                 </div>
 
-                {/* Controls Bar Placed OUTSIDE Product Image */}
-                <div className="external-gallery-controls-bar">
-                  <span className="image-counter-pill">
-                    📷 Image {activeIdx + 1} of {gallery.length}
-                  </span>
-
-                  {/* 360 & View Mode Controls */}
-                  <div className="viewer-mode-controls">
-                    <button
-                      className={`mode-btn ${!is360Mode ? 'active' : ''}`}
-                      onClick={() => setIs360Mode(false)}
-                    >
-                      HD Image
-                    </button>
-                    <button
-                      className={`mode-btn ${is360Mode ? 'active' : ''}`}
-                      onClick={() => setIs360Mode(!is360Mode)}
-                    >
-                      <RotateCw size={13} /> 360° View
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
