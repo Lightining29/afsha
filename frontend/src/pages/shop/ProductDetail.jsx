@@ -20,8 +20,6 @@ import {
   Video,
   ChevronDown,
   ChevronUp,
-  Package,
-  Layers,
   HelpCircle
 } from 'lucide-react';
 import {
@@ -36,7 +34,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-import ReviewSection from '../../components/shop/ReviewSection';
+
 import ProductCard from '../../components/product/ProductCard';
 import { useRecentlyViewed } from '../../hooks/useRecentlyViewed';
 import { toastWishlist, toastSuccess } from '../../utils/toast.js';
@@ -299,33 +297,6 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* Combo Offers & Product Bundles */}
-        <div className="combo-bundle-card">
-          <div className="bundle-header">
-            <h3><Package size={20} color="#E94057" /> Frequently Bought Together (Combo Offer)</h3>
-            <span className="bundle-discount-badge">Save Extra 15%</span>
-          </div>
-          <div className="bundle-items-row">
-            <div className="bundle-item">
-              <img src={mainImage} alt={product.name} />
-              <span>{product.name}</span>
-            </div>
-            <span className="plus-sign">+</span>
-            {similar[0] && (
-              <div className="bundle-item">
-                <img src={similar[0].image} alt={similar[0].name} />
-                <span>{similar[0].name}</span>
-              </div>
-            )}
-            <div className="bundle-pricing">
-              <div className="bundle-total">{formatPrice(finalPrice + (similar[0] ? getProductPrice(similar[0]) * 0.85 : 0))}</div>
-              <button className="btn-bundle-buy" onClick={handleAddBundleToCart}>
-                {bundleAdded ? <Check size={16} /> : <Layers size={16} />}
-                {bundleAdded ? 'Bundle Added!' : 'Add Combo Bundle to Cart'}
-              </button>
-            </div>
-          </div>
-        </div>
 
         {/* Tabs: Description, Videos & FAQ */}
         <div className="product-tabs-section">
@@ -394,7 +365,7 @@ export default function ProductDetail() {
           </div>
         )}
 
-        <ReviewSection product={product} />
+
       </div>
 
       <Footer />

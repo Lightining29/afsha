@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, PlusCircle, LogOut, Home, Mail, Boxes, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, LogOut, Home, Mail, Boxes, Menu, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import '../../styles/Panel.css';
 
@@ -71,9 +71,7 @@ export default function AdminLayout() {
           <NavLink to="/admin/orders" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <Package size={18} /> Orders
           </NavLink>
-          <NavLink to="/admin/offline-sale" style={navItemStyle} onClick={() => setMenuOpen(false)}>
-            <PlusCircle size={18} /> Add Offline Sale
-          </NavLink>
+
           <NavLink to="/admin/products" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <ShoppingCart size={18} /> Products
           </NavLink>

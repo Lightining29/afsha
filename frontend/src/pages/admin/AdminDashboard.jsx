@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   DollarSign,
-  ShoppingBag,
   Users,
   AlertCircle,
   TrendingUp,
@@ -97,14 +96,6 @@ export default function AdminDashboard() {
             </div>
             <div className="admin-action-title">Add New Product</div>
             <div className="admin-action-desc">Upload photos, set pricing & stock</div>
-          </Link>
-
-          <Link to="/admin/offline-sale" className="admin-action-launcher">
-            <div className="icon-box" style={{ background: '#f1f5f9', color: '#0f172a' }}>
-              <ShoppingBag size={22} />
-            </div>
-            <div className="admin-action-title">Record Offline Sale</div>
-            <div className="admin-action-desc">Instore & Cash/UPI transactions</div>
           </Link>
 
           <Link to="/admin/stock" className="admin-action-launcher">
