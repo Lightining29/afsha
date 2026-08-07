@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Upload, X, ImagePlus, Sparkles, RefreshCw } from 'lucide-react';
+import { Upload, X, ImagePlus } from 'lucide-react';
 import { fetchAdminCategories, createProduct, updateProduct, fetchAdminProducts } from '../../api';
 import '../../styles/Panel.css';
 import '../auth/Auth.css';
@@ -40,38 +40,6 @@ export default function AdminProductForm() {
   const [removedIndices, setRemovedIndices] = useState(new Set());
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [aiGenerating, setAiGenerating] = useState(false);
-
-  const handleAIDescription = async () => {
-    if (!form.name.trim()) {
-      setError('Please enter a Product Name first to generate AI Description.');
-      return;
-    }
-    setAiGenerating(true);
-    setError('');
-    try {
-      const res = await fetch('/api/ai/generate-description', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          features: form.description || 'Premium quality e-commerce product',
-        }),
-      });
-      const data = await res.json();
-      if (data.success && data.data) {
-        const fullDesc = `${data.data.description}\n\nKey Highlights:\n${data.data.bulletPoints.join('\n')}`;
-        setForm((prev) => ({ ...prev, description: fullDesc }));
-      } else {
-        throw new Error(data.message || 'AI Generation failed');
-      }
-    } catch (err) {
-      setError(`AI Description Error: ${err.message}`);
-    } finally {
-      setAiGenerating(false);
-    }
-  };
-
   // Existing images still visible = original minus removed ones.
   const keptOriginals = originalUrls
     .map((url, i) => ({ url, originalIndex: i }))
@@ -229,36 +197,13 @@ export default function AdminProductForm() {
             </div>
 
             <div className="apf-group">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                <label style={{ margin: 0 }}>Description *</label>
-                <button
-                  type="button"
-                  onClick={handleAIDescription}
-                  disabled={aiGenerating}
-                  style={{
-                    background: 'linear-gradient(135deg, #1A2B3C 0%, #E94057 100%)',
-                    color: '#ffffff',
-                    border: 'none',
-                    borderRadius: '8px',
-                    padding: '4px 10px',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                  }}
-                >
-                  {aiGenerating ? <RefreshCw size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                  {aiGenerating ? 'Generating...' : 'AI Generate Description & SEO'}
-                </button>
-              </div>
+              <label>Description *</label>
               <textarea
                 value={form.description}
                 onChange={update('description')}
                 required
                 rows={5}
-                placeholder="Describe the product benefits or click AI Generate..."
+                placeholder="Describe the product benefits, features, and specifications."
               />
             </div>
 
