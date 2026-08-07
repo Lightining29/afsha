@@ -15,12 +15,31 @@ import './AdminDashboard.css';
 
 export default function AdminDashboard() {
   const [data, setData] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetchAdminAnalytics().then(setData).catch(() => {});
+    fetchAdminAnalytics()
+      .then((res) => setData({
+        totalRevenue: res?.totalRevenue ?? 0,
+        totalOrders: res?.totalOrders ?? 0,
+        totalUsers: res?.totalUsers ?? 0,
+        pendingApproval: res?.pendingApproval ?? 0,
+        recentOrders: res?.recentOrders ?? [],
+        topProducts: res?.topProducts ?? [],
+        lowStock: res?.lowStock ?? [],
+      }))
+      .catch(() => setError(true));
   }, []);
 
-  if (!data) return <div className="loading-spinner" style={{ margin: '60px auto' }} />;
+  if (error) return (
+    <div style={{ padding: '60px', textAlign: 'center', color: '#64748b' }}>
+      <h2 style={{ color: '#0f172a' }}>Dashboard unavailable</h2>
+      <p>Could not load analytics. Please check your server connection.</p>
+      <button onClick={() => window.location.reload()} style={{ marginTop: '16px', padding: '10px 24px', background: '#0f172a', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 700 }}>Retry</button>
+    </div>
+  );
+
+  if (!data) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}><div className="loading-spinner" /></div>;
 
   return (
     <div className="admin-dashboard-page">

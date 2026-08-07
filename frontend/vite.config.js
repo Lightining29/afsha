@@ -40,10 +40,6 @@ export default defineConfig({
             './src/pages/admin/AdminCategories.jsx',
             './src/pages/admin/AdminContacts.jsx',
             './src/pages/admin/AdminStock.jsx',
-            './src/pages/admin/AdminReviews.jsx',
-            './src/pages/admin/AdminOfflineSale.jsx',
-            './src/pages/admin/AdminFlashSale.jsx',
-            './src/pages/admin/AdminPromoBanners.jsx',
           ],
         },
         // Use content hash for cache busting
