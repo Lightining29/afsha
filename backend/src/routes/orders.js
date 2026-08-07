@@ -1,4 +1,5 @@
 import express from 'express';
+import crypto from 'crypto';
 import Razorpay from 'razorpay';
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
@@ -75,6 +76,24 @@ function hasConfirmedPayment(order) {
   return ['paid', 'approved', 'shipped'].includes(order.status);
 }
 
+function checkoutToken(userId, amount, items) {
+  const itemKey = items
+    .map((item) => `${item.productId || item._id}:${Number(item.quantity)}`)
+    .sort()
+    .join(',');
+  return crypto
+    .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET.trim())
+    .update(`${userId}|${amount}|${itemKey}`)
+    .digest('hex');
+}
+
+function safeTokenEquals(actual, expected) {
+  if (!actual || !expected) return false;
+  const a = Buffer.from(actual);
+  const b = Buffer.from(expected);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
 /** Razorpay webhook — raw body registered in index.js. Idempotent safety net. */
 export async function razorpayWebhookHandler(req, res) {
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
@@ -109,7 +128,8 @@ export async function razorpayWebhookHandler(req, res) {
   return res.json({ received: true });
 }
 
-// Create order + Razorpay order, then return the payload the Checkout modal needs.
+// Create only the Razorpay payment session. A database order is created after the
+// payment has been verified, so abandoned checkout attempts are never stored.
 router.post('/checkout', protect, async (req, res) => {
   try {
     const rzp = getRazorpay();
@@ -123,8 +143,8 @@ router.post('/checkout', protect, async (req, res) => {
       return res.status(400).json({ message: 'Shipping address is required' });
     }
 
-    const orderItems = [];
     let subtotal = 0;
+    const paymentItems = [];
 
     for (const item of items) {
       const product = await Product.findById(item.productId || item._id);
@@ -133,37 +153,21 @@ router.post('/checkout', protect, async (req, res) => {
         return res.status(400).json({ message: `Insufficient stock for ${product.name}` });
       }
       const price = getFinalPrice(product);
-      orderItems.push({
-        product: product._id,
-        name: product.name,
-        image: getProductImageUrl(product),
-        price,
-        quantity: item.quantity,
-      });
       subtotal += price * item.quantity;
+      paymentItems.push({ productId: product._id.toString(), quantity: item.quantity });
     }
 
-    const order = await Order.create({
-      user: req.user.id,
-      items: orderItems,
-      subtotal,
-      total: subtotal,
-      shippingAddress,
-      status: 'pending_payment',
-    });
+    const amount = Math.round(subtotal * 100);
+    const token = checkoutToken(req.user.id, amount, paymentItems);
 
     const razorpayOrder = await rzp.orders.create({
-      amount: Math.round(order.total * 100), // paise
+      amount, // paise
       currency: 'INR',
-      receipt: order.orderNumber,
-      notes: { orderId: order._id.toString() },
+      receipt: `afsha_${Date.now()}`,
+      notes: { checkoutToken: token },
     });
 
-    order.razorpayOrderId = razorpayOrder.id;
-    await order.save();
-
     return res.json({
-      orderId: order._id,
       razorpayOrderId: razorpayOrder.id,
       amount: razorpayOrder.amount,
       currency: 'INR',
@@ -176,44 +180,75 @@ router.post('/checkout', protect, async (req, res) => {
   }
 });
 
-// Verify the Checkout modal's response and fulfill. Primary fulfiller.
-router.post('/verify/:orderId', protect, async (req, res) => {
+// Verify the Checkout modal response, then create and fulfill the database order.
+router.post('/verify', protect, async (req, res) => {
   try {
-    const { razorpayPaymentId, razorpaySignature } = req.body;
-    const order = await Order.findOne({ _id: req.params.orderId, user: req.user.id });
-    if (!order) return res.status(404).json({ message: 'Order not found' });
-    if (!order.razorpayOrderId) return res.status(400).json({ message: 'Order has no Razorpay session' });
+    const { razorpayOrderId, razorpayPaymentId, razorpaySignature, items, shippingAddress } = req.body;
+    if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
+      return res.status(400).json({ message: 'Missing payment verification details' });
+    }
+    if (!items?.length || !shippingAddress?.fullName || !shippingAddress?.email || !shippingAddress?.address) {
+      return res.status(400).json({ message: 'Order details are required' });
+    }
 
     const valid = verifyOrderSignature(
-      { razorpayOrderId: order.razorpayOrderId, razorpayPaymentId, signature: razorpaySignature },
+      { razorpayOrderId, razorpayPaymentId, signature: razorpaySignature },
       process.env.RAZORPAY_KEY_SECRET
     );
     if (!valid) return res.status(400).json({ message: 'Invalid signature' });
 
-    // Idempotency — if webhook already fulfilled, don't double-process.
-    if (order.status !== 'pending_payment') {
-      if (hasConfirmedPayment(order)) {
-        await sendReceiptIfNeeded(order);
-      }
-      return res.json({ ok: true, alreadyPaid: true });
-    }
+    const existingOrder = await Order.findOne({ razorpayPaymentId });
+    if (existingOrder) return res.json({ ok: true, orderId: existingOrder._id, alreadyPaid: true });
 
     const rzp = getRazorpay();
     if (!rzp) {
       return res.status(500).json({ message: 'Razorpay not configured' });
     }
-    const payment = await rzp.payments.fetch(razorpayPaymentId);
-    if (payment.status !== 'captured') {
-      return res.status(402).json({ message: 'Payment not captured' });
+    const orderItems = [];
+    let subtotal = 0;
+    for (const item of items) {
+      const quantity = Number(item.quantity);
+      const product = await Product.findById(item.productId || item._id);
+      if (!product || !Number.isInteger(quantity) || quantity < 1) {
+        return res.status(400).json({ message: 'Invalid order item' });
+      }
+      if (product.stockQuantity < quantity) {
+        return res.status(400).json({ message: `Insufficient stock for ${product.name}` });
+      }
+      const price = getFinalPrice(product);
+      orderItems.push({ product: product._id, name: product.name, image: getProductImageUrl(product), price, quantity });
+      subtotal += price * quantity;
     }
 
-    order.status = 'paid';
-    order.razorpayPaymentId = razorpayPaymentId;
-    order.razorpaySignature = razorpaySignature;
-    await order.save();
+    const amount = Math.round(subtotal * 100);
+    const expectedToken = checkoutToken(req.user.id, amount, items);
+    const razorpayOrder = await rzp.orders.fetch(razorpayOrderId);
+    if (!safeTokenEquals(razorpayOrder.notes?.checkoutToken, expectedToken)) {
+      return res.status(400).json({ message: 'Checkout session does not match this order' });
+    }
+
+    const payment = await rzp.payments.fetch(razorpayPaymentId);
+    if (payment.status !== 'captured' || payment.order_id !== razorpayOrderId) {
+      return res.status(402).json({ message: 'Payment not captured' });
+    }
+    if (amount !== payment.amount) {
+      return res.status(400).json({ message: 'Payment amount does not match the current order total' });
+    }
+
+    const order = await Order.create({
+      user: req.user.id,
+      items: orderItems,
+      subtotal,
+      total: subtotal,
+      shippingAddress,
+      status: 'paid',
+      razorpayOrderId,
+      razorpayPaymentId,
+      razorpaySignature,
+    });
     await fulfillOrder(order);
 
-    return res.json({ ok: true });
+    return res.json({ ok: true, orderId: order._id });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -221,7 +256,7 @@ router.post('/verify/:orderId', protect, async (req, res) => {
 
 router.get('/my', protect, async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user.id })
+    const orders = await Order.find({ user: req.user.id, status: { $ne: 'pending_payment' } })
       .populate('items.product', 'updatedAt')
       .sort({ createdAt: -1 });
     res.json(orders.map(withItemImageFallback));

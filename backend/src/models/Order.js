@@ -26,7 +26,7 @@ const orderSchema = new mongoose.Schema(
     },
     paymentMethod: { type: String, enum: ['razorpay', 'cash', 'UPI'], default: 'razorpay' },
     razorpayOrderId: { type: String, index: true },
-    razorpayPaymentId: String,
+    razorpayPaymentId: { type: String, unique: true, sparse: true },
     razorpaySignature: String,
     shippingAddress: {
       fullName: String,
@@ -41,6 +41,9 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+orderSchema.index({ user: 1, createdAt: -1 });
+orderSchema.index({ status: 1, createdAt: -1 });
 
 orderSchema.pre('save', async function (next) {
   if (this.orderNumber) return next();

@@ -35,6 +35,12 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
+// Keep browser and proxy connections reusable while staying below common load
+// balancer idle timeouts.
+server.keepAliveTimeout = 65_000;
+server.headersTimeout = 66_000;
+server.requestTimeout = 120_000;
+
 // Socket.IO setup with CORS
 const io = new Server(server, {
   cors: {
@@ -44,7 +50,10 @@ const io = new Server(server, {
 });
 
 app.use(cors());
-app.use(compression());
+app.use(compression({
+  threshold: 1024,
+  level: 6,
+}));
 
 app.post('/api/orders/webhook', express.raw({ type: 'application/json' }), razorpayWebhookHandler);
 app.post('/razorpay/webhook', express.raw({ type: 'application/json' }), razorpayWebhookHandler);

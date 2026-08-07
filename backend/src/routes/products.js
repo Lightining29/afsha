@@ -7,6 +7,7 @@ const router = express.Router();
 // High-speed server-side query cache
 const productCache = new Map();
 const CACHE_TTL_MS = 15_000; // 15 seconds
+const PUBLIC_CACHE_CONTROL = 'public, max-age=30, s-maxage=60, stale-while-revalidate=120';
 
 function getCached(key) {
   const item = productCache.get(key);
@@ -28,6 +29,7 @@ export function invalidateProductServerCache() {
 // Public: active flash sale products
 router.get('/flash-sale', async (req, res) => {
   try {
+    res.set('Cache-Control', PUBLIC_CACHE_CONTROL);
     const cacheKey = 'flash-sale';
     const cached = getCached(cacheKey);
     if (cached) return res.json(cached);
@@ -56,8 +58,12 @@ router.get('/flash-sale', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    const { category, bestseller, limit } = req.query;
-    const cacheKey = `list_${category || ''}_${bestseller || ''}_${limit || ''}`;
+    res.set('Cache-Control', PUBLIC_CACHE_CONTROL);
+    const { category, bestseller, limit, page, paginate } = req.query;
+    const isPaginated = paginate === 'true';
+    const pageNumber = Math.max(1, Number.parseInt(page, 10) || 1);
+    const pageSize = Math.min(48, Math.max(1, Number.parseInt(limit, 10) || 12));
+    const cacheKey = `list_${category || ''}_${bestseller || ''}_${limit || ''}_${pageNumber}_${isPaginated}`;
     const cached = getCached(cacheKey);
     if (cached) return res.json(cached);
 
@@ -69,12 +75,18 @@ router.get('/', async (req, res) => {
       .select('-imageData -imageContentType -images.data')
       .populate('category', 'name slug')
       .sort({ salesCount: -1, createdAt: -1 });
-    if (limit) query = query.limit(parseInt(limit, 10));
+    if (isPaginated) {
+      query = query.skip((pageNumber - 1) * pageSize).limit(pageSize + 1);
+    } else if (limit) {
+      query = query.limit(pageSize);
+    }
 
     const products = await query.lean();
-    const result = products.map(enrichProduct);
-    setCache(cacheKey, result);
-    res.json(result);
+    const hasMore = isPaginated && products.length > pageSize;
+    const result = (hasMore ? products.slice(0, pageSize) : products).map(enrichProduct);
+    const response = isPaginated ? { items: result, hasMore, nextPage: hasMore ? pageNumber + 1 : null } : result;
+    setCache(cacheKey, response);
+    res.json(response);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -82,6 +94,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:slug', async (req, res) => {
   try {
+    res.set('Cache-Control', PUBLIC_CACHE_CONTROL);
     const cacheKey = `detail_${req.params.slug}`;
     const cached = getCached(cacheKey);
     if (cached) return res.json(cached);
@@ -101,4 +114,3 @@ router.get('/:slug', async (req, res) => {
 });
 
 export default router;
-

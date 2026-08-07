@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   DollarSign,
+  ShoppingBag,
   Users,
   AlertCircle,
   TrendingUp,

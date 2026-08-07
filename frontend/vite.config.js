@@ -29,8 +29,6 @@ export default defineConfig({
           'vendor-router': ['react-router-dom'],
           // Icons - large library
           'vendor-icons': ['lucide-react'],
-          // Alerts
-          'vendor-swal': ['sweetalert2'],
           // Admin pages - only loaded when admin visits
           'admin': [
             './src/pages/admin/AdminDashboard.jsx',
@@ -50,4 +48,3 @@ export default defineConfig({
     },
   },
 });
-

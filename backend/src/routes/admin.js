@@ -11,6 +11,7 @@ import { protect, adminOnly } from '../middleware/auth.js';
 import { upload } from '../middleware/upload.js';
 import { enrichProduct } from '../utils/pricing.js';
 import { sendOrderReceipt } from '../services/email.js';
+import { invalidateCategoryServerCache } from './categories.js';
 
 const router = express.Router();
 router.use(protect, adminOnly);
@@ -49,7 +50,7 @@ router.get('/analytics', async (_req, res) => {
           { $match: { status: { $in: ['paid', 'approved', 'shipped'] } } },
           { $group: { _id: null, total: { $sum: '$total' } } },
         ]),
-        Order.find().populate('user', 'name email').sort({ createdAt: -1 }).limit(5),
+        Order.find({ status: { $ne: 'pending_payment' } }).populate('user', 'name email').sort({ createdAt: -1 }).limit(5),
         Order.aggregate([
           { $match: { status: { $in: ['paid', 'approved', 'shipped'] } } },
           { $unwind: '$items' },
@@ -320,6 +321,7 @@ router.post('/categories', upload.single('image'), async (req, res) => {
       category.imageContentType = req.file.mimetype;
     }
     await category.save();
+    invalidateCategoryServerCache();
 
     const obj = category.toObject();
     const v = category.updatedAt ? category.updatedAt.getTime() : Date.now();
@@ -349,6 +351,7 @@ router.put('/categories/:id', upload.single('image'), async (req, res) => {
     }
     category.updatedAt = new Date();
     await category.save();
+    invalidateCategoryServerCache();
 
     const obj = category.toObject();
     const v = category.updatedAt ? category.updatedAt.getTime() : Date.now();
@@ -367,6 +370,7 @@ router.delete('/categories/:id', async (req, res) => {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
     if (!category) return res.status(404).json({ message: 'Category not found' });
+    invalidateCategoryServerCache();
     res.json({ message: 'Category deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -376,7 +380,7 @@ router.delete('/categories/:id', async (req, res) => {
 /* ─── ORDERS ─────────────────────────────────────────────────────── */
 router.get('/orders', async (_req, res) => {
   try {
-    const orders = await Order.find()
+    const orders = await Order.find({ status: { $ne: 'pending_payment' } })
       .populate('user', 'name email phone')
       .populate('items.product', 'updatedAt')
       .sort({ createdAt: -1 });

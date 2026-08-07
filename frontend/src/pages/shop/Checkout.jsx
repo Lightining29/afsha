@@ -10,6 +10,29 @@ import { toastError } from '../../utils/toast.js';
 import './Checkout.css';
 import '../auth/Auth.css';
 
+const RAZORPAY_SDK_URL = 'https://checkout.razorpay.com/v1/checkout.js';
+
+function loadRazorpaySdk() {
+  if (window.Razorpay) return Promise.resolve();
+
+  const existingScript = document.querySelector(`script[src="${RAZORPAY_SDK_URL}"]`);
+  if (existingScript) {
+    return new Promise((resolve, reject) => {
+      existingScript.addEventListener('load', resolve, { once: true });
+      existingScript.addEventListener('error', () => reject(new Error('Razorpay payment SDK failed to load.')), { once: true });
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = RAZORPAY_SDK_URL;
+    script.async = true;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('Razorpay payment SDK failed to load.'));
+    document.head.appendChild(script);
+  });
+}
+
 export default function CheckoutPage() {
   const { items, cartTotal, clearCart } = useCart();
   const { user } = useAuth();
@@ -58,9 +81,11 @@ export default function CheckoutPage() {
     );
   }
 
-  const openRazorpay = (result) => {
-    if (!window.Razorpay) {
-      const msg = 'Razorpay payment SDK failed to load. Please refresh the page or check your connection.';
+  const openRazorpay = async (result) => {
+    try {
+      await loadRazorpaySdk();
+    } catch (err) {
+      const msg = err.message || 'Razorpay payment SDK failed to load. Please refresh the page or check your connection.';
       setError(msg);
       toastError('Payment failed', msg);
       setLoading(false);
@@ -77,12 +102,15 @@ export default function CheckoutPage() {
       prefill: { name: form.fullName, email: form.email, contact: form.phone },
       handler: async (response) => {
         try {
-          await verifyPayment(result.orderId, {
+          const verified = await verifyPayment({
+            razorpayOrderId: result.razorpayOrderId,
             razorpayPaymentId: response.razorpay_payment_id,
             razorpaySignature: response.razorpay_signature,
+            items: items.map((item) => ({ productId: item._id, quantity: item.quantity })),
+            shippingAddress: form,
           });
           clearCart();
-          navigate(`/checkout/success?orderId=${result.orderId}`);
+          navigate(`/checkout/success?orderId=${verified.orderId}`);
         } catch (err) {
           const msg = err.message || 'Payment verification failed.';
           setError(msg);
@@ -113,7 +141,7 @@ export default function CheckoutPage() {
         quantity: i.quantity,
       }));
       const result = await checkout(payload, form);
-      openRazorpay(result);
+      await openRazorpay(result);
     } catch (err) {
       if (err.status === 401) {
         toastError('Session Expired', 'Please log in to complete your purchase.');

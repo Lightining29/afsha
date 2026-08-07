@@ -52,7 +52,7 @@ async function apiUpload(path, method, formData) {
 /* ── Public ── */
 // In-memory cache for categories — avoids re-fetching on every navigation
 const _cache = { categories: null, categoriesAt: 0 };
-const CATEGORY_TTL = 60_000; // 60 seconds
+const CATEGORY_TTL = 5 * 60_000; // Categories rarely change
 
 export async function fetchCategories() {
   const now = Date.now();
@@ -153,10 +153,10 @@ export async function removeFromWishlist(productId) {
 export async function checkout(items, shippingAddress) {
   return apiFetch('/orders/checkout', { method: 'POST', body: JSON.stringify({ items, shippingAddress }) });
 }
-export async function verifyPayment(orderId, { razorpayPaymentId, razorpaySignature }) {
-  return apiFetch(`/orders/verify/${orderId}`, {
+export async function verifyPayment(payment) {
+  return apiFetch('/orders/verify', {
     method: 'POST',
-    body: JSON.stringify({ razorpayPaymentId, razorpaySignature }),
+    body: JSON.stringify(payment),
   });
 }
 export async function fetchMyOrders() { return apiFetch('/orders/my'); }

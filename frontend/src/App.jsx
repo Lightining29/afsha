@@ -1,32 +1,33 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { HomeLayout } from './pages/shop/Home';
-import Cart from './pages/shop/Cart';
-import ProductDetail from './pages/shop/ProductDetail';
-import CategoryProducts from './pages/shop/CategoryProducts';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import VerifyOtp from './pages/auth/VerifyOtp';
-import Checkout from './pages/shop/Checkout';
-import CheckoutSuccess from './pages/shop/CheckoutSuccess';
-import AccountLayout from './pages/account/AccountLayout';
-import OrderHistory from './pages/account/OrderHistory';
-import AccountSettings from './pages/account/AccountSettings';
-import AdminLayout from './pages/admin/AdminLayout';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminOrders from './pages/admin/AdminOrders';
-import AdminProducts from './pages/admin/AdminProducts';
-import AdminProductForm from './pages/admin/AdminProductForm';
-import AdminCategories from './pages/admin/AdminCategories';
-import AdminContacts from './pages/admin/AdminContacts';
-import AdminStock from './pages/admin/AdminStock';
-import NotFound from './pages/NotFound';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import LoginModal from './components/LoginModal';
 import { useAuth } from './context/AuthContext';
 import './pages/shop/Home.css';
+
+const Cart = lazy(() => import('./pages/shop/Cart'));
+const ProductDetail = lazy(() => import('./pages/shop/ProductDetail'));
+const CategoryProducts = lazy(() => import('./pages/shop/CategoryProducts'));
+const Login = lazy(() => import('./pages/auth/Login'));
+const Register = lazy(() => import('./pages/auth/Register'));
+const VerifyOtp = lazy(() => import('./pages/auth/VerifyOtp'));
+const Checkout = lazy(() => import('./pages/shop/Checkout'));
+const CheckoutSuccess = lazy(() => import('./pages/shop/CheckoutSuccess'));
+const AccountLayout = lazy(() => import('./pages/account/AccountLayout'));
+const OrderHistory = lazy(() => import('./pages/account/OrderHistory'));
+const AccountSettings = lazy(() => import('./pages/account/AccountSettings'));
+const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminOrders = lazy(() => import('./pages/admin/AdminOrders'));
+const AdminProducts = lazy(() => import('./pages/admin/AdminProducts'));
+const AdminProductForm = lazy(() => import('./pages/admin/AdminProductForm'));
+const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
+const AdminContacts = lazy(() => import('./pages/admin/AdminContacts'));
+const AdminStock = lazy(() => import('./pages/admin/AdminStock'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function App() {
 
   return (
     <>
+      <Suspense fallback={<div className="loading-screen"><div className="loading-spinner" /></div>}>
       <Routes>
         <Route path="/" element={<HomeLayout />} />
 
@@ -112,6 +114,7 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
     </>
   );
