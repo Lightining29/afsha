@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { HomeLayout } from './pages/shop/Home';
 import Cart from './pages/shop/Cart';
 import ProductDetail from './pages/shop/ProductDetail';
@@ -9,10 +9,8 @@ import Register from './pages/auth/Register';
 import VerifyOtp from './pages/auth/VerifyOtp';
 import Checkout from './pages/shop/Checkout';
 import CheckoutSuccess from './pages/shop/CheckoutSuccess';
-import RazorpayCheckoutTest from './pages/shop/RazorpayCheckoutTest';
 import AccountLayout from './pages/account/AccountLayout';
 import OrderHistory from './pages/account/OrderHistory';
-import WishlistPage from './pages/account/WishlistPage';
 import AccountSettings from './pages/account/AccountSettings';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -22,14 +20,6 @@ import AdminProductForm from './pages/admin/AdminProductForm';
 import AdminCategories from './pages/admin/AdminCategories';
 import AdminContacts from './pages/admin/AdminContacts';
 import AdminStock from './pages/admin/AdminStock';
-import AdminReviews from './pages/admin/AdminReviews';
-import AdminOfflineSale from './pages/admin/AdminOfflineSale';
-import AdminFlashSale from './pages/admin/AdminFlashSale';
-import AdminPromoBanners from './pages/admin/AdminPromoBanners';
-import Contact from './pages/Contact';
-import BlogList from './pages/blog/BlogList';
-import BlogDetail from './pages/blog/BlogDetail';
-import LocalSEO from './pages/shop/LocalSEO';
 import NotFound from './pages/NotFound';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Navbar from './components/layout/Navbar';
@@ -37,10 +27,6 @@ import Footer from './components/layout/Footer';
 import LoginModal from './components/LoginModal';
 import { useAuth } from './context/AuthContext';
 import './pages/shop/Home.css';
-
-function RevealShell({ children }) {
-  return <div>{children}</div>;
-}
 
 function App() {
   const location = useLocation();
@@ -54,59 +40,32 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<RevealShell><HomeLayout /></RevealShell>} />
+        <Route path="/" element={<HomeLayout />} />
+
         <Route
           path="/cart"
           element={
             <>
               <Navbar />
-              <RevealShell><Cart /></RevealShell>
+              <Cart />
               <Footer />
             </>
           }
         />
-        <Route
-          path="/product/:slug"
-          element={<RevealShell><ProductDetail /></RevealShell>}
-        />
-        <Route
-          path="/products/:slug"
-          element={<RevealShell><ProductDetail /></RevealShell>}
-        />
-        <Route
-          path="/category/:categorySlug"
-          element={<RevealShell><CategoryProducts /></RevealShell>}
-        />
-        <Route
-          path="/blogs"
-          element={<RevealShell><BlogList /></RevealShell>}
-        />
-        <Route
-          path="/blog/:slug"
-          element={<RevealShell><BlogDetail /></RevealShell>}
-        />
-        <Route
-          path="/locations/:city"
-          element={<RevealShell><LocalSEO /></RevealShell>}
-        />
-        <Route
-          path="/contact"
-          element={
-            <>
-              <Navbar />
-              <RevealShell><Contact /></RevealShell>
-              <Footer />
-            </>
-          }
-        />
+
+        <Route path="/product/:slug" element={<ProductDetail />} />
+        <Route path="/products/:slug" element={<ProductDetail />} />
+        <Route path="/category/:categorySlug" element={<CategoryProducts />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
+
         <Route
           path="/checkout"
           element={
             <ProtectedRoute>
-              <RevealShell><Checkout /></RevealShell>
+              <Checkout />
             </ProtectedRoute>
           }
         />
@@ -114,31 +73,28 @@ function App() {
           path="/checkout/success"
           element={
             <ProtectedRoute>
-              <RevealShell><CheckoutSuccess /></RevealShell>
+              <CheckoutSuccess />
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/razorpay-checkout"
-          element={<RevealShell><RazorpayCheckoutTest /></RevealShell>}
-        />
+
         <Route
           path="/account"
           element={
             <ProtectedRoute>
-              <RevealShell><AccountLayout /></RevealShell>
+              <AccountLayout />
             </ProtectedRoute>
           }
         >
           <Route index element={<OrderHistory />} />
-          <Route path="wishlist" element={<WishlistPage />} />
           <Route path="settings" element={<AccountSettings />} />
         </Route>
+
         <Route
           path="/admin"
           element={
             <ProtectedRoute adminOnly>
-              <RevealShell><AdminLayout /></RevealShell>
+              <AdminLayout />
             </ProtectedRoute>
           }
         >
@@ -152,11 +108,8 @@ function App() {
           <Route path="categories/new" element={<AdminCategories />} />
           <Route path="categories/:id/edit" element={<AdminCategories />} />
           <Route path="contacts" element={<AdminContacts />} />
-          <Route path="reviews" element={<AdminReviews />} />
-          <Route path="offline-sale" element={<AdminOfflineSale />} />
-          <Route path="flash-sale" element={<AdminFlashSale />} />
-          <Route path="promo-banners" element={<AdminPromoBanners />} />
         </Route>
+
         <Route path="*" element={<NotFound />} />
       </Routes>
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
@@ -165,4 +118,3 @@ function App() {
 }
 
 export default App;
-
