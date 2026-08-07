@@ -3,7 +3,6 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
   Star,
-  Heart,
   Truck,
   RefreshCw,
   Shield,
@@ -25,8 +24,6 @@ import {
   fetchProducts,
   formatPrice,
   getProductPrice,
-  addToWishlist,
-  removeFromWishlist,
 } from '../../api';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
@@ -48,7 +45,7 @@ const sampleFaqs = [
 export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { addToCart, toggleWishlist, isInWishlist } = useCart();
+  const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const [product, setProduct]     = useState(null);
   const [similar, setSimilar]     = useState([]);
@@ -112,7 +109,6 @@ export default function ProductDetail() {
 
   const finalPrice = getProductPrice(product);
   const discount = product.discountPercent > 0 ? product.price - finalPrice : 0;
-  const wished = isInWishlist(product._id);
 
   const gallery = Array.isArray(product.images) && product.images.length > 0
     ? product.images
@@ -211,14 +207,6 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              <div className="product-actions-top">
-                <button
-                  className={`wishlist-icon-btn ${wished ? 'active' : ''}`}
-                  onClick={() => toggleWishlist(product)}
-                >
-                  <Heart size={22} fill={wished ? 'currentColor' : 'none'} />
-                </button>
-              </div>
             </div>
 
             {/* Price Box */}

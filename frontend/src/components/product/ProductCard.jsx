@@ -1,29 +1,12 @@
-import { Heart, Star, Zap } from 'lucide-react';
+import { Star, Zap } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
-import { formatPrice, getProductPrice, addToWishlist, removeFromWishlist } from '../../api';
-import { toastWishlist } from '../../utils/toast.js';
+import { formatPrice, getProductPrice } from '../../api';
 import './ProductCard.css';
 
-export default function ProductCard({ product, onWishlistRemove }) {
-  const { toggleWishlist, isInWishlist } = useCart();
-  const { isAuthenticated, setShowLoginModal } = useAuth();
-  const navigate    = useNavigate();
-  const wished      = isInWishlist(product._id);
-  const finalPrice  = getProductPrice(product);
+export default function ProductCard({ product }) {
+  const navigate   = useNavigate();
+  const finalPrice = getProductPrice(product);
   const hasDiscount = product.discountPercent > 0;
-
-  const handleWishlist = async () => {
-    if (!isAuthenticated) { setShowLoginModal(true); return; }
-    toggleWishlist(product);
-    toastWishlist(!wished);
-    try {
-      if (wished) { await removeFromWishlist(product._id); onWishlistRemove?.(); }
-      else        { await addToWishlist(product._id); }
-    } catch { toggleWishlist(product); }
-  };
-
 
   return (
     <Link to={`/products/${product.slug}`} className="product-card-link">
@@ -32,15 +15,6 @@ export default function ProductCard({ product, onWishlistRemove }) {
         {/* ── Product Image ─────────────────────────── */}
         <div className="product-image-wrap">
           <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
-
-
-          <button
-            className={`wishlist-btn ${wished ? 'active' : ''}`}
-            onClick={(e) => { e.preventDefault(); handleWishlist(); }}
-            aria-label="Add to wishlist"
-          >
-            <Heart size={18} fill={wished ? 'currentColor' : 'none'} />
-          </button>
         </div>
 
         {/* ── Product Info ──────────────────────────── */}

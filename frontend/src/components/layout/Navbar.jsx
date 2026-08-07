@@ -6,11 +6,8 @@ import { toastSuccess } from '../../utils/toast.js';
 import './Navbar.css';
 
 const navLinks = [
-  { label: 'Home', href: '#home' },
-  { label: 'Shop', href: '#bestsellers' },
+  { label: 'Home', href: '/' },
   { label: 'Categories', href: '#categories' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '/contact' },
 ];
 
 export default function Navbar() {

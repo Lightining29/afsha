@@ -3,11 +3,10 @@
    ========================================================================== */
 
 .categories-section {
-  padding: 86px 0;
-  background: linear-gradient(180deg, #FFF0F4 0%, #FFFFFF 50%, #FFF5F8 100%);
-  position: relative;
-  border-top: 1px solid rgba(255, 214, 224, 0.6);
-  border-bottom: 1px solid rgba(255, 214, 224, 0.6);
+  padding: 64px 0;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 
