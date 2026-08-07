@@ -10,7 +10,6 @@
   font-size: 0.9rem;
   color: var(--text-muted);
   margin-bottom: 24px;
-  transition: color 0.2s;
 }
 
 .back-link:hover {
@@ -95,7 +94,6 @@
   align-items: center;
   justify-content: center;
   color: var(--text-dark);
-  transition: background 0.2s;
 }
 
 .cart-item-qty button:hover {
@@ -110,7 +108,6 @@
 
 .cart-item-remove {
   color: var(--text-light);
-  transition: color 0.2s;
 }
 
 .cart-item-remove:hover {

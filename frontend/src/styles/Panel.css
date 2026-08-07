@@ -39,7 +39,6 @@
   font-size: 0.92rem;
   color: #334155;
   font-weight: 600;
-  transition: all 0.15s ease;
   text-align: left;
 }
 
@@ -409,7 +408,6 @@
     width: 270px;
     max-width: 85vw;
     transform: translateX(-100%);
-    transition: transform 0.25s ease;
     z-index: 1050;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
