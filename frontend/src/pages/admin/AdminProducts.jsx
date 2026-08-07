@@ -66,7 +66,12 @@ export default function AdminProducts() {
               <tr key={p._id}>
                 <td data-label="Product" data-full>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <img src={p.image} alt={p.name} style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover' }} />
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover', background: '#f1f5f9' }}
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
                     {p.name}
                   </div>
                 </td>
