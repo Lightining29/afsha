@@ -9,6 +9,30 @@ import Review from '../models/Review.js';
 const router = express.Router();
 
 /**
+ * Safely send binary image buffer to client.
+ * Converts BSON Binary / ArrayBuffer objects to standard Node Buffer so Express
+ * sends raw binary data instead of serializing to JSON.
+ */
+function sendBuffer(res, data, contentType) {
+  if (!data) return res.status(404).json({ message: 'Image not found' });
+  let buf;
+  if (Buffer.isBuffer(data)) {
+    buf = data;
+  } else if (data.buffer && Buffer.isBuffer(data.buffer)) {
+    buf = data.buffer;
+  } else if (data.buffer && (data.buffer instanceof ArrayBuffer || ArrayBuffer.isView(data.buffer))) {
+    buf = Buffer.from(data.buffer);
+  } else if (Array.isArray(data)) {
+    buf = Buffer.from(data);
+  } else {
+    buf = Buffer.from(data);
+  }
+  res.set('Content-Type', contentType || 'image/jpeg');
+  res.set('Cache-Control', 'public, max-age=86400');
+  res.send(buf);
+}
+
+/**
  * GET /api/images/product/:id
  * Serve a product's primary (cover) binary image.
  */
@@ -17,14 +41,18 @@ router.get('/product/:id', async (req, res) => {
     const product = await Product.findById(req.params.id)
       .select({ imageData: 1, imageContentType: 1, images: { $slice: 1 } })
       .lean();
-    const image = product?.imageData
-      ? { data: product.imageData, contentType: product.imageContentType }
-      : product?.images?.[0];
-    if (!image?.data) {
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    const slot = product.images?.[0]?.data
+      ? { data: product.images[0].data, contentType: product.images[0].contentType }
+      : product.imageData
+        ? { data: product.imageData, contentType: product.imageContentType }
+        : null;
+
+    if (!slot?.data) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    res.set('Content-Type', image.contentType || 'image/jpeg');
-    res.send(image.data);
+    sendBuffer(res, slot.data, slot.contentType);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -40,20 +68,23 @@ router.get('/product/:id/:index', async (req, res) => {
     if (Number.isNaN(idx) || idx < 0) {
       return res.status(400).json({ message: 'Invalid image index' });
     }
-    const product = idx === 0
-      ? await Product.findById(req.params.id).select({ imageData: 1, imageContentType: 1, images: { $slice: 1 } }).lean()
-      : await Product.findById(req.params.id).select({ images: { $slice: [idx, 1] } }).lean();
+    const product = await Product.findById(req.params.id)
+      .select({ imageData: 1, imageContentType: 1, images: { $slice: [idx, 1] } })
+      .lean();
     if (!product) return res.status(404).json({ message: 'Product not found' });
 
-    const slot = idx === 0
-      ? (product.imageData ? { data: product.imageData, contentType: product.imageContentType } : product.images?.[0])
-      : product.images?.[0];
+    let slot = product.images?.[0]?.data
+      ? { data: product.images[0].data, contentType: product.images[0].contentType }
+      : null;
 
-    if (!slot || !slot.data) {
+    if (!slot && idx === 0 && product.imageData) {
+      slot = { data: product.imageData, contentType: product.imageContentType };
+    }
+
+    if (!slot?.data) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    res.set('Content-Type', slot.contentType || 'image/jpeg');
-    res.send(slot.data);
+    sendBuffer(res, slot.data, slot.contentType);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -68,8 +99,7 @@ router.get('/banner/hero', async (_req, res) => {
     if (!banner || !banner.imageData) {
       return res.status(404).json({ message: 'No hero image set' });
     }
-    res.set('Content-Type', banner.imageContentType || 'image/jpeg');
-    res.send(banner.imageData);
+    sendBuffer(res, banner.imageData, banner.imageContentType);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -84,8 +114,7 @@ router.get('/banner/promo', async (_req, res) => {
     if (!banner || !banner.promoImageData) {
       return res.status(404).json({ message: 'No promo image set' });
     }
-    res.set('Content-Type', banner.promoImageContentType || 'image/jpeg');
-    res.send(banner.promoImageData);
+    sendBuffer(res, banner.promoImageData, banner.promoImageContentType);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -100,8 +129,7 @@ router.get('/promo-banner/:id', async (req, res) => {
     if (!banner || !banner.imageData) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    res.set('Content-Type', banner.imageContentType || 'image/jpeg');
-    res.send(banner.imageData);
+    sendBuffer(res, banner.imageData, banner.imageContentType);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -116,8 +144,7 @@ router.get('/category/:id', async (req, res) => {
     if (!category || !category.imageData) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    res.set('Content-Type', category.imageContentType || 'image/jpeg');
-    res.send(category.imageData);
+    sendBuffer(res, category.imageData, category.imageContentType);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -132,8 +159,7 @@ router.get('/user/:id', async (req, res) => {
     if (!user || !user.photoData) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    res.set('Content-Type', user.photoContentType || 'image/jpeg');
-    res.send(user.photoData);
+    sendBuffer(res, user.photoData, user.photoContentType);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -155,8 +181,7 @@ router.get('/review/:id/:index', async (req, res) => {
     if (!slot || !slot.data) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    res.set('Content-Type', slot.contentType || 'image/jpeg');
-    res.send(slot.data);
+    sendBuffer(res, slot.data, slot.contentType);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

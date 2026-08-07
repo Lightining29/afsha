@@ -155,7 +155,16 @@ export default function ProductDetail() {
                       onClick={() => setActiveImage(i)}
                       aria-label={`View image ${i + 1}`}
                     >
-                      <img src={src} alt={`${product.name} view ${i + 1}`} decoding="async" />
+                      <img
+                        src={src}
+                        alt={`${product.name} view ${i + 1}`}
+                        decoding="async"
+                        onError={(e) => {
+                          if (product.image && e.target.src !== product.image) {
+                            e.target.src = product.image;
+                          }
+                        }}
+                      />
                       <span className="thumb-idx">{i + 1}</span>
                     </button>
                   ))}
@@ -171,6 +180,11 @@ export default function ProductDetail() {
                     className={`product-image-main ${is360Mode ? 'rotating-360' : ''}`}
                     fetchpriority="high"
                     decoding="async"
+                    onError={(e) => {
+                      if (product.image && e.target.src !== product.image) {
+                        e.target.src = product.image;
+                      }
+                    }}
                   />
 
                   {/* Single Sleek Discount Badge (if applicable) */}
