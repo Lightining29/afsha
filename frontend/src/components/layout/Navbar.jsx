@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, User, ShoppingBag, Menu, X } from 'lucide-react';
-import { useCart } from '../../context/CartContext';
+import { Search, User, Menu, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { toastSuccess } from '../../utils/toast.js';
 import './Navbar.css';
@@ -15,7 +14,6 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const { cartCount } = useCart();
   const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -127,10 +125,6 @@ export default function Navbar() {
             )}
           </div>
 
-          <Link to="/cart" className="icon-btn cart-btn" aria-label="Cart">
-            <ShoppingBag size={19} />
-            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-          </Link>
 
           <button
             className="icon-btn menu-toggle"

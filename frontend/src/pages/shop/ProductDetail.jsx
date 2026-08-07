@@ -4,13 +4,11 @@ import { Helmet } from 'react-helmet-async';
 import {
   Star,
   Heart,
-  ShoppingBag,
   Truck,
   RefreshCw,
   Shield,
   Minus,
   Plus,
-  Check,
   Share2,
   Sparkles,
   Award,
@@ -56,9 +54,6 @@ export default function ProductDetail() {
   const [similar, setSimilar]     = useState([]);
   const [alsoLike, setAlsoLike]   = useState([]);
   const [loading, setLoading]     = useState(true);
-  const [quantity, setQuantity]   = useState(1);
-  const [cartAdded, setCartAdded] = useState(false);
-  const [bundleAdded, setBundleAdded] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [is360Mode, setIs360Mode] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
@@ -127,23 +122,8 @@ export default function ProductDetail() {
   const activeIdx = Math.min(activeImage, gallery.length - 1);
   const mainImage = gallery[activeIdx] || product.image;
 
-  const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product);
-    }
-    setCartAdded(true);
-    setTimeout(() => setCartAdded(false), 2000);
-  };
-
-  const handleAddBundleToCart = () => {
-    addToCart(product);
-    if (similar[0]) addToCart(similar[0]);
-    setBundleAdded(true);
-    setTimeout(() => setBundleAdded(false), 2000);
-  };
-
   const handleBuyNow = () => {
-    handleAddToCart();
+    addToCart(product);
     navigate('/checkout');
   };
 
@@ -262,13 +242,8 @@ export default function ProductDetail() {
             {/* Action Buttons */}
             <div className="actions-section">
               <div className="action-buttons-group">
-                <button className={`btn-add-to-cart ${cartAdded ? 'added' : ''}`} onClick={handleAddToCart}>
-                  {cartAdded ? <Check size={20} /> : <ShoppingBag size={20} />}
-                  {cartAdded ? 'Added to Cart!' : 'Add to Cart'}
-                </button>
-
                 <button className="btn-buy-now-glow" onClick={handleBuyNow}>
-                  One-Click Buy Now
+                  Buy Now
                 </button>
               </div>
             </div>
