@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import {
   fetchProduct,
-  fetchProducts,
   formatPrice,
   getProductPrice,
 } from '../../api';
@@ -29,8 +28,6 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-
-import ProductCard from '../../components/product/ProductCard';
 
 import { toastWishlist, toastSuccess } from '../../utils/toast.js';
 import './ProductDetail.css';
@@ -48,8 +45,6 @@ export default function ProductDetail() {
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const [product, setProduct]     = useState(null);
-  const [similar, setSimilar]     = useState([]);
-  const [alsoLike, setAlsoLike]   = useState([]);
   const [loading, setLoading]     = useState(true);
   const [activeImage, setActiveImage] = useState(0);
   const [is360Mode, setIs360Mode] = useState(false);
@@ -66,15 +61,6 @@ export default function ProductDetail() {
         if (!mounted) return;
         setProduct(data);
 
-        const catId = data.category?._id;
-        if (catId) {
-          try {
-            const list = await fetchProducts({ category: catId, limit: '10' });
-            const others = (Array.isArray(list) ? list : []).filter((p) => p._id !== data._id);
-            if (mounted) setSimilar(others.slice(0, 4));
-            if (mounted) setAlsoLike(others.slice(4, 8));
-          } catch {}
-        }
       })
       .catch(() => { if (mounted) navigate('/'); })
       .finally(() => { if (mounted) setLoading(false); });
@@ -300,21 +286,6 @@ export default function ProductDetail() {
             )}
           </div>
         </div>
-
-        {/* Related Products Section (Grid - No Horizontal Scrolling) */}
-        {similar.length > 0 && (
-          <div className="related-products-section" style={{ marginTop: '48px', marginBottom: '40px' }}>
-            <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '24px', fontSize: '1.5rem', fontWeight: 800 }}>
-              Related Products & Accessories
-            </h2>
-            <div className="products-grid">
-              {similar.map((p) => (
-                <ProductCard key={p._id} product={p} />
-              ))}
-            </div>
-          </div>
-        )}
-
 
       </div>
 
