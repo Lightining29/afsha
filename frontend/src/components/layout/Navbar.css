@@ -1,5 +1,5 @@
 /* =========================================
-   NAVBAR — Clean Simple White Design
+   NAVBAR — Clean Black & White Design
    ========================================= */
 
 /* ---- Base navbar ---- */
@@ -57,7 +57,7 @@
 }
 
 .nav-links a:hover {
-  color: #e11d48;
+  color: #0f172a;
   background: #f8fafc;
 }
 
@@ -86,9 +86,9 @@
 }
 
 .icon-btn:hover {
-  color: #e11d48;
+  color: #0f172a;
   background: #ffffff;
-  border-color: #cbd5e1;
+  border-color: #0f172a;
 }
 
 /* ---- Expandable search ---- */
@@ -136,7 +136,7 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #e11d48;
+  background: #0f172a;
   color: #fff;
   font-size: 0.65rem;
   font-weight: 700;
@@ -198,7 +198,7 @@
 .user-dropdown a:hover,
 .user-dropdown button:hover {
   background: #f8fafc;
-  color: #e11d48;
+  color: #0f172a;
 }
 
 /* ---- Responsive ---- */
@@ -234,7 +234,7 @@
 
   .nav-links a:hover,
   .nav-links a:active {
-    background: #e11d48;
+    background: #0f172a;
     color: #ffffff;
   }
 

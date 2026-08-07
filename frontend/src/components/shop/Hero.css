@@ -51,7 +51,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #e11d48;
+  background: #0f172a;
 }
 
 .hero-title {
@@ -64,7 +64,7 @@
 }
 
 .hero-title-highlight {
-  color: #e11d48;
+  color: #0f172a;
 }
 
 .hero-desc {
@@ -98,12 +98,12 @@
 }
 
 .hero-cta-primary {
-  background: #e11d48;
+  background: #0f172a;
   color: #ffffff;
 }
 
 .hero-cta-primary:hover {
-  background: #be123c;
+  background: #1e293b;
 }
 
 .hero-cta-ghost {
@@ -212,7 +212,7 @@
   left: 14px;
   padding: 4px 10px;
   border-radius: 6px;
-  background: #e11d48;
+  background: #0f172a;
   color: #fff;
   font-size: 0.72rem;
   font-weight: 700;
@@ -251,7 +251,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #e11d48;
+  color: #0f172a;
   margin: 0 0 4px;
 }
 
