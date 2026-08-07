@@ -15,14 +15,17 @@ const router = express.Router();
 router.get('/product/:id', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
-      .select('imageData imageContentType')
+      .select({ imageData: 1, imageContentType: 1, images: { $slice: 1 } })
       .lean();
-    if (!product || !product.imageData) {
+    const image = product?.imageData
+      ? { data: product.imageData, contentType: product.imageContentType }
+      : product?.images?.[0];
+    if (!image?.data) {
       return res.status(404).json({ message: 'Image not found' });
     }
-    res.set('Content-Type', product.imageContentType || 'image/jpeg');
+    res.set('Content-Type', image.contentType || 'image/jpeg');
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
-    res.send(product.imageData);
+    res.send(image.data);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -39,12 +42,12 @@ router.get('/product/:id/:index', async (req, res) => {
       return res.status(400).json({ message: 'Invalid image index' });
     }
     const product = idx === 0
-      ? await Product.findById(req.params.id).select('imageData imageContentType').lean()
+      ? await Product.findById(req.params.id).select({ imageData: 1, imageContentType: 1, images: { $slice: 1 } }).lean()
       : await Product.findById(req.params.id).select({ images: { $slice: [idx, 1] } }).lean();
     if (!product) return res.status(404).json({ message: 'Product not found' });
 
     const slot = idx === 0
-      ? (product.imageData ? { data: product.imageData, contentType: product.imageContentType } : null)
+      ? (product.imageData ? { data: product.imageData, contentType: product.imageContentType } : product.images?.[0])
       : product.images?.[0];
 
     if (!slot || !slot.data) {

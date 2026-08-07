@@ -1,6 +1,20 @@
 import { compressImage } from '../utils/imageCompressor.js';
 
 const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://127.0.0.1:5000/api' : '/api');
+const API_ORIGIN = API_BASE.startsWith('http') ? new URL(API_BASE).origin : '';
+
+// API payloads use relative image paths. Resolve them to the API host when a
+// separately hosted frontend is configured through VITE_API_URL.
+function resolveAssetUrls(value) {
+  if (typeof value === 'string') {
+    return API_ORIGIN && value.startsWith('/api/') ? `${API_ORIGIN}${value}` : value;
+  }
+  if (Array.isArray(value)) return value.map(resolveAssetUrls);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, resolveAssetUrls(item)]));
+  }
+  return value;
+}
 
 function getToken() {
   return localStorage.getItem('glowora_token');
@@ -27,7 +41,7 @@ async function apiFetch(path, options = {}) {
     error.data = data;
     throw error;
   }
-  return data;
+  return resolveAssetUrls(data);
 }
 
 /**
