@@ -57,46 +57,6 @@
   transform: scale(1.05);
 }
 
-/* Badges Stack */
-.product-badges-stack {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  z-index: 2;
-  pointer-events: none;
-  max-width: calc(100% - 44px);
-}
-
-.product-badge-chip {
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 3px 8px;
-  border-radius: 12px;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.badge-discount { background: #ff4757; color: #ffffff; }
-.badge-trending { background: #ff7f50; color: #ffffff; }
-.badge-bestseller { background: #ffa500; color: #ffffff; }
-.badge-new { background: #2ed573; color: #ffffff; }
-.badge-limited { background: #a55eea; color: #ffffff; }
-.badge-toprated { background: #1e90ff; color: #ffffff; }
-.badge-premium { background: #333333; color: #ffffff; }
-.badge-natural { background: #20bf6b; color: #ffffff; }
-.badge-warranty { background: #0fb9b1; color: #ffffff; }
-.badge-flash { background: #eb3b5a; color: #ffffff; }
-.badge-vip { background: #8854d0; color: #ffffff; }
-.badge-custom { background: #4b6584; color: #ffffff; }
 
 /* Wishlist Button */
 .wishlist-btn {

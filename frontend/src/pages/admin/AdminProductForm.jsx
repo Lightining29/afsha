@@ -294,60 +294,10 @@ export default function AdminProductForm() {
                 <label>Discount (%)</label>
                 <input type="number" min="0" max="100" value={form.discountPercent} onChange={update('discountPercent')} />
               </div>
-              <div className="apf-group">
-                <label>Preset Product Badge</label>
-                <select
-                  value={form.badge}
-                  onChange={(e) => setForm((prev) => ({ ...prev, badge: e.target.value }))}
-                >
-                  <option value="">Auto / System Default</option>
-                  <option value="Top Rated">⭐ Top Rated</option>
-                  <option value="Trending">🔥 Trending</option>
-                  <option value="Bestseller">⭐ Bestseller</option>
-                  <option value="New Arrival">✨ New Arrival</option>
-                  <option value="Limited Edition">💎 Limited Edition</option>
-                  <option value="Flash Deal">⚡ Flash Deal</option>
-                  <option value="Natural Care">🍃 Natural Care</option>
-                  <option value="1-Year Warranty">🛡️ 1-Year Warranty</option>
-                  <option value="VIP Exclusive">👑 VIP Exclusive</option>
-                </select>
-              </div>
             </div>
 
-            <div className="apf-group" style={{ marginTop: 12 }}>
-              <label>Custom Badge Text (Optional)</label>
-              <input
-                type="text"
-                value={form.badge}
-                onChange={update('badge')}
-                placeholder="e.g. 50% Off Today, Organic Pure..."
-              />
-            </div>
-
-            <div className="apf-group" style={{ marginTop: 14 }}>
-              <label style={{ fontWeight: 800, color: '#E94057', fontSize: 13, marginBottom: 8, display: 'block' }}>
-                <Sparkles size={14} inline /> Extra Feature Badges
-              </label>
-              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-                <label className="apf-checkbox-label">
-                  <input type="checkbox" checked={form.isTrending} onChange={update('isTrending')} />
-                  <span>🔥 Trending</span>
-                </label>
-                <label className="apf-checkbox-label">
-                  <input type="checkbox" checked={form.bestseller} onChange={update('bestseller')} />
-                  <span>⭐ Bestseller</span>
-                </label>
-                <label className="apf-checkbox-label">
-                  <input type="checkbox" checked={form.isNewArrival} onChange={update('isNewArrival')} />
-                  <span>✨ New</span>
-                </label>
-                <label className="apf-checkbox-label">
-                  <input type="checkbox" checked={form.isLimitedEdition} onChange={update('isLimitedEdition')} />
-                  <span>💎 Limited</span>
-                </label>
-              </div>
-            </div>
           </div>
+
 
           {/* Right column — image upload (multiple) */}
           <div className="apf-image-col">
