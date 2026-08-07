@@ -29,17 +29,17 @@ export default function AdminLayout() {
 
   const sidebarClass = `panel-sidebar ${menuOpen ? 'open' : ''}`;
   const sidebarStyle = {
-    background: 'linear-gradient(180deg, #FFF0F5 0%, #FFD1DC 50%, #FFB7C5 100%)',
-    borderRight: '1px solid #F4ACB7',
-    boxShadow: '4px 0 24px rgba(244, 172, 183, 0.25)',
+    background: '#ffffff',
+    borderRight: '1px solid #e2e8f0',
+    boxShadow: '2px 0 10px rgba(0, 0, 0, 0.03)',
   };
-  const headerStyle = { borderColor: 'rgba(15, 23, 42, 0.15)' };
-  const navItemStyle = { color: '#0f172a', fontWeight: 700 };
+  const headerStyle = { borderBottom: '1px solid #e2e8f0' };
+  const navItemStyle = { color: '#334155', fontWeight: 600 };
 
   return (
-    <div className="panel-layout" style={{ minHeight: '100vh' }}>
+    <div className="panel-layout" style={{ minHeight: '100vh', background: '#f8fafc' }}>
       {/* Mobile top bar — hidden on desktop */}
-      <div className="admin-mobile-bar">
+      <div className="admin-mobile-bar" style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
         <button
           className="admin-menu-toggle"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -62,7 +62,7 @@ export default function AdminLayout() {
       <aside className={sidebarClass} style={sidebarStyle}>
         <div className="panel-sidebar-header" style={headerStyle}>
           <img src="/logo.png" alt="Afsha Enterprises" className="admin-sidebar-logo" />
-          <p style={{ color: '#0f172a', fontWeight: 800 }}>{user?.name}</p>
+          <p style={{ color: '#0f172a', fontWeight: 700 }}>{user?.name}</p>
         </div>
         <nav className="panel-nav">
           <NavLink to="/admin" end style={navItemStyle} onClick={() => setMenuOpen(false)}>
@@ -95,15 +95,6 @@ export default function AdminLayout() {
           <NavLink to="/admin/promo-banners" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <Image size={18} /> Promo Banners
           </NavLink>
-          <NavLink to="/admin/ai-banner-generator" style={navItemStyle} onClick={() => setMenuOpen(false)}>
-            <Sparkles size={18} color="#d97706" /> AI Banner Generator
-          </NavLink>
-          <NavLink to="/admin/ai-email-generator" style={navItemStyle} onClick={() => setMenuOpen(false)}>
-            <Mail size={18} color="#059669" /> AI Email Generator
-          </NavLink>
-          <NavLink to="/admin/ai-image-enhancer" style={navItemStyle} onClick={() => setMenuOpen(false)}>
-            <Image size={18} color="#e11d48" /> AI Image Enhancer
-          </NavLink>
           <NavLink to="/admin/products/new" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <PlusCircle size={18} /> Add Product
           </NavLink>
@@ -115,9 +106,10 @@ export default function AdminLayout() {
           </button>
         </nav>
       </aside>
-      <main className="panel-content">
+      <main className="panel-content" style={{ background: '#ffffff', padding: '24px' }}>
         <Outlet />
       </main>
     </div>
   );
 }
+

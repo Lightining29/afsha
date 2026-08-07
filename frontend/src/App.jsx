@@ -26,10 +26,6 @@ import AdminReviews from './pages/admin/AdminReviews';
 import AdminOfflineSale from './pages/admin/AdminOfflineSale';
 import AdminFlashSale from './pages/admin/AdminFlashSale';
 import AdminPromoBanners from './pages/admin/AdminPromoBanners';
-import AdminAIBannerGenerator from './pages/admin/AdminAIBannerGenerator';
-import AdminAIEmailGenerator from './pages/admin/AdminAIEmailGenerator';
-import AdminAIImageEnhancer from './pages/admin/AdminAIImageEnhancer';
-import AIChatbot from './components/AIChatbot';
 import Contact from './pages/Contact';
 import BlogList from './pages/blog/BlogList';
 import BlogDetail from './pages/blog/BlogDetail';
@@ -53,33 +49,6 @@ function App() {
   // Scroll to top on route change
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, [location.pathname]);
-
-  useEffect(() => {
-    const io = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.05, rootMargin: '50px' });
-
-    // Small delay to let the DOM settle after route change
-    const timer = setTimeout(() => {
-      const nodes = document.querySelectorAll('.reveal, .animate-in, .scroll-reveal');
-      nodes.forEach((node) => {
-        // Immediately reveal elements already in viewport (fixes mobile)
-        const rect = node.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          node.classList.add('visible');
-        } else {
-          io.observe(node);
-        }
-      });
-    }, 100);
-
-    return () => { clearTimeout(timer); io.disconnect(); };
   }, [location.pathname]);
 
   return (
@@ -187,16 +156,13 @@ function App() {
           <Route path="offline-sale" element={<AdminOfflineSale />} />
           <Route path="flash-sale" element={<AdminFlashSale />} />
           <Route path="promo-banners" element={<AdminPromoBanners />} />
-          <Route path="ai-banner-generator" element={<AdminAIBannerGenerator />} />
-          <Route path="ai-email-generator" element={<AdminAIEmailGenerator />} />
-          <Route path="ai-image-enhancer" element={<AdminAIImageEnhancer />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <AIChatbot />
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
     </>
   );
 }
 
 export default App;
+

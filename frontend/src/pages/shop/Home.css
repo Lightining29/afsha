@@ -1,11 +1,11 @@
 /* =========================================
-   HOME PAGE — Stat strip, section rhythm, feature cards, CTA band
+   HOME PAGE — Lightweight Simple White Theme
    ========================================= */
 
-/* ----- Stat strip (social proof right under hero) ----- */
+/* ----- Stat strip ----- */
 .stat-strip {
-  background: var(--text-dark);
-  padding: 26px 0;
+  background: #0f172a;
+  padding: 24px 0;
 }
 
 .stat-strip-grid {
@@ -17,24 +17,23 @@
 .stat-item {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   color: #fff;
 }
 
 .stat-icon {
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--rose-gold-light);
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
   flex-shrink: 0;
 }
 
 .stat-value {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
   line-height: 1.1;
   color: #fff;
@@ -46,86 +45,80 @@
 }
 
 @media (max-width: 768px) {
-  .stat-strip-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .stat-strip-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
 }
 
-/* Shared section spacing so every block on the page breathes the same.
-   Page reads as clean neumorphic surface; alternate sections slightly lighter. */
+/* Home Sections */
 .section.home-section {
-  padding: 80px 0;
-  background: var(--neu-surface);
+  padding: 60px 0;
+  background: #ffffff;
 }
 
 .section.home-section:nth-child(even) {
-  background: var(--off-white);
+  background: #ffffff;
 }
 
 @media (max-width: 768px) {
   .section.home-section {
-    padding: 56px 0;
+    padding: 40px 0;
   }
 }
 
 /* ----- About section ----- */
 .about-section {
-  background: var(--neu-surface) !important;
+  background: #ffffff !important;
   text-align: center;
 }
 
 .about-content p.about-desc {
   max-width: 680px;
-  margin: 0 auto 48px;
-  font-size: 1.05rem;
-  color: var(--text-muted);
-  line-height: 1.85;
+  margin: 0 auto 40px;
+  font-size: 1.02rem;
+  color: #475569;
+  line-height: 1.7;
 }
 
 .about-pillars {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 26px;
-  margin-top: 0;
+  gap: 20px;
 }
 
 .about-pillar {
-  background: var(--neu-surface);
-  border: none;
-  border-radius: var(--radius);
-  padding: 32px 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px 18px;
   text-align: center;
-  box-shadow: var(--neu-out);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: border-color 0.2s;
 }
 
 .about-pillar:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--sky-glow), var(--neu-out);
+  border-color: #cbd5e1;
 }
 
-/* Icon chip — neumorphic inset well with sky-blue glow */
 .about-pillar-icon {
   display: grid;
   place-items: center;
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 16px;
-  border-radius: 18px;
-  color: var(--rose-gold-dark);
-  background: var(--neu-surface);
-  box-shadow: var(--neu-in), 0 0 18px rgba(59, 130, 246, 0.22);
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 14px;
+  border-radius: 12px;
+  color: #e11d48;
+  background: #fff1f2;
+  border: 1px solid #ffe4e6;
 }
 
 .about-pillar h4 {
-  font-family: var(--font-serif);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-dark);
-  margin-bottom: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
 }
 
 .about-pillar p {
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: #64748b;
   line-height: 1.5;
 }
 
@@ -137,46 +130,45 @@
   .about-pillars { grid-template-columns: 1fr; }
 }
 
-/* ----- Closing CTA band (sky-blue) ----- */
+/* ----- Closing CTA band ----- */
 .cta-band {
   position: relative;
-  padding: 64px 0;
+  padding: 48px 0;
   text-align: center;
-  background:
-    radial-gradient(circle at 20% 30%, rgba(96, 165, 250, 0.32), transparent 45%),
-    radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.28), transparent 45%),
-    linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #eff6ff 100%);
-  overflow: hidden;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .cta-band-inner {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 28px;
+  gap: 24px;
   flex-wrap: wrap;
 }
 
 .cta-band-title {
-  font-family: var(--font-serif);
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  color: #1e293b;
-  margin: 0 0 6px;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
 }
 
 .cta-band-sub {
   color: #475569;
-  font-size: 1rem;
+  font-size: 0.98rem;
   margin: 0;
 }
 
 .cta-band-btn {
   white-space: nowrap;
-  padding: 14px 24px;
+  padding: 12px 22px;
 }
 
 @media (max-width: 640px) {
-  .cta-band { padding: 48px 0; }
+  .cta-band { padding: 36px 0; }
   .cta-band-inner { flex-direction: column; text-align: center; }
 }
+
 
