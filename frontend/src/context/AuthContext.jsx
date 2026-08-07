@@ -14,6 +14,7 @@ export function AuthProvider({ children }) {
       const token = localStorage.getItem('glowora_token');
       if (!token) {
         setUser(null);
+        setLoading(false);
         return;
       }
       const data = await fetchMe();
