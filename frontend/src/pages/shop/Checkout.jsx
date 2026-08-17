@@ -1,0 +1,230 @@
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, CreditCard } from 'lucide-react';
+import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
+import { checkout, verifyPayment, formatPrice, getProductPrice } from '../../api';
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
+import { toastError } from '../../utils/toast.js';
+import './Checkout.css';
+import '../auth/Auth.css';
+
+const RAZORPAY_SDK_URL = 'https://checkout.razorpay.com/v1/checkout.js';
+
+function loadRazorpaySdk() {
+  if (window.Razorpay) return Promise.resolve();
+
+  const existingScript = document.querySelector(`script[src="${RAZORPAY_SDK_URL}"]`);
+  if (existingScript) {
+    return new Promise((resolve, reject) => {
+      existingScript.addEventListener('load', resolve, { once: true });
+      existingScript.addEventListener('error', () => reject(new Error('Razorpay payment SDK failed to load.')), { once: true });
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = RAZORPAY_SDK_URL;
+    script.async = true;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('Razorpay payment SDK failed to load.'));
+    document.head.appendChild(script);
+  });
+}
+
+export default function CheckoutPage() {
+  const { items, cartTotal, clearCart } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [form, setForm] = useState({
+    fullName: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    address: user?.address || '',
+    city: user?.city || '',
+    state: user?.state || '',
+    zip: user?.zipCode || '',
+  });
+
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        fullName: prev.fullName || user.name || '',
+        email: prev.email || user.email || '',
+        phone: prev.phone || user.phone || '',
+        address: prev.address || user.address || '',
+        city: prev.city || user.city || '',
+        state: prev.state || user.state || '',
+        zip: prev.zip || user.zipCode || '',
+      }));
+    }
+  }, [user]);
+
+  const update = (field) => (e) => setForm({ ...form, [field]: e.target.value });
+
+  if (items.length === 0) {
+    return (
+      <>
+        <Navbar />
+        <div className="success-page">
+          <div className="success-card">
+            <h1>Cart is empty</h1>
+            <Link to="/" className="btn btn-sky">Continue Shopping</Link>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  const openRazorpay = async (result) => {
+    try {
+      await loadRazorpaySdk();
+    } catch (err) {
+      const msg = err.message || 'Razorpay payment SDK failed to load. Please refresh the page or check your connection.';
+      setError(msg);
+      toastError('Payment failed', msg);
+      setLoading(false);
+      return;
+    }
+
+    const rzp = new window.Razorpay({
+      key: result.key,
+      amount: result.amount,
+      currency: result.currency,
+      name: 'Afsha Enterprises',
+      description: `Order ${result.orderId}`,
+      order_id: result.razorpayOrderId,
+      prefill: { name: form.fullName, email: form.email, contact: form.phone },
+      handler: async (response) => {
+        try {
+          const verified = await verifyPayment({
+            razorpayOrderId: result.razorpayOrderId,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpaySignature: response.razorpay_signature,
+            items: items.map((item) => ({ productId: item._id, quantity: item.quantity })),
+            shippingAddress: form,
+          });
+          clearCart();
+          navigate(`/checkout/success?orderId=${verified.orderId}`);
+        } catch (err) {
+          const msg = err.message || 'Payment verification failed.';
+          setError(msg);
+          toastError('Verification failed', msg);
+          setLoading(false);
+        }
+      },
+      modal: { ondismiss: () => setLoading(false) },
+    });
+
+    rzp.on('payment.failed', (resp) => {
+      const msg = resp?.error?.description || 'Payment failed.';
+      setError(msg);
+      toastError('Payment failed', msg);
+      setLoading(false);
+    });
+
+    rzp.open();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      const payload = items.map((i) => ({
+        productId: i._id,
+        quantity: i.quantity,
+      }));
+      const result = await checkout(payload, form);
+      await openRazorpay(result);
+    } catch (err) {
+      if (err.status === 401) {
+        toastError('Session Expired', 'Please log in to complete your purchase.');
+        navigate('/login', { state: { from: '/checkout' } });
+        return;
+      }
+      setError(err.message);
+      toastError('Checkout failed', err.message);
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <Navbar />
+      <div className="checkout-page">
+        <div className="container">
+          <Link to="/cart" className="back-link">
+            <ArrowLeft size={18} /> Back to Cart
+          </Link>
+          <h1 className="checkout-title">Checkout</h1>
+
+          <div className="checkout-layout">
+            <form className="checkout-form-card" onSubmit={handleSubmit}>
+              <h3>Shipping Information</h3>
+              {error && <div className="auth-error">{error}</div>}
+              <div className="checkout-grid">
+                <div className="form-group full">
+                  <label>Full Name</label>
+                  <input value={form.fullName} onChange={update('fullName')} required />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input type="email" value={form.email} onChange={update('email')} required />
+                </div>
+                <div className="form-group">
+                  <label>Phone</label>
+                  <input value={form.phone} onChange={update('phone')} />
+                </div>
+                <div className="form-group full">
+                  <label>Address</label>
+                  <input value={form.address} onChange={update('address')} required />
+                </div>
+                <div className="form-group">
+                  <label>City</label>
+                  <input value={form.city} onChange={update('city')} required />
+                </div>
+                <div className="form-group">
+                  <label>State</label>
+                  <input value={form.state} onChange={update('state')} />
+                </div>
+                <div className="form-group">
+                  <label>ZIP Code</label>
+                  <input value={form.zip} onChange={update('zip')} required />
+                </div>
+              </div>
+              <button type="submit" className="btn btn-sky" style={{ width: '100%', marginTop: 24, justifyContent: 'center' }} disabled={loading}>
+                {loading ? 'Processing...' : `Pay ${formatPrice(cartTotal)}`}
+              </button>
+            </form>
+
+            <div className="checkout-summary">
+              <h3>Order Summary</h3>
+              {items.map((item) => (
+                <div key={item._id} className="checkout-item">
+                  <img src={item.image} alt={item.name} />
+                  <div className="checkout-item-info">
+                    <h4>{item.name}</h4>
+                    <span>Qty: {item.quantity}</span>
+                  </div>
+                  <span>{formatPrice(getProductPrice(item) * item.quantity)}</span>
+                </div>
+              ))}
+              <div className="summary-divider" style={{ margin: '16px 0', borderTop: '2px solid var(--border)' }} />
+              <div className="summary-row total" style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: '1.1rem' }}>
+                <span>Total</span>
+                <span>{formatPrice(cartTotal)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+}

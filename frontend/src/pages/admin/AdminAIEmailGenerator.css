@@ -1,0 +1,156 @@
+/* Admin AI Email Generator Styles */
+.ai-email-page {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.ai-email-header {
+  margin-bottom: 24px;
+}
+
+.ai-email-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1A2B3C;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 6px 0;
+}
+
+.ai-email-header p {
+  color: #64748b;
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Control Card */
+.ai-email-form-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  margin-bottom: 32px;
+}
+
+.ai-email-type-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.ai-type-btn {
+  flex: 1;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.ai-type-btn.active {
+  background: #1A2B3C;
+  color: #ffffff;
+  border-color: #1A2B3C;
+  box-shadow: 0 4px 14px rgba(26, 43, 60, 0.2);
+}
+
+.ai-email-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+@media (max-width: 900px) {
+  .ai-email-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Subject Lines Cards */
+.ai-subjects-box {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 24px;
+}
+
+.ai-subjects-box h3 {
+  font-size: 15px;
+  font-weight: 800;
+  margin: 0 0 12px 0;
+  color: #1A2B3C;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-subject-item {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ai-subject-item:hover {
+  background: #ffffff;
+  border-color: #E94057;
+}
+
+.ai-subject-item.selected {
+  border-color: #E94057;
+  background: #fff5f5;
+  font-weight: 700;
+}
+
+/* Live Preview Frame */
+.ai-email-preview-container {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.ai-preview-header {
+  background: #f1f5f9;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ai-preview-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.ai-email-iframe {
+  width: 100%;
+  height: 600px;
+  border: none;
+  background: #ffffff;
+}

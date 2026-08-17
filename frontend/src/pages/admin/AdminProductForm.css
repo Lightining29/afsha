@@ -1,0 +1,342 @@
+/* =========================================
+   ADMIN PRODUCT FORM — with file upload UI
+   ========================================= */
+.apf-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+/* Fields column */
+.apf-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.apf-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.apf-group label,
+.apf-section-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.apf-section-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.apf-group input,
+.apf-group select,
+.apf-group textarea {
+  padding: 11px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  color: #1A2B3C;
+  background: #f8fafc;
+  font-family: var(--font-sans);
+  outline: none;
+  width: 100%;
+  resize: vertical;
+}
+
+.apf-group input:focus,
+.apf-group select:focus,
+.apf-group textarea:focus {
+  border-color: #87CEEB;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.15);
+}
+
+.apf-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* Checkbox row */
+.apf-check {
+  justify-content: flex-end;
+}
+
+.apf-checkbox-label {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  cursor: pointer;
+  padding: 11px 0;
+}
+
+.apf-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3A9BC4;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Image upload column */
+.apf-image-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Drop zone */
+.apf-dropzone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  background: #f8fafc;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.apf-dropzone:hover {
+  border-color: #87CEEB;
+  background: #f0f9ff;
+}
+
+.apf-dropzone.has-image {
+  border-style: solid;
+  border-color: #B8E2F2;
+}
+
+/* Empty state */
+.apf-dropzone-empty {
+  text-align: center;
+  padding: 24px;
+  pointer-events: none;
+}
+
+.apf-drop-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #e0f4fd, #B8E2F2);
+  color: #3A9BC4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.apf-drop-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.apf-drop-hint {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+/* Preview image */
+.apf-preview-img {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Clear button over preview */
+.apf-clear-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  font-family: var(--font-sans);
+}
+
+.apf-clear-btn:hover {
+  background: #dc2626;
+}
+
+/* Browse button */
+.apf-browse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  background: white;
+  color: #334155;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+
+.apf-browse-btn:hover {
+  border-color: #87CEEB;
+  color: #3A9BC4;
+  background: #f0f9ff;
+}
+
+/* File name display */
+.apf-file-name {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 8px;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Actions */
+.apf-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* =========================================
+   Multi-image upload
+   ========================================= */
+.apf-section-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.apf-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 50px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.apf-thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.apf-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.apf-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.apf-thumb.cover {
+  border-color: #87CEEB;
+}
+
+.apf-cover-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(58, 155, 196, 0.92);
+  padding: 2px 6px;
+  border-radius: 50px;
+}
+
+.apf-thumb-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  background: rgba(239, 68, 68, 0.92);
+  color: #fff;
+  cursor: pointer;
+}
+
+.apf-thumb-remove:hover {
+  background: #dc2626;
+}
+
+/* Compact multi-image dropzone (smaller than the single-image one) */
+.apf-dropzone-multi {
+  min-height: 150px;
+}
+
+.apf-dropzone-multi .apf-drop-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  margin-bottom: 10px;
+}
+
+.apf-dropzone-multi .apf-drop-title {
+  margin-bottom: 4px;
+}
+
+@media (max-width: 860px) {
+  .apf-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .apf-image-col {
+    order: -1;
+  }
+}
+
+@media (max-width: 540px) {
+  .apf-row { grid-template-columns: 1fr; }
+
+  /* Wider thumbnails on phones — 2 per row reads better */
+  .apf-thumb-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

@@ -1,0 +1,79 @@
+.not-found-page {
+  padding: 80px 20px;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, var(--bg-surface) 0%, var(--bg-body) 100%);
+}
+
+.not-found-page .container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.icon-box {
+  margin-bottom: 24px;
+  display: inline-flex;
+  padding: 20px;
+  background: var(--bg-surface);
+  border-radius: 50%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-light);
+}
+
+.not-found-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 80px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--sky-500) 0%, var(--sky-700) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+.not-found-text {
+  font-size: 18px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.quick-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.quick-links .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.quick-links .btn-sky {
+  background: var(--sky-500);
+  color: #fff;
+}
+
+.quick-links .btn-sky:hover {
+  background: var(--sky-600);
+  transform: translateY(-2px);
+}
+
+.quick-links .btn-outline {
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.quick-links .btn-outline:hover {
+  background: var(--bg-surface);
+  transform: translateY(-2px);
+}

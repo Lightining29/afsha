@@ -1,0 +1,173 @@
+/* =========================================
+   HOME PAGE — Lightweight Simple White Theme
+   ========================================= */
+
+/* ----- Stat strip ----- */
+.stat-strip {
+  background: #0f172a;
+  padding: 24px 0;
+}
+
+.stat-strip-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+}
+
+.stat-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 768px) {
+  .stat-strip-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+
+/* Home Sections */
+.section.home-section {
+  padding: 60px 0;
+  background: #ffffff;
+}
+
+.section.home-section:nth-child(even) {
+  background: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .section.home-section {
+    padding: 40px 0;
+  }
+}
+
+/* ----- About section ----- */
+.about-section {
+  background: #ffffff !important;
+  text-align: center;
+}
+
+.about-content p.about-desc {
+  max-width: 680px;
+  margin: 0 auto 40px;
+  font-size: 1.02rem;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.about-pillars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.about-pillar {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px 18px;
+  text-align: center;
+}
+
+.about-pillar:hover {
+  border-color: #cbd5e1;
+}
+
+.about-pillar-icon {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 14px;
+  border-radius: 12px;
+  color: #0f172a;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+
+.about-pillar h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.about-pillar p {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .about-pillars { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .about-pillars { grid-template-columns: 1fr; }
+}
+
+/* ----- Closing CTA band ----- */
+.cta-band {
+  position: relative;
+  padding: 48px 0;
+  text-align: center;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cta-band-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.cta-band-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+
+.cta-band-sub {
+  color: #475569;
+  font-size: 0.98rem;
+  margin: 0;
+}
+
+.cta-band-btn {
+  white-space: nowrap;
+  padding: 12px 22px;
+}
+
+@media (max-width: 640px) {
+  .cta-band { padding: 36px 0; }
+  .cta-band-inner { flex-direction: column; text-align: center; }
+}
+
+

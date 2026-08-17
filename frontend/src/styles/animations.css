@@ -1,0 +1,13 @@
+/* Animations removed — all elements visible immediately */
+.reveal,
+.animate-in,
+.fade-up {
+  opacity: 1;
+  transform: none;
+}
+
+.stagger .product-card,
+.stagger .category-card {
+  opacity: 1;
+  transform: none;
+}
