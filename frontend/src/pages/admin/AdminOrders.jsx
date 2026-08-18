@@ -53,6 +53,9 @@ export default function AdminOrders() {
   const [copiedId, setCopiedId] = useState(null);
   const [selectedReceiptOrder, setSelectedReceiptOrder] = useState(null);
 
+  const [processingId, setProcessingId] = useState(null);
+  const [bannerNotice, setBannerNotice] = useState(null);
+
   const load = () => {
     fetchAdminOrders().then(setOrders).finally(() => setLoading(false));
   };
@@ -60,13 +63,49 @@ export default function AdminOrders() {
   useEffect(load, []);
 
   const handleApprove = async (id) => {
-    await approveOrder(id);
-    load();
+    if (processingId) return;
+    try {
+      setProcessingId(id);
+      setBannerNotice(null);
+      setOrders((prev) =>
+        prev.map((o) => (o._id === id ? { ...o, status: 'approved' } : o))
+      );
+      await approveOrder(id);
+      setBannerNotice({ type: 'success', text: '✓ Order approved successfully! Status updated.' });
+      setTimeout(() => setBannerNotice(null), 4000);
+      load();
+    } catch (err) {
+      console.error('Failed to approve order:', err);
+      const msg = err.message || err.data?.message || 'Failed to approve order';
+      setBannerNotice({ type: 'error', text: `✕ Failed to approve: ${msg}` });
+      alert(`Error approving order: ${msg}`);
+      load();
+    } finally {
+      setProcessingId(null);
+    }
   };
 
   const handleShip = async (id) => {
-    await shipOrder(id);
-    load();
+    if (processingId) return;
+    try {
+      setProcessingId(id);
+      setBannerNotice(null);
+      setOrders((prev) =>
+        prev.map((o) => (o._id === id ? { ...o, status: 'shipped' } : o))
+      );
+      await shipOrder(id);
+      setBannerNotice({ type: 'success', text: '✓ Order marked as shipped!' });
+      setTimeout(() => setBannerNotice(null), 4000);
+      load();
+    } catch (err) {
+      console.error('Failed to ship order:', err);
+      const msg = err.message || err.data?.message || 'Failed to ship order';
+      setBannerNotice({ type: 'error', text: `✕ Failed to ship: ${msg}` });
+      alert(`Error marking order as shipped: ${msg}`);
+      load();
+    } finally {
+      setProcessingId(null);
+    }
   };
 
   const handleCopyOrderNumber = (orderNum) => {
@@ -222,9 +261,12 @@ export default function AdminOrders() {
     printWin.document.close();
   };
 
+  const isPendingApproval = (status) =>
+    ['pending_approval', 'paid', 'pending_payment', 'pending'].includes(status);
+
   // Metrics summary
   const totalCount = orders.length;
-  const pendingCount = orders.filter((o) => o.status === 'pending_approval' || o.status === 'paid').length;
+  const pendingCount = orders.filter((o) => isPendingApproval(o.status)).length;
   const shippedCount = orders.filter((o) => o.status === 'shipped').length;
   const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
 
@@ -243,7 +285,7 @@ export default function AdminOrders() {
       orderNum.includes(query);
 
     if (statusFilter === 'all') return matchesSearch;
-    if (statusFilter === 'pending') return matchesSearch && (o.status === 'pending_approval' || o.status === 'paid');
+    if (statusFilter === 'pending') return matchesSearch && isPendingApproval(o.status);
     if (statusFilter === 'approved') return matchesSearch && o.status === 'approved';
     if (statusFilter === 'shipped') return matchesSearch && o.status === 'shipped';
     return matchesSearch;
@@ -253,6 +295,12 @@ export default function AdminOrders() {
 
   return (
     <div className="admin-orders-page">
+      {bannerNotice && (
+        <div className={`admin-orders-alert ${bannerNotice.type}`}>
+          {bannerNotice.text}
+        </div>
+      )}
+
       {/* Title & Metrics Header */}
       <div className="admin-orders-header">
         <div className="admin-orders-title">
@@ -498,14 +546,48 @@ export default function AdminOrders() {
                 </div>
 
                 <div>
-                  {(order.status === 'paid' || order.status === 'pending_approval') && (
-                    <button className="action-btn-approve" onClick={() => handleApprove(order._id)}>
-                      <CheckCircle size={16} /> Approve Order
+                  {isPendingApproval(order.status) && (
+                    <button
+                      type="button"
+                      className="action-btn-approve"
+                      disabled={processingId === order._id}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleApprove(order._id);
+                      }}
+                    >
+                      {processingId === order._id ? (
+                        <>
+                          <span className="inline-spinner" /> Approving...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle size={16} /> Approve Order
+                        </>
+                      )}
                     </button>
                   )}
                   {order.status === 'approved' && (
-                    <button className="action-btn-ship" onClick={() => handleShip(order._id)}>
-                      <Truck size={16} /> Mark Shipped
+                    <button
+                      type="button"
+                      className="action-btn-ship"
+                      disabled={processingId === order._id}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleShip(order._id);
+                      }}
+                    >
+                      {processingId === order._id ? (
+                        <>
+                          <span className="inline-spinner" /> Updating...
+                        </>
+                      ) : (
+                        <>
+                          <Truck size={16} /> Mark Shipped
+                        </>
+                      )}
                     </button>
                   )}
                   {order.status === 'shipped' && (

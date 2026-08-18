@@ -463,18 +463,32 @@ router.patch('/orders/:id/approve', async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ message: 'Order not found' });
-    if (order.status !== 'paid') {
-      return res.status(400).json({ message: 'Only paid orders can be approved' });
+    
+    if (order.status === 'cancelled') {
+      return res.status(400).json({ message: 'Cannot approve a cancelled order' });
     }
+    if (order.status === 'shipped') {
+      return res.status(400).json({ message: 'Order is already marked as shipped' });
+    }
+
     order.status = 'approved';
-    if (!order.receiptSent && order.shippingAddress?.email) {
-      await sendOrderReceipt(order, order.shippingAddress.email);
-      order.receiptSent = true;
+
+    // Safe email receipt dispatch
+    try {
+      const targetEmail = order.shippingAddress?.email || (order.user ? (await User.findById(order.user).select('email'))?.email : null);
+      if (!order.receiptSent && targetEmail) {
+        await sendOrderReceipt(order, targetEmail);
+        order.receiptSent = true;
+      }
+    } catch (emailErr) {
+      console.warn('[Email Warning] Receipt sending skipped or failed during approval:', emailErr.message);
     }
+
     await order.save();
-    res.json(order);
+    return res.json(order);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error('Order approval error:', err);
+    return res.status(500).json({ message: err.message || 'Failed to approve order' });
   }
 });
 
@@ -482,18 +496,32 @@ router.patch('/orders/:id/ship', async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ message: 'Order not found' });
-    if (order.status !== 'approved') {
-      return res.status(400).json({ message: 'Only approved orders can be shipped' });
+    
+    if (order.status === 'shipped') {
+      return res.status(400).json({ message: 'Order is already marked as shipped' });
     }
+    if (order.status === 'cancelled') {
+      return res.status(400).json({ message: 'Cannot ship a cancelled order' });
+    }
+
     order.status = 'shipped';
-    if (!order.receiptSent && order.shippingAddress?.email) {
-      await sendOrderReceipt(order, order.shippingAddress.email);
-      order.receiptSent = true;
+
+    // Safe email receipt dispatch
+    try {
+      const targetEmail = order.shippingAddress?.email || (order.user ? (await User.findById(order.user).select('email'))?.email : null);
+      if (!order.receiptSent && targetEmail) {
+        await sendOrderReceipt(order, targetEmail);
+        order.receiptSent = true;
+      }
+    } catch (emailErr) {
+      console.warn('[Email Warning] Receipt sending skipped or failed during shipping:', emailErr.message);
     }
+
     await order.save();
-    res.json(order);
+    return res.json(order);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error('Order shipping error:', err);
+    return res.status(500).json({ message: err.message || 'Failed to mark order as shipped' });
   }
 });
 

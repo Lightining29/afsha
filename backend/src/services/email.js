@@ -210,25 +210,30 @@ export function buildOrderConfirmationEmail(order, email) {
 }
 
 export async function sendOrderReceipt(order, userEmail) {
-  const transporter = createTransporter();
-  const email = order.shippingAddress?.email || userEmail;
-  if (!email) return false;
-  const message = buildOrderConfirmationEmail(order, email);
+  try {
+    const transporter = createTransporter();
+    const email = order.shippingAddress?.email || userEmail;
+    if (!email) return false;
+    const message = buildOrderConfirmationEmail(order, email);
 
-  if (!transporter) {
-    console.log(`[Email Demo] Order confirmation for ${order.orderNumber || order._id} -> ${email}`);
-    console.log(message.text);
+    if (!transporter) {
+      console.log(`[Email Demo] Order confirmation for ${order.orderNumber || order._id} -> ${email}`);
+      console.log(message.text);
+      return true;
+    }
+
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM || '"Afsha Enterprises" <noreply@afshaenterprises.com>',
+      to: email,
+      subject: message.subject,
+      html: message.html,
+      text: message.text,
+    });
     return true;
+  } catch (err) {
+    console.error('[SMTP Warning] Failed to send order receipt:', err.message);
+    return false;
   }
-
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM || '"Afsha Enterprises" <noreply@afshaenterprises.com>',
-    to: email,
-    subject: message.subject,
-    html: message.html,
-    text: message.text,
-  });
-  return true;
 }
 
 export async function sendOtp(email, code, subject = 'Your Afsha Enterprises verification code', title = 'Verify your email address') {
