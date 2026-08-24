@@ -27,11 +27,11 @@ export default function Hero() {
       .catch(() => {});
   }, []);
 
-  // 2s Auto Slider Timer for 3 slides
+  // 3s Auto Slider Timer for 3 slides as requested
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % 3);
-    }, 2000);
+    }, 3000);
     return () => clearInterval(timer);
   }, []);
 
@@ -62,25 +62,25 @@ export default function Hero() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* ── Slide 1: Original Trimmer Banner (Dark Luxury Theme) ── */}
-          <div className={`hero-banner-card slide-trimmer ${activeSlide === 0 ? 'slide-active' : 'slide-hidden'}`}>
+          {/* ── Slide 1: Raksha Bandhan Light Yellow Theme with Product Showcase ── */}
+          <div className={`hero-banner-card slide-trimmer-yellow-light ${activeSlide === 0 ? 'slide-active' : 'slide-hidden'}`}>
             {/* Left Content */}
             <div className="hero-banner-left">
-              <div className="hero-banner-eyebrow">
-                <Sparkles size={11} className="hero-sparkle-icon" />
-                <span>Multi-functional Trimmer</span>
+              <div className="hero-banner-eyebrow yellow-slide-eyebrow">
+                <Gift size={11} className="yellow-slide-gift-icon" />
+                <span>Raksha Bandhan Special</span>
               </div>
 
-              <h2 className="hero-banner-title">
+              <h2 className="hero-banner-title yellow-slide-title">
                 Silky Smooth <br />
-                <span className="hero-banner-title-main">Flawless Finish</span> <br />
-                <span className="hero-banner-title-accent">
-                  {isBogo ? 'Buy 1 Get 1 Free' : 'Painless & Instant'}
+                <span className="yellow-slide-title-main">Flawless Finish</span> <br />
+                <span className="yellow-slide-title-accent">
+                  {isBogo ? 'Buy 1 Get 1 Free' : 'Special Gift For Sister'}
                 </span>
               </h2>
 
-              <Link to={targetProductLink} className="hero-banner-shop-btn">
-                Shop now
+              <Link to={targetProductLink} className="hero-banner-shop-btn yellow-slide-shop-btn">
+                Shop Gift 🎁
               </Link>
             </div>
 
@@ -96,7 +96,7 @@ export default function Hero() {
                 />
 
                 {isBogo && (
-                  <div className="hero-banner-bogo-tag">
+                  <div className="hero-banner-bogo-tag yellow-slide-bogo-tag">
                     <Gift size={11} /> BOGO FREE
                   </div>
                 )}
@@ -184,24 +184,15 @@ export default function Hero() {
 
           {/* ── Slider Pagination Indicators (3 Dots) ── */}
           <div className="hero-slider-indicators">
-            <button
-              type="button"
-              className={`hero-slider-dot ${activeSlide === 0 ? 'active' : ''} ${activeSlide === 1 ? 'dot-on-light' : ''}`}
-              onClick={() => setActiveSlide(0)}
-              aria-label="Slide 1 - Trimmer Showcase"
-            />
-            <button
-              type="button"
-              className={`hero-slider-dot ${activeSlide === 1 ? 'active' : ''} ${activeSlide === 1 ? 'dot-on-light' : ''}`}
-              onClick={() => setActiveSlide(1)}
-              aria-label="Slide 2 - Raksha Bandhan Greetings"
-            />
-            <button
-              type="button"
-              className={`hero-slider-dot ${activeSlide === 2 ? 'active' : ''}`}
-              onClick={() => setActiveSlide(2)}
-              aria-label="Slide 3 - Royal Rakhi Special"
-            />
+            {[0, 1, 2].map((idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={`hero-slider-dot ${activeSlide === idx ? 'active' : ''} ${activeSlide !== 2 ? 'dot-on-light' : ''}`}
+                onClick={() => setActiveSlide(idx)}
+                aria-label={`Slide ${idx + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>

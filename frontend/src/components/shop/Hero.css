@@ -51,7 +51,71 @@
   z-index: 1;
 }
 
-/* ── Slide 1: Obsidian Luxury Dark Theme ── */
+/* ── Slide 1: Raksha Bandhan Festive Light Yellow Theme ── */
+.slide-trimmer-yellow-light {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 45%, #fde68a 100%);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  box-shadow: inset 0 0 35px rgba(254, 240, 138, 0.35);
+  position: relative;
+}
+
+.slide-trimmer-yellow-light::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.35) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Yellow Slide Typography */
+.yellow-slide-eyebrow {
+  background: rgba(245, 158, 11, 0.15) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  color: #92400e !important;
+}
+
+.yellow-slide-gift-icon {
+  color: #b45309;
+}
+
+.yellow-slide-title {
+  color: #0f172a !important;
+}
+
+.yellow-slide-title-main {
+  color: #0f172a !important;
+  font-weight: 900;
+}
+
+.yellow-slide-title-accent {
+  color: #b45309 !important;
+  font-weight: 900;
+}
+
+.yellow-slide-shop-btn {
+  background: #0f172a !important;
+  color: #ffffff !important;
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.28) !important;
+}
+
+.yellow-slide-shop-btn:hover {
+  background: #b45309 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(180, 83, 9, 0.45) !important;
+}
+
+.yellow-slide-bogo-tag {
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: #ffffff;
+}
+
+/* Slide 1 Legacy Dark (if needed) */
 .slide-trimmer {
   background: linear-gradient(135deg, #090c12 0%, #111827 55%, #0a0d14 100%);
   border: 1px solid rgba(255, 255, 255, 0.09);
