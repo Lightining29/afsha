@@ -104,18 +104,20 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ── Slide 2: Raksha Bandhan Special Banner (Light Theme, Wishes & Shop Button Only) ── */}
+          {/* ── Slide 2: Raksha Bandhan Special Banner (Light Theme, Transparent Artwork & Rakhi) ── */}
           <div className={`hero-banner-card slide-raksha-light ${activeSlide === 1 ? 'slide-active' : 'slide-hidden'}`}>
-            {/* Left / Center Festive Artwork & Wishes */}
             <div className="raksha-light-content">
+              {/* Left Transparent Raksha Bandhan & Rakhi Art */}
               <div className="raksha-light-left-art">
                 <img
-                  src="/raksha-bandhan-light.png"
+                  src="/raksha-bandhan-clean-transparent.png"
                   alt="Happy Raksha Bandhan"
                   className="raksha-light-main-img"
+                  fetchpriority="high"
                 />
               </div>
 
+              {/* Right Wishes & Shop Button */}
               <div className="raksha-light-text-col">
                 <div className="raksha-light-eyebrow">
                   <HeartHandshake size={13} className="raksha-heart-icon" />
@@ -123,16 +125,23 @@ export default function Hero() {
                 </div>
 
                 <h3 className="raksha-light-wishes-title">
-                  Wishing You a Joyous <br />
-                  <span className="raksha-title-highlight">Raksha Bandhan</span> ✨
+                  Happy <span className="raksha-title-highlight">Raksha Bandhan</span> ✨
                 </h3>
 
+                <div className="raksha-ornament-wrap">
+                  <img
+                    src="/festive-rakhi-ornament.png"
+                    alt="Festive Rakhi"
+                    className="raksha-ornament-img"
+                  />
+                </div>
+
                 <p className="raksha-light-wishes-desc">
-                  Celebrating the purest bond of love, care and lifelong togetherness.
+                  May this auspicious festival of Rakhi bring boundless love, peace, and eternal joy to you and your family.
                 </p>
 
                 <Link to="#all-products" className="hero-banner-shop-btn raksha-light-cta-btn">
-                  Explore Festive Gifts 🎁
+                  Shop Festive Gifts 🎁
                 </Link>
               </div>
             </div>
