@@ -1,5 +1,5 @@
 /* ==========================================================================
-   PRODUCT CARD — Mobile-first Soft Card Aesthetic
+   PRODUCT CARD — Mobile-first Soft Card with Diagonal Discount Ribbon
    ========================================================================== */
 
 .product-card-link {
@@ -10,6 +10,19 @@
   min-width: 0;
   width: 100%;
   box-sizing: border-box;
+}
+
+.product-card-link.carousel-card {
+  flex: 0 0 170px;
+  width: 170px;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 769px) {
+  .product-card-link.carousel-card {
+    flex: 0 0 210px;
+    width: 210px;
+  }
 }
 
 .product-card {
@@ -45,7 +58,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 12px;
+  padding: 10px;
 }
 
 .product-image-wrap img {
@@ -59,6 +72,25 @@
   transform: scale(1.06);
 }
 
+/* ── Diagonal Corner Ribbon (Screenshot match) ── */
+.product-corner-ribbon {
+  position: absolute;
+  top: 14px;
+  right: -32px;
+  width: 110px;
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-align: center;
+  padding: 3px 0;
+  transform: rotate(45deg);
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+  z-index: 3;
+  letter-spacing: 0.2px;
+  text-transform: lowercase;
+}
+
 /* BOGO Floating Badge on Image */
 .product-card-bogo-badge {
   position: absolute;
@@ -66,14 +98,14 @@
   left: 8px;
   background: linear-gradient(135deg, #e11d48, #be123c);
   color: #ffffff;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 800;
-  letter-spacing: 0.4px;
-  padding: 3px 8px;
+  letter-spacing: 0.3px;
+  padding: 3px 7px;
   border-radius: 6px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   box-shadow: 0 3px 8px rgba(225, 29, 72, 0.3);
   z-index: 2;
   text-transform: uppercase;
@@ -83,31 +115,17 @@
   color: #ffffff;
 }
 
-/* Discount Badge */
-.product-card-discount-tag {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  background: #ef4444;
-  color: #ffffff;
-  font-size: 0.62rem;
-  font-weight: 800;
-  padding: 3px 7px;
-  border-radius: 6px;
-  z-index: 2;
-}
-
 /* BOGO Timer Badge in Card */
 .product-card-timer-wrap {
   position: absolute;
-  bottom: 8px;
-  left: 8px;
+  bottom: 6px;
+  left: 6px;
   z-index: 2;
 }
 
 /* Product Info */
 .product-info {
-  padding: 12px 14px 14px;
+  padding: 10px 12px 12px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -115,18 +133,20 @@
 }
 
 .product-name {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: #0f172a;
-  margin: 0 0 2px 0;
-  line-height: 1.3;
-  white-space: nowrap;
+  margin: 0 0 3px 0;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  height: 2.5em;
 }
 
 .product-category-sub {
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   color: #94a3b8;
   margin: 0 0 8px 0;
   font-weight: 500;
@@ -140,7 +160,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
+  gap: 4px;
   margin-top: auto;
   width: 100%;
   box-sizing: border-box;
@@ -157,7 +177,7 @@
 }
 
 .product-card .price-current {
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-weight: 800;
   color: #0f172a;
   line-height: 1.15;
@@ -166,8 +186,8 @@
 }
 
 .product-card .price-original {
-  font-size: 0.78rem;
-  color: #94a3b8;
+  font-size: 0.75rem;
+  color: #ef4444;
   text-decoration: line-through;
   line-height: 1.1;
   white-space: nowrap;
@@ -175,12 +195,12 @@
 
 /* Floating Wishlist Heart Button */
 .product-heart-btn {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #ffffff;
-  border: 1px solid #f1f5f9;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -191,53 +211,13 @@
 
 .product-heart-btn:hover {
   transform: scale(1.1);
-  background: #ffffff;
 }
 
 .product-heart-btn:active {
-  transform: scale(0.92);
+  transform: scale(0.9);
 }
 
 .product-heart-btn.liked {
   background: #fff1f2;
   border-color: #fecdd3;
-}
-
-/* ── Mobile Responsiveness (Up to 768px) ───────── */
-@media (max-width: 768px) {
-  .product-card {
-    border-radius: 16px;
-  }
-
-  .product-image-wrap {
-    border-radius: 15px 15px 0 0;
-    padding: 8px;
-  }
-
-  .product-info {
-    padding: 10px;
-  }
-
-  .product-name {
-    font-size: 0.85rem;
-  }
-
-  .product-category-sub {
-    font-size: 0.72rem;
-    margin-bottom: 6px;
-  }
-
-  .product-card .price-current {
-    font-size: 0.95rem;
-  }
-
-  .product-heart-btn {
-    width: 30px;
-    height: 30px;
-  }
-
-  .product-heart-btn svg {
-    width: 14px;
-    height: 14px;
-  }
 }

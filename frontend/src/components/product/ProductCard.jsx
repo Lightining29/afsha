@@ -1,12 +1,11 @@
-import { Star, Zap, Gift, Heart } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Gift, Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { fetchProduct, formatPrice, getProductPrice } from '../../api';
 import { useCart } from '../../context/CartContext';
 import CountdownTimer from '../shop/CountdownTimer';
 import './ProductCard.css';
 
-export default function ProductCard({ product }) {
-  const navigate = useNavigate();
+export default function ProductCard({ product, variant = 'standard' }) {
   const { toggleWishlist, isInWishlist } = useCart();
   const finalPrice = getProductPrice(product);
   const hasDiscount = product.discountPercent > 0;
@@ -30,27 +29,33 @@ export default function ProductCard({ product }) {
   return (
     <Link
       to={`/products/${product.slug}`}
-      className="product-card-link"
+      className={`product-card-link ${variant === 'carousel' ? 'carousel-card' : ''}`}
       onPointerEnter={prefetchProduct}
       onFocus={prefetchProduct}
     >
       <div className="product-card">
-        {/* ── Product Image & Floating Badges ── */}
+        {/* ── Product Image Wrap ── */}
         <div className="product-image-wrap">
-          <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
+          <img
+            src={product.image || '/hair-remover-transparent.png'}
+            alt={product.name}
+            loading="lazy"
+            decoding="async"
+            onError={(e) => { e.target.src = '/hair-remover-transparent.png'; }}
+          />
+
+          {/* Diagonal Corner Ribbon (Screenshot match) */}
+          {hasDiscount && (
+            <div className="product-corner-ribbon">
+              <span>{product.discountPercent}% off</span>
+            </div>
+          )}
 
           {/* BOGO Floating Badge */}
           {isBogo && (
             <div className="product-card-bogo-badge">
               <Gift size={11} className="bogo-gift-icon" />
-              <span>{product.bogoBadgeText || 'BUY 1 GET 1 FREE'}</span>
-            </div>
-          )}
-
-          {/* Discount Badge Ribbon */}
-          {!isBogo && hasDiscount && (
-            <div className="product-card-discount-tag">
-              {product.discountPercent}% OFF
+              <span>{product.bogoBadgeText || 'BOGO FREE'}</span>
             </div>
           )}
 
@@ -66,7 +71,7 @@ export default function ProductCard({ product }) {
         <div className="product-info">
           <h3 className="product-name">{product.name}</h3>
           <p className="product-category-sub">
-            {product.category?.name || 'Personal Care'}
+            {product.category?.name || "Personal Care"}
           </p>
 
           <div className="product-bottom">
@@ -87,7 +92,7 @@ export default function ProductCard({ product }) {
               aria-label={isLiked ? 'Remove from wishlist' : 'Add to wishlist'}
             >
               <Heart
-                size={16}
+                size={15}
                 fill={isLiked ? '#ef4444' : 'none'}
                 color={isLiked ? '#ef4444' : '#94a3b8'}
               />

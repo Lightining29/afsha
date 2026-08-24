@@ -11,26 +11,27 @@ import './Home.css';
 const siteTitle = 'Afsha Enterprises | Premium Body Massagers & Personal Grooming';
 const siteDescription = 'Afsha Enterprises offers premium electric massagers, body hair removers, and wellness devices with fast express shipping across India.';
 
-// Curated high-res circular category avatars matching Image 3 & 4
-const CATEGORY_IMAGES = {
-  beauty: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=160&auto=format&fit=crop&q=80',
-  skincare: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=160&auto=format&fit=crop&q=80',
-  hair: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=160&auto=format&fit=crop&q=80',
-  wellness: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=160&auto=format&fit=crop&q=80',
-  massage: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=160&auto=format&fit=crop&q=80',
-  body: 'https://images.unsplash.com/photo-1512290900672-1f55a1532085?w=160&auto=format&fit=crop&q=80',
-  grooming: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=160&auto=format&fit=crop&q=80',
-  shoes: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=160&auto=format&fit=crop&q=80',
-  jewelry: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=160&auto=format&fit=crop&q=80',
-  fashion: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=160&auto=format&fit=crop&q=80',
-};
+// Local instant-loading fast assets for category circular badges (0ms load time)
+const LOCAL_CATEGORY_PHOTOS = [
+  '/hair-remover-transparent.png',
+  '/circle-face.png',
+  '/circle-eyebrow.png',
+  '/circle-arm.png',
+  '/circle-leg.png',
+  '/circle-bikini.png',
+  '/circle-neck.png',
+  '/circle-underarm.png',
+];
 
-function getCategoryPhoto(name = '') {
+function getCategoryPhoto(name = '', idx = 0) {
   const lower = name.toLowerCase();
-  for (const [k, url] of Object.entries(CATEGORY_IMAGES)) {
-    if (lower.includes(k)) return url;
-  }
-  return CATEGORY_IMAGES.beauty;
+  if (/trimmer|cutter|hair|epilat|shav/i.test(lower)) return '/hair-remover-transparent.png';
+  if (/face|skin|glow/i.test(lower)) return '/circle-face.png';
+  if (/eye|brow/i.test(lower)) return '/circle-eyebrow.png';
+  if (/arm|body|hand/i.test(lower)) return '/circle-arm.png';
+  if (/leg|foot/i.test(lower)) return '/circle-leg.png';
+  if (/bikini|underarm/i.test(lower)) return '/circle-bikini.png';
+  return LOCAL_CATEGORY_PHOTOS[idx % LOCAL_CATEGORY_PHOTOS.length];
 }
 
 export default function Home() {
@@ -61,7 +62,7 @@ export default function Home() {
     return () => { isMounted = false; };
   }, []);
 
-  const newArrivals = products.slice(0, 4);
+  const newArrivals = products.slice(0, 8);
 
   const filteredBestSellers = activeCategory === 'all'
     ? products
@@ -75,14 +76,14 @@ export default function Home() {
       </Helmet>
 
       <div className="container">
-        {/* ── Search Bar with character-by-character auto-suggestions (Image 4) ── */}
+        {/* ── Search Bar with character auto-suggestions (Image 4) ── */}
         <SearchBar />
       </div>
 
-      {/* ── Top Hero Banner with Transparent Trimmer & Orbiting Badges ── */}
+      {/* ── Hero Banner with Transparent Trimmer & Orbiting Badges ── */}
       <Hero />
 
-      {/* ── Circular Categories Row (Image 3 & 4) ── */}
+      {/* ── Circular Categories Row (Instant Loading Local Badges) ── */}
       <section id="categories" className="home-categories-circle-section">
         <div className="container">
           <div className="home-categories-circle-scroll">
@@ -93,53 +94,63 @@ export default function Home() {
             >
               <div className="cat-circle-avatar-box">
                 <img
-                  src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=160&auto=format&fit=crop&q=80"
+                  src="/hair-remover-transparent.png"
                   alt="All Items"
                   className="cat-circle-img"
+                  fetchpriority="high"
+                  decoding="async"
                 />
               </div>
               <span className="cat-circle-label">All</span>
             </div>
 
             {/* Dynamic Category Circles */}
-            {categories.map((cat) => (
-              <div
-                key={cat._id}
-                className={`home-cat-circle-item ${activeCategory === cat._id ? 'active' : ''}`}
-                onClick={() => setActiveCategory(activeCategory === cat._id ? 'all' : cat._id)}
-              >
-                <div className="cat-circle-avatar-box">
-                  <img
-                    src={cat.image || cat.imageUrl || getCategoryPhoto(cat.name)}
-                    alt={cat.name}
-                    className="cat-circle-img"
-                    onError={(e) => { e.target.src = getCategoryPhoto(cat.name); }}
-                  />
+            {categories.map((cat, idx) => {
+              const photo = cat.image || cat.imageUrl || getCategoryPhoto(cat.name, idx);
+              return (
+                <div
+                  key={cat._id}
+                  className={`home-cat-circle-item ${activeCategory === cat._id ? 'active' : ''}`}
+                  onClick={() => setActiveCategory(activeCategory === cat._id ? 'all' : cat._id)}
+                >
+                  <div className="cat-circle-avatar-box">
+                    <img
+                      src={photo}
+                      alt={cat.name}
+                      className="cat-circle-img"
+                      fetchpriority="high"
+                      decoding="async"
+                      onError={(e) => {
+                        e.target.src = getCategoryPhoto(cat.name, idx);
+                      }}
+                    />
+                  </div>
+                  <span className="cat-circle-label">{cat.name}</span>
                 </div>
-                <span className="cat-circle-label">{cat.name}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ── Section 1: Special For You / New Arrival (Image 4) ── */}
+      {/* ── Section 1: New Arrival (Horizontal Swiper Carousel) ── */}
       <section className="home-section-block">
         <div className="container">
           <div className="home-section-header">
-            <h2 className="home-section-title">Special For You</h2>
+            <h2 className="home-section-title">New Arrival</h2>
             <a href="#all-products" className="home-see-all-link">See all</a>
           </div>
 
-          <div className="home-product-grid new-arrival-grid">
+          {/* Horizontal Swiper Carousel */}
+          <div className="home-carousel-scroll">
             {newArrivals.map((product) => (
-              <ProductCard key={product._id} product={product} />
+              <ProductCard key={product._id} product={product} variant="carousel" />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Section 2: Best Seller ── */}
+      {/* ── Section 2: Best Seller (With Category Filter Pills) ── */}
       <section id="all-products" className="home-section-block">
         <div className="container">
           <div className="home-section-header">
@@ -147,7 +158,28 @@ export default function Home() {
             <a href="#all-products" className="home-see-all-link">See all</a>
           </div>
 
-          {/* Best Seller Grid */}
+          {/* Horizontal Category Filter Pill Tabs (Screenshot match) */}
+          <div className="home-category-pills">
+            <button
+              type="button"
+              className={`home-cat-pill ${activeCategory === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveCategory('all')}
+            >
+              All
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat._id}
+                type="button"
+                className={`home-cat-pill ${activeCategory === cat._id ? 'active' : ''}`}
+                onClick={() => setActiveCategory(cat._id)}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Best Seller 2-Column Grid */}
           <div className="home-product-grid best-seller-grid">
             {filteredBestSellers.map((product) => (
               <ProductCard key={product._id} product={product} />
