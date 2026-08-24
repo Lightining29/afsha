@@ -7,7 +7,8 @@ import {
   Heart,
   Minus,
   Plus,
-  Gift
+  Gift,
+  Zap
 } from 'lucide-react';
 import {
   fetchProduct,
@@ -80,13 +81,7 @@ export default function ProductDetail() {
   const activeIdx = Math.min(activeImage, gallery.length - 1);
   const mainImage = gallery[activeIdx] || product.image;
 
-  const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product);
-    }
-    toastSuccess('Added to Cart', `${product.name} (Qty: ${quantity}) added!`);
-  };
-
+  // Direct Buy Flow: Adds selected quantity to cart and routes straight to checkout
   const handleBuyNow = () => {
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
@@ -239,7 +234,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* ── Fixed Bottom Action Bar with Buy Buttons (Screenshot reference) ── */}
+        {/* ── Fixed Bottom Action Bar: Instant Direct Buy Flow ── */}
         <div className="pdp-bottom-action-bar">
           {/* Stepper Capsule */}
           <div className="pdp-stepper-capsule">
@@ -262,14 +257,15 @@ export default function ProductDetail() {
             </button>
           </div>
 
-          {/* Wide Golden Yellow "Add to cart" / Buy Button */}
+          {/* Direct Buy Now Button */}
           <button
             type="button"
             className="pdp-cta-yellow-btn"
-            onClick={handleAddToCart}
+            onClick={handleBuyNow}
             disabled={product.inStock === false}
           >
-            {product.inStock === false ? 'Out of Stock' : 'Add to cart'}
+            <Zap size={16} fill="#111827" />
+            <span>{product.inStock === false ? 'Out of Stock' : 'Buy Now'}</span>
           </button>
         </div>
       </div>
