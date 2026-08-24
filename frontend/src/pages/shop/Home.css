@@ -1,9 +1,90 @@
 /* ==========================================================================
-   HOME PAGE — Mobile-first Modern App Layout
+   HOME PAGE — Mobile-first Modern App Layout with Circular Categories (Images 3 & 4)
    ========================================================================== */
 
+/* ── Circular Categories Section (Image 3 & 4) ── */
+.home-categories-circle-section {
+  padding: 8px 0 20px;
+  background: #ffffff;
+}
+
+.home-categories-circle-scroll {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 2px 8px;
+}
+
+.home-categories-circle-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.home-cat-circle-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+  width: 68px;
+}
+
+.home-cat-circle-item:active {
+  transform: scale(0.92);
+}
+
+.cat-circle-avatar-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  padding: 2.5px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.home-cat-circle-item:hover .cat-circle-avatar-box,
+.home-cat-circle-item.active .cat-circle-avatar-box {
+  border-color: #fec22a;
+  box-shadow: 0 0 0 3px rgba(254, 194, 42, 0.3);
+  transform: scale(1.05);
+}
+
+.cat-circle-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.cat-circle-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #334155;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 68px;
+}
+
+.home-cat-circle-item.active .cat-circle-label {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+/* ── Home Section Blocks ── */
 .home-section-block {
-  padding: 16px 0 28px;
+  padding: 14px 0 28px;
   background: #ffffff;
 }
 
@@ -31,47 +112,6 @@
 
 .home-see-all-link:hover {
   color: #0f172a;
-}
-
-/* Category Filter Pills */
-.home-category-pills {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 12px;
-  margin-bottom: 16px;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.home-category-pills::-webkit-scrollbar {
-  display: none;
-}
-
-.home-cat-pill {
-  padding: 8px 18px;
-  border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #64748b;
-  background: #f1f5f9;
-  border: none;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.home-cat-pill:hover {
-  background: #e2e8f0;
-  color: #0f172a;
-}
-
-.home-cat-pill.active {
-  background: #fec22a;
-  color: #111827;
-  font-weight: 800;
-  box-shadow: 0 2px 8px rgba(254, 194, 42, 0.35);
 }
 
 /* Product Grid */

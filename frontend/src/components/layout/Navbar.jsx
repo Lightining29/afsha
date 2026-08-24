@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, User, Menu, X, Bell } from 'lucide-react';
+import { User, Menu, X, Bell, LayoutGrid } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { toastSuccess, toastInfo } from '../../utils/toast.js';
 import './Navbar.css';
@@ -17,11 +17,8 @@ export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [query, setQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
 
-  // Elevate the bar (stronger shadow / tighter blur) once the page scrolls.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -50,32 +47,33 @@ export default function Navbar() {
     }
   }
 
-  function handleSearchSubmit(e) {
-    e.preventDefault();
-    const q = query.trim();
-    if (!q) return;
-    setSearchOpen(false);
-    setQuery('');
-    navigate(`/?q=${encodeURIComponent(q)}#all-products`);
-  }
-
   return (
     <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="container navbar-inner">
-        {/* Mobile Left Menu Toggle */}
+        {/* Left: Clean 4-Dot Grid / Menu Button */}
         <button
           className="icon-btn mobile-menu-btn"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Menu"
         >
-          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          {menuOpen ? <X size={20} /> : <LayoutGrid size={20} />}
         </button>
 
+        {/* Center: Single Clean Logo */}
         <Link to="/" className="logo" onClick={() => setMenuOpen(false)}>
-          <img src="/logo.png" alt="Afsha Enterprises" className="logo-img" onError={(e) => { e.target.style.display = 'none'; }} />
-          <span className="logo-brand-text">Afsha</span>
+          <img
+            src="/logo.png"
+            alt="Afsha Enterprises"
+            className="logo-img"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'block';
+            }}
+          />
+          <span className="logo-brand-text" style={{ display: 'none' }}>Afsha</span>
         </Link>
 
+        {/* Desktop Nav Links */}
         <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
           {navLinks.map((link) => (
             <a key={link.label} href={link.href} onClick={(e) => handleNavClick(e, link)}>
@@ -84,21 +82,8 @@ export default function Navbar() {
           ))}
         </nav>
 
+        {/* Right: Clean Notification Bell & User Avatar */}
         <div className="nav-actions">
-          {/* Expandable search */}
-          <form className={`nav-search ${searchOpen ? 'open' : ''}`} onSubmit={handleSearchSubmit}>
-            <input
-              type="text"
-              placeholder="Search products…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              aria-label="Search products"
-            />
-            <button type="button" className="icon-btn" aria-label="Search" onClick={() => setSearchOpen((v) => !v)}>
-              <Search size={18} />
-            </button>
-          </form>
-
           {/* Notification Bell */}
           <button
             type="button"
@@ -109,14 +94,20 @@ export default function Navbar() {
             <Bell size={18} />
           </button>
 
+          {/* User Profile */}
           <div className="user-menu-wrap">
-            <button className={`icon-btn ${user?.photoUrl ? 'navbar-user-btn' : ''}`} aria-label="Account" onClick={() => setUserMenuOpen(!userMenuOpen)}>
+            <button
+              className={`icon-btn ${user?.photoUrl ? 'navbar-user-btn' : ''}`}
+              aria-label="Account"
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+            >
               {user?.photoUrl ? (
                 <img src={user.photoUrl} alt="Avatar" className="navbar-avatar" />
               ) : (
                 <User size={18} />
               )}
             </button>
+
             {userMenuOpen && (
               <div className="user-dropdown">
                 {user ? (
