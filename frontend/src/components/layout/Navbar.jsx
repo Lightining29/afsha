@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { User, Menu, X, Bell, LayoutGrid } from 'lucide-react';
+import { User, X, Bell, LayoutGrid } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { toastSuccess, toastInfo } from '../../utils/toast.js';
 import './Navbar.css';
@@ -59,18 +59,10 @@ export default function Navbar() {
           {menuOpen ? <X size={20} /> : <LayoutGrid size={20} />}
         </button>
 
-        {/* Center: Single Clean Logo */}
-        <Link to="/" className="logo" onClick={() => setMenuOpen(false)}>
-          <img
-            src="/logo.png"
-            alt="Afsha Enterprises"
-            className="logo-img"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'block';
-            }}
-          />
-          <span className="logo-brand-text" style={{ display: 'none' }}>Afsha</span>
+        {/* Center: Luxury Text-Only Brand Logo */}
+        <Link to="/" className="luxury-text-logo" onClick={() => setMenuOpen(false)}>
+          <span className="logo-main-text">AFSHA</span>
+          <span className="logo-sub-text">ENTERPRISES</span>
         </Link>
 
         {/* Desktop Nav Links */}

@@ -35,7 +35,7 @@ export default function Hero() {
           {/* Left Text & CTA */}
           <div className="hero-banner-left">
             <div className="hero-banner-eyebrow">
-              <Sparkles size={12} className="hero-sparkle-icon" />
+              <Sparkles size={11} className="hero-sparkle-icon" />
               <span>Multi-functional Trimmer</span>
             </div>
 
@@ -55,7 +55,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          {/* Right Product Image — 100% Crystal Clear Natural Showcase */}
+          {/* Right Product Image — Aligned to Right with Symmetrical Gapping */}
           <div className="hero-banner-right">
             <div className="hero-banner-img-container">
               <img

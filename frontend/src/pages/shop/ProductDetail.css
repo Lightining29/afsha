@@ -312,22 +312,22 @@
   color: #475569;
 }
 
-/* ── Fixed Bottom Action Bar ── */
+/* ── Fixed Bottom Action Bar: Ultra-Premium Luxury Styling ── */
 .pdp-bottom-action-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid #f1f5f9;
-  padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid #e2e8f0;
+  padding: 12px 20px calc(14px + env(safe-area-inset-bottom, 0px));
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   z-index: 10001;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.07);
   max-width: 600px;
   margin: 0 auto;
 }
@@ -338,65 +338,77 @@
   }
 }
 
-/* Dark Stepper Capsule */
+/* Luxury Stepper Capsule */
 .pdp-stepper-capsule {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: #0f172a;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
   border-radius: 999px;
-  padding: 8px 12px;
-  color: #ffffff;
+  padding: 6px 10px;
+  color: #0f172a;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .pdp-stepper-btn {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: #0f172a;
   cursor: pointer;
   transition: all 0.15s ease;
-  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.pdp-stepper-btn:hover {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
 }
 
 .pdp-stepper-btn:active {
-  transform: scale(0.88);
+  transform: scale(0.9);
 }
 
 .pdp-stepper-val {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 800;
-  min-width: 18px;
+  min-width: 20px;
   text-align: center;
+  color: #0f172a;
 }
 
-/* Wide Golden Yellow CTA Button */
+/* Wide Ultra-Premium Buy Now CTA Button */
 .pdp-cta-yellow-btn {
   flex: 1;
-  background: #fec22a;
-  color: #111827;
-  font-size: 0.98rem;
-  font-weight: 800;
-  padding: 14px 24px;
+  background: linear-gradient(135deg, #fec22a 0%, #f59e0b 100%);
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  padding: 13px 24px;
   border-radius: 999px;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(254, 194, 42, 0.35);
+  gap: 8px;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.4);
   transition: all 0.2s ease;
 }
 
 .pdp-cta-yellow-btn:hover:not(:disabled) {
-  background: #f59e0b;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(254, 194, 42, 0.45);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.5);
 }
 
 .pdp-cta-yellow-btn:active:not(:disabled) {
