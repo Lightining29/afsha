@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HERO BANNER — Black Luxury Background, Right-Aligned Product with Equal Gapping
+   HERO BANNER SLIDER — 2s Auto Carousel (Trimmer & Raksha Bandhan Festive)
    ========================================================================== */
 
 .hero-banner-section {
@@ -7,25 +7,76 @@
   background: #ffffff;
 }
 
-.hero-banner-card {
+.hero-slider-viewport {
   position: relative;
-  background: linear-gradient(135deg, #090c12 0%, #111827 55%, #0a0d14 100%);
+  width: 100%;
   border-radius: 24px;
-  padding: 22px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
   overflow: hidden;
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
   border: 1px solid rgba(255, 255, 255, 0.09);
   min-height: 210px;
 }
 
+/* ── Banner Card Base ── */
+.hero-banner-card {
+  width: 100%;
+  padding: 22px 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 210px;
+  box-sizing: border-box;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.hero-banner-card.slide-active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+  position: relative;
+  z-index: 2;
+}
+
+.hero-banner-card.slide-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.98);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+/* Slide 1: Obsidian Luxury Theme */
+.slide-trimmer {
+  background: linear-gradient(135deg, #090c12 0%, #111827 55%, #0a0d14 100%);
+}
+
+/* Slide 2: Royal Festive Raksha Bandhan Theme */
+.slide-raksha {
+  background: linear-gradient(135deg, #1d0718 0%, #300d23 45%, #120613 100%);
+  position: relative;
+}
+
+.slide-raksha::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Left Content */
 .hero-banner-left {
   flex: 1;
-  max-width: 46%;
+  max-width: 48%;
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -46,8 +97,14 @@
   font-weight: 800;
   letter-spacing: 0.4px;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   white-space: nowrap;
+}
+
+.raksha-eyebrow {
+  background: rgba(244, 63, 94, 0.15);
+  border-color: rgba(251, 113, 133, 0.3);
+  color: #fecdd3;
 }
 
 .hero-sparkle-icon {
@@ -60,7 +117,7 @@
   font-weight: 700;
   color: #f8fafc;
   line-height: 1.22;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   letter-spacing: -0.4px;
 }
 
@@ -69,12 +126,39 @@
   color: #ffffff;
 }
 
-/* Painless & Instant text in Yellow */
 .hero-banner-title-accent {
   color: #fec22a;
   font-weight: 800;
 }
 
+/* ── Raksha Bandhan Festive Graphic on Left ── */
+.raksha-art-wrap {
+  width: 100%;
+  max-width: 170px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 4px 12px rgba(244, 63, 94, 0.35));
+}
+
+.raksha-art-graphic {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.raksha-tagline {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #ffe4e6;
+  margin: 0 0 12px;
+  line-height: 1.25;
+}
+
+/* Buttons */
 .hero-banner-shop-btn {
   display: inline-flex;
   align-items: center;
@@ -83,7 +167,7 @@
   color: #0f172a;
   font-size: 0.88rem;
   font-weight: 800;
-  padding: 10px 24px;
+  padding: 9px 22px;
   border-radius: 12px;
   text-decoration: none;
   transition: all 0.2s ease;
@@ -97,10 +181,22 @@
   box-shadow: 0 6px 18px rgba(254, 194, 42, 0.35);
 }
 
-/* Right Trimmer Showcase — Positioned Far Right */
+.raksha-gift-btn {
+  background: linear-gradient(135deg, #fec22a 0%, #f59e0b 100%);
+  color: #0f172a;
+  font-weight: 900;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+}
+
+.raksha-gift-btn:hover {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+}
+
+/* Right Trimmer Showcase */
 .hero-banner-right {
   position: relative;
-  width: 54%;
+  width: 52%;
   height: 205px;
   display: flex;
   align-items: center;
@@ -132,7 +228,7 @@
   object-position: right center;
   filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.65));
   image-rendering: -webkit-optimize-contrast;
-  transform: translateX(8px);
+  transform: translateX(6px);
 }
 
 .hero-banner-bogo-tag {
@@ -152,29 +248,79 @@
   box-shadow: 0 3px 8px rgba(225, 29, 72, 0.4);
 }
 
-/* Mobile Responsiveness */
+.raksha-festive-tag {
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── Slider Navigation Indicators ── */
+.hero-slider-indicators {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 10;
+}
+
+.hero-slider-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s ease;
+}
+
+.hero-slider-dot.active {
+  width: 22px;
+  background: #fec22a;
+  box-shadow: 0 0 8px rgba(254, 194, 42, 0.6);
+}
+
+/* ── Mobile Responsiveness ── */
 @media (max-width: 640px) {
-  .hero-banner-card {
-    padding: 16px 14px;
+  .hero-slider-viewport {
     border-radius: 20px;
-    min-height: 165px;
+    min-height: 168px;
+  }
+
+  .hero-banner-card {
+    padding: 16px 14px 22px;
+    border-radius: 20px;
+    min-height: 168px;
     gap: 8px;
   }
 
   .hero-banner-left {
-    max-width: 46%;
+    max-width: 48%;
   }
 
   .hero-banner-eyebrow {
     font-size: 0.62rem;
     padding: 3px 8px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .hero-banner-title {
     font-size: 1.02rem;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     line-height: 1.18;
+  }
+
+  .raksha-art-wrap {
+    max-width: 140px;
+    height: 48px;
+    margin-bottom: 2px;
+  }
+
+  .raksha-tagline {
+    font-size: 0.66rem;
+    margin-bottom: 8px;
   }
 
   .hero-banner-shop-btn {
@@ -185,23 +331,28 @@
 
   .hero-banner-right {
     height: 160px;
-    width: 54%;
-    margin-right: -8px;
+    width: 52%;
+    margin-right: -6px;
   }
 
   .hero-banner-img {
-    transform: translateX(6px);
+    transform: translateX(4px);
   }
 }
 
-/* Desktop Luxury Enhancements (1024px+) */
+/* ── Desktop Luxury Enhancements (1024px+) ── */
 @media (min-width: 1024px) {
   .hero-banner-section {
     padding: 16px 0 32px;
   }
 
+  .hero-slider-viewport {
+    border-radius: 32px;
+    min-height: 380px;
+  }
+
   .hero-banner-card {
-    padding: 44px 54px;
+    padding: 44px 54px 44px;
     border-radius: 32px;
     min-height: 380px;
   }
@@ -213,14 +364,25 @@
   .hero-banner-eyebrow {
     font-size: 0.78rem;
     padding: 6px 14px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
 
   .hero-banner-title {
     font-size: 2.8rem;
     line-height: 1.14;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
     letter-spacing: -0.8px;
+  }
+
+  .raksha-art-wrap {
+    max-width: 280px;
+    height: 110px;
+    margin-bottom: 8px;
+  }
+
+  .raksha-tagline {
+    font-size: 1rem;
+    margin-bottom: 20px;
   }
 
   .hero-banner-shop-btn {
@@ -238,5 +400,14 @@
   .hero-banner-img {
     max-height: 310px;
     transform: translateX(0);
+  }
+
+  .hero-slider-indicators {
+    bottom: 16px;
+    gap: 8px;
+  }
+
+  .hero-slider-dot.active {
+    width: 28px;
   }
 }

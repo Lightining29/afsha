@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Gift } from 'lucide-react';
+import { Sparkles, Gift, HeartHandshake } from 'lucide-react';
 import { fetchProducts } from '../../api';
 import './Hero.css';
 
 export default function Hero() {
   const [hairRemover, setHairRemover] = useState(null);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const touchStartX = useRef(null);
 
   useEffect(() => {
     fetchProducts({ limit: '16' })
@@ -25,53 +27,141 @@ export default function Hero() {
       .catch(() => {});
   }, []);
 
+  // 2s Auto Slider Timer as requested
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev === 0 ? 1 : 0));
+    }, 2000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff > 35) {
+      setActiveSlide(1);
+    } else if (diff < -35) {
+      setActiveSlide(0);
+    }
+    touchStartX.current = null;
+  };
+
   const isBogo = hairRemover?.isBogoActive ?? (hairRemover?.isBogo && (!hairRemover?.bogoEndsAt || new Date(hairRemover.bogoEndsAt) > new Date()));
   const showcaseImage = '/hair-remover-showcase-v3.png';
+  const targetProductLink = hairRemover?.slug ? `/products/${hairRemover.slug}` : '#all-products';
 
   return (
     <section id="home" className="hero-banner-section">
       <div className="container">
-        <div className="hero-banner-card">
-          {/* Left Text & CTA */}
-          <div className="hero-banner-left">
-            <div className="hero-banner-eyebrow">
-              <Sparkles size={11} className="hero-sparkle-icon" />
-              <span>Multi-functional Trimmer</span>
+        <div
+          className="hero-slider-viewport"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* ── Slide 1: Original Trimmer Banner ── */}
+          <div className={`hero-banner-card slide-trimmer ${activeSlide === 0 ? 'slide-active' : 'slide-hidden'}`}>
+            {/* Left Content */}
+            <div className="hero-banner-left">
+              <div className="hero-banner-eyebrow">
+                <Sparkles size={11} className="hero-sparkle-icon" />
+                <span>Multi-functional Trimmer</span>
+              </div>
+
+              <h2 className="hero-banner-title">
+                Silky Smooth <br />
+                <span className="hero-banner-title-main">Flawless Finish</span> <br />
+                <span className="hero-banner-title-accent">
+                  {isBogo ? 'Buy 1 Get 1 Free' : 'Painless & Instant'}
+                </span>
+              </h2>
+
+              <Link to={targetProductLink} className="hero-banner-shop-btn">
+                Shop now
+              </Link>
             </div>
 
-            <h2 className="hero-banner-title">
-              Silky Smooth <br />
-              <span className="hero-banner-title-main">Flawless Finish</span> <br />
-              <span className="hero-banner-title-accent">
-                {isBogo ? 'Buy 1 Get 1 Free' : 'Painless & Instant'}
-              </span>
-            </h2>
+            {/* Right Product Image Showcase */}
+            <div className="hero-banner-right">
+              <div className="hero-banner-img-container">
+                <img
+                  src={showcaseImage}
+                  alt={hairRemover?.name || 'Multi-functional Eyebrow & Body Trimmer'}
+                  className="hero-banner-img"
+                  fetchpriority="high"
+                  decoding="async"
+                />
 
-            <Link
-              to={hairRemover?.slug ? `/products/${hairRemover.slug}` : '#all-products'}
-              className="hero-banner-shop-btn"
-            >
-              Shop now
-            </Link>
+                {isBogo && (
+                  <div className="hero-banner-bogo-tag">
+                    <Gift size={11} /> BOGO FREE
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Right Product Image — Aligned to Right with Symmetrical Gapping */}
-          <div className="hero-banner-right">
-            <div className="hero-banner-img-container">
-              <img
-                src={showcaseImage}
-                alt={hairRemover?.name || 'Multi-functional Eyebrow & Body Trimmer'}
-                className="hero-banner-img"
-                fetchpriority="high"
-                decoding="async"
-              />
+          {/* ── Slide 2: Raksha Bandhan Special Festival Banner ── */}
+          <div className={`hero-banner-card slide-raksha ${activeSlide === 1 ? 'slide-active' : 'slide-hidden'}`}>
+            {/* Left Festive Graphic & CTA */}
+            <div className="hero-banner-left raksha-left">
+              <div className="hero-banner-eyebrow raksha-eyebrow">
+                <HeartHandshake size={12} className="hero-sparkle-icon" />
+                <span>Raksha Bandhan Special</span>
+              </div>
 
-              {isBogo && (
-                <div className="hero-banner-bogo-tag">
-                  <Gift size={11} /> BOGO FREE
-                </div>
-              )}
+              <div className="raksha-art-wrap">
+                <img
+                  src="/raksha-bandhan-art.png"
+                  alt="Happy Raksha Bandhan"
+                  className="raksha-art-graphic"
+                />
+              </div>
+
+              <p className="raksha-tagline">
+                Gift Pure Care &amp; Love To Your Sister ✨
+              </p>
+
+              <Link to={targetProductLink} className="hero-banner-shop-btn raksha-gift-btn">
+                Gift Now 🎁
+              </Link>
             </div>
+
+            {/* Right Product Image */}
+            <div className="hero-banner-right">
+              <div className="hero-banner-img-container">
+                <img
+                  src={showcaseImage}
+                  alt={hairRemover?.name || 'Raksha Bandhan Gift Set'}
+                  className="hero-banner-img"
+                  fetchpriority="high"
+                  decoding="async"
+                />
+
+                <div className="hero-banner-bogo-tag raksha-festive-tag">
+                  <Gift size={11} /> SISTER GIFT
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Slider Pagination Indicators ── */}
+          <div className="hero-slider-indicators">
+            <button
+              type="button"
+              className={`hero-slider-dot ${activeSlide === 0 ? 'active' : ''}`}
+              onClick={() => setActiveSlide(0)}
+              aria-label="Slide 1 - Trimmer Showcase"
+            />
+            <button
+              type="button"
+              className={`hero-slider-dot ${activeSlide === 1 ? 'active' : ''}`}
+              onClick={() => setActiveSlide(1)}
+              aria-label="Slide 2 - Raksha Bandhan"
+            />
           </div>
         </div>
       </div>
