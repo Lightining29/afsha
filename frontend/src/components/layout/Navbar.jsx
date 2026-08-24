@@ -60,9 +60,9 @@ export default function Navbar() {
             {menuOpen ? <X size={20} /> : <LayoutGrid size={20} />}
           </button>
 
-          <Link to="/" className="luxury-text-logo" onClick={() => setMenuOpen(false)}>
-            <span className="logo-main-text">Afsha</span>
-            <span className="logo-dot">.</span>
+          <Link to="/" className="luxury-brand-wordmark" onClick={() => setMenuOpen(false)}>
+            <span className="brand-wordmark-title">Afsha</span>
+            <span className="brand-wordmark-sub">ENTERPRISES</span>
           </Link>
         </div>
 
