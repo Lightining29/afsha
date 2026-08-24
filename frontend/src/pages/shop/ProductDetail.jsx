@@ -8,7 +8,8 @@ import {
   Minus,
   Plus,
   Gift,
-  Zap
+  Zap,
+  Star,
 } from 'lucide-react';
 import {
   fetchProduct,
