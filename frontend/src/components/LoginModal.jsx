@@ -46,6 +46,7 @@ export default function LoginModal({ onClose }) {
       const u = await loginWithGoogle(credential);
       toastSuccess('Welcome!', `Signed in as ${u.name}`);
       onClose();
+      navigate(u.role === 'admin' ? '/admin' : '/account');
     } catch (err) {
       setError(err.message || 'Google Sign-In failed');
       toastError('Google Sign-In failed', err.message);
@@ -70,6 +71,7 @@ export default function LoginModal({ onClose }) {
         const u = await login(email, password);
         toastSuccess('Welcome back!', `Signed in as ${u.name}`);
         onClose();
+        navigate(u.role === 'admin' ? '/admin' : '/account');
       } else if (mode === 'register') {
         const res = await register(name, email, password);
         if (res?.requireVerification) {
@@ -79,6 +81,7 @@ export default function LoginModal({ onClose }) {
         } else {
           toastSuccess('Account created!', 'Welcome to Afsha Enterprises.');
           onClose();
+          navigate('/account');
         }
       } else if (mode === 'forgot') {
         if (forgotStep === 1) {

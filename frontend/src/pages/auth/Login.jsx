@@ -22,7 +22,7 @@ export default function Login() {
     try {
       const user = await loginWithGoogle(credential);
       toastSuccess('Welcome back!', `Signed in as ${user.name}`);
-      navigate(user.role === 'admin' ? '/admin' : from, { replace: true });
+      navigate(user.role === 'admin' ? '/admin' : '/account', { replace: true });
     } catch (err) {
       setError(err.message || 'Google login failed');
       toastError('Google login failed', err.message);
@@ -43,7 +43,7 @@ export default function Login() {
     try {
       const user = await login(email, password);
       toastSuccess('Welcome back!', `Signed in as ${user.name}`);
-      navigate(user.role === 'admin' ? '/admin' : from, { replace: true });
+      navigate(user.role === 'admin' ? '/admin' : '/account', { replace: true });
     } catch (err) {
       if (err.data?.requireVerification) {
         navigate('/verify-otp', { state: { email: err.data.email } });
