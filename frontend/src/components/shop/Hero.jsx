@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Gift, HeartHandshake } from 'lucide-react';
+import { Sparkles, Gift, HeartHandshake, Flame } from 'lucide-react';
 import { fetchProducts } from '../../api';
 import './Hero.css';
 
@@ -27,10 +27,10 @@ export default function Hero() {
       .catch(() => {});
   }, []);
 
-  // 2s Auto Slider Timer
+  // 2s Auto Slider Timer for 3 slides
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev === 0 ? 1 : 0));
+      setActiveSlide((prev) => (prev + 1) % 3);
     }, 2000);
     return () => clearInterval(timer);
   }, []);
@@ -43,9 +43,9 @@ export default function Hero() {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (diff > 35) {
-      setActiveSlide(1);
+      setActiveSlide((prev) => (prev + 1) % 3);
     } else if (diff < -35) {
-      setActiveSlide(0);
+      setActiveSlide((prev) => (prev === 0 ? 2 : prev - 1));
     }
     touchStartX.current = null;
   };
@@ -62,7 +62,7 @@ export default function Hero() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* ── Slide 1: Original Trimmer Banner (Dark Theme) ── */}
+          {/* ── Slide 1: Original Trimmer Banner (Dark Luxury Theme) ── */}
           <div className={`hero-banner-card slide-trimmer ${activeSlide === 0 ? 'slide-active' : 'slide-hidden'}`}>
             {/* Left Content */}
             <div className="hero-banner-left">
@@ -104,7 +104,7 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ── Slide 2: Raksha Bandhan Special Banner (Light Theme, Transparent Artwork & Rakhi) ── */}
+          {/* ── Slide 2: Raksha Bandhan Special Banner (Light Theme, Wishes & Shop Button Only) ── */}
           <div className={`hero-banner-card slide-raksha-light ${activeSlide === 1 ? 'slide-active' : 'slide-hidden'}`}>
             <div className="raksha-light-content">
               {/* Left Transparent Raksha Bandhan & Rakhi Art */}
@@ -147,7 +147,42 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ── Slider Pagination Indicators ── */}
+          {/* ── Slide 3: Royal Velvet Theme with Half Rakhi Hanging Out & Italic Colorful Text ── */}
+          <div className={`hero-banner-card slide-raksha-royal ${activeSlide === 2 ? 'slide-active' : 'slide-hidden'}`}>
+            {/* Half Rakhi Hanging Out of Banner Top-Right */}
+            <div className="hero-hanging-rakhi-wrap">
+              <img
+                src="/hanging-rakhi-ornament.png"
+                alt="Hanging Rakhi Ornament"
+                className="hero-hanging-rakhi-img"
+              />
+            </div>
+
+            {/* Slide Content */}
+            <div className="royal-slide-content">
+              <div className="royal-eyebrow">
+                <Flame size={12} className="royal-sparkle-icon" />
+                <span>Rakhi Festive Celebration</span>
+              </div>
+
+              <h2 className="royal-italic-headline">
+                <span className="royal-italic-line-1">A Sacred Thread of</span> <br />
+                <span className="royal-italic-colorful">Love, Joy &amp; Protection</span>
+              </h2>
+
+              <p className="royal-wishes-subtitle">
+                Cherish the sweetest memories and celebrate eternal sibling love with exclusive curated gifts.
+              </p>
+
+              <div className="royal-btn-group">
+                <Link to="#all-products" className="hero-banner-shop-btn royal-glow-btn">
+                  Gift Sister Today 💖
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Slider Pagination Indicators (3 Dots) ── */}
           <div className="hero-slider-indicators">
             <button
               type="button"
@@ -159,7 +194,13 @@ export default function Hero() {
               type="button"
               className={`hero-slider-dot ${activeSlide === 1 ? 'active' : ''} ${activeSlide === 1 ? 'dot-on-light' : ''}`}
               onClick={() => setActiveSlide(1)}
-              aria-label="Slide 2 - Raksha Bandhan"
+              aria-label="Slide 2 - Raksha Bandhan Greetings"
+            />
+            <button
+              type="button"
+              className={`hero-slider-dot ${activeSlide === 2 ? 'active' : ''}`}
+              onClick={() => setActiveSlide(2)}
+              aria-label="Slide 3 - Royal Rakhi Special"
             />
           </div>
         </div>
