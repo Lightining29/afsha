@@ -17,7 +17,8 @@ import {
   Video,
   ChevronDown,
   ChevronUp,
-  HelpCircle
+  HelpCircle,
+  Gift
 } from 'lucide-react';
 import {
   fetchProduct,
@@ -28,6 +29,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
+import CountdownTimer from '../../components/shop/CountdownTimer';
 
 import { toastWishlist, toastSuccess } from '../../utils/toast.js';
 import './ProductDetail.css';
@@ -106,6 +108,7 @@ export default function ProductDetail() {
 
   const finalPrice = getProductPrice(product);
   const discount = product.discountPercent > 0 ? product.price - finalPrice : 0;
+  const isBogo = product.isBogoActive ?? (product.isBogo && (!product.bogoEndsAt || new Date(product.bogoEndsAt) > new Date()));
 
   const gallery = Array.isArray(product.images) && product.images.length > 0
     ? product.images
@@ -219,6 +222,27 @@ export default function ProductDetail() {
               </div>
 
             </div>
+
+            {/* BOGO Deal Highlight Banner */}
+            {isBogo && (
+              <div className="product-bogo-deal-banner">
+                <div className="bogo-deal-header">
+                  <div className="bogo-deal-tag">
+                    <Gift size={16} className="bogo-gift-bounce" />
+                    <span>{product.bogoBadgeText || 'BUY 1 GET 1 FREE'}</span>
+                  </div>
+                  <span className="bogo-deal-badge">Special Deal</span>
+                </div>
+                <p className="bogo-deal-desc">
+                  🎉 <strong>Buy 1, Get 2nd Free!</strong> Add 1 item to your cart and receive 2 items delivered at the same price!
+                </p>
+                {product.bogoEndsAt && (
+                  <div className="bogo-deal-timer-wrap">
+                    <CountdownTimer targetDate={product.bogoEndsAt} label="Offer Expires In" />
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Price Box */}
             <div className="price-section">

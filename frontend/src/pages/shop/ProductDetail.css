@@ -251,6 +251,68 @@
   margin: 6px 0 12px;
 }
 
+/* ── BOGO Deal Highlight Banner ── */
+.product-bogo-deal-banner {
+  background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+  border: 1.5px solid #f43f5e;
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(244, 63, 94, 0.12);
+}
+
+.bogo-deal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bogo-deal-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 5px 12px;
+  border-radius: 50px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.3);
+}
+
+.bogo-gift-bounce {
+  animation: bogoBounce 1.8s infinite ease-in-out;
+}
+
+@keyframes bogoBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.bogo-deal-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #9f1239;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.bogo-deal-desc {
+  font-size: 0.92rem;
+  color: #881337;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.bogo-deal-timer-wrap {
+  margin-top: 4px;
+}
+
 .price-section {
   display: flex;
   align-items: center;

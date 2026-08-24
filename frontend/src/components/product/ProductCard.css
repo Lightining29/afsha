@@ -57,6 +57,44 @@
   transform: scale(1.05);
 }
 
+/* BOGO Floating Badge on Image */
+.product-card-bogo-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 4px 10px rgba(225, 29, 72, 0.35);
+  z-index: 2;
+  text-transform: uppercase;
+  animation: bogoPulse 2s infinite ease-in-out;
+}
+
+@keyframes bogoPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+.bogo-gift-icon {
+  color: #ffffff;
+}
+
+/* BOGO Timer Badge in Card */
+.product-card-timer-wrap {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  z-index: 2;
+}
+
 
 /* Wishlist Button */
 .wishlist-btn {

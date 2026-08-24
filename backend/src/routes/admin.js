@@ -110,6 +110,7 @@ router.post('/products', upload.array('images', 5), async (req, res) => {
       name, description, price, originalPrice,
       category, stockQuantity, discountPercent, bestseller,
       badge, isTrending, isNewArrival, isLimitedEdition,
+      isBogo, bogoEndsAt, bogoBadgeText,
     } = req.body;
 
     if (!name || !description || !price || !category) {
@@ -128,6 +129,7 @@ router.post('/products', upload.array('images', 5), async (req, res) => {
 
     const qty = parseInt(stockQuantity ?? 50, 10);
     const isBest = bestseller === 'true' || bestseller === true;
+    const isBogoOffer = isBogo === 'true' || isBogo === true;
     const product = await Product.create({
       name,
       slug,
@@ -146,6 +148,9 @@ router.post('/products', upload.array('images', 5), async (req, res) => {
       isBestseller: isBest,
       isNewArrival: isNewArrival === 'true' || isNewArrival === true,
       isLimitedEdition: isLimitedEdition === 'true' || isLimitedEdition === true,
+      isBogo: isBogoOffer,
+      bogoEndsAt: bogoEndsAt ? new Date(bogoEndsAt) : null,
+      bogoBadgeText: bogoBadgeText || 'BUY 1 GET 1 FREE',
       inStock: qty > 0,
     });
 
@@ -172,6 +177,15 @@ router.put('/products/:id', upload.array('images', 5), async (req, res) => {
     if (updateData.isTrending !== undefined) updateData.isTrending = updateData.isTrending === 'true' || updateData.isTrending === true;
     if (updateData.isNewArrival !== undefined) updateData.isNewArrival = updateData.isNewArrival === 'true' || updateData.isNewArrival === true;
     if (updateData.isLimitedEdition !== undefined) updateData.isLimitedEdition = updateData.isLimitedEdition === 'true' || updateData.isLimitedEdition === true;
+    if (updateData.isBogo !== undefined) {
+      updateData.isBogo = updateData.isBogo === 'true' || updateData.isBogo === true;
+    }
+    if (updateData.bogoEndsAt !== undefined) {
+      updateData.bogoEndsAt = updateData.bogoEndsAt ? new Date(updateData.bogoEndsAt) : null;
+    }
+    if (updateData.bogoBadgeText !== undefined) {
+      updateData.bogoBadgeText = updateData.bogoBadgeText || 'BUY 1 GET 1 FREE';
+    }
 
     // Strip image-control fields — they're handled below, not passed to findByIdAndUpdate.
     // deleteImageIndex may arrive as a single string (one value) or an array

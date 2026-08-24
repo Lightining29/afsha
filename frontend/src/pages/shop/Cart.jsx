@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag, Bookmark, Check } from 'lucide-react';
+import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag, Bookmark, Check, Gift } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { formatPrice, getProductPrice } from '../../api';
@@ -8,7 +8,19 @@ import { toastInfo, toastSuccess } from '../../utils/toast.js';
 import './Cart.css';
 
 export default function Cart() {
-  const { items, cartTotal, removeFromCart, updateQuantity, addToCart } = useCart();
+  const {
+    items,
+    cartTotal,
+    cartRawSubtotal,
+    bogoTotalSavings,
+    removeFromCart,
+    updateQuantity,
+    addToCart,
+    isItemBogo,
+    getItemPayableQty,
+    getItemTotalPrice,
+    getItemSavings
+  } = useCart();
   const { isAuthenticated, setShowLoginModal } = useAuth();
   const [savedForLater, setSavedForLater] = useState(() => {
     const saved = localStorage.getItem('glowora_saved_for_later');
@@ -64,54 +76,88 @@ export default function Cart() {
 
         <div className="cart-layout">
           <div className="cart-items">
-            {items.map((item) => (
-              <div key={item._id} className="cart-item">
-                <img src={item.image} alt={item.name} />
-                <div className="cart-item-info">
-                  <h3>{item.name}</h3>
-                  <span className="cart-item-price">{formatPrice(getProductPrice(item))}</span>
-                  <div style={{ marginTop: '8px' }}>
-                    <button
-                      className="save-later-btn"
-                      onClick={() => handleSaveForLater(item)}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#E94057',
-                        fontSize: '12px',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        padding: 0,
-                      }}
-                    >
-                      <Bookmark size={14} /> Save for later
+            {items.map((item) => {
+              const hasBogo = isItemBogo(item);
+              const payableQty = getItemPayableQty(item);
+              const itemTotal = getItemTotalPrice(item);
+              const savings = getItemSavings(item);
+              const unitPrice = getProductPrice(item);
+              const rawItemTotal = unitPrice * item.quantity;
+
+              return (
+                <div key={item._id} className="cart-item">
+                  <img src={item.image} alt={item.name} />
+                  <div className="cart-item-info">
+                    <h3>{item.name}</h3>
+                    <div className="cart-item-price-row">
+                      <span className="cart-item-price">{formatPrice(unitPrice)}</span>
+                      {hasBogo && (
+                        <span className="cart-bogo-tag">
+                          <Gift size={12} /> {item.bogoBadgeText || 'BUY 1 GET 1 FREE'}
+                        </span>
+                      )}
+                    </div>
+
+                    {hasBogo && (
+                      <div className="cart-bogo-notice">
+                        {item.quantity === 1 ? (
+                          <span>🎉 <strong>1 Paid + 1 Free Unit Included!</strong> (2 items delivered)</span>
+                        ) : (
+                          <span>🎉 <strong>{payableQty} Paid + {item.quantity - payableQty} FREE Units!</strong></span>
+                        )}
+                      </div>
+                    )}
+
+                    <div style={{ marginTop: '8px' }}>
+                      <button
+                        className="save-later-btn"
+                        onClick={() => handleSaveForLater(item)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#E94057',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          padding: 0,
+                        }}
+                      >
+                        <Bookmark size={14} /> Save for later
+                      </button>
+                    </div>
+                  </div>
+                  <div className="cart-item-qty">
+                    <button onClick={() => updateQuantity(item._id, item.quantity - 1)}>
+                      <Minus size={16} />
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item._id, item.quantity + 1)}>
+                      <Plus size={16} />
                     </button>
                   </div>
-                </div>
-                <div className="cart-item-qty">
-                  <button onClick={() => updateQuantity(item._id, item.quantity - 1)}>
-                    <Minus size={16} />
+                  <div className="cart-item-total-col">
+                    <span className="cart-item-total">
+                      {formatPrice(itemTotal)}
+                    </span>
+                    {savings > 0 && (
+                      <span className="cart-item-raw-total">
+                        {formatPrice(rawItemTotal)}
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    className="cart-item-remove"
+                    onClick={() => handleRemove(item)}
+                    aria-label="Remove item"
+                  >
+                    <Trash2 size={18} />
                   </button>
-                  <span>{item.quantity}</span>
-                  <button onClick={() => updateQuantity(item._id, item.quantity + 1)}>
-                    <Plus size={16} />
-                  </button>
                 </div>
-                <span className="cart-item-total">
-                  {formatPrice(getProductPrice(item) * item.quantity)}
-                </span>
-                <button
-                  className="cart-item-remove"
-                  onClick={() => handleRemove(item)}
-                  aria-label="Remove item"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
-            ))}
+              );
+            })}
 
             {/* Saved for Later Section */}
             {savedForLater.length > 0 && (
@@ -149,8 +195,14 @@ export default function Cart() {
             <h3>Order Summary</h3>
             <div className="summary-row">
               <span>Subtotal</span>
-              <span>{formatPrice(cartTotal)}</span>
+              <span>{formatPrice(cartRawSubtotal)}</span>
             </div>
+            {bogoTotalSavings > 0 && (
+              <div className="summary-row bogo-discount-row">
+                <span>🎁 BOGO Savings</span>
+                <span className="bogo-savings-val">-{formatPrice(bogoTotalSavings)}</span>
+              </div>
+            )}
             <div className="summary-row">
               <span>Shipping</span>
               <span className="free">Free</span>
@@ -177,3 +229,4 @@ export default function Cart() {
     </div>
   );
 }
+

@@ -321,6 +321,51 @@
   margin-bottom: 4px;
 }
 
+/* BOGO Offer Card */
+.apf-bogo-card {
+  background: linear-gradient(135deg, #fff1f2, #ffe4e6);
+  border: 1.5px solid #fecdd3;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 4px;
+}
+
+.apf-bogo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bogo-toggle {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.bogo-title {
+  font-weight: 700 !important;
+  color: #e11d48 !important;
+  font-size: 0.95rem !important;
+}
+
+.apf-bogo-body {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed #fda4af;
+}
+
+.apf-bogo-hint {
+  font-size: 0.82rem;
+  color: #9f1239;
+  margin: 0 0 14px 0;
+  line-height: 1.4;
+}
+
+.apf-input-subtext {
+  font-size: 0.72rem;
+  color: #9f1239;
+  margin-top: 4px;
+}
+
 @media (max-width: 860px) {
   .apf-grid {
     grid-template-columns: 1fr;

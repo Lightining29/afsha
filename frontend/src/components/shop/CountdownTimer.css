@@ -1,0 +1,88 @@
+/* Compact timer for cards */
+.bogo-countdown-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(4px);
+  color: #fbbf24;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.bogo-clock-icon {
+  color: #fbbf24;
+  animation: pulse 1.5s infinite;
+}
+
+/* Full countdown box for detail pages & hero */
+.bogo-countdown-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(225, 29, 72, 0.08);
+  border: 1px dashed rgba(225, 29, 72, 0.4);
+  padding: 10px 14px;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.bogo-countdown-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #e11d48;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bogo-countdown-grid {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bogo-time-seg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(225, 29, 72, 0.2);
+  border-radius: 6px;
+  padding: 4px 8px;
+  min-width: 38px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.bogo-time-val {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.bogo-time-unit {
+  font-size: 9px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.bogo-time-sep {
+  font-size: 14px;
+  font-weight: 800;
+  color: #e11d48;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

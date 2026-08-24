@@ -204,6 +204,30 @@
   padding: 30px;
 }
 
+/* BOGO Floating Badge in Hero */
+.hero-product-bogo-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4);
+  text-transform: uppercase;
+}
+
+.hero-bogo-icon {
+  animation: pulse 1.5s infinite;
+}
+
 /* Discount badge */
 .hero-product-badge {
   position: absolute;
@@ -215,6 +239,22 @@
   color: #fff;
   font-size: 0.72rem;
   font-weight: 700;
+}
+
+.hero-product-bogo-badge ~ .hero-product-badge {
+  top: 48px;
+}
+
+.hero-feature-bogo {
+  background: #fff1f2;
+  border: 1px dashed #fda4af;
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #9f1239 !important;
+}
+
+.hero-countdown-wrap {
+  margin-bottom: 14px;
 }
 
 /* Rating chip */

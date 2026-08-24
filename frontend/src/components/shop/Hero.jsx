@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, Star, Headphones, ShoppingBag, Zap, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Star, Headphones, ShoppingBag, Zap, CheckCircle2, Gift } from 'lucide-react';
 import { toastBuyNow } from '../../utils/toast.js';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { fetchProducts, formatPrice, getProductPrice } from '../../api';
+import CountdownTimer from './CountdownTimer';
 import './Hero.css';
 
 const trustStats = [
@@ -68,6 +69,7 @@ export default function Hero() {
 
   const finalPrice = hairRemover ? getProductPrice(hairRemover) : null;
   const hasDiscount = hairRemover?.discountPercent > 0;
+  const isBogo = hairRemover?.isBogoActive ?? (hairRemover?.isBogo && (!hairRemover?.bogoEndsAt || new Date(hairRemover.bogoEndsAt) > new Date()));
 
   const parallaxStyle = {
     '--scroll-y': `${Math.min(scrollY * 0.1, 28)}px`,
@@ -144,6 +146,14 @@ export default function Hero() {
                 </div>
               )}
 
+              {/* BOGO Floating Badge */}
+              {isBogo && (
+                <div className="hero-product-bogo-badge">
+                  <Gift size={13} className="hero-bogo-icon" />
+                  <span>{hairRemover?.bogoBadgeText || 'BUY 1 GET 1 FREE'}</span>
+                </div>
+              )}
+
               {/* Discount badge */}
               {hasDiscount && (
                 <div className="hero-product-badge">
@@ -169,10 +179,22 @@ export default function Hero() {
               </h3>
 
               <ul className="hero-product-features">
+                {isBogo && (
+                  <li className="hero-feature-bogo">
+                    <Gift size={14} color="#f43f5e" />
+                    <span><strong>Buy 1 Get 1 Free Deal:</strong> 2 items delivered for 1</span>
+                  </li>
+                )}
                 <li><CheckCircle2 size={14} /> Painless &amp; gentle on skin</li>
                 <li><CheckCircle2 size={14} /> Use anywhere on the body</li>
                 <li><CheckCircle2 size={14} /> Long-lasting smooth results</li>
               </ul>
+
+              {isBogo && hairRemover?.bogoEndsAt && (
+                <div className="hero-countdown-wrap">
+                  <CountdownTimer targetDate={hairRemover.bogoEndsAt} label="BOGO Offer Ends In" />
+                </div>
+              )}
 
               <div className="hero-product-price-row">
                 <span className="hero-product-price">

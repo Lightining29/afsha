@@ -100,10 +100,65 @@
   background: var(--sky-blue-light);
 }
 
+.cart-item-price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cart-bogo-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.cart-bogo-notice {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: #e11d48;
+  background: #fff1f2;
+  border: 1px dashed #fecdd3;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.cart-item-total-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 80px;
+}
+
 .cart-item-total {
   font-weight: 700;
-  min-width: 70px;
   text-align: right;
+  color: #0f172a;
+}
+
+.cart-item-raw-total {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.bogo-discount-row {
+  color: #e11d48 !important;
+  font-weight: 600;
+}
+
+.bogo-savings-val {
+  color: #e11d48;
+  font-weight: 700;
 }
 
 .cart-item-remove {

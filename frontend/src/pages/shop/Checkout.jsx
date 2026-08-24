@@ -34,7 +34,16 @@ function loadRazorpaySdk() {
 }
 
 export default function CheckoutPage() {
-  const { items, cartTotal, clearCart } = useCart();
+  const {
+    items,
+    cartTotal,
+    cartRawSubtotal,
+    bogoTotalSavings,
+    clearCart,
+    isItemBogo,
+    getItemPayableQty,
+    getItemTotalPrice
+  } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -205,16 +214,44 @@ export default function CheckoutPage() {
 
             <div className="checkout-summary">
               <h3>Order Summary</h3>
-              {items.map((item) => (
-                <div key={item._id} className="checkout-item">
-                  <img src={item.image} alt={item.name} />
-                  <div className="checkout-item-info">
-                    <h4>{item.name}</h4>
-                    <span>Qty: {item.quantity}</span>
+              {items.map((item) => {
+                const hasBogo = isItemBogo(item);
+                const itemTotal = getItemTotalPrice(item);
+                const payableQty = getItemPayableQty(item);
+
+                return (
+                  <div key={item._id} className="checkout-item">
+                    <img src={item.image} alt={item.name} />
+                    <div className="checkout-item-info">
+                      <h4>{item.name}</h4>
+                      <span>
+                        Qty: {item.quantity}
+                        {hasBogo && (
+                          <span style={{ color: '#e11d48', fontWeight: 600, marginLeft: 4 }}>
+                            (🎁 {item.quantity === 1 ? '1 Free Included' : `${item.quantity - payableQty} Free`})
+                          </span>
+                        )}
+                      </span>
+                    </div>
+                    <span>{formatPrice(itemTotal)}</span>
                   </div>
-                  <span>{formatPrice(getProductPrice(item) * item.quantity)}</span>
+                );
+              })}
+              <div className="summary-divider" style={{ margin: '16px 0', borderTop: '2px solid var(--border)' }} />
+              <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, color: 'var(--text-muted)' }}>
+                <span>Subtotal</span>
+                <span>{formatPrice(cartRawSubtotal)}</span>
+              </div>
+              {bogoTotalSavings > 0 && (
+                <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, color: '#e11d48', fontWeight: 600 }}>
+                  <span>🎁 BOGO Savings</span>
+                  <span>-{formatPrice(bogoTotalSavings)}</span>
                 </div>
-              ))}
+              )}
+              <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, color: 'var(--text-muted)' }}>
+                <span>Shipping</span>
+                <span style={{ color: 'var(--sky-blue-deep)', fontWeight: 600 }}>Free</span>
+              </div>
               <div className="summary-divider" style={{ margin: '16px 0', borderTop: '2px solid var(--border)' }} />
               <div className="summary-row total" style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: '1.1rem' }}>
                 <span>Total</span>

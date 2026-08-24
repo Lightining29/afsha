@@ -22,6 +22,9 @@ const emptyForm = {
   isTrending: false,
   isNewArrival: false,
   isLimitedEdition: false,
+  isBogo: false,
+  bogoEndsAt: '',
+  bogoBadgeText: 'BUY 1 GET 1 FREE',
 };
 
 export default function AdminProductForm() {
@@ -71,6 +74,9 @@ export default function AdminProductForm() {
             isTrending: p.isTrending || false,
             isNewArrival: p.isNewArrival || false,
             isLimitedEdition: p.isLimitedEdition || false,
+            isBogo: p.isBogo || false,
+            bogoEndsAt: p.bogoEndsAt ? new Date(p.bogoEndsAt).toISOString().slice(0, 16) : '',
+            bogoBadgeText: p.bogoBadgeText || 'BUY 1 GET 1 FREE',
           });
           // Prefer the multi-image array; fall back to the primary URL.
           const imgs = Array.isArray(p.images) ? p.images : [];
@@ -157,6 +163,9 @@ export default function AdminProductForm() {
         isTrending: form.isTrending,
         isNewArrival: form.isNewArrival,
         isLimitedEdition: form.isLimitedEdition,
+        isBogo: form.isBogo,
+        bogoEndsAt: form.bogoEndsAt ? new Date(form.bogoEndsAt).toISOString() : '',
+        bogoBadgeText: form.bogoBadgeText || 'BUY 1 GET 1 FREE',
       };
 
       if (isEdit) {
@@ -209,11 +218,11 @@ export default function AdminProductForm() {
 
             <div className="apf-row">
               <div className="apf-group">
-                <label>Price ($) *</label>
+                <label>Price (₹) *</label>
                 <input type="number" step="0.01" min="0" value={form.price} onChange={update('price')} required />
               </div>
               <div className="apf-group">
-                <label>Original Price ($)</label>
+                <label>Original Price (₹)</label>
                 <input type="number" step="0.01" min="0" value={form.originalPrice} onChange={update('originalPrice')} placeholder="Before discount" />
               </div>
             </div>
@@ -239,6 +248,48 @@ export default function AdminProductForm() {
                 <label>Discount (%)</label>
                 <input type="number" min="0" max="100" value={form.discountPercent} onChange={update('discountPercent')} />
               </div>
+            </div>
+
+            {/* ── BOGO Offer Section ── */}
+            <div className="apf-bogo-card">
+              <div className="apf-bogo-header">
+                <label className="apf-checkbox-label bogo-toggle">
+                  <input
+                    type="checkbox"
+                    checked={form.isBogo}
+                    onChange={update('isBogo')}
+                  />
+                  <span className="bogo-title">🎁 Enable Buy 1 Get 1 Free (BOGO) Offer</span>
+                </label>
+              </div>
+
+              {form.isBogo && (
+                <div className="apf-bogo-body">
+                  <p className="apf-bogo-hint">
+                    When active, customers purchasing 1 unit receive a 2nd unit free (or buy 2 for the price of 1) automatically at checkout.
+                  </p>
+                  <div className="apf-row">
+                    <div className="apf-group">
+                      <label>Offer Expiry Date &amp; Time (Countdown Timer)</label>
+                      <input
+                        type="datetime-local"
+                        value={form.bogoEndsAt}
+                        onChange={update('bogoEndsAt')}
+                      />
+                      <span className="apf-input-subtext">Leave empty for an unlimited / ongoing BOGO offer.</span>
+                    </div>
+                    <div className="apf-group">
+                      <label>Badge Display Text</label>
+                      <input
+                        type="text"
+                        value={form.bogoBadgeText}
+                        onChange={update('bogoBadgeText')}
+                        placeholder="BUY 1 GET 1 FREE"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
           </div>

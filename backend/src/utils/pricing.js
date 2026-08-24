@@ -16,6 +16,29 @@ export function getFinalPrice(product) {
   return price;
 }
 
+export function isBogoActive(product) {
+  if (!product) return false;
+  if (!product.isBogo) return false;
+  if (product.bogoEndsAt && new Date(product.bogoEndsAt) <= new Date()) {
+    return false;
+  }
+  return true;
+}
+
+export function getBogoPayableQuantity(product, quantity) {
+  const qty = Number(quantity) || 1;
+  if (isBogoActive(product)) {
+    return Math.ceil(qty / 2);
+  }
+  return qty;
+}
+
+export function calculateItemTotal(product, quantity) {
+  const finalPrice = getFinalPrice(product);
+  const payableQty = getBogoPayableQuantity(product, quantity);
+  return finalPrice * payableQty;
+}
+
 export function enrichProduct(product) {
   const obj = product.toObject ? product.toObject({ virtuals: true }) : { ...product };
   const now = new Date();
@@ -25,6 +48,12 @@ export function enrichProduct(product) {
     obj.flashSalePrice > 0 &&
     (!obj.flashSaleEndsAt || new Date(obj.flashSaleEndsAt) > now);
   obj.flashSaleActive = flashActive;
+
+  // Determine if BOGO offer is still active
+  const bogoActive = isBogoActive(obj);
+  obj.isBogoActive = bogoActive;
+  obj.bogoBadgeText = obj.bogoBadgeText || 'BUY 1 GET 1 FREE';
+
   obj.finalPrice = getFinalPrice(obj);
   obj.inStock = (obj.stockQuantity ?? 0) > 0;
   // Expose image as a URL path — never send raw binary to clients

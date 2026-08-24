@@ -34,6 +34,10 @@ const productSchema = new mongoose.Schema(
     flashSale:        { type: Boolean, default: false, index: true },
     flashSalePrice:   { type: Number },
     flashSaleEndsAt:  { type: Date },
+    // Buy 1 Get 1 Free (BOGO) Offer
+    isBogo:           { type: Boolean, default: false, index: true },
+    bogoEndsAt:       { type: Date, default: null },
+    bogoBadgeText:    { type: String, default: 'BUY 1 GET 1 FREE' },
   },
   { timestamps: true }
 );
@@ -42,6 +46,7 @@ const productSchema = new mongoose.Schema(
 productSchema.index({ category: 1, salesCount: -1 });
 productSchema.index({ bestseller: 1, salesCount: -1 });
 productSchema.index({ flashSale: 1, flashSaleEndsAt: 1 });
+productSchema.index({ isBogo: 1, bogoEndsAt: 1 });
 productSchema.index({ createdAt: -1 });
 
 export default mongoose.model('Product', productSchema);

@@ -4,7 +4,7 @@ import Razorpay from 'razorpay';
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 import { protect } from '../middleware/auth.js';
-import { getFinalPrice } from '../utils/pricing.js';
+import { getFinalPrice, calculateItemTotal, getBogoPayableQuantity, isBogoActive } from '../utils/pricing.js';
 import { sendOrderReceipt } from '../services/email.js';
 import { verifyOrderSignature, verifyWebhookSignature } from '../utils/razorpaySignature.js';
 
@@ -152,8 +152,8 @@ router.post('/checkout', protect, async (req, res) => {
       if (product.stockQuantity < item.quantity) {
         return res.status(400).json({ message: `Insufficient stock for ${product.name}` });
       }
-      const price = getFinalPrice(product);
-      subtotal += price * item.quantity;
+      const itemTotal = calculateItemTotal(product, item.quantity);
+      subtotal += itemTotal;
       paymentItems.push({ productId: product._id.toString(), quantity: item.quantity });
     }
 
@@ -216,8 +216,9 @@ router.post('/verify', protect, async (req, res) => {
         return res.status(400).json({ message: `Insufficient stock for ${product.name}` });
       }
       const price = getFinalPrice(product);
+      const itemTotal = calculateItemTotal(product, quantity);
       orderItems.push({ product: product._id, name: product.name, image: getProductImageUrl(product), price, quantity });
-      subtotal += price * quantity;
+      subtotal += itemTotal;
     }
 
     const amount = Math.round(subtotal * 100);
