@@ -62,41 +62,41 @@ export default function Hero() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* ── Slide 1: Raksha Bandhan Light Yellow Theme with Product Showcase ── */}
-          <div className={`hero-banner-card slide-trimmer-yellow-light ${activeSlide === 0 ? 'slide-active' : 'slide-hidden'}`}>
+          {/* ── Slide 1: Raksha Bandhan Light Theme (Same as Slide 2) with Product Showcase ── */}
+          <div className={`hero-banner-card slide-raksha-light slide-trimmer-light ${activeSlide === 0 ? 'slide-active' : 'slide-hidden'}`}>
             {/* Left Content */}
             <div className="hero-banner-left">
-              <div className="hero-banner-eyebrow yellow-slide-eyebrow">
-                <Gift size={11} className="yellow-slide-gift-icon" />
+              <div className="hero-banner-eyebrow raksha-light-eyebrow">
+                <Gift size={11} className="raksha-heart-icon" />
                 <span>Raksha Bandhan Special</span>
               </div>
 
-              <h2 className="hero-banner-title yellow-slide-title">
+              <h2 className="hero-banner-title slide-light-title">
                 Silky Smooth <br />
-                <span className="yellow-slide-title-main">Flawless Finish</span> <br />
-                <span className="yellow-slide-title-accent">
+                <span className="slide-light-title-main">Flawless Finish</span> <br />
+                <span className="slide-light-title-accent">
                   {isBogo ? 'Buy 1 Get 1 Free' : 'Special Gift For Sister'}
                 </span>
               </h2>
 
-              <Link to={targetProductLink} className="hero-banner-shop-btn yellow-slide-shop-btn">
+              <Link to={targetProductLink} className="hero-banner-shop-btn slide-light-cta-btn">
                 Shop Gift 🎁
               </Link>
             </div>
 
-            {/* Right Product Image Showcase */}
+            {/* Right Product Image Showcase (No shadow as requested) */}
             <div className="hero-banner-right">
               <div className="hero-banner-img-container">
                 <img
                   src={showcaseImage}
                   alt={hairRemover?.name || 'Multi-functional Eyebrow & Body Trimmer'}
-                  className="hero-banner-img"
+                  className="hero-banner-img hero-img-no-shadow"
                   fetchpriority="high"
                   decoding="async"
                 />
 
                 {isBogo && (
-                  <div className="hero-banner-bogo-tag yellow-slide-bogo-tag">
+                  <div className="hero-banner-bogo-tag slide-light-bogo-tag">
                     <Gift size={11} /> BOGO FREE
                   </div>
                 )}
@@ -112,7 +112,7 @@ export default function Hero() {
                 <img
                   src="/raksha-bandhan-clean-transparent.png"
                   alt="Happy Raksha Bandhan"
-                  className="raksha-light-main-img"
+                  className="raksha-light-main-img hero-img-no-shadow"
                   fetchpriority="high"
                 />
               </div>
@@ -132,7 +132,7 @@ export default function Hero() {
                   <img
                     src="/festive-rakhi-ornament.png"
                     alt="Festive Rakhi"
-                    className="raksha-ornament-img"
+                    className="raksha-ornament-img hero-img-no-shadow"
                   />
                 </div>
 
@@ -147,8 +147,8 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ── Slide 3: Royal Velvet Theme with Half Rakhi Hanging Out & Italic Colorful Text ── */}
-          <div className={`hero-banner-card slide-raksha-royal ${activeSlide === 2 ? 'slide-active' : 'slide-hidden'}`}>
+          {/* ── Slide 3: Royal Festive Light Theme with Half Rakhi Hanging Out & Italic Colorful Text ── */}
+          <div className={`hero-banner-card slide-raksha-royal-light ${activeSlide === 2 ? 'slide-active' : 'slide-hidden'}`}>
             {/* Half Rakhi Hanging Out of Banner Top-Right */}
             <div className="hero-hanging-rakhi-wrap">
               <img
@@ -160,22 +160,22 @@ export default function Hero() {
 
             {/* Slide Content */}
             <div className="royal-slide-content">
-              <div className="royal-eyebrow">
+              <div className="royal-eyebrow royal-light-eyebrow">
                 <Flame size={12} className="royal-sparkle-icon" />
                 <span>Rakhi Festive Celebration</span>
               </div>
 
-              <h2 className="royal-italic-headline">
-                <span className="royal-italic-line-1">A Sacred Thread of</span> <br />
-                <span className="royal-italic-colorful">Love, Joy &amp; Protection</span>
+              <h2 className="royal-italic-headline royal-light-italic-headline">
+                <span className="royal-italic-line-1-dark">A Sacred Thread of</span> <br />
+                <span className="royal-italic-colorful-light">Love, Joy &amp; Protection</span>
               </h2>
 
-              <p className="royal-wishes-subtitle">
+              <p className="royal-wishes-subtitle royal-light-subtitle">
                 Cherish the sweetest memories and celebrate eternal sibling love with exclusive curated gifts.
               </p>
 
               <div className="royal-btn-group">
-                <Link to="#all-products" className="hero-banner-shop-btn royal-glow-btn">
+                <Link to="#all-products" className="hero-banner-shop-btn royal-light-cta-btn">
                   Gift Sister Today 💖
                 </Link>
               </div>
@@ -188,7 +188,7 @@ export default function Hero() {
               <button
                 key={idx}
                 type="button"
-                className={`hero-slider-dot ${activeSlide === idx ? 'active' : ''} ${activeSlide !== 2 ? 'dot-on-light' : ''}`}
+                className={`hero-slider-dot dot-on-light ${activeSlide === idx ? 'active' : ''}`}
                 onClick={() => setActiveSlide(idx)}
                 aria-label={`Slide ${idx + 1}`}
               />

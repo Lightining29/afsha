@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HERO BANNER SLIDER — 2s Auto Carousel (3 Themes: Trimmer, Light Rakhi, Royal Rakhi)
+   HERO BANNER SLIDER — 3s Auto Carousel (All Light Themes: Ivory, Rose & Silk)
    ========================================================================== */
 
 .hero-banner-section {
@@ -36,7 +36,7 @@
   transform: scale(1);
   position: relative;
   z-index: 2;
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 14px 36px rgba(244, 63, 94, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 .hero-banner-card.slide-hidden {
@@ -51,77 +51,7 @@
   z-index: 1;
 }
 
-/* ── Slide 1: Raksha Bandhan Festive Light Yellow Theme ── */
-.slide-trimmer-yellow-light {
-  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 45%, #fde68a 100%);
-  border: 1px solid rgba(245, 158, 11, 0.28);
-  box-shadow: inset 0 0 35px rgba(254, 240, 138, 0.35);
-  position: relative;
-}
-
-.slide-trimmer-yellow-light::before {
-  content: '';
-  position: absolute;
-  top: -10%;
-  right: -5%;
-  width: 250px;
-  height: 250px;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.35) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Yellow Slide Typography */
-.yellow-slide-eyebrow {
-  background: rgba(245, 158, 11, 0.15) !important;
-  border-color: rgba(245, 158, 11, 0.35) !important;
-  color: #92400e !important;
-}
-
-.yellow-slide-gift-icon {
-  color: #b45309;
-}
-
-.yellow-slide-title {
-  color: #0f172a !important;
-}
-
-.yellow-slide-title-main {
-  color: #0f172a !important;
-  font-weight: 900;
-}
-
-.yellow-slide-title-accent {
-  color: #b45309 !important;
-  font-weight: 900;
-}
-
-.yellow-slide-shop-btn {
-  background: #0f172a !important;
-  color: #ffffff !important;
-  font-weight: 800;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.28) !important;
-}
-
-.yellow-slide-shop-btn:hover {
-  background: #b45309 !important;
-  color: #ffffff !important;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(180, 83, 9, 0.45) !important;
-}
-
-.yellow-slide-bogo-tag {
-  background: linear-gradient(135deg, #e11d48, #be123c);
-  color: #ffffff;
-}
-
-/* Slide 1 Legacy Dark (if needed) */
-.slide-trimmer {
-  background: linear-gradient(135deg, #090c12 0%, #111827 55%, #0a0d14 100%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-}
-
-/* ── Slide 2: Raksha Bandhan Light Theme (Ivory, Rose & Golden Festive) ── */
+/* ── Slide 1 & 2: Raksha Bandhan Light Theme (Ivory, Rose & Golden Festive) ── */
 .slide-raksha-light {
   background: linear-gradient(135deg, #ffffff 0%, #fff1f2 40%, #fef3c7 100%);
   border: 1px solid rgba(244, 63, 94, 0.18);
@@ -141,22 +71,23 @@
   z-index: 1;
 }
 
-/* ── Slide 3: Royal Velvet Sunset Theme (Hanging Rakhi & Italic Colorful Text) ── */
-.slide-raksha-royal {
-  background: linear-gradient(135deg, #190924 0%, #380829 35%, #580d2c 70%, #200619 100%);
-  border: 1px solid rgba(251, 113, 133, 0.25);
+/* ── Slide 3: Royal Festive Light Theme (Lavender, Rose Silk & Golden) ── */
+.slide-raksha-royal-light {
+  background: linear-gradient(135deg, #ffffff 0%, #fce7f3 35%, #fff1f2 70%, #fef3c7 100%);
+  border: 1px solid rgba(236, 72, 153, 0.22);
   position: relative;
   overflow: visible !important; /* Allows half rakhi hanging out */
+  box-shadow: inset 0 0 40px rgba(253, 230, 138, 0.35);
 }
 
-.slide-raksha-royal::before {
+.slide-raksha-royal-light::before {
   content: '';
   position: absolute;
   top: -15%;
   left: 10%;
   width: 320px;
   height: 320px;
-  background: radial-gradient(circle, rgba(244, 63, 94, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.15) 0%, transparent 70%);
   pointer-events: none;
   z-index: 1;
 }
@@ -170,7 +101,7 @@
   height: 95px;
   z-index: 10;
   transform: rotate(18deg);
-  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 10px 18px rgba(234, 88, 12, 0.35));
   pointer-events: none;
   animation: rakhiSway 4s ease-in-out infinite alternate;
 }
@@ -190,87 +121,6 @@
   object-fit: contain;
 }
 
-/* Royal Slide Content */
-.royal-slide-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-  max-width: 68%;
-  z-index: 4;
-  position: relative;
-}
-
-.royal-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(251, 113, 133, 0.18);
-  border: 1px solid rgba(251, 113, 133, 0.35);
-  color: #fecdd3;
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
-.royal-sparkle-icon {
-  color: #fb7185;
-}
-
-.royal-italic-headline {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-style: italic;
-  font-size: clamp(1.18rem, 3.3vw, 1.95rem);
-  font-weight: 800;
-  line-height: 1.22;
-  margin: 0 0 8px;
-  letter-spacing: -0.3px;
-}
-
-.royal-italic-line-1 {
-  color: #ffffff;
-}
-
-.royal-italic-colorful {
-  background: linear-gradient(135deg, #fef08a 0%, #fb923c 35%, #f43f5e 70%, #f472b6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 900;
-  font-style: italic;
-  display: inline-block;
-}
-
-.royal-wishes-subtitle {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #ffe4e6;
-  line-height: 1.4;
-  margin: 0 0 14px;
-  max-width: 440px;
-}
-
-.royal-glow-btn {
-  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #f59e0b 100%);
-  color: #ffffff;
-  font-weight: 900;
-  padding: 9px 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 18px rgba(244, 63, 94, 0.45);
-  transition: all 0.2s ease;
-}
-
-.royal-glow-btn:hover {
-  background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #d97706 100%);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(244, 63, 94, 0.6);
-}
-
 /* Left Content */
 .hero-banner-left {
   flex: 1;
@@ -286,41 +136,44 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  padding: 4px 10px;
+  padding: 3px 10px;
   border-radius: 999px;
   font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   text-transform: uppercase;
   margin-bottom: 10px;
   white-space: nowrap;
 }
 
-.hero-sparkle-icon {
-  color: #fec22a;
-  flex-shrink: 0;
+.raksha-light-eyebrow {
+  background: #ffe4e6;
+  color: #e11d48;
+  border: 1px solid #fecdd3;
 }
 
-.hero-banner-title {
+.raksha-heart-icon {
+  color: #e11d48;
+}
+
+/* Slide 1 Light Typography */
+.slide-light-title {
   font-size: clamp(1.15rem, 3.2vw, 1.8rem);
   font-weight: 700;
-  color: #f8fafc;
+  color: #0f172a;
   line-height: 1.22;
   margin-bottom: 14px;
   letter-spacing: -0.4px;
 }
 
-.hero-banner-title-main {
+.slide-light-title-main {
   font-weight: 900;
-  color: #ffffff;
+  color: #0f172a;
 }
 
-.hero-banner-title-accent {
-  color: #fec22a;
-  font-weight: 800;
+.slide-light-title-accent {
+  color: #e11d48;
+  font-weight: 900;
 }
 
 /* Buttons */
@@ -328,22 +181,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
-  color: #0f172a;
   font-size: 0.88rem;
   font-weight: 800;
   padding: 9px 22px;
   border-radius: 12px;
   text-decoration: none;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
 }
 
-.hero-banner-shop-btn:hover {
-  background: #fec22a;
-  color: #0f172a;
+.slide-light-cta-btn {
+  background: linear-gradient(135deg, #ea580c 0%, #e11d48 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+}
+
+.slide-light-cta-btn:hover {
+  background: linear-gradient(135deg, #c2410c 0%, #be123c 100%);
+  color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(254, 194, 42, 0.35);
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.45);
 }
 
 /* Right Trimmer Showcase */
@@ -373,15 +229,20 @@
   50% { transform: translateY(-4px); }
 }
 
+/* Product image without harsh shadow */
 .hero-banner-img {
   width: 100%;
   height: 100%;
   max-height: 205px;
   object-fit: contain;
   object-position: right center;
-  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.65));
+  filter: none !important; /* No shadow as requested */
   image-rendering: -webkit-optimize-contrast;
   transform: translateX(6px);
+}
+
+.hero-img-no-shadow {
+  filter: none !important;
 }
 
 .hero-banner-bogo-tag {
@@ -401,8 +262,13 @@
   box-shadow: 0 3px 8px rgba(225, 29, 72, 0.4);
 }
 
+.slide-light-bogo-tag {
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: #ffffff;
+}
+
 /* ==========================================================================
-   RAKSHA BANDHAN LIGHT THEME (No Product, Wishes & Shop Button Only)
+   SLIDE 2: RAKSHA BANDHAN GREETINGS (Light Theme)
    ========================================================================== */
 
 .raksha-light-content {
@@ -428,7 +294,6 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 6px 16px rgba(234, 88, 12, 0.18));
 }
 
 .raksha-light-text-col {
@@ -438,26 +303,6 @@
   align-items: flex-start;
   justify-content: center;
   min-width: 0;
-}
-
-.raksha-light-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #ffe4e6;
-  color: #e11d48;
-  border: 1px solid #fecdd3;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-
-.raksha-heart-icon {
-  color: #e11d48;
 }
 
 .raksha-light-wishes-title {
@@ -483,7 +328,6 @@
   display: flex;
   align-items: center;
   margin: 1px 0 6px;
-  filter: drop-shadow(0 2px 6px rgba(234, 88, 12, 0.25));
 }
 
 .raksha-ornament-img {
@@ -517,6 +361,80 @@
   box-shadow: 0 6px 20px rgba(225, 29, 72, 0.45);
 }
 
+/* ==========================================================================
+   SLIDE 3: ROYAL FESTIVE LIGHT THEME (Colorful Italic & Hanging Rakhi)
+   ========================================================================== */
+
+.royal-slide-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 68%;
+  z-index: 4;
+  position: relative;
+}
+
+.royal-light-eyebrow {
+  background: #fdf2f8;
+  border: 1px solid #fbcfe8;
+  color: #be185d;
+}
+
+.royal-sparkle-icon {
+  color: #e11d48;
+}
+
+.royal-light-italic-headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.18rem, 3.3vw, 1.95rem);
+  font-weight: 800;
+  line-height: 1.22;
+  margin: 0 0 8px;
+  letter-spacing: -0.3px;
+}
+
+.royal-italic-line-1-dark {
+  color: #0f172a;
+}
+
+.royal-italic-colorful-light {
+  background: linear-gradient(135deg, #ea580c 0%, #e11d48 35%, #db2777 70%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  font-style: italic;
+  display: inline-block;
+}
+
+.royal-light-subtitle {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+  line-height: 1.4;
+  margin: 0 0 14px;
+  max-width: 440px;
+}
+
+.royal-light-cta-btn {
+  background: linear-gradient(135deg, #e11d48 0%, #db2777 50%, #ea580c 100%);
+  color: #ffffff;
+  font-weight: 900;
+  padding: 9px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(225, 29, 72, 0.35);
+  transition: all 0.2s ease;
+}
+
+.royal-light-cta-btn:hover {
+  background: linear-gradient(135deg, #be123c 0%, #9d174d 50%, #c2410c 100%);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(225, 29, 72, 0.45);
+}
+
 /* ── Slider Navigation Indicators ── */
 .hero-slider-indicators {
   position: absolute;
@@ -533,7 +451,7 @@
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(15, 23, 42, 0.2);
   border: none;
   cursor: pointer;
   padding: 0;
@@ -542,16 +460,6 @@
 
 .hero-slider-dot.active {
   width: 22px;
-  background: #fec22a;
-  box-shadow: 0 0 8px rgba(254, 194, 42, 0.6);
-}
-
-/* Dots on Light Slide */
-.hero-slider-dot.dot-on-light {
-  background: rgba(15, 23, 42, 0.2);
-}
-
-.hero-slider-dot.dot-on-light.active {
   background: #ea580c;
   box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
 }
@@ -580,7 +488,7 @@
     margin-bottom: 6px;
   }
 
-  .hero-banner-title {
+  .slide-light-title {
     font-size: 1.02rem;
     margin-bottom: 8px;
     line-height: 1.18;
@@ -611,12 +519,6 @@
     flex: 0 0 38%;
     max-width: 120px;
     height: 120px;
-  }
-
-  .raksha-light-eyebrow {
-    font-size: 0.6rem;
-    padding: 2px 7px;
-    margin-bottom: 4px;
   }
 
   .raksha-light-wishes-title {
@@ -659,19 +561,13 @@
     max-width: 72%;
   }
 
-  .royal-eyebrow {
-    font-size: 0.6rem;
-    padding: 2px 8px;
-    margin-bottom: 6px;
-  }
-
-  .royal-italic-headline {
+  .royal-light-italic-headline {
     font-size: 1.02rem;
     margin-bottom: 4px;
     line-height: 1.18;
   }
 
-  .royal-wishes-subtitle {
+  .royal-light-subtitle {
     font-size: 0.68rem;
     margin-bottom: 8px;
     line-height: 1.25;
@@ -681,7 +577,7 @@
     overflow: hidden;
   }
 
-  .royal-glow-btn {
+  .royal-light-cta-btn {
     font-size: 0.76rem;
     padding: 6px 16px;
     border-radius: 8px;
@@ -715,7 +611,7 @@
     margin-bottom: 16px;
   }
 
-  .hero-banner-title {
+  .slide-light-title {
     font-size: 2.8rem;
     line-height: 1.14;
     margin-bottom: 22px;
@@ -749,12 +645,6 @@
     flex: 0 0 38%;
     max-width: 320px;
     height: 290px;
-  }
-
-  .raksha-light-eyebrow {
-    font-size: 0.78rem;
-    padding: 5px 14px;
-    margin-bottom: 14px;
   }
 
   .raksha-light-wishes-title {
@@ -795,26 +685,20 @@
     padding: 0 20px;
   }
 
-  .royal-eyebrow {
-    font-size: 0.78rem;
-    padding: 6px 16px;
-    margin-bottom: 16px;
-  }
-
-  .royal-italic-headline {
+  .royal-light-italic-headline {
     font-size: 2.85rem;
     line-height: 1.15;
     margin-bottom: 16px;
   }
 
-  .royal-wishes-subtitle {
+  .royal-light-subtitle {
     font-size: 1.08rem;
     line-height: 1.6;
     margin-bottom: 26px;
     max-width: 580px;
   }
 
-  .royal-glow-btn {
+  .royal-light-cta-btn {
     font-size: 1rem;
     padding: 14px 34px;
     border-radius: 14px;
