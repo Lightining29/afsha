@@ -451,3 +451,49 @@
   cursor: not-allowed;
   box-shadow: none;
 }
+
+/* ── Desktop Enhancements (1024px+) ── */
+@media (min-width: 1024px) {
+  .product-detail-app-container {
+    max-width: 1120px;
+    padding-top: 28px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .pdp-main-content-layout {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-top: 14px;
+  }
+
+  .pdp-stage-section {
+    position: sticky;
+    top: 84px;
+    background: #f8fafc;
+    border-radius: 28px;
+    border: 1px solid #f1f5f9;
+    padding: 36px 28px 28px;
+    margin-bottom: 0;
+  }
+
+  .pdp-stage-img-wrap {
+    max-width: 440px;
+    aspect-ratio: 1.05;
+  }
+
+  .pdp-info-sheet {
+    box-shadow: none;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .pdp-bottom-action-bar {
+    max-width: 1120px;
+    border-radius: 24px 24px 0 0;
+    padding: 16px 36px;
+  }
+}

@@ -209,3 +209,19 @@
   color: #64748b;
   font-size: 0.9rem;
 }
+
+/* Desktop Enhancements (1024px+) */
+@media (min-width: 1024px) {
+  .home-search-wrapper {
+    max-width: 680px;
+    margin: 18px auto 26px;
+  }
+
+  .home-search-bar {
+    padding: 10px 20px 10px 24px;
+  }
+
+  .home-search-bar input {
+    font-size: 1rem;
+  }
+}

@@ -193,3 +193,50 @@
     transform: translateX(6px);
   }
 }
+
+/* Desktop Luxury Enhancements (1024px+) */
+@media (min-width: 1024px) {
+  .hero-banner-section {
+    padding: 16px 0 32px;
+  }
+
+  .hero-banner-card {
+    padding: 44px 54px;
+    border-radius: 32px;
+    min-height: 380px;
+  }
+
+  .hero-banner-left {
+    max-width: 48%;
+  }
+
+  .hero-banner-eyebrow {
+    font-size: 0.78rem;
+    padding: 6px 14px;
+    margin-bottom: 18px;
+  }
+
+  .hero-banner-title {
+    font-size: 2.8rem;
+    line-height: 1.14;
+    margin-bottom: 24px;
+    letter-spacing: -0.8px;
+  }
+
+  .hero-banner-shop-btn {
+    font-size: 1rem;
+    padding: 13px 32px;
+    border-radius: 14px;
+  }
+
+  .hero-banner-right {
+    height: 310px;
+    width: 50%;
+    margin-right: 0;
+  }
+
+  .hero-banner-img {
+    max-height: 310px;
+    transform: translateX(0);
+  }
+}

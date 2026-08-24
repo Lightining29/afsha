@@ -127,122 +127,125 @@ export default function ProductDetail() {
           </button>
         </header>
 
-        {/* ── Main Showcase Image ── */}
-        <div className="pdp-stage-section">
-          <div className="pdp-stage-img-wrap">
-            <img
-              src={mainImage}
-              alt={product.name}
-              className="pdp-stage-img"
-              fetchpriority="high"
-            />
-            {isBogo && (
-              <div className="pdp-bogo-float-badge">
-                <Gift size={13} /> {product.bogoBadgeText || 'BUY 1 GET 1 FREE'}
+        {/* ── Main Content Layout (Desktop 2-Column Grid / Mobile Stacked) ── */}
+        <div className="pdp-main-content-layout">
+          {/* ── Main Showcase Image ── */}
+          <div className="pdp-stage-section">
+            <div className="pdp-stage-img-wrap">
+              <img
+                src={mainImage}
+                alt={product.name}
+                className="pdp-stage-img"
+                fetchpriority="high"
+              />
+              {isBogo && (
+                <div className="pdp-bogo-float-badge">
+                  <Gift size={13} /> {product.bogoBadgeText || 'BUY 1 GET 1 FREE'}
+                </div>
+              )}
+            </div>
+
+            {/* Circular Gallery Thumbnail Strip */}
+            {gallery.length > 1 && (
+              <div className="pdp-circular-thumbnails">
+                {gallery.map((src, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className={`pdp-thumb-circle ${i === activeIdx ? 'active' : ''}`}
+                    onClick={() => setActiveImage(i)}
+                    aria-label={`View image ${i + 1}`}
+                  >
+                    <img src={src} alt={`Thumbnail ${i + 1}`} />
+                  </button>
+                ))}
               </div>
             )}
           </div>
 
-          {/* Circular Gallery Thumbnail Strip (Screenshot reference) */}
-          {gallery.length > 1 && (
-            <div className="pdp-circular-thumbnails">
-              {gallery.map((src, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className={`pdp-thumb-circle ${i === activeIdx ? 'active' : ''}`}
-                  onClick={() => setActiveImage(i)}
-                  aria-label={`View image ${i + 1}`}
-                >
-                  <img src={src} alt={`Thumbnail ${i + 1}`} />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* ── Product Info Sheet ── */}
-        <div className="pdp-info-sheet">
-          {/* Star Rating Badge */}
-          <div className="pdp-rating-badge">
-            <div className="pdp-stars-row">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  size={15}
-                  fill={star <= Math.round(product.rating ?? 4.8) ? '#f59e0b' : '#e2e8f0'}
-                  color={star <= Math.round(product.rating ?? 4.8) ? '#f59e0b' : '#cbd5e1'}
-                />
-              ))}
-            </div>
-            <span className="pdp-rating-score">{(product.rating ?? 4.8).toFixed(1)}</span>
-            <span className="pdp-rating-reviews">({product.reviewCount || 128} reviews)</span>
-          </div>
-
-          <div className="pdp-title-row">
-            <div>
-              <h2 className="pdp-product-name">{product.name}</h2>
-              <p className="pdp-category-name">
-                {product.category?.name || "Women's Wellness & Care"}
-              </p>
+          {/* ── Product Info Sheet ── */}
+          <div className="pdp-info-sheet">
+            {/* Star Rating Badge */}
+            <div className="pdp-rating-badge">
+              <div className="pdp-stars-row">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    size={15}
+                    fill={star <= Math.round(product.rating ?? 4.8) ? '#f59e0b' : '#e2e8f0'}
+                    color={star <= Math.round(product.rating ?? 4.8) ? '#f59e0b' : '#cbd5e1'}
+                  />
+                ))}
+              </div>
+              <span className="pdp-rating-score">{(product.rating ?? 4.8).toFixed(1)}</span>
+              <span className="pdp-rating-reviews">({product.reviewCount || 128} reviews)</span>
             </div>
 
-            {/* Wishlist Heart Button */}
-            <button
-              type="button"
-              className={`pdp-heart-circle-btn ${isLiked ? 'liked' : ''}`}
-              onClick={() => toggleWishlist(product)}
-              aria-label="Toggle wishlist"
-            >
-              <Heart
-                size={20}
-                fill={isLiked ? '#ef4444' : 'none'}
-                color={isLiked ? '#ef4444' : '#94a3b8'}
-              />
-            </button>
-          </div>
-
-          {/* Price Row with Crossed-Out Original Price */}
-          <div className="pdp-price-row">
-            <span className="pdp-price-current">{formatPrice(finalPrice)}</span>
-            {(hasDiscount || product.originalPrice) && (
-              <span className="pdp-price-original">
-                {formatPrice(hasDiscount ? product.price : product.originalPrice)}
-              </span>
-            )}
-            {hasDiscount && (
-              <span className="pdp-save-chip">-{product.discountPercent}% OFF</span>
-            )}
-          </div>
-
-          {/* BOGO Countdown Timer (if active) */}
-          {isBogo && product.bogoEndsAt && (
-            <div className="pdp-bogo-timer-box">
-              <CountdownTimer targetDate={product.bogoEndsAt} label="BOGO Offer Ends In" />
-            </div>
-          )}
-
-          {/* Full Description Display in Beautiful Structured Card */}
-          <div className="pdp-description-section">
-            <h3 className="pdp-desc-heading">Product Overview</h3>
-            <div className="pdp-desc-content">
-              {product.description?.split('\n').filter(Boolean).map((paragraph, pIdx) => (
-                <p key={pIdx} className="pdp-desc-paragraph">
-                  {paragraph}
+            <div className="pdp-title-row">
+              <div>
+                <h2 className="pdp-product-name">{product.name}</h2>
+                <p className="pdp-category-name">
+                  {product.category?.name || "Women's Wellness & Care"}
                 </p>
-              ))}
-            </div>
-          </div>
+              </div>
 
-          {/* Social Proof Favorite Avatars */}
-          <div className="pdp-social-proof">
-            <div className="pdp-avatar-group">
-              <span className="pdp-avatar av-1">👩</span>
-              <span className="pdp-avatar av-2">👱‍♀️</span>
-              <span className="pdp-avatar av-3">👩‍🦰</span>
-              <span className="pdp-avatar av-4">✨</span>
+              {/* Wishlist Heart Button */}
+              <button
+                type="button"
+                className={`pdp-heart-circle-btn ${isLiked ? 'liked' : ''}`}
+                onClick={() => toggleWishlist(product)}
+                aria-label="Toggle wishlist"
+              >
+                <Heart
+                  size={20}
+                  fill={isLiked ? '#ef4444' : 'none'}
+                  color={isLiked ? '#ef4444' : '#94a3b8'}
+                />
+              </button>
             </div>
-            <span className="pdp-social-proof-text">10,000+ people favorite this</span>
+
+            {/* Price Row with Crossed-Out Original Price */}
+            <div className="pdp-price-row">
+              <span className="pdp-price-current">{formatPrice(finalPrice)}</span>
+              {(hasDiscount || product.originalPrice) && (
+                <span className="pdp-price-original">
+                  {formatPrice(hasDiscount ? product.price : product.originalPrice)}
+                </span>
+              )}
+              {hasDiscount && (
+                <span className="pdp-save-chip">-{product.discountPercent}% OFF</span>
+              )}
+            </div>
+
+            {/* BOGO Countdown Timer (if active) */}
+            {isBogo && product.bogoEndsAt && (
+              <div className="pdp-bogo-timer-box">
+                <CountdownTimer targetDate={product.bogoEndsAt} label="BOGO Offer Ends In" />
+              </div>
+            )}
+
+            {/* Full Description Display in Beautiful Structured Card */}
+            <div className="pdp-description-section">
+              <h3 className="pdp-desc-heading">Product Overview</h3>
+              <div className="pdp-desc-content">
+                {product.description?.split('\n').filter(Boolean).map((paragraph, pIdx) => (
+                  <p key={pIdx} className="pdp-desc-paragraph">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            {/* Social Proof Favorite Avatars */}
+            <div className="pdp-social-proof">
+              <div className="pdp-avatar-group">
+                <span className="pdp-avatar av-1">👩</span>
+                <span className="pdp-avatar av-2">👱‍♀️</span>
+                <span className="pdp-avatar av-3">👩‍🦰</span>
+                <span className="pdp-avatar av-4">✨</span>
+              </div>
+              <span className="pdp-social-proof-text">10,000+ people favorite this</span>
+            </div>
           </div>
         </div>
 
