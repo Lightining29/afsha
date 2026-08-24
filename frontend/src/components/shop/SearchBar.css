@@ -22,8 +22,8 @@
 
 .home-search-bar:focus-within {
   background: #ffffff;
-  border-color: #fec22a;
-  box-shadow: 0 0 0 3px rgba(254, 194, 42, 0.25), 0 4px 14px rgba(0, 0, 0, 0.06);
+  border-color: #0f172a;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08), 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 
 .home-search-icon {
@@ -85,7 +85,7 @@
 }
 
 .home-search-filter-btn:hover {
-  color: #fec22a;
+  color: #0f172a;
   transform: scale(1.1);
 }
 

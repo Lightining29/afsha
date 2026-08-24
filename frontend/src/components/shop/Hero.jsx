@@ -55,7 +55,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          {/* Right Product Image — Trimmer with circular callouts surrounding it */}
+          {/* Right Product Image — 100% Crystal Clear Natural Showcase */}
           <div className="hero-banner-right">
             <div className="hero-banner-img-container">
               <img
@@ -72,7 +72,6 @@ export default function Hero() {
                 </div>
               )}
             </div>
-            <div className="hero-banner-glow" />
           </div>
         </div>
       </div>

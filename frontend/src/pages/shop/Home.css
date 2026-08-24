@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HOME PAGE — Mobile-first Modern App Layout matching Uploaded Screenshots
+   HOME PAGE — Clean, Modern Mobile-first Layout (No Yellow, Crisp Colors)
    ========================================================================== */
 
 /* ── Circular Categories Section (Instant Loading) ── */
@@ -54,8 +54,8 @@
 
 .home-cat-circle-item:hover .cat-circle-avatar-box,
 .home-cat-circle-item.active .cat-circle-avatar-box {
-  border-color: #fec22a;
-  box-shadow: 0 0 0 3px rgba(254, 194, 42, 0.3);
+  border-color: #0f172a;
+  box-shadow: 0 0 0 2.5px rgba(15, 23, 42, 0.15);
   transform: scale(1.05);
 }
 
@@ -166,10 +166,10 @@
 }
 
 .home-cat-pill.active {
-  background: #fec22a;
-  color: #111827;
+  background: #0f172a;
+  color: #ffffff;
   font-weight: 800;
-  box-shadow: 0 2px 8px rgba(254, 194, 42, 0.35);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
 }
 
 /* ── Product Grid ── */

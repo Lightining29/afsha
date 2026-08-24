@@ -1,16 +1,14 @@
 import sharp from 'sharp';
 import path from 'path';
 
-async function createHDShowcase() {
-  // Use high-resolution media_1787564007062.png (1024x723)
+async function createCrystalClearShowcase() {
   const inputOriginal = 'C:/Users/brayw/.gemini/antigravity/brain/153b417f-0115-4062-8d25-bae3bddca31f/.user_uploaded/media_1787564007062.png';
   const outputPath = path.resolve('../frontend/public/hair-remover-showcase.png');
 
-  console.log('Loading HD showcase graphic from media_1787564007062.png...');
+  console.log('Loading original image...');
   const meta = await sharp(inputOriginal).metadata();
-  console.log('HD Size:', meta.width, meta.height);
 
-  // Crop from below the title "Multi-functional Eyebrow Trimmer"
+  // Crop only the content region (width: ~904, height: ~708)
   const cropTop = 10;
   const cropHeight = meta.height - 15;
   const cropLeft = 60;
@@ -23,8 +21,11 @@ async function createHDShowcase() {
     .toBuffer({ resolveWithObject: true });
 
   const { width, height, channels } = info;
-  console.log(`Extracted HD canvas: ${width}x${height}`);
+  console.log(`Canvas: ${width}x${height}`);
 
+  // BFS Flood Fill from edges ONLY on the white background.
+  // We ONLY change the Alpha channel (data[idx+3] = 0).
+  // We DO NOT TOUCH RGB (data[idx], data[idx+1], data[idx+2]) at all!
   const isBg = new Uint8Array(width * height);
   const queue = [];
 
@@ -33,7 +34,7 @@ async function createHDShowcase() {
     return [data[idx], data[idx + 1], data[idx + 2], data[idx + 3]];
   }
 
-  // Push border pixels
+  // Push boundary pixels that are white / off-white
   for (let x = 0; x < width; x++) {
     const [r1, g1, b1] = getPixel(x, 0);
     if (r1 > 220 && g1 > 220 && b1 > 220) { isBg[x] = 1; queue.push([x, 0]); }
@@ -57,10 +58,11 @@ async function createHDShowcase() {
         const nIdx = ny * width + nx;
         if (!isBg[nIdx]) {
           const [nr, ng, nb] = getPixel(nx, ny);
-          if (nr > 232 && ng > 232 && nb > 232) {
+          // Pure white & near-white background
+          if (nr > 235 && ng > 235 && nb > 235) {
             isBg[nIdx] = 1;
             queue.push([nx, ny]);
-          } else if (nr > 215 && ng > 215 && nb > 215 && Math.abs(nr - ng) < 6 && Math.abs(nr - nb) < 6) {
+          } else if (nr > 220 && ng > 220 && nb > 220 && Math.abs(nr - ng) < 5 && Math.abs(nr - nb) < 5) {
             isBg[nIdx] = 1;
             queue.push([nx, ny]);
           }
@@ -69,32 +71,21 @@ async function createHDShowcase() {
     }
   }
 
-  // Turn white background to transparent and turn dark text into glowing light text for dark banner!
+  // Set alpha = 0 for background ONLY. Absolutely NO color changes to foreground!
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const idx = (y * width + x) * channels;
       if (isBg[y * width + x]) {
-        data[idx + 3] = 0; // Pure transparent
-      } else {
-        const r = data[idx];
-        const g = data[idx + 1];
-        const b = data[idx + 2];
-        // Dark text labels -> golden yellow #fec22a
-        if (r < 95 && g < 95 && b < 95) {
-          data[idx] = 254;
-          data[idx + 1] = 194;
-          data[idx + 2] = 42;
-        }
+        data[idx + 3] = 0;
       }
     }
   }
 
   await sharp(data, { raw: { width, height, channels } })
-    .trim()
-    .png()
+    .png({ quality: 100, compressionLevel: 6 })
     .toFile(outputPath);
 
-  console.log('HD Transparent showcase graphic saved to:', outputPath);
+  console.log('Crystal clear showcase saved (ZERO yellow, 100% natural colors):', outputPath);
 }
 
-createHDShowcase().catch(console.error);
+createCrystalClearShowcase().catch(console.error);
