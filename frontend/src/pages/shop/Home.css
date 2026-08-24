@@ -97,10 +97,11 @@
 }
 
 .home-section-title {
-  font-size: 1.45rem;
+  font-size: clamp(1.6rem, 4.8vw, 2.2rem);
   font-weight: 900;
   color: #0f172a;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.6px;
+  line-height: 1.15;
 }
 
 .home-see-all-link {
@@ -202,7 +203,7 @@
   }
 
   .home-section-title {
-    font-size: 1.15rem;
+    font-size: 1.45rem;
   }
 }
 
