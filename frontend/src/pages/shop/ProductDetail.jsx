@@ -7,9 +7,7 @@ import {
   Heart,
   Minus,
   Plus,
-  Gift,
-  Share2,
-  Check
+  Gift
 } from 'lucide-react';
 import {
   fetchProduct,
@@ -30,7 +28,6 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariant, setSelectedVariant] = useState('Standard');
   const [descExpanded, setDescExpanded] = useState(false);
 
   useEffect(() => {
@@ -53,7 +50,7 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-      <div className="product-detail-page-wrapper">
+      <div className="product-detail-app-container">
         <div className="product-detail-loading">
           <div className="loading-spinner" />
         </div>
@@ -63,7 +60,7 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="product-detail-page-wrapper">
+      <div className="product-detail-app-container">
         <div className="product-not-found">
           <h2>Product not found</h2>
           <Link to="/" className="btn btn-gold">← Back to Shop</Link>
@@ -105,7 +102,7 @@ export default function ProductDetail() {
       </Helmet>
 
       <div className="product-detail-app-container">
-        {/* ── Top Header Bar (Screenshot 2) ── */}
+        {/* ── Top Header Bar (Screenshot reference) ── */}
         <header className="pdp-top-bar">
           <button
             type="button"
@@ -151,7 +148,7 @@ export default function ProductDetail() {
             )}
           </div>
 
-          {/* Circular Gallery Thumbnail Strip (Screenshot 2) */}
+          {/* Circular Gallery Thumbnail Strip (Screenshot reference) */}
           {gallery.length > 1 && (
             <div className="pdp-circular-thumbnails">
               {gallery.map((src, i) => (
@@ -169,13 +166,13 @@ export default function ProductDetail() {
           )}
         </div>
 
-        {/* ── Product Info Sheet (Screenshot 2) ── */}
+        {/* ── Product Info Sheet (Screenshot reference) ── */}
         <div className="pdp-info-sheet">
           <div className="pdp-title-row">
             <div>
               <h2 className="pdp-product-name">{product.name}</h2>
               <p className="pdp-category-name">
-                {product.category?.name || 'Personal Care & Wellness'}
+                {product.category?.name || "Women's Wellness & Care"}
               </p>
             </div>
 
@@ -194,7 +191,7 @@ export default function ProductDetail() {
             </button>
           </div>
 
-          {/* Price Row */}
+          {/* Price Row with Crossed-Out Original Price */}
           <div className="pdp-price-row">
             <span className="pdp-price-current">{formatPrice(finalPrice)}</span>
             {(hasDiscount || product.originalPrice) && (
@@ -207,29 +204,12 @@ export default function ProductDetail() {
             )}
           </div>
 
-          {/* BOGO Countdown Timer */}
+          {/* BOGO Countdown Timer (if active) */}
           {isBogo && product.bogoEndsAt && (
             <div className="pdp-bogo-timer-box">
               <CountdownTimer targetDate={product.bogoEndsAt} label="BOGO Offer Ends In" />
             </div>
           )}
-
-          {/* Options / Variant Selector Pills (Screenshot 2) */}
-          <div className="pdp-variants-section">
-            <span className="pdp-section-subhead">Options</span>
-            <div className="pdp-variant-pills">
-              {['Standard', isBogo ? 'Pack of 2 (BOGO Deal)' : 'Value Pack', 'Pro Edition'].map((variant) => (
-                <button
-                  key={variant}
-                  type="button"
-                  className={`pdp-variant-pill ${selectedVariant === variant ? 'active' : ''}`}
-                  onClick={() => setSelectedVariant(variant)}
-                >
-                  {variant}
-                </button>
-              ))}
-            </div>
-          </div>
 
           {/* Description with Read More */}
           <div className="pdp-description-section">
@@ -242,24 +222,24 @@ export default function ProductDetail() {
                 className="pdp-read-more-btn"
                 onClick={() => setDescExpanded(!descExpanded)}
               >
-                {descExpanded ? 'Read less' : 'Read more...'}
+                {descExpanded ? 'Read less' : 'Read more ...'}
               </button>
             )}
           </div>
 
-          {/* Social Proof Favorite Avatars (Screenshot 2) */}
+          {/* Social Proof Favorite Avatars (Screenshot reference) */}
           <div className="pdp-social-proof">
             <div className="pdp-avatar-group">
-              <span className="pdp-avatar av-1">✨</span>
-              <span className="pdp-avatar av-2">🌸</span>
-              <span className="pdp-avatar av-3">💎</span>
-              <span className="pdp-avatar av-4">⭐</span>
+              <span className="pdp-avatar av-1">👩</span>
+              <span className="pdp-avatar av-2">👱‍♀️</span>
+              <span className="pdp-avatar av-3">👩‍🦰</span>
+              <span className="pdp-avatar av-4">✨</span>
             </div>
             <span className="pdp-social-proof-text">10,000+ people favorite this</span>
           </div>
         </div>
 
-        {/* ── Fixed Bottom Action Bar (Screenshot 2) ── */}
+        {/* ── Fixed Bottom Action Bar with Buy Buttons (Screenshot reference) ── */}
         <div className="pdp-bottom-action-bar">
           {/* Stepper Capsule */}
           <div className="pdp-stepper-capsule">
@@ -282,11 +262,11 @@ export default function ProductDetail() {
             </button>
           </div>
 
-          {/* Add to Cart / Buy Now Golden Yellow CTA */}
+          {/* Wide Golden Yellow "Add to cart" / Buy Button */}
           <button
             type="button"
             className="pdp-cta-yellow-btn"
-            onClick={handleBuyNow}
+            onClick={handleAddToCart}
             disabled={product.inStock === false}
           >
             {product.inStock === false ? 'Out of Stock' : 'Add to cart'}

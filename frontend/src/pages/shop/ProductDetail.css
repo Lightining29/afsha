@@ -1,5 +1,5 @@
 /* ==========================================================================
-   PRODUCT DETAIL PAGE — Mobile-first Clean App UI (Screenshot 2)
+   PRODUCT DETAIL PAGE — Mobile-first Clean App UI (Screenshot Reference)
    ========================================================================== */
 
 .product-detail-app-container {
@@ -7,7 +7,7 @@
   margin: 0 auto;
   min-height: 100vh;
   background: #ffffff;
-  padding-bottom: 90px;
+  padding-bottom: 120px;
   position: relative;
 }
 
@@ -29,7 +29,7 @@
   text-align: center;
 }
 
-/* ── Top Header Bar (Screenshot 2) ── */
+/* ── Top Header Bar ── */
 .pdp-top-bar {
   display: flex;
   align-items: center;
@@ -38,7 +38,7 @@
   background: #ffffff;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
 }
 
 .pdp-circle-btn {
@@ -109,7 +109,7 @@
   text-transform: uppercase;
 }
 
-/* Circular Thumbnails (Screenshot 2) */
+/* Circular Thumbnails */
 .pdp-circular-thumbnails {
   display: flex;
   align-items: center;
@@ -148,7 +148,7 @@
   transform: scale(1.08);
 }
 
-/* ── Product Info Sheet (Screenshot 2) ── */
+/* ── Product Info Sheet ── */
 .pdp-info-sheet {
   background: #ffffff;
   border-radius: 28px 28px 0 0;
@@ -239,46 +239,6 @@
   margin-top: 4px;
 }
 
-/* Variants Section */
-.pdp-variants-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.pdp-section-subhead {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.pdp-variant-pills {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.pdp-variant-pill {
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 1.5px solid #e2e8f0;
-  background: #ffffff;
-  color: #334155;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.pdp-variant-pill.active {
-  border-color: #0f172a;
-  background: #0f172a;
-  color: #ffffff;
-}
-
 /* Description */
 .pdp-description-section {
   font-size: 0.88rem;
@@ -304,9 +264,12 @@
   margin-top: 4px;
   display: inline-block;
   cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
-/* Social Proof (Screenshot 2) */
+/* Social Proof */
 .pdp-social-proof {
   display: flex;
   align-items: center;
@@ -349,7 +312,7 @@
   color: #475569;
 }
 
-/* ── Fixed Bottom Action Bar (Screenshot 2) ── */
+/* ── Fixed Bottom Action Bar ── */
 .pdp-bottom-action-bar {
   position: fixed;
   bottom: 0;
@@ -363,8 +326,8 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  z-index: 100;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+  z-index: 10001;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
   max-width: 600px;
   margin: 0 auto;
 }
@@ -384,6 +347,7 @@
   border-radius: 999px;
   padding: 8px 12px;
   color: #ffffff;
+  flex-shrink: 0;
 }
 
 .pdp-stepper-btn {
@@ -397,6 +361,7 @@
   color: #ffffff;
   cursor: pointer;
   transition: all 0.15s ease;
+  border: none;
 }
 
 .pdp-stepper-btn:active {

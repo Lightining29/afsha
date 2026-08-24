@@ -7,11 +7,15 @@ import './BottomNav.css';
 export default function BottomNav() {
   const location = useLocation();
   const { cartCount, wishlist } = useCart();
-  const { user, isAuthenticated, setShowLoginModal } = useAuth();
+  const { isAuthenticated, setShowLoginModal } = useAuth();
   const path = location.pathname;
 
-  // Don't show bottom nav in admin dashboard
-  if (path.startsWith('/admin')) {
+  // Don't show bottom nav on admin, product details, cart, or checkout pages to prevent blocking action buttons
+  if (
+    path.startsWith('/admin') ||
+    path.startsWith('/product') ||
+    path.startsWith('/checkout')
+  ) {
     return null;
   }
 
@@ -37,11 +41,16 @@ export default function BottomNav() {
         </div>
       </Link>
 
-      <Link to={isAuthenticated ? '/account/wishlist' : '/cart'} onClick={(e) => {
-        if (!isAuthenticated && !isWishlist) {
-          // let them view wishlist or login modal
-        }
-      }} className={`bottom-nav-item ${isWishlist ? 'active' : ''}`}>
+      <Link
+        to={isAuthenticated ? '/account/wishlist' : '/login'}
+        onClick={(e) => {
+          if (!isAuthenticated) {
+            e.preventDefault();
+            setShowLoginModal(true);
+          }
+        }}
+        className={`bottom-nav-item ${isWishlist ? 'active' : ''}`}
+      >
         <div className="bottom-nav-icon-wrap">
           <Heart size={22} strokeWidth={isWishlist ? 2.5 : 1.8} />
           {wishlist?.length > 0 && <span className="bottom-nav-badge">{wishlist.length}</span>}
