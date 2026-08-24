@@ -50,20 +50,21 @@ export default function Navbar() {
   return (
     <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="container navbar-inner">
-        {/* Left: Clean 4-Dot Grid / Menu Button */}
-        <button
-          className="icon-btn mobile-menu-btn"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Menu"
-        >
-          {menuOpen ? <X size={20} /> : <LayoutGrid size={20} />}
-        </button>
+        {/* Left Side: 4-Dot Menu & Beautiful Text Logo */}
+        <div className="navbar-left-cluster">
+          <button
+            className="icon-btn mobile-menu-btn"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menu"
+          >
+            {menuOpen ? <X size={20} /> : <LayoutGrid size={20} />}
+          </button>
 
-        {/* Center: Luxury Text-Only Brand Logo */}
-        <Link to="/" className="luxury-text-logo" onClick={() => setMenuOpen(false)}>
-          <span className="logo-main-text">AFSHA</span>
-          <span className="logo-sub-text">ENTERPRISES</span>
-        </Link>
+          <Link to="/" className="luxury-text-logo" onClick={() => setMenuOpen(false)}>
+            <span className="logo-main-text">Afsha</span>
+            <span className="logo-dot">.</span>
+          </Link>
+        </div>
 
         {/* Desktop Nav Links */}
         <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
@@ -74,7 +75,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Right: Clean Notification Bell & User Avatar */}
+        {/* Right Side: Notification Bell & User Avatar */}
         <div className="nav-actions">
           {/* Notification Bell */}
           <button

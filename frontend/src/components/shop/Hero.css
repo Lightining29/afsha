@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
   overflow: hidden;
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
   border: 1px solid rgba(255, 255, 255, 0.09);
@@ -25,7 +25,7 @@
 /* Left Content */
 .hero-banner-left {
   flex: 1;
-  max-width: 48%;
+  max-width: 46%;
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -97,16 +97,16 @@
   box-shadow: 0 6px 18px rgba(254, 194, 42, 0.35);
 }
 
-/* Right Trimmer Showcase — Positioned Far Right with Symmetrical Margins */
+/* Right Trimmer Showcase — Positioned Far Right */
 .hero-banner-right {
   position: relative;
-  width: 50%;
-  height: 200px;
+  width: 54%;
+  height: 205px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   z-index: 2;
-  margin-right: -4px;
+  margin-right: -10px;
 }
 
 .hero-banner-img-container {
@@ -127,11 +127,12 @@
 .hero-banner-img {
   width: 100%;
   height: 100%;
-  max-height: 200px;
+  max-height: 205px;
   object-fit: contain;
   object-position: right center;
   filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.65));
   image-rendering: -webkit-optimize-contrast;
+  transform: translateX(8px);
 }
 
 .hero-banner-bogo-tag {
@@ -154,14 +155,14 @@
 /* Mobile Responsiveness */
 @media (max-width: 640px) {
   .hero-banner-card {
-    padding: 16px 16px;
+    padding: 16px 14px;
     border-radius: 20px;
     min-height: 165px;
     gap: 8px;
   }
 
   .hero-banner-left {
-    max-width: 48%;
+    max-width: 46%;
   }
 
   .hero-banner-eyebrow {
@@ -184,7 +185,11 @@
 
   .hero-banner-right {
     height: 160px;
-    width: 52%;
-    margin-right: -4px;
+    width: 54%;
+    margin-right: -8px;
+  }
+
+  .hero-banner-img {
+    transform: translateX(6px);
   }
 }
