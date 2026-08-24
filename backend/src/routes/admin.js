@@ -110,7 +110,7 @@ router.post('/products', upload.array('images', 5), async (req, res) => {
       name, description, price, originalPrice,
       category, stockQuantity, discountPercent, bestseller,
       badge, isTrending, isNewArrival, isLimitedEdition,
-      isBogo, bogoEndsAt, bogoBadgeText,
+      isBogo, bogoEndsAt, bogoBadgeText, rating, reviewCount,
     } = req.body;
 
     if (!name || !description || !price || !category) {
@@ -140,6 +140,8 @@ router.post('/products', upload.array('images', 5), async (req, res) => {
       imageContentType: images[0].contentType,
       images,
       category,
+      rating: rating !== undefined ? Math.min(5, Math.max(0, parseFloat(rating))) : 4.8,
+      reviewCount: reviewCount !== undefined ? Math.max(0, parseInt(reviewCount, 10)) : 120,
       stockQuantity: qty,
       discountPercent: parseInt(discountPercent ?? 0, 10),
       bestseller: isBest,
@@ -168,6 +170,8 @@ router.put('/products/:id', upload.array('images', 5), async (req, res) => {
     // Parse numeric & boolean fields sent as form strings
     if (updateData.price) updateData.price = parseFloat(updateData.price);
     if (updateData.originalPrice) updateData.originalPrice = parseFloat(updateData.originalPrice);
+    if (updateData.rating !== undefined) updateData.rating = Math.min(5, Math.max(0, parseFloat(updateData.rating)));
+    if (updateData.reviewCount !== undefined) updateData.reviewCount = Math.max(0, parseInt(updateData.reviewCount, 10));
     if (updateData.stockQuantity !== undefined) updateData.stockQuantity = parseInt(updateData.stockQuantity, 10);
     if (updateData.discountPercent !== undefined) updateData.discountPercent = parseInt(updateData.discountPercent, 10);
     if (updateData.bestseller !== undefined) {

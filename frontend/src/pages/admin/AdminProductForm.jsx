@@ -17,6 +17,8 @@ const emptyForm = {
   category: '',
   stockQuantity: 50,
   discountPercent: 0,
+  rating: 4.8,
+  reviewCount: 120,
   bestseller: false,
   badge: '',
   isTrending: false,
@@ -69,6 +71,8 @@ export default function AdminProductForm() {
             category: p.category?._id || p.category,
             stockQuantity: p.stockQuantity,
             discountPercent: p.discountPercent || 0,
+            rating: p.rating ?? 4.8,
+            reviewCount: p.reviewCount ?? 120,
             bestseller: p.bestseller || false,
             badge: p.badge || '',
             isTrending: p.isTrending || false,
@@ -156,6 +160,8 @@ export default function AdminProductForm() {
         ...form,
         price: parseFloat(form.price),
         originalPrice: form.originalPrice ? parseFloat(form.originalPrice) : '',
+        rating: parseFloat(form.rating) || 4.8,
+        reviewCount: parseInt(form.reviewCount, 10) || 0,
         stockQuantity: parseInt(form.stockQuantity, 10),
         discountPercent: parseInt(form.discountPercent, 10) || 0,
         bestseller: form.bestseller,
@@ -247,6 +253,14 @@ export default function AdminProductForm() {
               <div className="apf-group">
                 <label>Discount (%)</label>
                 <input type="number" min="0" max="100" value={form.discountPercent} onChange={update('discountPercent')} />
+              </div>
+              <div className="apf-group">
+                <label>Product Rating (⭐ 0.0 - 5.0)</label>
+                <input type="number" step="0.1" min="0" max="5" value={form.rating} onChange={update('rating')} placeholder="e.g. 4.9" />
+              </div>
+              <div className="apf-group">
+                <label>Review Count</label>
+                <input type="number" min="0" value={form.reviewCount} onChange={update('reviewCount')} placeholder="e.g. 150" />
               </div>
             </div>
 

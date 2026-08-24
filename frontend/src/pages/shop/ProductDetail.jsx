@@ -161,8 +161,24 @@ export default function ProductDetail() {
           )}
         </div>
 
-        {/* ── Product Info Sheet (Screenshot reference) ── */}
+        {/* ── Product Info Sheet ── */}
         <div className="pdp-info-sheet">
+          {/* Star Rating Badge */}
+          <div className="pdp-rating-badge">
+            <div className="pdp-stars-row">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  size={15}
+                  fill={star <= Math.round(product.rating ?? 4.8) ? '#f59e0b' : '#e2e8f0'}
+                  color={star <= Math.round(product.rating ?? 4.8) ? '#f59e0b' : '#cbd5e1'}
+                />
+              ))}
+            </div>
+            <span className="pdp-rating-score">{(product.rating ?? 4.8).toFixed(1)}</span>
+            <span className="pdp-rating-reviews">({product.reviewCount || 128} reviews)</span>
+          </div>
+
           <div className="pdp-title-row">
             <div>
               <h2 className="pdp-product-name">{product.name}</h2>
@@ -206,23 +222,19 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {/* Description with Read More */}
+          {/* Full Description Display in Beautiful Structured Card */}
           <div className="pdp-description-section">
-            <p className={`pdp-desc-text ${descExpanded ? 'expanded' : ''}`}>
-              {product.description}
-            </p>
-            {product.description?.length > 120 && (
-              <button
-                type="button"
-                className="pdp-read-more-btn"
-                onClick={() => setDescExpanded(!descExpanded)}
-              >
-                {descExpanded ? 'Read less' : 'Read more ...'}
-              </button>
-            )}
+            <h3 className="pdp-desc-heading">Product Overview</h3>
+            <div className="pdp-desc-content">
+              {product.description?.split('\n').filter(Boolean).map((paragraph, pIdx) => (
+                <p key={pIdx} className="pdp-desc-paragraph">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
           </div>
 
-          {/* Social Proof Favorite Avatars (Screenshot reference) */}
+          {/* Social Proof Favorite Avatars */}
           <div className="pdp-social-proof">
             <div className="pdp-avatar-group">
               <span className="pdp-avatar av-1">👩</span>

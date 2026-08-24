@@ -97,22 +97,31 @@
 }
 
 .home-section-title {
-  font-size: 1.25rem;
-  font-weight: 800;
+  font-size: 1.45rem;
+  font-weight: 900;
   color: #0f172a;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.5px;
 }
 
 .home-see-all-link {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fec22a;
+  color: #0f172a;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 999px;
   text-decoration: none;
-  transition: color 0.2s ease;
+  box-shadow: 0 2px 8px rgba(254, 194, 42, 0.35);
+  transition: all 0.2s ease;
 }
 
 .home-see-all-link:hover {
-  color: #0f172a;
+  background: #f59e0b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(254, 194, 42, 0.45);
 }
 
 /* ── Horizontal Swiper Carousel for New Arrivals (Screenshot Match) ── */
