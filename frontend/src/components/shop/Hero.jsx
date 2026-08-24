@@ -27,7 +27,7 @@ export default function Hero() {
       .catch(() => {});
   }, []);
 
-  // 2s Auto Slider Timer as requested
+  // 2s Auto Slider Timer
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev === 0 ? 1 : 0));
@@ -62,7 +62,7 @@ export default function Hero() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* ── Slide 1: Original Trimmer Banner ── */}
+          {/* ── Slide 1: Original Trimmer Banner (Dark Theme) ── */}
           <div className={`hero-banner-card slide-trimmer ${activeSlide === 0 ? 'slide-active' : 'slide-hidden'}`}>
             {/* Left Content */}
             <div className="hero-banner-left">
@@ -104,46 +104,36 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ── Slide 2: Raksha Bandhan Special Festival Banner ── */}
-          <div className={`hero-banner-card slide-raksha ${activeSlide === 1 ? 'slide-active' : 'slide-hidden'}`}>
-            {/* Left Festive Graphic & CTA */}
-            <div className="hero-banner-left raksha-left">
-              <div className="hero-banner-eyebrow raksha-eyebrow">
-                <HeartHandshake size={12} className="hero-sparkle-icon" />
-                <span>Raksha Bandhan Special</span>
-              </div>
-
-              <div className="raksha-art-wrap">
+          {/* ── Slide 2: Raksha Bandhan Special Banner (Light Theme, Wishes & Shop Button Only) ── */}
+          <div className={`hero-banner-card slide-raksha-light ${activeSlide === 1 ? 'slide-active' : 'slide-hidden'}`}>
+            {/* Left / Center Festive Artwork & Wishes */}
+            <div className="raksha-light-content">
+              <div className="raksha-light-left-art">
                 <img
-                  src="/raksha-bandhan-art.png"
+                  src="/raksha-bandhan-light.png"
                   alt="Happy Raksha Bandhan"
-                  className="raksha-art-graphic"
+                  className="raksha-light-main-img"
                 />
               </div>
 
-              <p className="raksha-tagline">
-                Gift Pure Care &amp; Love To Your Sister ✨
-              </p>
-
-              <Link to={targetProductLink} className="hero-banner-shop-btn raksha-gift-btn">
-                Gift Now 🎁
-              </Link>
-            </div>
-
-            {/* Right Product Image */}
-            <div className="hero-banner-right">
-              <div className="hero-banner-img-container">
-                <img
-                  src={showcaseImage}
-                  alt={hairRemover?.name || 'Raksha Bandhan Gift Set'}
-                  className="hero-banner-img"
-                  fetchpriority="high"
-                  decoding="async"
-                />
-
-                <div className="hero-banner-bogo-tag raksha-festive-tag">
-                  <Gift size={11} /> SISTER GIFT
+              <div className="raksha-light-text-col">
+                <div className="raksha-light-eyebrow">
+                  <HeartHandshake size={13} className="raksha-heart-icon" />
+                  <span>Bond of Love &amp; Protection</span>
                 </div>
+
+                <h3 className="raksha-light-wishes-title">
+                  Wishing You a Joyous <br />
+                  <span className="raksha-title-highlight">Raksha Bandhan</span> ✨
+                </h3>
+
+                <p className="raksha-light-wishes-desc">
+                  Celebrating the purest bond of love, care and lifelong togetherness.
+                </p>
+
+                <Link to="#all-products" className="hero-banner-shop-btn raksha-light-cta-btn">
+                  Explore Festive Gifts 🎁
+                </Link>
               </div>
             </div>
           </div>
@@ -152,13 +142,13 @@ export default function Hero() {
           <div className="hero-slider-indicators">
             <button
               type="button"
-              className={`hero-slider-dot ${activeSlide === 0 ? 'active' : ''}`}
+              className={`hero-slider-dot ${activeSlide === 0 ? 'active' : ''} ${activeSlide === 1 ? 'dot-on-light' : ''}`}
               onClick={() => setActiveSlide(0)}
               aria-label="Slide 1 - Trimmer Showcase"
             />
             <button
               type="button"
-              className={`hero-slider-dot ${activeSlide === 1 ? 'active' : ''}`}
+              className={`hero-slider-dot ${activeSlide === 1 ? 'active' : ''} ${activeSlide === 1 ? 'dot-on-light' : ''}`}
               onClick={() => setActiveSlide(1)}
               aria-label="Slide 2 - Raksha Bandhan"
             />
