@@ -6,6 +6,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import LoginModal from './components/LoginModal';
 import { useAuth } from './context/AuthContext';
+import BottomNav from './components/layout/BottomNav';
 import './pages/shop/Home.css';
 
 const Cart = lazy(() => import('./pages/shop/Cart'));
@@ -116,6 +117,7 @@ function App() {
       </Routes>
       </Suspense>
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
+      <BottomNav />
     </>
   );
 }

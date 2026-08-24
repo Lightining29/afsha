@@ -1,14 +1,23 @@
-import { Star, Zap, Gift } from 'lucide-react';
+import { Star, Zap, Gift, Heart } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchProduct, formatPrice, getProductPrice } from '../../api';
+import { useCart } from '../../context/CartContext';
 import CountdownTimer from '../shop/CountdownTimer';
 import './ProductCard.css';
 
 export default function ProductCard({ product }) {
-  const navigate   = useNavigate();
+  const navigate = useNavigate();
+  const { toggleWishlist, isInWishlist } = useCart();
   const finalPrice = getProductPrice(product);
   const hasDiscount = product.discountPercent > 0;
   const isBogo = product.isBogoActive ?? (product.isBogo && (!product.bogoEndsAt || new Date(product.bogoEndsAt) > new Date()));
+  const isLiked = isInWishlist(product._id);
+
+  const handleHeartClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product);
+  };
 
   const prefetchProduct = () => {
     fetchProduct(product.slug).catch(() => {});
@@ -19,22 +28,33 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <Link to={`/products/${product.slug}`} className="product-card-link" onPointerEnter={prefetchProduct} onFocus={prefetchProduct}>
+    <Link
+      to={`/products/${product.slug}`}
+      className="product-card-link"
+      onPointerEnter={prefetchProduct}
+      onFocus={prefetchProduct}
+    >
       <div className="product-card">
-
-        {/* ── Product Image & Badges ─────────────────────────── */}
+        {/* ── Product Image & Floating Badges ── */}
         <div className="product-image-wrap">
           <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
 
           {/* BOGO Floating Badge */}
           {isBogo && (
             <div className="product-card-bogo-badge">
-              <Gift size={12} className="bogo-gift-icon" />
+              <Gift size={11} className="bogo-gift-icon" />
               <span>{product.bogoBadgeText || 'BUY 1 GET 1 FREE'}</span>
             </div>
           )}
 
-          {/* BOGO Countdown Timer if expiry date set */}
+          {/* Discount Badge Ribbon */}
+          {!isBogo && hasDiscount && (
+            <div className="product-card-discount-tag">
+              {product.discountPercent}% OFF
+            </div>
+          )}
+
+          {/* BOGO Countdown Timer */}
           {isBogo && product.bogoEndsAt && (
             <div className="product-card-timer-wrap">
               <CountdownTimer targetDate={product.bogoEndsAt} compact />
@@ -42,15 +62,12 @@ export default function ProductCard({ product }) {
           )}
         </div>
 
-        {/* ── Product Info ──────────────────────────── */}
+        {/* ── Product Info ── */}
         <div className="product-info">
           <h3 className="product-name">{product.name}</h3>
-
-          <div className="product-rating">
-            <Star size={14} fill="#FFD700" color="#FFD700" />
-            <span>{product.rating}</span>
-            <span className="review-count">({product.reviewCount})</span>
-          </div>
+          <p className="product-category-sub">
+            {product.category?.name || 'Personal Care'}
+          </p>
 
           <div className="product-bottom">
             <div className="product-prices">
@@ -62,19 +79,21 @@ export default function ProductCard({ product }) {
               )}
             </div>
 
-            {/* ── Buy Now Button ─── */}
+            {/* Floating Wishlist Heart */}
             <button
-              className="buy-now-btn"
-              onClick={(e) => { e.preventDefault(); navigate(`/products/${product.slug}`); }}
-              aria-label="Buy now"
-              disabled={product.inStock === false}
+              type="button"
+              className={`product-heart-btn ${isLiked ? 'liked' : ''}`}
+              onClick={handleHeartClick}
+              aria-label={isLiked ? 'Remove from wishlist' : 'Add to wishlist'}
             >
-              <Zap size={13} />
-              <span>{product.inStock === false ? 'Out of Stock' : 'Buy Now'}</span>
+              <Heart
+                size={16}
+                fill={isLiked ? '#ef4444' : 'none'}
+                color={isLiked ? '#ef4444' : '#94a3b8'}
+              />
             </button>
           </div>
         </div>
-
       </div>
     </Link>
   );

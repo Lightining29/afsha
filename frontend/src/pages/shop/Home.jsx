@@ -1,42 +1,110 @@
+import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { fetchProducts, fetchCategories } from '../../api';
 import Navbar from '../../components/layout/Navbar';
 import Hero from '../../components/shop/Hero';
-import Categories from '../../components/shop/Categories';
-import AllProducts from '../../components/shop/AllProducts';
+import ProductCard from '../../components/product/ProductCard';
 import Footer from '../../components/layout/Footer';
 import './Home.css';
 
-const siteTitle = 'Afsha Enterprises | Best Body Massagers in India';
-const siteDescription = 'Afsha Enterprises offers premium electric, handheld, neck, shoulder, foot, and pain relief body massagers with fast delivery across India.';
-const siteKeywords = 'Afsha Enterprises, body massager, electric massager, neck massager, pain relief massager, foot massager';
+const siteTitle = 'Afsha Enterprises | Premium Body Massagers & Personal Grooming';
+const siteDescription = 'Afsha Enterprises offers premium electric massagers, body hair removers, and wellness devices with fast express shipping across India.';
 
 export default function Home() {
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    Promise.all([
+      fetchProducts({ limit: '24' }),
+      fetchCategories()
+    ])
+      .then(([productsData, categoriesData]) => {
+        if (!isMounted) return;
+        const prodList = Array.isArray(productsData) ? productsData : (productsData?.items || []);
+        setProducts(prodList);
+        if (Array.isArray(categoriesData)) {
+          setCategories(categoriesData);
+        }
+      })
+      .catch((err) => console.error('Failed to load home data:', err))
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => { isMounted = false; };
+  }, []);
+
+  const newArrivals = products.slice(0, 4);
+
+  const filteredBestSellers = activeCategory === 'all'
+    ? products
+    : products.filter((p) => (p.category?._id === activeCategory || p.category === activeCategory || p.category?.slug === activeCategory));
+
   return (
     <>
       <Helmet>
         <title>{siteTitle}</title>
         <meta name="description" content={siteDescription} />
-        <meta name="keywords" content={siteKeywords} />
-        <meta name="robots" content="index, follow" />
-        <meta name="author" content="Afsha Enterprises" />
-        <link rel="canonical" href="https://www.afshaenterprises.com/" />
-        <meta property="og:title" content={siteTitle} />
-        <meta property="og:description" content={siteDescription} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.afshaenterprises.com/" />
-        <meta property="og:image" content="https://www.afshaenterprises.com/logo.png" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={siteTitle} />
-        <meta name="twitter:description" content={siteDescription} />
       </Helmet>
 
+      {/* ── Top Hero Special Sale Banner ── */}
       <Hero />
 
-      <Categories />
-
-      <section className="section home-section">
+      {/* ── Section 1: New Arrival ── */}
+      <section className="home-section-block">
         <div className="container">
-          <AllProducts />
+          <div className="home-section-header">
+            <h2 className="home-section-title">New Arrival</h2>
+            <a href="#all-products" className="home-see-all-link">See all</a>
+          </div>
+
+          <div className="home-product-grid new-arrival-grid">
+            {newArrivals.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Section 2: Best Seller ── */}
+      <section id="all-products" className="home-section-block">
+        <div className="container">
+          <div className="home-section-header">
+            <h2 className="home-section-title">Best Seller</h2>
+            <a href="#all-products" className="home-see-all-link">See all</a>
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="home-category-pills">
+            <button
+              type="button"
+              className={`home-cat-pill ${activeCategory === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveCategory('all')}
+            >
+              All
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat._id}
+                type="button"
+                className={`home-cat-pill ${activeCategory === cat._id ? 'active' : ''}`}
+                onClick={() => setActiveCategory(cat._id)}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Best Seller Grid */}
+          <div className="home-product-grid best-seller-grid">
+            {filteredBestSellers.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
         </div>
       </section>
     </>

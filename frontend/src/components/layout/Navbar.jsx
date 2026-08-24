@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, User, Menu, X } from 'lucide-react';
+import { Search, User, Menu, X, Bell } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { toastSuccess } from '../../utils/toast.js';
+import { toastSuccess, toastInfo } from '../../utils/toast.js';
 import './Navbar.css';
 
 const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Categories', href: '#categories' },
+  { label: 'Bestsellers', href: '#all-products' },
 ];
 
 export default function Navbar() {
@@ -55,14 +56,24 @@ export default function Navbar() {
     if (!q) return;
     setSearchOpen(false);
     setQuery('');
-    navigate(`/?q=${encodeURIComponent(q)}#bestsellers`);
+    navigate(`/?q=${encodeURIComponent(q)}#all-products`);
   }
 
   return (
     <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="container navbar-inner">
+        {/* Mobile Left Menu Toggle */}
+        <button
+          className="icon-btn mobile-menu-btn"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Menu"
+        >
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+
         <Link to="/" className="logo" onClick={() => setMenuOpen(false)}>
-          <img src="/logo.png" alt="Afsha Enterprises" className="logo-img" />
+          <img src="/logo.png" alt="Afsha Enterprises" className="logo-img" onError={(e) => { e.target.style.display = 'none'; }} />
+          <span className="logo-brand-text">Afsha</span>
         </Link>
 
         <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
@@ -84,16 +95,26 @@ export default function Navbar() {
               aria-label="Search products"
             />
             <button type="button" className="icon-btn" aria-label="Search" onClick={() => setSearchOpen((v) => !v)}>
-              <Search size={19} />
+              <Search size={18} />
             </button>
           </form>
+
+          {/* Notification Bell */}
+          <button
+            type="button"
+            className="icon-btn notification-btn"
+            aria-label="Notifications"
+            onClick={() => toastInfo('Notifications', 'No new notifications right now.')}
+          >
+            <Bell size={18} />
+          </button>
 
           <div className="user-menu-wrap">
             <button className={`icon-btn ${user?.photoUrl ? 'navbar-user-btn' : ''}`} aria-label="Account" onClick={() => setUserMenuOpen(!userMenuOpen)}>
               {user?.photoUrl ? (
                 <img src={user.photoUrl} alt="Avatar" className="navbar-avatar" />
               ) : (
-                <User size={19} />
+                <User size={18} />
               )}
             </button>
             {userMenuOpen && (
@@ -115,21 +136,11 @@ export default function Navbar() {
                   <>
                     <Link to="/login" onClick={() => setUserMenuOpen(false)}>Sign In</Link>
                     <Link to="/register" onClick={() => setUserMenuOpen(false)}>Register</Link>
-
                   </>
                 )}
               </div>
             )}
           </div>
-
-
-          <button
-            className="icon-btn menu-toggle"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Menu"
-          >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
         </div>
       </div>
     </header>

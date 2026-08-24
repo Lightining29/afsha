@@ -2,23 +2,14 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
-  Star,
-  Truck,
-  RefreshCw,
-  Shield,
+  ArrowLeft,
+  MoreHorizontal,
+  Heart,
   Minus,
   Plus,
+  Gift,
   Share2,
-  Sparkles,
-  Award,
-  Zap,
-  Flame,
-  RotateCw,
-  Video,
-  ChevronDown,
-  ChevronUp,
-  HelpCircle,
-  Gift
+  Check
 } from 'lucide-react';
 import {
   fetchProduct,
@@ -26,89 +17,65 @@ import {
   getProductPrice,
 } from '../../api';
 import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
-import Navbar from '../../components/layout/Navbar';
-import Footer from '../../components/layout/Footer';
 import CountdownTimer from '../../components/shop/CountdownTimer';
-
-import { toastWishlist, toastSuccess } from '../../utils/toast.js';
+import Footer from '../../components/layout/Footer';
+import { toastSuccess, toastInfo } from '../../utils/toast.js';
 import './ProductDetail.css';
-
-const sampleFaqs = [
-  { q: "Is this product authentic & original?", a: "Yes! All Afsha Enterprises products are 100% authentic, quality tested, and backed by a 1-year warranty." },
-  { q: "How long until I see visible results?", a: "Most customers notice smoother texture within 3 to 5 days of regular daily application." },
-  { q: "What is the product warranty?", a: "All products include a 1-year warranty covering manufacturing defects and hardware performance." },
-  { q: "How fast is shipping & delivery?", a: "Orders are processed within 24 hours and delivered via express courier in 2 to 4 business days." }
-];
 
 export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
-  const { isAuthenticated } = useAuth();
-  const [product, setProduct]     = useState(null);
-  const [loading, setLoading]     = useState(true);
+  const { addToCart, toggleWishlist, isInWishlist } = useCart();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
-  const [is360Mode, setIs360Mode] = useState(false);
-  const [activeTab, setActiveTab] = useState('description');
-  const [openFaq, setOpenFaq]     = useState(0);
-  const [copied, setCopied]       = useState(false);
-
+  const [quantity, setQuantity] = useState(1);
+  const [selectedVariant, setSelectedVariant] = useState('Standard');
+  const [descExpanded, setDescExpanded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     setLoading(true);
     fetchProduct(slug)
-      .then(async (data) => {
+      .then((data) => {
         if (!mounted) return;
         setProduct(data);
-
       })
-      .catch(() => { if (mounted) navigate('/'); })
-      .finally(() => { if (mounted) setLoading(false); });
+      .catch(() => {
+        if (mounted) navigate('/');
+      })
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
 
     return () => { mounted = false; };
   }, [slug, navigate]);
 
-  // A detail page is an intentional product view: begin fetching every gallery
-  // image immediately so switching thumbnails is instant.
-  useEffect(() => {
-    const images = Array.isArray(product?.images) && product.images.length
-      ? product.images
-      : [product?.image].filter(Boolean);
-    images.forEach((src) => {
-      const image = new Image();
-      image.src = src;
-    });
-  }, [product]);
-
-
   if (loading) {
     return (
-      <>
-        <Navbar />
-        <div className="product-detail-loading"><div className="loading-spinner" /></div>
-        <Footer />
-      </>
+      <div className="product-detail-page-wrapper">
+        <div className="product-detail-loading">
+          <div className="loading-spinner" />
+        </div>
+      </div>
     );
   }
 
   if (!product) {
     return (
-      <>
-        <Navbar />
+      <div className="product-detail-page-wrapper">
         <div className="product-not-found">
           <h2>Product not found</h2>
-          <Link to="/" className="btn btn-sky">← Back to Shop</Link>
+          <Link to="/" className="btn btn-gold">← Back to Shop</Link>
         </div>
-        <Footer />
-      </>
+      </div>
     );
   }
 
   const finalPrice = getProductPrice(product);
-  const discount = product.discountPercent > 0 ? product.price - finalPrice : 0;
+  const hasDiscount = product.discountPercent > 0;
   const isBogo = product.isBogoActive ?? (product.isBogo && (!product.bogoEndsAt || new Date(product.bogoEndsAt) > new Date()));
+  const isLiked = isInWishlist(product._id);
 
   const gallery = Array.isArray(product.images) && product.images.length > 0
     ? product.images
@@ -116,8 +83,17 @@ export default function ProductDetail() {
   const activeIdx = Math.min(activeImage, gallery.length - 1);
   const mainImage = gallery[activeIdx] || product.image;
 
+  const handleAddToCart = () => {
+    for (let i = 0; i < quantity; i++) {
+      addToCart(product);
+    }
+    toastSuccess('Added to Cart', `${product.name} (Qty: ${quantity}) added!`);
+  };
+
   const handleBuyNow = () => {
-    addToCart(product);
+    for (let i = 0; i < quantity; i++) {
+      addToCart(product);
+    }
     navigate('/checkout');
   };
 
@@ -125,208 +101,198 @@ export default function ProductDetail() {
     <>
       <Helmet>
         <title>{`${product.name} | Afsha Enterprises`}</title>
-        <meta name="description" content={product.description.substring(0, 160)} />
+        <meta name="description" content={product.description?.substring(0, 160)} />
       </Helmet>
-      <Navbar />
 
-      <div className="product-detail-container">
-        {/* Breadcrumb */}
-        <div className="breadcrumb">
-          <Link to="/">Home</Link>
-          <span className="separator">/</span>
-          {product.category && (
-            <>
-              <Link to={`/category/${product.category.slug}`}>{product.category.name}</Link>
-              <span className="separator">/</span>
-            </>
-          )}
-          <span className="current">{product.name}</span>
-        </div>
+      <div className="product-detail-app-container">
+        {/* ── Top Header Bar (Screenshot 2) ── */}
+        <header className="pdp-top-bar">
+          <button
+            type="button"
+            className="pdp-circle-btn"
+            onClick={() => navigate(-1)}
+            aria-label="Back"
+          >
+            <ArrowLeft size={18} />
+          </button>
 
-        {/* Main Grid */}
-        <div className="product-detail-wrapper">
-          {/* Left Column: Organized Image Gallery with Side Strip & Stage */}
-          <div className="product-image-section">
-            <div className="organized-gallery-layout">
-              {/* Thumbnail Strip Column */}
-              {gallery.length > 0 && (
-                <div className="gallery-thumbnail-strip">
-                  {gallery.map((src, i) => (
-                    <button
-                      key={i}
-                      className={`thumbnail-strip-item ${i === activeIdx ? 'active' : ''}`}
-                      onClick={() => setActiveImage(i)}
-                      aria-label={`View image ${i + 1}`}
-                    >
-                      <img
-                        src={src}
-                        alt={`${product.name} view ${i + 1}`}
-                        decoding="async"
-                        onError={(e) => {
-                          if (product.image && e.target.src !== product.image) {
-                            e.target.src = product.image;
-                          }
-                        }}
-                      />
-                      <span className="thumb-idx">{i + 1}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
+          <h1 className="pdp-top-title">Details Products</h1>
 
-              {/* Main HD Image Stage Wrapper */}
-              <div className="product-stage-wrapper">
-                <div className="product-image-container">
-                  <img
-                    src={mainImage}
-                    alt={product.name}
-                    className={`product-image-main ${is360Mode ? 'rotating-360' : ''}`}
-                    fetchpriority="high"
-                    decoding="async"
-                    onError={(e) => {
-                      if (product.image && e.target.src !== product.image) {
-                        e.target.src = product.image;
-                      }
-                    }}
-                  />
+          <button
+            type="button"
+            className="pdp-circle-btn"
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({ title: product.name, url: window.location.href }).catch(() => {});
+              } else {
+                navigator.clipboard.writeText(window.location.href);
+                toastInfo('Link Copied', 'Product link copied to clipboard.');
+              }
+            }}
+            aria-label="Share options"
+          >
+            <MoreHorizontal size={18} />
+          </button>
+        </header>
 
-                  {/* Single Sleek Discount Badge (if applicable) */}
-                  {product.discountPercent > 0 && (
-                    <span className="product-stage-discount-badge">
-                      -{product.discountPercent}% OFF
-                    </span>
-                  )}
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Info & Buy Options */}
-          <div className="product-info-section">
-            <div className="product-header">
-              <div>
-                <span className="product-category-chip">
-                  <Sparkles size={12} /> {product.category?.name || 'Skincare & Beauty'}
-                </span>
-                <h1 className="product-title">{product.name}</h1>
-                <div className="product-rating-section">
-                  <div className="stars">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={18} fill="#FFD700" color="#FFD700" />
-                    ))}
-                  </div>
-                  <span className="rating-number">4.9</span>
-                  <span className="review-count">({product.reviewCount || 148} reviews)</span>
-                </div>
-              </div>
-
-            </div>
-
-            {/* BOGO Deal Highlight Banner */}
+        {/* ── Main Showcase Image ── */}
+        <div className="pdp-stage-section">
+          <div className="pdp-stage-img-wrap">
+            <img
+              src={mainImage}
+              alt={product.name}
+              className="pdp-stage-img"
+              fetchpriority="high"
+            />
             {isBogo && (
-              <div className="product-bogo-deal-banner">
-                <div className="bogo-deal-header">
-                  <div className="bogo-deal-tag">
-                    <Gift size={16} className="bogo-gift-bounce" />
-                    <span>{product.bogoBadgeText || 'BUY 1 GET 1 FREE'}</span>
-                  </div>
-                  <span className="bogo-deal-badge">Special Deal</span>
-                </div>
-                <p className="bogo-deal-desc">
-                  🎉 <strong>Buy 1, Get 2nd Free!</strong> Add 1 item to your cart and receive 2 items delivered at the same price!
-                </p>
-                {product.bogoEndsAt && (
-                  <div className="bogo-deal-timer-wrap">
-                    <CountdownTimer targetDate={product.bogoEndsAt} label="Offer Expires In" />
-                  </div>
-                )}
+              <div className="pdp-bogo-float-badge">
+                <Gift size={13} /> {product.bogoBadgeText || 'BUY 1 GET 1 FREE'}
               </div>
             )}
+          </div>
 
-            {/* Price Box */}
-            <div className="price-section">
-              <div className="price-group">
-                <span className="price-current">{formatPrice(finalPrice)}</span>
-                {product.discountPercent > 0 && (
-                  <span className="price-original">{formatPrice(product.price)}</span>
-                )}
-              </div>
-              {product.discountPercent > 0 && (
-                <span className="discount-percent-badge">Save {product.discountPercent}%</span>
-              )}
-            </div>
-
-            {/* Description */}
-            <p className="product-description">{product.description}</p>
-
-            {/* Action Buttons */}
-            <div className="actions-section">
-              <div className="action-buttons-group">
-                <button className="btn-buy-now-glow" onClick={handleBuyNow}>
-                  Buy Now
+          {/* Circular Gallery Thumbnail Strip (Screenshot 2) */}
+          {gallery.length > 1 && (
+            <div className="pdp-circular-thumbnails">
+              {gallery.map((src, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`pdp-thumb-circle ${i === activeIdx ? 'active' : ''}`}
+                  onClick={() => setActiveImage(i)}
+                  aria-label={`View image ${i + 1}`}
+                >
+                  <img src={src} alt={`Thumbnail ${i + 1}`} />
                 </button>
-              </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ── Product Info Sheet (Screenshot 2) ── */}
+        <div className="pdp-info-sheet">
+          <div className="pdp-title-row">
+            <div>
+              <h2 className="pdp-product-name">{product.name}</h2>
+              <p className="pdp-category-name">
+                {product.category?.name || 'Personal Care & Wellness'}
+              </p>
+            </div>
+
+            {/* Wishlist Heart Button */}
+            <button
+              type="button"
+              className={`pdp-heart-circle-btn ${isLiked ? 'liked' : ''}`}
+              onClick={() => toggleWishlist(product)}
+              aria-label="Toggle wishlist"
+            >
+              <Heart
+                size={20}
+                fill={isLiked ? '#ef4444' : 'none'}
+                color={isLiked ? '#ef4444' : '#94a3b8'}
+              />
+            </button>
+          </div>
+
+          {/* Price Row */}
+          <div className="pdp-price-row">
+            <span className="pdp-price-current">{formatPrice(finalPrice)}</span>
+            {(hasDiscount || product.originalPrice) && (
+              <span className="pdp-price-original">
+                {formatPrice(hasDiscount ? product.price : product.originalPrice)}
+              </span>
+            )}
+            {hasDiscount && (
+              <span className="pdp-save-chip">-{product.discountPercent}% OFF</span>
+            )}
+          </div>
+
+          {/* BOGO Countdown Timer */}
+          {isBogo && product.bogoEndsAt && (
+            <div className="pdp-bogo-timer-box">
+              <CountdownTimer targetDate={product.bogoEndsAt} label="BOGO Offer Ends In" />
+            </div>
+          )}
+
+          {/* Options / Variant Selector Pills (Screenshot 2) */}
+          <div className="pdp-variants-section">
+            <span className="pdp-section-subhead">Options</span>
+            <div className="pdp-variant-pills">
+              {['Standard', isBogo ? 'Pack of 2 (BOGO Deal)' : 'Value Pack', 'Pro Edition'].map((variant) => (
+                <button
+                  key={variant}
+                  type="button"
+                  className={`pdp-variant-pill ${selectedVariant === variant ? 'active' : ''}`}
+                  onClick={() => setSelectedVariant(variant)}
+                >
+                  {variant}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
 
-
-        {/* Tabs: Description, Videos & FAQ */}
-        <div className="product-tabs-section">
-          <div className="tabs-header-bar">
-            <button className={`tab-link ${activeTab === 'description' ? 'active' : ''}`} onClick={() => setActiveTab('description')}>
-              Product Description
-            </button>
-            <button className={`tab-link ${activeTab === 'video' ? 'active' : ''}`} onClick={() => setActiveTab('video')}>
-              <Video size={16} inline /> Product Demo Video
-            </button>
-            <button className={`tab-link ${activeTab === 'faq' ? 'active' : ''}`} onClick={() => setActiveTab('faq')}>
-              <HelpCircle size={16} inline /> Product FAQs
-            </button>
+          {/* Description with Read More */}
+          <div className="pdp-description-section">
+            <p className={`pdp-desc-text ${descExpanded ? 'expanded' : ''}`}>
+              {product.description}
+            </p>
+            {product.description?.length > 120 && (
+              <button
+                type="button"
+                className="pdp-read-more-btn"
+                onClick={() => setDescExpanded(!descExpanded)}
+              >
+                {descExpanded ? 'Read less' : 'Read more...'}
+              </button>
+            )}
           </div>
 
-          <div className="tab-content-panel">
-            {activeTab === 'description' && (
-              <div>
-                <h3>Product Overview & Specifications</h3>
-                <p>{product.description}</p>
-              </div>
-            )}
-
-            {activeTab === 'video' && (
-              <div>
-                <h3>Interactive Video Showcase</h3>
-                <div className="video-player-box">
-                  <iframe
-                    width="100%"
-                    height="400"
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                    title="Product Video Demo"
-                    style={{ borderRadius: '16px', border: 'none' }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'faq' && (
-              <div className="faqs-accordion">
-                {sampleFaqs.map((faq, i) => (
-                  <div key={i} className="faq-accordion-item" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                    <div className="faq-question">
-                      <span>{faq.q}</span>
-                      {openFaq === i ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                    </div>
-                    {openFaq === i && <div className="faq-answer">{faq.a}</div>}
-                  </div>
-                ))}
-              </div>
-            )}
+          {/* Social Proof Favorite Avatars (Screenshot 2) */}
+          <div className="pdp-social-proof">
+            <div className="pdp-avatar-group">
+              <span className="pdp-avatar av-1">✨</span>
+              <span className="pdp-avatar av-2">🌸</span>
+              <span className="pdp-avatar av-3">💎</span>
+              <span className="pdp-avatar av-4">⭐</span>
+            </div>
+            <span className="pdp-social-proof-text">10,000+ people favorite this</span>
           </div>
         </div>
 
+        {/* ── Fixed Bottom Action Bar (Screenshot 2) ── */}
+        <div className="pdp-bottom-action-bar">
+          {/* Stepper Capsule */}
+          <div className="pdp-stepper-capsule">
+            <button
+              type="button"
+              className="pdp-stepper-btn"
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              aria-label="Decrease quantity"
+            >
+              <Minus size={14} />
+            </button>
+            <span className="pdp-stepper-val">{quantity}</span>
+            <button
+              type="button"
+              className="pdp-stepper-btn"
+              onClick={() => setQuantity(quantity + 1)}
+              aria-label="Increase quantity"
+            >
+              <Plus size={14} />
+            </button>
+          </div>
+
+          {/* Add to Cart / Buy Now Golden Yellow CTA */}
+          <button
+            type="button"
+            className="pdp-cta-yellow-btn"
+            onClick={handleBuyNow}
+            disabled={product.inStock === false}
+          >
+            {product.inStock === false ? 'Out of Stock' : 'Add to cart'}
+          </button>
+        </div>
       </div>
-
       <Footer />
     </>
   );

@@ -1,0 +1,87 @@
+/* ==========================================================================
+   MOBILE BOTTOM NAVIGATION BAR — Floating clean app navigation
+   ========================================================================== */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid #f1f5f9;
+  z-index: 999;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 16px env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: flex;
+  }
+
+  /* Add padding to bottom of page so fixed nav never covers content */
+  body {
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  text-decoration: none;
+  padding: 8px 16px;
+  position: relative;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.bottom-nav-item:active {
+  transform: scale(0.92);
+}
+
+.bottom-nav-item.active {
+  color: #0f172a;
+}
+
+.bottom-nav-icon-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-nav-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #0f172a;
+  margin-top: 3px;
+  position: absolute;
+  bottom: -6px;
+}
+
+.bottom-nav-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #fec22a;
+  color: #000000;
+  font-size: 10px;
+  font-weight: 800;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}

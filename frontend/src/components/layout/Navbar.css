@@ -29,13 +29,32 @@
 .logo {
   display: flex;
   align-items: center;
+  gap: 8px;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
 .logo-img {
-  height: 46px;
+  height: 38px;
   width: auto;
   object-fit: contain;
+}
+
+.logo-brand-text {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.4px;
+}
+
+.mobile-menu-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: flex;
+  }
 }
 
 /* ---- Nav links ---- */
