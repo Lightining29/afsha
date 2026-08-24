@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Zap, Gift } from 'lucide-react';
+import { Sparkles, Gift } from 'lucide-react';
 import { fetchProducts } from '../../api';
 import './Hero.css';
 
@@ -28,17 +28,27 @@ export default function Hero() {
 
   const isBogo = hairRemover?.isBogoActive ?? (hairRemover?.isBogo && (!hairRemover?.bogoEndsAt || new Date(hairRemover.bogoEndsAt) > new Date()));
 
+  // Prioritize transparent vector asset or product image
+  const displayImage = (!imgError && hairRemover?.image)
+    ? hairRemover.image
+    : '/hair-remover-transparent.svg';
+
   return (
     <section id="home" className="hero-banner-section">
       <div className="container">
         <div className="hero-banner-card">
           {/* Left Text & CTA */}
           <div className="hero-banner-left">
+            <div className="hero-banner-eyebrow">
+              <Sparkles size={13} className="hero-sparkle-icon" />
+              <span>Painless &amp; Instant</span>
+            </div>
+
             <h2 className="hero-banner-title">
-              Get your <br />
-              <span className="hero-banner-title-main">special sale</span> <br />
+              Silky Smooth <br />
+              <span className="hero-banner-title-main">Flawless Skin</span> <br />
               <span className="hero-banner-title-accent">
-                {isBogo ? 'Buy 1 Get 1 Free' : 'up to 50%'}
+                {isBogo ? 'Buy 1 Get 1 Free' : 'Salon Finish at Home'}
               </span>
             </h2>
 
@@ -50,29 +60,28 @@ export default function Hero() {
             </Link>
           </div>
 
-          {/* Right Product Image — Body Hair Remover */}
+          {/* Right Product Image — Transparent & Beautiful Body Hair Remover */}
           <div className="hero-banner-right">
-            {hairRemover && !imgError ? (
+            <div className="hero-banner-img-container">
               <img
-                src={hairRemover.image}
-                alt={hairRemover.name || 'Body Hair Remover'}
+                src={displayImage}
+                alt={hairRemover?.name || 'Body Hair Remover'}
                 className="hero-banner-img"
                 fetchpriority="high"
                 decoding="async"
-                onError={() => setImgError(true)}
+                onError={() => {
+                  if (displayImage !== '/hair-remover-transparent.svg') {
+                    setImgError(true);
+                  }
+                }}
               />
-            ) : (
-              <div className="hero-banner-placeholder">
-                <Zap size={44} color="#fec22a" />
-                <span>Body Hair Remover</span>
-              </div>
-            )}
 
-            {isBogo && (
-              <div className="hero-banner-bogo-tag">
-                <Gift size={12} /> BOGO FREE
-              </div>
-            )}
+              {isBogo && (
+                <div className="hero-banner-bogo-tag">
+                  <Gift size={11} /> BOGO FREE
+                </div>
+              )}
+            </div>
             <div className="hero-banner-glow" />
           </div>
         </div>
