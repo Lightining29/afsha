@@ -26,7 +26,7 @@ export default function Hero() {
   }, []);
 
   const isBogo = hairRemover?.isBogoActive ?? (hairRemover?.isBogo && (!hairRemover?.bogoEndsAt || new Date(hairRemover.bogoEndsAt) > new Date()));
-  const showcaseImage = '/hair-remover-showcase.png';
+  const showcaseImage = '/hair-remover-showcase-v2.png';
 
   return (
     <section id="home" className="hero-banner-section">
