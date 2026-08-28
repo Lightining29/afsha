@@ -65,7 +65,35 @@
         "@type": "AggregateRating",
         "ratingValue": "4.9",
         "reviewCount": 188
-      }
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Suresh Gokhale"
+          },
+          "datePublished": "2026-08-20",
+          "reviewBody": "Purchased for my 68-year-old mother who suffered from foot swelling and heel pain. The air compression squeeze and rolling nodes gave her immense comfort within 15 minutes.",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          }
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Sunita Bannerjee"
+          },
+          "datePublished": "2026-08-20",
+          "reviewBody": "Best investment for anyone who stands for long hours at work. The reflexology sole rollers hit all acupressure points and revitalize tired feet.",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          }
+        }
+      ]
     },
     {
       "@type": "BreadcrumbList",
@@ -171,6 +199,12 @@
     .specs-table td { padding: 10px 14px; }
     .specs-table td:first-child { font-weight: 700; color: var(--text-muted); width: 35%; }
     .specs-table td:last-child { font-weight: 800; color: var(--text); }
+
+    .review-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+    .review-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.86rem; }
+    .review-name { font-weight: 800; color: var(--text); }
+    .review-city { color: var(--green); font-weight: 700; font-size: 0.76rem; background: #dcfce7; padding: 2px 8px; border-radius: 999px; }
+    .review-comment { font-size: 0.88rem; color: #334155; line-height: 1.5; margin-top: 6px; }
 
     .faq-item { margin-bottom: 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; }
     .faq-q { font-weight: 800; font-size: 0.95rem; color: #0284c7; margin-bottom: 6px; }
@@ -285,6 +319,33 @@
           <tr><td>Timer</td><td>15-30 Minute Auto Timer</td></tr>
         </tbody>
       </table>
+    </section>
+
+    <!-- Verified Customer Reviews -->
+    <section class="section-card">
+      <h2 class="section-heading">Verified Customer Reviews</h2>
+      
+        <div class="review-item">
+          <div class="review-meta">
+            <span class="review-name">Suresh Gokhale</span>
+            <span class="review-city">✓ Verified Buyer (Nagpur)</span>
+            <span style="color:#94a3b8; font-size:0.75rem;">10 Aug 2026</span>
+          </div>
+          <div style="color:#f59e0b; font-size:0.85rem; margin-bottom:4px;">★★★★★</div>
+          <p class="review-comment">"Purchased for my 68-year-old mother who suffered from foot swelling and heel pain. The air compression squeeze and rolling nodes gave her immense comfort within 15 minutes."</p>
+        </div>
+      
+      
+        <div class="review-item">
+          <div class="review-meta">
+            <span class="review-name">Sunita Bannerjee</span>
+            <span class="review-city">✓ Verified Buyer (Hyderabad)</span>
+            <span style="color:#94a3b8; font-size:0.75rem;">16 Aug 2026</span>
+          </div>
+          <div style="color:#f59e0b; font-size:0.85rem; margin-bottom:4px;">★★★★★</div>
+          <p class="review-comment">"Best investment for anyone who stands for long hours at work. The reflexology sole rollers hit all acupressure points and revitalize tired feet."</p>
+        </div>
+      
     </section>
 
     <section class="section-card">

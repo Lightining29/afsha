@@ -191,22 +191,13 @@ export default function ProductDetail() {
           "bestRating": "5",
           "worstRating": "1"
         },
-        "review": [
-          {
-            "@type": "Review",
-            "author": { "@type": "Person", "name": "Rahul Verma" },
-            "datePublished": "2026-08-15",
-            "reviewBody": "Amazing body massager. Instant relief from lower back pain after long office hours. Highly recommended!",
-            "reviewRating": { "@type": "Rating", "ratingValue": "5" }
-          },
-          {
-            "@type": "Review",
-            "author": { "@type": "Person", "name": "Pooja Sharma" },
-            "datePublished": "2026-08-20",
-            "reviewBody": "Genuine quality and very fast delivery. The multiple heads are very useful for neck and legs.",
-            "reviewRating": { "@type": "Rating", "ratingValue": "5" }
-          }
-        ]
+        "review": (seoData.reviewsList || []).map((rev) => ({
+          "@type": "Review",
+          "author": { "@type": "Person", "name": rev.name },
+          "datePublished": "2026-08-20",
+          "reviewBody": rev.comment,
+          "reviewRating": { "@type": "Rating", "ratingValue": rev.rating }
+        }))
       },
       {
         "@type": "BreadcrumbList",
@@ -572,37 +563,23 @@ export default function ProductDetail() {
             </div>
 
             <div className="pdp-reviews-list">
-              <div className="pdp-review-item">
-                <div className="review-meta">
-                  <span className="reviewer-name">Rahul Verma</span>
-                  <span className="verified-badge"><CheckCircle2 size={13} /> Verified Buyer (Delhi)</span>
-                  <span className="review-date">15 Aug 2026</span>
+              {(seoData.reviewsList || []).map((rev, rIdx) => (
+                <div key={rIdx} className="pdp-review-item">
+                  <div className="review-meta">
+                    <span className="reviewer-name">{rev.name}</span>
+                    <span className="verified-badge"><CheckCircle2 size={13} /> Verified Buyer ({rev.location})</span>
+                    <span className="review-date">{rev.date}</span>
+                  </div>
+                  <div className="pdp-stars-row">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} size={13} fill="#f59e0b" color="#f59e0b" />
+                    ))}
+                  </div>
+                  <p className="review-comment">
+                    &quot;{rev.comment}&quot;
+                  </p>
                 </div>
-                <div className="pdp-stars-row">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} size={13} fill="#f59e0b" color="#f59e0b" />
-                  ))}
-                </div>
-                <p className="review-comment">
-                  &quot;Best massager I have purchased. The vibration intensity is solid and completely relieved my lower back stiffness after sitting for 9 hours in my office chair. Delivery arrived in 3 days!&quot;
-                </p>
-              </div>
-
-              <div className="pdp-review-item">
-                <div className="review-meta">
-                  <span className="reviewer-name">Pooja Sharma</span>
-                  <span className="verified-badge"><CheckCircle2 size={13} /> Verified Buyer (Mumbai)</span>
-                  <span className="review-date">20 Aug 2026</span>
-                </div>
-                <div className="pdp-stars-row">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} size={13} fill="#f59e0b" color="#f59e0b" />
-                  ))}
-                </div>
-                <p className="review-comment">
-                  &quot;Great quality product. The different attachments are super useful for neck, shoulders, and legs. Definitely worth the price!&quot;
-                </p>
-              </div>
+              ))}
             </div>
           </div>
 

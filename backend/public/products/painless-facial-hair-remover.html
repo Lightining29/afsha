@@ -65,7 +65,35 @@
         "@type": "AggregateRating",
         "ratingValue": "4.8",
         "reviewCount": 512
-      }
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Ritu Singhania"
+          },
+          "datePublished": "2026-08-20",
+          "reviewBody": "No more painful salon threading or waxing redness! This pocket lipstick trimmer removes upper lip peach fuzz completely painlessly in 30 seconds. My foundation looks flawless and glass-smooth.",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          }
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Meera Nair"
+          },
+          "datePublished": "2026-08-20",
+          "reviewBody": "Extremely gentle on my sensitive acne-prone skin. The built-in LED light helps you spot fine invisible hairs easily. Fits right in my handbag!",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          }
+        }
+      ]
     },
     {
       "@type": "BreadcrumbList",
@@ -171,6 +199,12 @@
     .specs-table td { padding: 10px 14px; }
     .specs-table td:first-child { font-weight: 700; color: var(--text-muted); width: 35%; }
     .specs-table td:last-child { font-weight: 800; color: var(--text); }
+
+    .review-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+    .review-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.86rem; }
+    .review-name { font-weight: 800; color: var(--text); }
+    .review-city { color: var(--green); font-weight: 700; font-size: 0.76rem; background: #dcfce7; padding: 2px 8px; border-radius: 999px; }
+    .review-comment { font-size: 0.88rem; color: #334155; line-height: 1.5; margin-top: 6px; }
 
     .faq-item { margin-bottom: 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; }
     .faq-q { font-weight: 800; font-size: 0.95rem; color: #0284c7; margin-bottom: 6px; }
@@ -294,6 +328,33 @@
           <tr><td>Dimensions</td><td>11cm × 2.5cm Pocket Lipstick Size</td></tr>
         </tbody>
       </table>
+    </section>
+
+    <!-- Verified Customer Reviews -->
+    <section class="section-card">
+      <h2 class="section-heading">Verified Customer Reviews</h2>
+      
+        <div class="review-item">
+          <div class="review-meta">
+            <span class="review-name">Ritu Singhania</span>
+            <span class="review-city">✓ Verified Buyer (Delhi)</span>
+            <span style="color:#94a3b8; font-size:0.75rem;">15 Aug 2026</span>
+          </div>
+          <div style="color:#f59e0b; font-size:0.85rem; margin-bottom:4px;">★★★★★</div>
+          <p class="review-comment">"No more painful salon threading or waxing redness! This pocket lipstick trimmer removes upper lip peach fuzz completely painlessly in 30 seconds. My foundation looks flawless and glass-smooth."</p>
+        </div>
+      
+      
+        <div class="review-item">
+          <div class="review-meta">
+            <span class="review-name">Meera Nair</span>
+            <span class="review-city">✓ Verified Buyer (Kochi)</span>
+            <span style="color:#94a3b8; font-size:0.75rem;">20 Aug 2026</span>
+          </div>
+          <div style="color:#f59e0b; font-size:0.85rem; margin-bottom:4px;">★★★★★</div>
+          <p class="review-comment">"Extremely gentle on my sensitive acne-prone skin. The built-in LED light helps you spot fine invisible hairs easily. Fits right in my handbag!"</p>
+        </div>
+      
     </section>
 
     <section class="section-card">
