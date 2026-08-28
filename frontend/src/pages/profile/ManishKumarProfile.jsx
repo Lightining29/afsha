@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {
   Code,
   Server,
@@ -21,40 +21,58 @@ import {
   Database,
   Globe,
   ChevronRight,
-  ArrowLeft,
-  Star,
-  Award,
+  ChevronLeft,
+  MoreVertical,
+  Wifi,
+  Battery,
   Send,
+  Plus,
   Github,
   Linkedin,
-  Clock,
   Check,
   Zap,
   HelpCircle,
-  Share2
+  Eye,
+  Lock
 } from 'lucide-react';
-import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import './ManishKumarProfile.css';
 
 export default function ManishKumarProfile() {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('all');
+  const [activeScreen, setActiveScreen] = useState('chat'); // 'hero' or 'chat' or 'both'
   const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState([
     {
       id: 1,
       sender: 'manish',
-      text: 'Hi there! 👋 I am Manish Kumar — Senior Java Full Stack Developer & AWS DevOps Architect. How can I help you build your dream project today?',
-      time: 'Just now'
+      text: "Hii, I'm Manish Kumar, your Senior Java Full Stack Developer & AWS Cloud Architect ❤️ How can I help you build your project today?",
+      time: '19:45 Pm'
+    },
+    {
+      id: 2,
+      sender: 'manish',
+      isCard: true,
+      cardTitle: 'Afsha Enterprises & Cloud Projects',
+      cardDesc: 'High-scale commercial e-commerce, LMS, and AWS microservices.',
+      time: '19:46 Pm'
+    },
+    {
+      id: 3,
+      sender: 'manish',
+      isNotice: true,
+      text: '⚡ Available for Full-Time, Freelance & Cloud Consulting roles! Expect high-performance clean code ahead.',
+      time: '19:47 Pm'
     }
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef(null);
 
-  // Scroll to top on mount
+  // Scroll to top on route change
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+  }, [location.pathname]);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -64,16 +82,44 @@ export default function ManishKumarProfile() {
     scrollToBottom();
   }, [messages, isTyping]);
 
+  // Determine SEO title and description based on exact route keyword focus
+  const currentPath = location.pathname.toLowerCase();
+  let seoTitle = 'Manish Kumar | Best Java Full Stack Developer & AWS DevOps Engineer';
+  let seoHeading = 'Manish Kumar';
+  let seoRole = 'Senior Java Full Stack Developer & AWS Solutions Architect';
+  let seoKeywords = 'Manish Kumar, Manish, Manish Kumar Java Developer, Manish Kumar DevOps Engineer, Manish Kumar Full Stack, Best Java Full Stack Developer India, Manish Kumar Ghaziabad, Java Developer Manish Kumar, AWS Architect Manish Kumar, Spring Boot Developer Manish Kumar, Hire Manish Kumar';
+
+  if (currentPath.includes('java')) {
+    seoTitle = 'Manish Kumar — Senior Java Developer & Spring Boot Microservices Specialist';
+    seoRole = 'Senior Java & Spring Boot Microservices Architect';
+    seoKeywords = 'Manish Kumar Java, Manish Kumar Java Developer, Manish Kumar Spring Boot, Java Full Stack Developer Manish Kumar, Manish Java, Best Java Developer India, Manish Kumar Hibernate JPA';
+  } else if (currentPath.includes('devops') || currentPath.includes('aws')) {
+    seoTitle = 'Manish Kumar — AWS Cloud DevOps Solutions Architect & CI/CD Specialist';
+    seoRole = 'AWS DevOps Solutions Architect & Kubernetes Engineer';
+    seoKeywords = 'Manish Kumar DevOps, Manish Kumar AWS, Manish Kumar Cloud Architect, Manish Kumar Docker Kubernetes, Manish DevOps, AWS Certified Manish Kumar';
+  } else if (currentPath === '/manish') {
+    seoTitle = 'Manish | Official Portfolio & Profile — Java Full Stack & Cloud Architect';
+    seoHeading = 'Manish';
+    seoKeywords = 'Manish, Manish Developer, Manish Full Stack, Manish Java, Manish AWS, Manish Software Engineer, Manish Kumar, Manish Portfolio';
+  } else if (currentPath.includes('resume')) {
+    seoTitle = 'Manish Kumar Resume & CV | Senior Java Full Stack & AWS DevOps Engineer';
+    seoRole = 'Verified Resume & CV — Manish Kumar';
+  }
+
+  const canonicalUrl = `https://www.afshaenterprises.com${location.pathname}`;
+  const profileImageUrl = 'https://www.afshaenterprises.com/manish-kumar.jpg';
+
   const handleSendChat = (e) => {
     e?.preventDefault();
     const query = chatInput.trim();
     if (!query) return;
 
+    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const userMsg = {
       id: Date.now(),
       sender: 'user',
       text: query,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      time: currentTime
     };
 
     setMessages((prev) => [...prev, userMsg]);
@@ -84,16 +130,16 @@ export default function ManishKumarProfile() {
       let reply = '';
       const q = query.toLowerCase();
 
-      if (q.includes('hire') || q.includes('contact') || q.includes('call') || q.includes('whatsapp')) {
-        reply = 'I am available for full-time roles, freelance projects, and cloud consulting! You can WhatsApp or call me directly at +91 8851961088 or email brayw433@gmail.com.';
-      } else if (q.includes('skill') || q.includes('tech') || q.includes('java') || q.includes('spring')) {
-        reply = 'My core tech stack includes Java 17/21, Spring Boot, Spring Security, Hibernate JPA, Microservices, React.js, AWS Cloud, Docker, Kubernetes, Jenkins CI/CD, and MySQL/PostgreSQL.';
-      } else if (q.includes('project') || q.includes('work') || q.includes('experience')) {
-        reply = 'I have built high-scale systems including Afsha Enterprises (E-Commerce), ProgrammingWala (LMS), and Rancom Technologies (Enterprise Cloud Portal), with experience at Appletree Infotech.';
-      } else if (q.includes('resume') || q.includes('cv')) {
-        reply = 'You can check out my complete verified portfolio and repositories on GitHub (@Lightining29) or connect directly on WhatsApp to receive my updated CV.';
+      if (q.includes('hire') || q.includes('contact') || q.includes('call') || q.includes('whatsapp') || q.includes('number')) {
+        reply = 'I am actively available for full-time roles, contract work, and cloud consulting! You can contact me directly on WhatsApp/Call at +91 8851961088 or email brayw433@gmail.com.';
+      } else if (q.includes('skill') || q.includes('tech') || q.includes('stack') || q.includes('java') || q.includes('spring')) {
+        reply = 'My core tech stack: Java 17/21, Spring Boot 3, Spring Security, Hibernate ORM, Microservices, React.js, Docker, Kubernetes, AWS (EC2, S3, RDS, Lambda), Jenkins CI/CD, MySQL, and PostgreSQL.';
+      } else if (q.includes('project') || q.includes('afsha') || q.includes('work') || q.includes('experience')) {
+        reply = 'I have built enterprise applications including Afsha Enterprises (commercial e-commerce with payments), ProgrammingWala (LMS portal), and Rancom Technologies (cloud infrastructure), plus work at Appletree Infotech.';
+      } else if (q.includes('resume') || q.includes('cv') || q.includes('download')) {
+        reply = 'You can explore all my verified code on GitHub (@Lightining29) or connect directly on WhatsApp (+91 8851961088) to get my complete PDF resume.';
       } else {
-        reply = `Thank you for your message! "${query}". Would you like to connect directly on WhatsApp or schedule a quick technical call?`;
+        reply = `Thank you for asking about "${query}". I would love to discuss this with you! Would you like to connect on WhatsApp or schedule a technical discussion?`;
       }
 
       setMessages((prev) => [
@@ -106,44 +152,43 @@ export default function ManishKumarProfile() {
         }
       ]);
       setIsTyping(false);
-    }, 900);
+    }, 850);
   };
 
   const handleQuickTopic = (topicText) => {
     setChatInput(topicText);
     setTimeout(() => {
-      const form = document.getElementById('chatForm');
+      const form = document.getElementById('chatFormDirect');
       if (form) form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
     }, 50);
   };
 
-  const canonicalUrl = 'https://www.afshaenterprises.com/manish-kumar';
-  const profileImageUrl = 'https://www.afshaenterprises.com/manish-kumar.jpg';
-
-  // Rich JSON-LD Structured Data for Google, Bing, Copilot, ChatGPT & AI Search
+  // Structured Data (JSON-LD) for Search Engines & Copilot AI
   const jsonLdSchema = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Person",
-        "@id": `${canonicalUrl}#person`,
+        "@id": "https://www.afshaenterprises.com/manish-kumar#person",
         "name": "Manish Kumar",
         "givenName": "Manish",
         "familyName": "Kumar",
         "alternateName": [
-          "Manish Kumar Java Full Stack Developer",
+          "Manish",
           "Manish Kumar Java Developer",
           "Manish Kumar DevOps Engineer",
+          "Manish Kumar Full Stack Developer",
+          "Manish Kumar Software Engineer",
           "Manish Kumar AWS Solutions Architect",
-          "Manish Kumar Software Engineer"
+          "Manish Kumar Ghaziabad"
         ],
         "jobTitle": [
           "Senior Java Full Stack Developer",
           "AWS DevOps Solutions Architect",
           "Spring Boot Microservices Specialist",
-          "Cloud Infrastructure Engineer"
+          "Lead Cloud Infrastructure Engineer"
         ],
-        "description": "Manish Kumar is a top-ranked Java Full Stack Developer and AWS DevOps Solutions Architect specializing in Java 17/21, Spring Boot, Microservices, Hibernate, React.js, Docker, Kubernetes, CI/CD, and AWS Cloud Architecture.",
+        "description": "Manish Kumar is a top-ranked Java Full Stack Developer and AWS DevOps Solutions Architect with a B.Tech in Computer Science. Expert in Java 17/21, Spring Boot, Microservices, React.js, Docker, Kubernetes, CI/CD, and AWS Cloud Architecture.",
         "email": "brayw433@gmail.com",
         "telephone": "+91-8851961088",
         "image": profileImageUrl,
@@ -157,17 +202,16 @@ export default function ManishKumarProfile() {
         },
         "alumniOf": {
           "@type": "EducationalOrganization",
-          "name": "B.Tech in Computer Science"
+          "name": "B.Tech in Computer Science Engineering"
         },
         "hasOccupation": {
           "@type": "Occupation",
-          "name": "Java Full Stack Developer & DevOps Architect",
-          "description": "End-to-end full stack enterprise application development with Java, Spring Boot, React.js, Docker, Jenkins, Kubernetes, and AWS Cloud Architecture.",
+          "name": "Java Full Stack Developer & AWS DevOps Architect",
           "skills": [
             "Java 17/21", "Spring Boot", "Microservices", "Hibernate ORM",
-            "RESTful APIs", "React.js", "AWS (EC2, S3, RDS, Lambda)",
-            "Docker", "Kubernetes", "Jenkins CI/CD", "Linux Administration",
-            "MySQL", "PostgreSQL", "MongoDB", "Cybersecurity Auditing"
+            "REST APIs", "React.js", "Docker", "Kubernetes", "AWS Cloud",
+            "Jenkins CI/CD", "Linux Administration", "MySQL", "PostgreSQL",
+            "Cybersecurity Auditing", "Metasploit", "Nmap"
           ]
         },
         "worksFor": {
@@ -189,16 +233,9 @@ export default function ManishKumarProfile() {
         "@type": "ProfilePage",
         "@id": `${canonicalUrl}#webpage`,
         "url": canonicalUrl,
-        "name": "Manish Kumar | Best Java Full Stack Developer & AWS DevOps Engineer",
-        "description": "Official professional profile and portfolio of Manish Kumar — Senior Java Full Stack Developer, Spring Boot Microservices Specialist & AWS DevOps Architect.",
-        "breadcrumb": {
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.afshaenterprises.com" },
-            { "@type": "ListItem", "position": 2, "name": "Manish Kumar Profile", "item": canonicalUrl }
-          ]
-        },
-        "mainEntity": { "@id": `${canonicalUrl}#person` }
+        "name": seoTitle,
+        "description": "Official verified portfolio and profile of Manish Kumar — Senior Java Full Stack Developer, Spring Boot Microservices Architect & AWS DevOps Engineer.",
+        "mainEntity": { "@id": "https://www.afshaenterprises.com/manish-kumar#person" }
       },
       {
         "@type": "FAQPage",
@@ -209,7 +246,7 @@ export default function ManishKumarProfile() {
             "name": "Who is Manish Kumar?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Manish Kumar is an accomplished Java Full Stack Developer, Spring Boot Microservices Architect, and AWS DevOps Engineer with a B.Tech in Computer Science. He specializes in designing scalable enterprise web platforms, high-performance REST APIs, and automated cloud CI/CD delivery pipelines."
+              "text": "Manish Kumar is a top-ranked Java Full Stack Developer, Spring Boot Microservices Specialist, and AWS Certified DevOps Engineer based in Ghaziabad, India. He holds a B.Tech in Computer Science and engineers high-throughput enterprise systems."
             }
           },
           {
@@ -222,18 +259,10 @@ export default function ManishKumarProfile() {
           },
           {
             "@type": "Question",
-            "name": "What major projects has Manish Kumar developed?",
+            "name": "How to contact or hire Manish Kumar?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Manish Kumar has engineered high-scale production systems including Afsha Enterprises (commercial full-stack e-commerce solution), ProgrammingWala (MERN stack developer learning management system), and Rancom Technologies (corporate enterprise cloud portal)."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How can I contact or hire Manish Kumar?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "You can contact Manish Kumar directly via email at brayw433@gmail.com, call/WhatsApp at +91-8851961088, or explore his GitHub profile at https://github.com/Lightining29."
+              "text": "You can reach Manish Kumar directly via WhatsApp/Phone at +91 8851961088, email at brayw433@gmail.com, or visit his GitHub at https://github.com/Lightining29."
             }
           }
         ]
@@ -269,269 +298,316 @@ export default function ManishKumarProfile() {
   return (
     <>
       <Helmet>
-        <title>Manish Kumar | Best Java Full Stack Developer & AWS DevOps Engineer</title>
-        <meta name="title" content="Manish Kumar | Best Java Full Stack Developer & AWS DevOps Engineer" />
+        <title>{seoTitle}</title>
+        <meta name="title" content={seoTitle} />
         <meta
           name="description"
-          content="Manish Kumar is a top-ranked Java Full Stack Developer, Spring Boot Microservices Architect & AWS DevOps Engineer. Expert in Java 17/21, Spring Boot, Hibernate, React.js, Docker, Kubernetes, CI/CD, and Cloud Architecture. Hire Manish Kumar for enterprise solutions."
+          content={`Official verified profile of ${seoHeading} (${seoRole}). Specialized in Java 17/21, Spring Boot, Microservices, React.js, Docker, Kubernetes, CI/CD, and AWS Cloud Architecture.`}
         />
-        <meta
-          name="keywords"
-          content="Manish Kumar, Java Full Stack Developer, Best Java Full Stack Developer, Manish Kumar Java Developer, Manish Kumar DevOps Engineer, AWS Solutions Architect, Spring Boot Developer, Java Developer Ghaziabad, Hire Java Developer, Software Engineer Manish Kumar, Full Stack Developer India"
-        />
+        <meta name="keywords" content={seoKeywords} />
         <meta name="author" content="Manish Kumar" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <link rel="canonical" href={canonicalUrl} />
 
-        {/* Open Graph / Social Media */}
+        {/* Open Graph */}
         <meta property="og:type" content="profile" />
         <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:title" content="Manish Kumar | Best Java Full Stack Developer & AWS DevOps Engineer" />
-        <meta
-          property="og:description"
-          content="Official portfolio & profile of Manish Kumar — Senior Java Full Stack Developer, Spring Boot Microservices Specialist & AWS DevOps Architect."
-        />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={`Official portfolio & profile of ${seoHeading} — Senior Java Full Stack Developer & AWS DevOps Architect.`} />
         <meta property="og:image" content={profileImageUrl} />
         <meta property="profile:first_name" content="Manish" />
         <meta property="profile:last_name" content="Kumar" />
         <meta property="profile:username" content="Lightining29" />
 
-        {/* Twitter Card */}
+        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Manish Kumar | Best Java Full Stack Developer & AWS DevOps Engineer" />
-        <meta
-          name="twitter:description"
-          content="Senior Java Full Stack Developer, Spring Boot Microservices Architect & AWS DevOps Engineer."
-        />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={`Senior Java Full Stack Developer & AWS DevOps Architect — ${seoHeading}.`} />
         <meta name="twitter:image" content={profileImageUrl} />
 
         {/* Structured Data */}
         <script type="application/ld+json">{JSON.stringify(jsonLdSchema)}</script>
       </Helmet>
 
-      <Navbar />
+      {/* Standalone Distraction-Free Mobile App Canvas (No Navbar, No BottomNav, No Back Button) */}
+      <main className="luv-standalone-page">
+        {/* Soft Ambient Rose/Peach/Lavender Glows */}
+        <div className="luv-glow-orb glow-rose-top" />
+        <div className="luv-glow-orb glow-peach-mid" />
+        <div className="luv-glow-orb glow-lavender-bot" />
 
-      <main className="luv-profile-page">
-        {/* Ambient Soft Glows */}
-        <div className="luv-ambient-orb orb-rose" />
-        <div className="luv-ambient-orb orb-peach" />
-        <div className="luv-ambient-orb orb-lavender" />
+        <div className="luv-app-stage">
+          {/* Dual Phone Showcase Container (Exact replica of reference UI) */}
+          <div className="luv-dual-phones-wrap">
 
-        <div className="luv-main-container">
-          {/* Top Bar */}
-          <div className="luv-top-header">
-            <Link to="/" className="luv-back-pill">
-              <ArrowLeft size={16} /> Back to Store
-            </Link>
-            <div className="luv-brand-pill">
-              <Sparkles size={13} className="luv-sparkle-icon" />
-              <span>Verified Developer</span>
-            </div>
-          </div>
+            {/* ── PHONE 1: Immersive Hero Card ── */}
+            <div className="luv-phone-mockup phone-hero-mockup">
+              {/* iOS Status Bar */}
+              <div className="ios-status-bar">
+                <span className="ios-time">9:41</span>
+                <div className="ios-status-icons">
+                  <span className="ios-signal-bars">••••</span>
+                  <Wifi size={13} />
+                  <Battery size={15} />
+                </div>
+              </div>
 
-          {/* ── Visual Mobile Dual Card Layout (Inspired by reference UI) ── */}
-          <div className="luv-showcase-grid">
-            {/* Left Card: Full-Bleed Immersive Portrait & Plan Card */}
-            <div className="luv-card luv-portrait-card">
-              <div className="luv-portrait-image-wrap">
+              {/* Brand Tag */}
+              <div className="luv-app-logo-row">
+                <span className="luv-logo-text">Manish.AI</span>
+              </div>
+
+              {/* Immersive Portrait Card */}
+              <div className="luv-portrait-showcase">
                 <img
                   src="/manish-kumar.webp"
                   onError={(e) => { e.target.src = '/manish-kumar.jpg'; }}
                   alt="Manish Kumar"
-                  className="luv-portrait-img"
+                  className="luv-hero-photo"
                   fetchpriority="high"
                 />
-                <div className="luv-portrait-overlay" />
+                <div className="luv-hero-photo-scrim" />
 
-                {/* Top Logo / Identity Tag */}
-                <div className="luv-portrait-top-tag">
-                  <span>DEV.PORTFOLIO</span>
+                <div className="luv-hero-name-overlay">
+                  <h1 className="hero-display-name">Manish</h1>
                 </div>
 
-                {/* Card Indicator Bars at bottom of photo */}
-                <div className="luv-progress-bars">
-                  <span className="bar active" />
-                  <span className="bar" />
-                  <span className="bar" />
+                {/* Progress Indicators */}
+                <div className="luv-story-progress-bars">
+                  <span className="story-bar active" />
+                  <span className="story-bar" />
+                  <span className="story-bar" />
                 </div>
               </div>
 
-              {/* Bottom Identity & Availability Capsule (Cleanly below the photo) */}
-              <div className="luv-plan-capsule">
-                <div className="luv-identity-head">
-                  <h1 className="luv-person-name">Manish Kumar</h1>
-                  <p className="luv-person-role">Senior Java Full Stack &amp; AWS DevOps Engineer</p>
-                </div>
+              {/* Floating Bottom Card */}
+              <div className="luv-floating-bottom-card">
+                <div className="plan-label-text">About the engineer</div>
 
-                <div className="luv-plan-header">
+                <div className="plan-main-row">
                   <div>
-                    <span className="luv-plan-type">Consulting &amp; Architecture</span>
-                    <h4 className="luv-plan-title">Spring Boot &amp; AWS Cloud</h4>
+                    <h3 className="plan-title-h3">Full Stack &amp; Cloud</h3>
+                    <span className="plan-sub-text">Java 17/21 + AWS DevOps</span>
                   </div>
-                  <div className="luv-plan-status">
-                    <span className="online-dot" /> Online
+                  <div className="plan-rate-box">
+                    <span className="rate-amount">Available</span>
+                    <span className="rate-period">Full-Time / Freelance</span>
                   </div>
                 </div>
 
-                <div className="luv-plan-perks">
-                  <div className="perk-row">
-                    <Check size={14} className="perk-check" />
+                <div className="plan-feature-bullets">
+                  <div className="bullet-row">
+                    <Check size={13} className="bullet-chk" />
                     <span>Spring Boot Microservices &amp; REST APIs</span>
                   </div>
-                  <div className="perk-row">
-                    <Check size={14} className="perk-check" />
-                    <span>AWS Cloud, Docker &amp; CI/CD Deployment</span>
-                  </div>
-                  <div className="perk-row">
-                    <Check size={14} className="perk-check" />
-                    <span>Enterprise React.js &amp; Database Architecture</span>
+                  <div className="bullet-row">
+                    <Check size={13} className="bullet-chk" />
+                    <span>AWS Cloud, Docker, Kubernetes &amp; CI/CD</span>
                   </div>
                 </div>
 
                 <a
-                  href="https://wa.me/918851961088?text=Hi%20Manish,%20I%20would%20like%20to%20discuss%20a%20project!"
+                  href="https://wa.me/918851961088?text=Hi%20Manish,%20I%20saw%20your%20profile%20and%20would%20like%20to%20discuss%20a%20project!"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="luv-chat-now-btn"
+                  className="luv-black-pill-cta"
                 >
-                  <MessageCircle size={16} /> Chat on WhatsApp
+                  Chat Now
                 </a>
+
+                <div className="plan-footer-sub">
+                  <span>Ghaziabad, Uttar Pradesh, India</span>
+                </div>
               </div>
             </div>
 
-            {/* Right Card: Interactive Conversational Persona & Story Stream */}
-            <div className="luv-card luv-chat-card">
-              {/* Header inside Chat Card */}
-              <div className="luv-chat-header">
-                <div className="luv-avatar-circle-wrap">
+            {/* ── PHONE 2: Conversational Chat & Profile Stream ── */}
+            <div className="luv-phone-mockup phone-chat-mockup">
+              {/* iOS Status Bar */}
+              <div className="ios-status-bar">
+                <span className="ios-time">9:41</span>
+                <div className="ios-status-icons">
+                  <span className="ios-signal-bars">••••</span>
+                  <Wifi size={13} />
+                  <Battery size={15} />
+                </div>
+              </div>
+
+              {/* Top Navigation Bar inside Phone */}
+              <div className="ios-chat-nav-bar">
+                <button
+                  type="button"
+                  className="ios-nav-circle-btn"
+                  onClick={() => window.history.back()}
+                  aria-label="Back"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <div className="ios-nav-title">Manish Kumar</div>
+                <button
+                  type="button"
+                  className="ios-nav-circle-btn"
+                  onClick={() => {
+                    if (navigator.share) {
+                      navigator.share({ title: seoTitle, url: canonicalUrl });
+                    }
+                  }}
+                  aria-label="Share"
+                >
+                  <MoreVertical size={17} />
+                </button>
+              </div>
+
+              {/* Ambient Circular Avatar in Top Center (Exact match to reference) */}
+              <div className="luv-avatar-center-stage">
+                <div className="luv-avatar-halo-ring">
                   <img
                     src="/manish-kumar.webp"
                     onError={(e) => { e.target.src = '/manish-kumar.jpg'; }}
                     alt="Manish Kumar"
-                    className="luv-circle-avatar"
+                    className="luv-center-avatar-img"
                   />
-                  <span className="luv-avatar-online-dot" />
                 </div>
-                <div className="luv-chat-header-info">
-                  <h3 className="luv-chat-name">Manish Kumar</h3>
-                  <div className="luv-online-status">
-                    <span className="status-green-dot" /> Online • Available for Hire
-                  </div>
+                <h2 className="luv-center-user-name">Manish Kumar</h2>
+                <div className="luv-center-online-status">
+                  <span className="online-green-pulse" /> Online
                 </div>
               </div>
 
-              {/* Quick Feature Pills */}
-              <div className="luv-topic-chips-row">
+              {/* Topic Category Pills */}
+              <div className="luv-chat-pills-carousel">
                 <button
                   type="button"
-                  className="topic-chip active"
-                  onClick={() => handleQuickTopic('I want to hire you for a Java Spring Boot project')}
+                  className="chat-filter-pill active"
+                  onClick={() => handleQuickTopic('⚡ I want to hire you for a Java Spring Boot project')}
                 >
-                  ⚡ Hire Developer
+                  ⚡ Exclusive Chat
                 </button>
                 <button
                   type="button"
-                  className="topic-chip"
-                  onClick={() => handleQuickTopic('Tell me about your AWS Cloud & DevOps expertise')}
+                  className="chat-filter-pill"
+                  onClick={() => handleQuickTopic('☁️ Tell me about your AWS DevOps & CI/CD architecture')}
                 >
-                  ☁️ AWS Cloud
+                  ☁️ AWS DevOps
                 </button>
                 <button
                   type="button"
-                  className="topic-chip"
-                  onClick={() => handleQuickTopic('What projects have you developed?')}
+                  className="chat-filter-pill"
+                  onClick={() => handleQuickTopic('💼 What major production projects have you built?')}
                 >
                   💼 Projects
                 </button>
                 <button
                   type="button"
-                  className="topic-chip"
-                  onClick={() => handleQuickTopic('Can you send your updated resume/CV?')}
+                  className="chat-filter-pill"
+                  onClick={() => handleQuickTopic('📄 Please share your verified resume/CV')}
                 >
                   📄 Resume / CV
                 </button>
               </div>
 
-              {/* Chat Message Stream */}
-              <div className="luv-chat-messages-scroll">
-                <div className="chat-date-divider">
+              {/* Conversation Stream Scroll Container */}
+              <div className="luv-chat-thread-container">
+                <div className="thread-day-tag">
                   <span>Today</span>
                 </div>
 
                 {messages.map((m) => (
-                  <div key={m.id} className={`chat-bubble-row ${m.sender === 'user' ? 'from-user' : 'from-manish'}`}>
+                  <div key={m.id} className={`thread-message-item ${m.sender === 'user' ? 'from-user' : 'from-manish'}`}>
                     {m.sender === 'manish' && (
                       <img
                         src="/manish-kumar.webp"
                         onError={(e) => { e.target.src = '/manish-kumar.jpg'; }}
                         alt="Manish"
-                        className="bubble-avatar"
+                        className="thread-mini-avatar"
                       />
                     )}
-                    <div className="bubble-content-wrap">
-                      {m.sender === 'manish' && <span className="bubble-sender-name">Manish Kumar</span>}
-                      <div className="bubble-text">
-                        {m.text}
-                      </div>
-                      <span className="bubble-timestamp">{m.time}</span>
+
+                    <div className="thread-msg-body">
+                      {m.sender === 'manish' && <span className="thread-sender-label">Manish Kumar</span>}
+
+                      {/* Card Type Message */}
+                      {m.isCard ? (
+                        <div className="thread-media-card">
+                          <div className="media-card-img-placeholder">
+                            <Eye size={20} className="media-eye-icon" />
+                            <span>Afsha Enterprises Showcase</span>
+                          </div>
+                          <div className="media-card-info">
+                            <strong>{m.cardTitle}</strong>
+                            <p>{m.cardDesc}</p>
+                          </div>
+                        </div>
+                      ) : m.isNotice ? (
+                        <div className="thread-notice-bubble">
+                          <Zap size={14} className="notice-zap-icon" />
+                          <span>{m.text}</span>
+                        </div>
+                      ) : (
+                        <div className="thread-bubble-box">
+                          {m.text}
+                        </div>
+                      )}
+
+                      <span className="thread-msg-time">{m.time}</span>
                     </div>
                   </div>
                 ))}
 
                 {isTyping && (
-                  <div className="chat-bubble-row from-manish">
+                  <div className="thread-message-item from-manish">
                     <img
                       src="/manish-kumar.webp"
                       onError={(e) => { e.target.src = '/manish-kumar.jpg'; }}
                       alt="Manish"
-                      className="bubble-avatar"
+                      className="thread-mini-avatar"
                     />
-                    <div className="typing-indicator-box">
-                      <span className="typing-dot" />
-                      <span className="typing-dot" />
-                      <span className="typing-dot" />
+                    <div className="thread-typing-bubble">
+                      <span className="dot" />
+                      <span className="dot" />
+                      <span className="dot" />
                     </div>
                   </div>
                 )}
                 <div ref={chatEndRef} />
               </div>
 
-              {/* Interactive Chat Input */}
-              <form id="chatForm" onSubmit={handleSendChat} className="luv-chat-input-bar">
+              {/* Interactive Floating Chat Input Bar */}
+              <form id="chatFormDirect" onSubmit={handleSendChat} className="ios-chat-bottom-input">
                 <a
                   href="tel:+918851961088"
-                  className="luv-attach-action-btn"
+                  className="ios-input-plus-btn"
                   title="Direct Call"
                 >
-                  <Phone size={17} />
+                  <Plus size={18} />
                 </a>
                 <input
                   type="text"
-                  placeholder="Ask Manish anything (e.g. skills, hire)..."
+                  placeholder="Type something here..."
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
-                  className="luv-chat-text-input"
+                  className="ios-native-text-input"
                 />
-                <button type="submit" className="luv-chat-send-btn" aria-label="Send message">
-                  <Send size={16} />
+                <button type="submit" className="ios-send-circle-btn" aria-label="Send message">
+                  <Send size={15} />
                 </button>
               </form>
             </div>
           </div>
 
-          {/* ── Direct Action Bar ── */}
-          <div className="luv-quick-actions-bar">
-            <a href="tel:+918851961088" className="action-pill-btn">
+          {/* ── Quick Direct Action Bar ── */}
+          <div className="luv-actions-pills-bar">
+            <a href="tel:+918851961088" className="app-action-pill">
               <Phone size={15} /> +91 8851961088
             </a>
-            <a href="mailto:brayw433@gmail.com" className="action-pill-btn">
+            <a href="mailto:brayw433@gmail.com" className="app-action-pill">
               <Mail size={15} /> brayw433@gmail.com
             </a>
             <a
               href="https://github.com/Lightining29"
               target="_blank"
               rel="noopener noreferrer"
-              className="action-pill-btn"
+              className="app-action-pill"
             >
               <Github size={15} /> GitHub @Lightining29
             </a>
@@ -539,190 +615,157 @@ export default function ManishKumarProfile() {
               href="https://manish-java-developer.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="action-pill-btn"
+              className="app-action-pill"
             >
               <ExternalLink size={15} /> Live Portfolio
             </a>
           </div>
 
-          {/* ── 2. Biography & Core Philosophy ── */}
-          <section className="luv-details-section">
-            <div className="luv-section-header">
-              <span className="luv-badge-pill"><GraduationCap size={13} /> Background</span>
-              <h2 className="luv-section-title">About Manish Kumar</h2>
-            </div>
-
-            <div className="luv-details-card">
-              <p className="luv-desc-p">
-                I am a passionate <strong>Java Full Stack Developer</strong> and <strong>AWS Cloud DevOps Architect</strong> holding a <strong>B.Tech in Computer Science</strong>. I specialize in bridging enterprise software development with scalable cloud delivery pipelines.
-              </p>
-              <p className="luv-desc-p">
-                My technical expertise spans high-throughput <strong>Java Spring Boot APIs</strong>, modern <strong>React.js</strong> web applications, Docker &amp; Kubernetes container orchestration, Jenkins CI/CD automation, and cloud security auditing.
-              </p>
-
-              <div className="luv-mini-cards-grid">
-                <div className="luv-mini-card">
-                  <div className="mini-icon-box"><GraduationCap size={18} /></div>
-                  <div>
-                    <span className="mini-label">Education</span>
-                    <h4 className="mini-val">B.Tech Computer Science</h4>
+          {/* ── Comprehensive Profile Details & SEO Knowledge Graph (For Crawlers, Recruiter Reviews & Copilot AI) ── */}
+          <div className="luv-extended-portfolio-sheet">
+            {/* Biography */}
+            <section className="sheet-section">
+              <div className="sheet-section-head">
+                <span className="sheet-pill-tag"><GraduationCap size={13} /> Biography</span>
+                <h2 className="sheet-h2">About Manish Kumar</h2>
+              </div>
+              <div className="sheet-card-box">
+                <p className="sheet-p">
+                  <strong>Manish Kumar</strong> is a top-ranked <strong>Java Full Stack Developer</strong> and <strong>AWS Cloud DevOps Architect</strong> holding a <strong>B.Tech in Computer Science</strong>. He specializes in designing resilient microservice backends, reactive user interfaces, and automated CI/CD cloud delivery pipelines.
+                </p>
+                <div className="sheet-key-highlights">
+                  <div className="highlight-item">
+                    <GraduationCap size={18} className="hl-icon" />
+                    <div>
+                      <strong>B.Tech Computer Science</strong>
+                      <p>Core Data Structures, Algorithms &amp; OOPs</p>
+                    </div>
                   </div>
-                </div>
-
-                <div className="luv-mini-card">
-                  <div className="mini-icon-box"><Briefcase size={18} /></div>
-                  <div>
-                    <span className="mini-label">Experience</span>
-                    <h4 className="mini-val">Appletree Infotech Intern</h4>
+                  <div className="highlight-item">
+                    <Briefcase size={18} className="hl-icon" />
+                    <div>
+                      <strong>Appletree Infotech Intern</strong>
+                      <p>Commercial Full Stack Enterprise Web Apps</p>
+                    </div>
                   </div>
-                </div>
-
-                <div className="luv-mini-card">
-                  <div className="mini-icon-box"><Cloud size={18} /></div>
-                  <div>
-                    <span className="mini-label">Cloud Expertise</span>
-                    <h4 className="mini-val">AWS Solutions &amp; DevOps</h4>
+                  <div className="highlight-item">
+                    <Cloud size={18} className="hl-icon" />
+                    <div>
+                      <strong>AWS Cloud Architecture</strong>
+                      <p>EC2, S3, RDS, Lambda, Docker &amp; Kubernetes</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          {/* ── 3. Featured Production Projects ── */}
-          <section className="luv-details-section">
-            <div className="luv-section-header">
-              <span className="luv-badge-pill"><Code size={13} /> Deliveries</span>
-              <h2 className="luv-section-title">Featured Projects</h2>
-            </div>
-
-            <div className="luv-projects-grid">
-              {/* Project 1: Afsha Enterprises */}
-              <div className="luv-project-item">
-                <div className="luv-project-header">
-                  <span className="project-category-tag">E-Commerce System</span>
-                  <h3 className="project-heading">Afsha Enterprises</h3>
-                </div>
-                <p className="project-summary-p">
-                  Commercial full-stack e-commerce platform for wellness &amp; grooming products with Razorpay payment processing, real-time OTP authentication, and image caching.
-                </p>
-                <div className="project-tags-row">
-                  <span>Java</span><span>Spring Boot</span><span>React.js</span><span>Razorpay</span>
-                </div>
-                <Link to="/" className="project-link-btn">
-                  Visit Live Store <ChevronRight size={14} />
-                </Link>
+            {/* Featured Projects */}
+            <section className="sheet-section">
+              <div className="sheet-section-head">
+                <span className="sheet-pill-tag"><Code size={13} /> Proven Deliveries</span>
+                <h2 className="sheet-h2">Featured Production Projects</h2>
               </div>
 
-              {/* Project 2: ProgrammingWala */}
-              <div className="luv-project-item">
-                <div className="luv-project-header">
-                  <span className="project-category-tag">LMS &amp; Education</span>
-                  <h3 className="project-heading">ProgrammingWala</h3>
-                </div>
-                <p className="project-summary-p">
-                  Comprehensive developer learning management system built with the MERN stack for coding tutorials, course enrollment, and student learning tracks.
-                </p>
-                <div className="project-tags-row">
-                  <span>MERN</span><span>React.js</span><span>Node.js</span><span>MongoDB</span>
-                </div>
-                <a
-                  href="https://manish-java-developer.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-link-btn"
-                >
-                  View Case Study <ExternalLink size={14} />
-                </a>
-              </div>
-
-              {/* Project 3: Rancom Technologies */}
-              <div className="luv-project-item">
-                <div className="luv-project-header">
-                  <span className="project-category-tag">Corporate Cloud Portal</span>
-                  <h3 className="project-heading">Rancom Technologies</h3>
-                </div>
-                <p className="project-summary-p">
-                  Enterprise IT corporate portal for Rancom Technologies Pvt Ltd (software company in Noida) with automated AWS cloud infrastructure.
-                </p>
-                <div className="project-tags-row">
-                  <span>Java</span><span>AWS Cloud</span><span>Docker</span><span>CI/CD</span>
-                </div>
-                <a
-                  href="https://manish-java-developer.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-link-btn"
-                >
-                  View Case Study <ExternalLink size={14} />
-                </a>
-              </div>
-            </div>
-          </section>
-
-          {/* ── 4. Technical Skills ── */}
-          <section className="luv-details-section">
-            <div className="luv-section-header">
-              <span className="luv-badge-pill"><Cpu size={13} /> Tech Stack</span>
-              <h2 className="luv-section-title">Skills &amp; Expertise</h2>
-            </div>
-
-            {/* Filter Tabs */}
-            <div className="luv-skill-tabs">
-              {['all', 'backend', 'devops', 'frontend', 'database', 'security'].map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  className={`skill-pill-btn ${activeTab === tab ? 'active' : ''}`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
-
-            <div className="luv-skills-grid">
-              {filteredSkills.map((s, i) => (
-                <div key={i} className="luv-skill-chip-box">
-                  <div className="skill-chip-icon">{s.icon}</div>
-                  <div className="skill-chip-info">
-                    <span className="skill-chip-title">{s.name}</span>
-                    <span className="skill-chip-level">{s.level}</span>
+              <div className="sheet-projects-grid">
+                <div className="sheet-project-card">
+                  <span className="proj-badge">E-Commerce System</span>
+                  <h3 className="proj-title">Afsha Enterprises</h3>
+                  <p className="proj-desc">
+                    Commercial e-commerce platform with Razorpay payment gateway integration, instant OTP authentication, real-time reviews, and product caching.
+                  </p>
+                  <div className="proj-tags">
+                    <span>Java</span><span>Spring Boot</span><span>React.js</span><span>Razorpay</span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
 
-          {/* ── 5. AI Knowledge Graph FAQs (Google, Bing, Copilot) ── */}
-          <section className="luv-details-section">
-            <div className="luv-section-header">
-              <span className="luv-badge-pill"><Sparkles size={13} /> Knowledge Graph</span>
-              <h2 className="luv-section-title">Frequently Asked Questions</h2>
-            </div>
+                <div className="sheet-project-card">
+                  <span className="proj-badge">LMS &amp; Education</span>
+                  <h3 className="proj-title">ProgrammingWala</h3>
+                  <p className="proj-desc">
+                    Full-featured developer learning management system built with the MERN stack for coding tutorials, video modules, and student tracking.
+                  </p>
+                  <div className="proj-tags">
+                    <span>MERN</span><span>Node.js</span><span>React.js</span><span>MongoDB</span>
+                  </div>
+                </div>
 
-            <div className="luv-faq-list">
-              <div className="luv-faq-item">
-                <h3 className="faq-h3"><HelpCircle size={16} /> Who is Manish Kumar?</h3>
-                <p className="faq-p">
-                  <strong>Manish Kumar</strong> is a top-ranked <strong>Java Full Stack Developer</strong>, Spring Boot Microservices Architect, and AWS Certified DevOps Engineer based in Ghaziabad, Uttar Pradesh, India with a B.Tech in Computer Science.
-                </p>
+                <div className="sheet-project-card">
+                  <span className="proj-badge">Corporate Cloud Portal</span>
+                  <h3 className="proj-title">Rancom Technologies</h3>
+                  <p className="proj-desc">
+                    Enterprise IT platform engineered for Rancom Technologies Pvt Ltd with scalable microservices and automated AWS cloud infrastructure.
+                  </p>
+                  <div className="proj-tags">
+                    <span>Java</span><span>AWS Cloud</span><span>Docker</span><span>CI/CD</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Technical Skills */}
+            <section className="sheet-section">
+              <div className="sheet-section-head">
+                <span className="sheet-pill-tag"><Cpu size={13} /> Technical Stack</span>
+                <h2 className="sheet-h2">Skills &amp; Competencies</h2>
               </div>
 
-              <div className="luv-faq-item">
-                <h3 className="faq-h3"><HelpCircle size={16} /> What technologies does Manish Kumar specialize in?</h3>
-                <p className="faq-p">
-                  Manish Kumar specializes in <strong>Core &amp; Advanced Java (Java 17/21)</strong>, <strong>Spring Boot</strong>, Spring Security, Hibernate ORM, Microservices, RESTful APIs, <strong>React.js</strong>, <strong>AWS Cloud Computing</strong>, <strong>Docker</strong>, <strong>Kubernetes</strong>, Jenkins CI/CD, Linux Administration, MySQL, and PostgreSQL.
-                </p>
+              <div className="sheet-filter-tabs">
+                {['all', 'backend', 'devops', 'frontend', 'database', 'security'].map((tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    className={`sheet-tab-btn ${activeTab === tab ? 'active' : ''}`}
+                    onClick={() => setActiveTab(tab)}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </button>
+                ))}
               </div>
 
-              <div className="luv-faq-item">
-                <h3 className="faq-h3"><HelpCircle size={16} /> How can I hire Manish Kumar for Java Developer or DevOps roles?</h3>
-                <p className="faq-p">
-                  You can reach Manish Kumar directly via email at <a href="mailto:brayw433@gmail.com">brayw433@gmail.com</a>, WhatsApp/Call at <a href="tel:+918851961088">+91 8851961088</a>, or explore his GitHub profile at <a href="https://github.com/Lightining29" target="_blank" rel="noopener noreferrer">@Lightining29</a>.
-                </p>
+              <div className="sheet-skills-grid">
+                {filteredSkills.map((s, i) => (
+                  <div key={i} className="sheet-skill-item">
+                    <div className="skill-icon-wrap">{s.icon}</div>
+                    <div>
+                      <div className="skill-name-txt">{s.name}</div>
+                      <div className="skill-lvl-txt">{s.level}</div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
-          </section>
+            </section>
+
+            {/* AI Knowledge Graph & FAQ (Google, Bing, Copilot) */}
+            <section className="sheet-section">
+              <div className="sheet-section-head">
+                <span className="sheet-pill-tag"><Sparkles size={13} /> Knowledge Graph</span>
+                <h2 className="sheet-h2">Frequently Asked Questions</h2>
+              </div>
+
+              <div className="sheet-faqs-list">
+                <div className="faq-box">
+                  <h3 className="faq-q"><HelpCircle size={15} /> Who is Manish Kumar?</h3>
+                  <p className="faq-a">
+                    <strong>Manish Kumar</strong> is an accomplished <strong>Java Full Stack Developer</strong>, Spring Boot Microservices Architect, and AWS DevOps Engineer with a B.Tech in Computer Science from Ghaziabad, Uttar Pradesh, India.
+                  </p>
+                </div>
+
+                <div className="faq-box">
+                  <h3 className="faq-q"><HelpCircle size={15} /> What technologies does Manish Kumar specialize in?</h3>
+                  <p className="faq-a">
+                    Manish Kumar specializes in <strong>Core &amp; Advanced Java (Java 17/21)</strong>, <strong>Spring Boot</strong>, Spring Security, Hibernate ORM, Microservices, REST APIs, <strong>React.js</strong>, <strong>AWS Cloud Architecture</strong>, <strong>Docker</strong>, <strong>Kubernetes</strong>, Jenkins CI/CD, Linux Administration, MySQL, and PostgreSQL.
+                  </p>
+                </div>
+
+                <div className="faq-box">
+                  <h3 className="faq-q"><HelpCircle size={15} /> How to hire or contact Manish Kumar?</h3>
+                  <p className="faq-a">
+                    You can contact Manish Kumar directly via WhatsApp/Phone at <a href="tel:+918851961088">+91 8851961088</a>, email at <a href="mailto:brayw433@gmail.com">brayw433@gmail.com</a>, or explore his GitHub profile at <a href="https://github.com/Lightining29" target="_blank" rel="noopener noreferrer">@Lightining29</a>.
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
       </main>
 

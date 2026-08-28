@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Static Pages -->
+  <!-- Master Site Pages -->
   <url>
     <loc>https://www.afshaenterprises.com/</loc>
     <changefreq>daily</changefreq>
@@ -16,10 +16,62 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- Manish Kumar High-Authority SEO & Keyword Landing Pages -->
+  <url>
+    <loc>https://www.afshaenterprises.com/manish</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
   <url>
     <loc>https://www.afshaenterprises.com/manish-kumar</loc>
     <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manishkumar</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-java-developer</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-devops-engineer</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-full-stack-developer</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-software-engineer</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-aws-architect</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-resume</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/about-manish-kumar</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/developer/manish-kumar</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
   </url>
 
   <!-- Local SEO Pages -->

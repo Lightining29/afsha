@@ -46,11 +46,21 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeLayout />} />
 
-        {/* Dedicated Manish Kumar Profile Routes (Not linked from Home) */}
+        {/* Dedicated Manish Kumar High-Authority SEO Routes (Distraction-Free) */}
+        <Route path="/manish" element={<ManishKumarProfile />} />
         <Route path="/manish-kumar" element={<ManishKumarProfile />} />
+        <Route path="/manishkumar" element={<ManishKumarProfile />} />
+        <Route path="/manish-kumar-java-developer" element={<ManishKumarProfile />} />
+        <Route path="/manish-kumar-devops-engineer" element={<ManishKumarProfile />} />
+        <Route path="/manish-kumar-full-stack-developer" element={<ManishKumarProfile />} />
+        <Route path="/manish-kumar-java-full-stack-developer" element={<ManishKumarProfile />} />
+        <Route path="/manish-kumar-software-engineer" element={<ManishKumarProfile />} />
+        <Route path="/manish-kumar-aws-architect" element={<ManishKumarProfile />} />
+        <Route path="/manish-kumar-resume" element={<ManishKumarProfile />} />
+        <Route path="/about-manish-kumar" element={<ManishKumarProfile />} />
+        <Route path="/developer/manish-kumar" element={<ManishKumarProfile />} />
         <Route path="/profile/manish-kumar" element={<ManishKumarProfile />} />
         <Route path="/developer" element={<ManishKumarProfile />} />
-        <Route path="/manish-kumar-java-full-stack-developer" element={<ManishKumarProfile />} />
 
         <Route
           path="/cart"

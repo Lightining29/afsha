@@ -2,14 +2,27 @@
   RewriteEngine On
   RewriteBase /
 
-  # Forward Authorization Header
+  # 1. Forward Authorization Header for JWT & API auth
   RewriteCond %{HTTP:Authorization} .
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-  # Serve existing static files directly from public folders
+  # 2. Redirect HTTP to HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # 3. Serve existing static files directly
   RewriteCond %{DOCUMENT_ROOT}/backend/public/$1 -f
   RewriteRule ^(.*)$ /backend/public/$1 [L]
 
   RewriteCond %{DOCUMENT_ROOT}/frontend/dist/$1 -f
   RewriteRule ^(.*)$ /frontend/dist/$1 [L]
+</IfModule>
+
+# Caching & Security headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>

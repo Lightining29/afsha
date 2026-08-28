@@ -10,11 +10,15 @@ export default function BottomNav() {
   const { isAuthenticated, setShowLoginModal } = useAuth();
   const path = location.pathname;
 
-  // Don't show bottom nav on admin, product details, checkout, or cart pages to ensure clean focus
+  // Don't show bottom nav on admin, product details, checkout, or developer profile pages
   if (
     path.startsWith('/admin') ||
     path.startsWith('/product') ||
-    path.startsWith('/checkout')
+    path.startsWith('/checkout') ||
+    path.startsWith('/manish') ||
+    path.startsWith('/developer') ||
+    path.startsWith('/about-manish') ||
+    path.startsWith('/profile')
   ) {
     return null;
   }
