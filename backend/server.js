@@ -481,6 +481,11 @@ io.on('connection', (socket) => {
 // Watch Banner collection for real-time updates (Change Streams or Polling fallback)
 async function setupBannerChangeStream() {
   try {
+    if (!Banner || mongoose.connection.readyState !== 1) {
+      setupBannerPolling();
+      return;
+    }
+
     const admin = Banner.db?.db?.admin();
     if (!admin) {
       setupBannerPolling();
@@ -549,8 +554,8 @@ function setupBannerPolling() {
   }, 10000);
 }
 
-// Start banner watcher
-setTimeout(setupBannerChangeStream, 2000);
+// Start banner watcher safely after startup
+setTimeout(setupBannerChangeStream, 3000);
 
 // Global safety exception handlers
 process.on('unhandledRejection', (reason) => {
@@ -581,8 +586,8 @@ function handleGracefulShutdown(signal) {
 process.on('SIGTERM', () => handleGracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => handleGracefulShutdown('SIGINT'));
 
-// Start listening
-server.listen(PORT, '0.0.0.0', () => {
+// Start listening (binds automatically to Hostinger PORT)
+server.listen(PORT, () => {
   console.log(`=============================================`);
   console.log(` Glowora Server running on port ${PORT}`);
   console.log(` Environment: ${process.env.NODE_ENV || 'production'}`);
