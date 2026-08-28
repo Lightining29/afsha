@@ -425,38 +425,6 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* 4 Trust Badges */}
-            <div className="pdp-trust-badges-grid">
-              <div className="pdp-trust-badge-item">
-                <Truck size={18} className="trust-icon-truck" />
-                <div>
-                  <strong>Free Express Delivery</strong>
-                  <span>All-India in 3-5 days</span>
-                </div>
-              </div>
-              <div className="pdp-trust-badge-item">
-                <ShieldCheck size={18} className="trust-icon-shield" />
-                <div>
-                  <strong>1-Year Warranty</strong>
-                  <span>100% Genuine Certified</span>
-                </div>
-              </div>
-              <div className="pdp-trust-badge-item">
-                <RotateCcw size={18} className="trust-icon-rotate" />
-                <div>
-                  <strong>7-Day Replacement</strong>
-                  <span>Hassle-free guarantee</span>
-                </div>
-              </div>
-              <div className="pdp-trust-badge-item">
-                <Zap size={18} className="trust-icon-zap" />
-                <div>
-                  <strong>Cash on Delivery (COD)</strong>
-                  <span>Pay when delivered</span>
-                </div>
-              </div>
-            </div>
-
             {/* Short Headline & Overview */}
             <div className="pdp-quick-headline-card">
               <Sparkles size={16} className="sparkle-gold" />
@@ -479,7 +447,7 @@ export default function ProductDetail() {
                 onClick={handleBuyNow}
               >
                 <Zap size={18} fill="#ffffff" />
-                <span>Buy Now with Cash on Delivery</span>
+                <span>Buy Now</span>
               </button>
             </div>
           </div>
@@ -572,19 +540,14 @@ export default function ProductDetail() {
                     <td><X size={16} className="icon-no" /> Aluminum/Plastic Weak Motor</td>
                   </tr>
                   <tr>
-                    <td>Official Warranty</td>
-                    <td><Check size={16} className="icon-yes" /> 1-Year Direct Brand Replacement</td>
-                    <td><X size={16} className="icon-no" /> No Warranty or Fake 7-day policy</td>
-                  </tr>
-                  <tr>
                     <td>Build Quality</td>
                     <td><Check size={16} className="icon-yes" /> High-Grade Non-Toxic ABS Body</td>
                     <td><X size={16} className="icon-no" /> Flimsy Recycled Plastic</td>
                   </tr>
                   <tr>
-                    <td>Shipping &amp; COD</td>
-                    <td><Check size={16} className="icon-yes" /> Free Express Delivery &amp; Free COD</td>
-                    <td><X size={16} className="icon-no" /> High Hidden Shipping Charges</td>
+                    <td>Performance &amp; Durability</td>
+                    <td><Check size={16} className="icon-yes" /> High-Torque Smooth Quiet Operation</td>
+                    <td><X size={16} className="icon-no" /> Loud Vibrations &amp; Fast Overheating</td>
                   </tr>
                 </tbody>
               </table>
@@ -717,7 +680,7 @@ export default function ProductDetail() {
             disabled={product.inStock === false}
           >
             <Zap size={16} fill="#111827" />
-            <span>{product.inStock === false ? 'Out of Stock' : 'Buy Now — Free COD'}</span>
+            <span>{product.inStock === false ? 'Out of Stock' : 'Buy Now'}</span>
           </button>
         </div>
       </div>

@@ -7,7 +7,7 @@
 export const PRODUCT_SEO_DATA = {
   'electric-body-massager': {
     title: 'Electric Body Massager Machine — Full Body Pain Relief & Muscle Relaxer | Afsha Enterprises',
-    metaDescription: 'Buy the best Electric Body Massager in India with multiple massage heads, variable speed control, and deep tissue vibration therapy. Relieves back, neck, leg, and shoulder pain. Free Shipping & Cash on Delivery (COD).',
+    metaDescription: 'Buy the best Electric Body Massager in India with multiple massage heads, variable speed control, and deep tissue vibration therapy. Relieves back, neck, leg, and shoulder pain.',
     keywords: 'best electric body massager India, full body massager machine, electric back pain massager, handheld body massager price, vibrating pain relief machine, buy body massager online India, cervical neck massager, electric massager with attachments, Afsha Enterprises body massager',
     category: 'Wellness & Massage',
     price: 1499,
@@ -55,8 +55,7 @@ export const PRODUCT_SEO_DATA = {
       { label: 'Attachment Heads', value: '4 Interchangeable Heads + 1 Mesh Cover' },
       { label: 'Cable Length', value: '1.8 Meters Heavy-Duty Cord' },
       { label: 'Body Material', value: 'Premium Non-Toxic ABS Thermoplastic' },
-      { label: 'Weight', value: '880 grams (Lightweight Ergonomic)' },
-      { label: 'Warranty', value: '1-Year Official Brand Warranty' }
+      { label: 'Weight', value: '880 grams (Lightweight Ergonomic)' }
     ],
     faqs: [
       {
@@ -64,16 +63,12 @@ export const PRODUCT_SEO_DATA = {
         a: 'Yes, absolutely. The deep vibration therapy relaxes the piriformis and lumbar muscles, which helps relieve pressure on the sciatic nerve and reduces chronic lower back aches.'
       },
       {
-        q: 'Is Cash on Delivery (COD) available in India?',
-        a: 'Yes! We provide Free Cash on Delivery (COD) across all serviceable PIN codes in India, along with fast 3-5 day express doorstep delivery.'
-      },
-      {
         q: 'How many minutes per day should I use this body massager?',
         a: 'We recommend 10 to 15 minutes per session, up to twice a day. Each muscle group should be massaged for approximately 3 to 5 minutes.'
       },
       {
         q: 'What is included inside the box?',
-        a: 'The box includes 1x Afsha Electric Body Massager Unit, 4x Specialized Massage Heads, 1x Protective Mesh Cover, User Manual, and 1-Year Warranty Card.'
+        a: 'The box includes 1x Afsha Electric Body Massager Unit, 4x Specialized Massage Heads, 1x Protective Mesh Cover, and User Manual.'
       }
     ]
   },
@@ -122,8 +117,7 @@ export const PRODUCT_SEO_DATA = {
       { label: 'Battery Life', value: '4 to 6 Hours on a Single Charge' },
       { label: 'Speed Levels', value: '6 Speed Gear Adjustments (1800 - 3600 RPM)' },
       { label: 'Noise Level', value: '35dB - 45dB Ultra Quiet' },
-      { label: 'Weight', value: '950 grams' },
-      { label: 'Warranty', value: '1-Year Full Replacement Warranty' }
+      { label: 'Weight', value: '950 grams' }
     ],
     faqs: [
       {
@@ -198,7 +192,7 @@ export const PRODUCT_SEO_DATA = {
 
   'neck-and-shoulder-massager': {
     title: 'Cervical Spine Neck & Shoulder Shiatsu Massager with Heat | Afsha Enterprises',
-    metaDescription: 'Buy 3D Shiatsu Neck and Shoulder Massager with Infrared Heat in India. Relieves cervical pain, stiff shoulders, upper back aches, and text neck. Free Delivery & 1-Year Warranty.',
+    metaDescription: 'Buy 3D Shiatsu Neck and Shoulder Massager with Infrared Heat in India. Relieves cervical pain, stiff shoulders, upper back aches, and text neck.',
     keywords: 'neck and shoulder massager India, cervical pain relief machine, shiatsu neck massager with heat, best cervical spine massager, electric shoulder relaxer, text neck massager machine',
     category: 'Wellness & Massage',
     price: 1899,
@@ -212,7 +206,7 @@ export const PRODUCT_SEO_DATA = {
       'Therapeutic Infrared Heating for Deep Muscle Relaxation',
       'Adjustable Arm Straps to Customize Pressure & Leverage',
       'Auto-Reversing Rotation Every 60 Seconds',
-      'Built-in 15-Minute Auto-Shutoff Overheat Safety Guard',
+      'Built-in 15-Minute Auto-Shutoff Safety Guard',
       'Home Wall Adapter + Car Adapter Included'
     ],
     benefits: [
@@ -262,7 +256,7 @@ export function getProductSeoContent(slug, product) {
 
   return {
     title: `${name} — Buy Online in India | Best Price & Reviews | Afsha Enterprises`,
-    metaDescription: `Buy genuine ${name} online at Afsha Enterprises. High-performance, premium quality with 1-Year Warranty, Free Shipping across India, and Cash on Delivery (COD).`,
+    metaDescription: `Buy genuine ${name} online at Afsha Enterprises. High-performance, premium quality.`,
     keywords: `${name}, buy ${name} India, ${name} price, best ${name} online, ${categoryName} products, Afsha Enterprises`,
     category: categoryName,
     price,
@@ -272,10 +266,9 @@ export function getProductSeoContent(slug, product) {
     reviewCount: product?.reviewCount || 142,
     headline: `Premium ${name} for Daily Comfort, Health & Wellness`,
     highlights: [
-      '100% Genuine & Certified Quality with 1-Year Warranty',
+      '100% Genuine & Certified Quality',
       'Ergonomic Design for Maximum Comfort & Easy Handling',
-      'Energy Efficient High-Performance Motor & Durability',
-      'Free Fast Doorstep Delivery & Cash on Delivery (COD) Available'
+      'Energy Efficient High-Performance Motor & Durability'
     ],
     benefits: [
       {
@@ -294,18 +287,12 @@ export function getProductSeoContent(slug, product) {
     ],
     specs: [
       { label: 'Category', value: categoryName },
-      { label: 'Warranty', value: '1-Year Official Warranty' },
-      { label: 'Delivery', value: 'Free All-India Delivery in 3-5 Days' },
-      { label: 'Payment Options', value: 'UPI, Cards, NetBanking, Cash on Delivery (COD)' }
+      { label: 'Payment Options', value: 'UPI, Cards, NetBanking' }
     ],
     faqs: [
       {
-        q: `Is ${name} covered under warranty?`,
-        a: 'Yes, every product from Afsha Enterprises comes with our 1-Year Official Replacement Warranty against manufacturing defects.'
-      },
-      {
-        q: 'How long does delivery take?',
-        a: 'We ship orders within 24 hours. Standard delivery across India takes 3 to 5 business days.'
+        q: `How to use ${name}?`,
+        a: `Review the included manual and follow the safety guidelines for best results.`
       }
     ]
   };

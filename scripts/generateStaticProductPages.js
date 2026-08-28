@@ -19,15 +19,14 @@ const ALL_PRODUCTS = [
     rating: 4.9,
     reviews: 384,
     metaTitle: 'Electric Body Massager Machine — Buy Full Body Pain Relief Relaxer | Afsha Enterprises',
-    metaDescription: 'Buy the best Electric Body Massager in India with multi-head attachments, speed control, and infrared heat therapy. Instant relief from back, neck, and leg pain. Free Shipping & COD.',
+    metaDescription: 'Buy the best Electric Body Massager in India with multi-head attachments, speed control, and infrared heat therapy. Instant relief from back, neck, and leg pain.',
     keywords: 'best electric body massager India, full body massager machine, electric back pain massager, buy body massager online India, handheld vibrating massager, cervical neck massager, Afsha Enterprises',
     highlights: [
       'Multi-Head Interchangeable Attachments (Wave, Roller, Flat & Mesh)',
       'High-Torque 3200 RPM Heavy-Duty Copper Core Motor',
       'Infrared Thermal Therapy for Deep Muscle Penetration',
       'Ergonomic Comfort Grip for Hard-to-Reach Back Areas',
-      'Variable Speed Dial for Custom Pressure & Gentle to Deep Kneading',
-      '100% Genuine Certified with 1-Year Brand Replacement Warranty'
+      'Variable Speed Dial for Custom Pressure & Gentle to Deep Kneading'
     ],
     benefits: [
       { title: 'Instant Relief from Back & Neck Pain', desc: 'Deep vibrations penetrate 12mm into muscle fibers to release tight knots and muscle spasms.' },
@@ -44,12 +43,10 @@ const ALL_PRODUCTS = [
       { k: 'Motor Speed', v: '1800 - 3200 RPM Variable' },
       { k: 'Power Source', v: 'AC 220V - 240V, 50Hz' },
       { k: 'Power Consumption', v: '28 Watts Energy Efficient' },
-      { k: 'Attachments', v: '4 Heads + 1 Protective Mesh Cover' },
-      { k: 'Warranty', v: '1-Year Official Brand Replacement Warranty' }
+      { k: 'Attachments', v: '4 Heads + 1 Protective Mesh Cover' }
     ],
     faqs: [
-      { q: 'Can this massager be used for lower back and sciatica pain?', a: 'Yes! The deep percussion relaxes the piriformis and lumbar muscles, relieving pressure on the sciatic nerve.' },
-      { q: 'Is Cash on Delivery (COD) available?', a: 'Yes, we provide Free Cash on Delivery (COD) all across India with express 3-5 day delivery.' }
+      { q: 'Can this massager be used for lower back and sciatica pain?', a: 'Yes! The deep percussion relaxes the piriformis and lumbar muscles, relieving pressure on the sciatic nerve.' }
     ]
   },
   {
@@ -64,7 +61,7 @@ const ALL_PRODUCTS = [
     rating: 4.9,
     reviews: 420,
     metaTitle: 'Deep Tissue Percussion Massager Gun — Muscle Recovery | Afsha Enterprises',
-    metaDescription: 'Shop Professional Deep Tissue Massage Gun in India. High-power brushless motor, 6 speed levels, 4 massage heads, and rechargeable battery. Free Shipping & COD.',
+    metaDescription: 'Shop Professional Deep Tissue Massage Gun in India. High-power brushless motor, 6 speed levels, 4 massage heads, and rechargeable battery.',
     keywords: 'deep tissue massager gun India, percussion massage gun, gym muscle recovery machine, athletic percussion massager, best massage gun price India',
     highlights: [
       'Quiet-Glide High-Torque Brushless Motor (<45dB)',
@@ -85,8 +82,7 @@ const ALL_PRODUCTS = [
     specs: [
       { k: 'Amplitude', v: '12mm Deep Stroke' },
       { k: 'Battery Life', v: '4 to 6 Hours per Charge' },
-      { k: 'Weight', v: '950 grams' },
-      { k: 'Warranty', v: '1-Year Full Warranty' }
+      { k: 'Weight', v: '950 grams' }
     ],
     faqs: [
       { q: 'Can I use this massage gun daily?', a: 'Yes, 10-15 minutes daily before or after workouts or after long sitting hours is highly recommended.' }
@@ -104,7 +100,7 @@ const ALL_PRODUCTS = [
     rating: 4.8,
     reviews: 512,
     metaTitle: 'Painless Facial & Body Hair Remover Trimmer for Women | Afsha Enterprises',
-    metaDescription: 'Buy 100% Painless Facial Hair Remover for Women in India. Hypoallergenic 18K gold head, built-in LED light, and USB rechargeable. Free Delivery & COD.',
+    metaDescription: 'Buy 100% Painless Facial Hair Remover for Women in India. Hypoallergenic 18K gold head, built-in LED light, and USB rechargeable.',
     keywords: 'painless facial hair remover women India, face hair trimmer for women, upper lip hair remover machine, flawless face shaver, painless eyebrow trimmer',
     highlights: [
       'Hypoallergenic 18K Gold-Plated Precision Cutting Head',
@@ -142,7 +138,7 @@ const ALL_PRODUCTS = [
     rating: 4.9,
     reviews: 290,
     metaTitle: 'Cervical Spine Neck & Shoulder Shiatsu Massager with Heat | Afsha Enterprises',
-    metaDescription: 'Buy 3D Shiatsu Neck and Shoulder Massager with Infrared Heat in India. Relieves cervical pain, stiff shoulders, and text neck. Free Delivery & COD.',
+    metaDescription: 'Buy 3D Shiatsu Neck and Shoulder Massager with Infrared Heat in India. Relieves cervical pain, stiff shoulders, and text neck.',
     keywords: 'neck and shoulder massager India, cervical pain relief machine, shiatsu neck massager with heat, best cervical spine massager, electric shoulder relaxer',
     highlights: [
       '8 Bi-Directional Deep Kneading 3D Massage Nodes',
@@ -178,12 +174,12 @@ const ALL_PRODUCTS = [
     rating: 4.9,
     reviews: 188,
     metaTitle: 'Foot & Calf Acupressure Circulation Massager Machine | Afsha Enterprises',
-    metaDescription: 'Buy Foot & Calf Leg Massager with Shiatsu Kneading, Air Compression, and Heat in India. Instant relief from plantar fasciitis, swelling, and neuropathy. Free Delivery & COD.',
+    metaDescription: 'Buy Foot & Calf Leg Massager with Shiatsu Kneading, Air Compression, and Heat in India. Instant relief from plantar fasciitis, swelling, and neuropathy.',
     keywords: 'foot massager machine India, calf leg massager, plantar fasciitis foot massager, electric foot reflexology machine, foot pain relief massager',
     highlights: [
       'Deep Kneading Shiatsu Rollers for Foot Soles & Arches',
       'Air Compression Squeeze for Calf & Ankle Swelling',
-      'Soothing Infrared Heat Therapy for Diabetic & Neuropathy Comfort',
+      'Soothing Infrared Heat Therapy for Foot Comfort',
       'Custom Intensity Controls & Washable Breathable Fabric Sleeves'
     ],
     benefits: [
@@ -197,8 +193,7 @@ const ALL_PRODUCTS = [
     specs: [
       { k: 'Modes', v: '3 Automatic Massage Programs' },
       { k: 'Pressure Levels', v: '3 Air Compression Levels' },
-      { k: 'Timer', v: '15-30 Minute Auto Timer' },
-      { k: 'Warranty', v: '1-Year Complete Warranty' }
+      { k: 'Timer', v: '15-30 Minute Auto Timer' }
     ],
     faqs: [
       { q: 'Is it suitable for large foot sizes?', a: 'Yes, the open-toe ergonomic chamber comfortably accommodates up to Men US Size 12 (UK 11).' }
@@ -216,7 +211,7 @@ const ALL_PRODUCTS = [
     rating: 4.8,
     reviews: 215,
     metaTitle: 'Cordless Rechargeable Handheld Body Massager | Afsha Enterprises',
-    metaDescription: 'Shop Handheld Rechargeable Body Massager online in India. Cordless design, powerful multi-mode vibration, 5 massage heads, and 120-minute battery. Free Shipping & COD.',
+    metaDescription: 'Shop Handheld Rechargeable Body Massager online in India. Cordless design, powerful multi-mode vibration, 5 massage heads, and 120-minute battery.',
     keywords: 'cordless body massager India, rechargeable handheld massager, wireless back massager, battery operated body relaxer, Afsha Enterprises',
     highlights: [
       '100% Cordless Freedom — Take Anywhere',
@@ -267,64 +262,13 @@ function generateHtml(p) {
           "priceValidUntil": "2027-12-31",
           "itemCondition": "https://schema.org/NewCondition",
           "availability": "https://schema.org/InStock",
-          "seller": { "@type": "Organization", "name": "Afsha Enterprises" },
-          "shippingDetails": {
-            "@type": "OfferShippingDetails",
-            "shippingRate": {
-              "@type": "MonetaryAmount",
-              "value": "0",
-              "currency": "INR"
-            },
-            "shippingDestination": {
-              "@type": "DefinedRegion",
-              "addressCountry": "IN"
-            },
-            "deliveryTime": {
-              "@type": "ShippingDeliveryTime",
-              "handlingTime": {
-                "@type": "QuantitativeValue",
-                "minValue": 0,
-                "maxValue": 1,
-                "unitCode": "DAY"
-              },
-              "transitTime": {
-                "@type": "QuantitativeValue",
-                "minValue": 2,
-                "maxValue": 5,
-                "unitCode": "DAY"
-              }
-            }
-          },
-          "hasMerchantReturnPolicy": {
-            "@type": "MerchantReturnPolicy",
-            "applicableCountry": "IN",
-            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-            "merchantReturnDays": 7,
-            "returnMethod": "https://schema.org/ReturnByMail",
-            "returnFees": "https://schema.org/FreeReturn"
-          }
+          "seller": { "@type": "Organization", "name": "Afsha Enterprises" }
         },
         "aggregateRating": {
           "@type": "AggregateRating",
           "ratingValue": p.rating.toFixed(1),
           "reviewCount": p.reviews
-        },
-        "review": [
-          {
-            "@type": "Review",
-            "author": { "@type": "Person", "name": "Rahul Verma" },
-            "datePublished": "2026-08-15",
-            "reviewBody": `Amazing ${p.name}. Instant relief from pain and stress. Highly recommended!`,
-            "reviewRating": { "@type": "Rating", "ratingValue": "5" }
-          },
-          {
-            "@type": "Review",
-            "author": { "@type": "Person", "name": "Pooja Sharma" },
-            "datePublished": "2026-08-20",
-            "reviewBody": "Genuine quality and very fast 3-day delivery. Very useful for the whole family.",
-            "reviewRating": { "@type": "Rating", "ratingValue": "5" }
-          }
-        ]
+        }
       },
       {
         "@type": "BreadcrumbList",
@@ -342,18 +286,6 @@ function generateHtml(p) {
           "@type": "Question",
           "name": f.q,
           "acceptedAnswer": { "@type": "Answer", "text": f.a }
-        }))
-      },
-      {
-        "@type": "HowTo",
-        "@id": `${canonicalUrl}#howto`,
-        "name": `How to Use ${p.name}`,
-        "description": `Step-by-step instructions on how to use ${p.name} safely and effectively.`,
-        "step": p.howToUse.map((step, idx) => ({
-          "@type": "HowToStep",
-          "position": idx + 1,
-          "name": step.title,
-          "text": step.desc
         }))
       }
     ]
@@ -392,7 +324,7 @@ function generateHtml(p) {
   <meta name="twitter:description" content="${p.metaDescription}">
   <meta name="twitter:image" content="${imageUrl}">
 
-  <!-- Structured Data Graph (Google Rich Card Ready) -->
+  <!-- Structured Data Graph -->
   <script type="application/ld+json">
     ${JSON.stringify(jsonLd, null, 2)}
   </script>
@@ -438,13 +370,8 @@ function generateHtml(p) {
     .price-orig { font-size: 1.2rem; color: var(--text-muted); text-decoration: line-through; }
     .badge-save { background: #dcfce7; color: var(--green); font-size: 0.76rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; }
 
-    /* Trust Grid */
-    .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: #ffffff; border: 1px solid var(--border); border-radius: 18px; padding: 14px; margin: 10px 0; }
-    .trust-item strong { display: block; font-size: 0.8rem; color: var(--text); }
-    .trust-item span { font-size: 0.7rem; color: var(--text-muted); }
-
     /* Buy CTAs */
-    .btn-buy-now { display: block; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; font-size: 1.05rem; font-weight: 900; text-decoration: none; padding: 16px 24px; border-radius: 999px; box-shadow: 0 8px 24px rgba(245,158,11,0.35); transition: transform 0.2s; }
+    .btn-buy-now { display: block; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; font-size: 1.05rem; font-weight: 900; text-decoration: none; padding: 16px 24px; border-radius: 999px; box-shadow: 0 8px 24px rgba(245,158,11,0.35); transition: transform 0.2s; margin-top: 10px; }
     .btn-buy-now:hover { transform: translateY(-2px); }
 
     /* Sections */
@@ -480,7 +407,7 @@ function generateHtml(p) {
   <header class="header">
     <div class="container header-inner">
       <a href="/" class="logo">Afsha <span>Enterprises</span></a>
-      <a href="/checkout" class="nav-btn">🛒 Buy Now (Free COD)</a>
+      <a href="/checkout" class="nav-btn">🛒 Buy Now</a>
     </div>
   </header>
 
@@ -509,29 +436,9 @@ function generateHtml(p) {
           <span class="badge-save">SAVE ${p.discountPercent}% OFF</span>
         </div>
 
-        <!-- Trust Badges -->
-        <div class="trust-grid">
-          <div class="trust-item">
-            <strong>🚚 Free Express Delivery</strong>
-            <span>All-India in 3-5 days</span>
-          </div>
-          <div class="trust-item">
-            <strong>🛡️ 1-Year Warranty</strong>
-            <span>100% Genuine Certified</span>
-          </div>
-          <div class="trust-item">
-            <strong>🔄 7-Day Replacement</strong>
-            <span>Hassle-free support</span>
-          </div>
-          <div class="trust-item">
-            <strong>💵 Cash on Delivery</strong>
-            <span>Pay on doorstep</span>
-          </div>
-        </div>
-
         <!-- Direct Buy Action -->
         <a href="/product/${p.slug}" class="btn-buy-now">
-          ⚡ BUY NOW — FREE CASH ON DELIVERY
+          ⚡ BUY NOW
         </a>
       </div>
     </div>
@@ -608,10 +515,7 @@ function generateHtml(p) {
 </html>`;
 }
 
-// Generate static HTML files in all required locations:
-// 1. root /public/*.html (e.g. electric-body-massager.html)
-// 2. /public/products/*.html
-// 3. /public/product/*.html
+// Generate static HTML files in all locations
 const outputDirs = [
   path.join(rootDir, 'frontend', 'public'),
   path.join(rootDir, 'backend', 'public'),
@@ -634,4 +538,4 @@ ALL_PRODUCTS.forEach(p => {
   console.log(`Generated separate static page for: ${p.slug}`);
 });
 
-console.log('All individual static product pages generated successfully!');
+console.log('All individual static product pages generated successfully without warranty or COD!');
