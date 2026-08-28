@@ -28,6 +28,7 @@ const AdminProductForm = lazy(() => import('./pages/admin/AdminProductForm'));
 const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
 const AdminContacts = lazy(() => import('./pages/admin/AdminContacts'));
 const AdminStock = lazy(() => import('./pages/admin/AdminStock'));
+const ManishKumarProfile = lazy(() => import('./pages/profile/ManishKumarProfile'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
@@ -44,6 +45,12 @@ function App() {
       <Suspense fallback={<div className="loading-screen"><div className="loading-spinner" /></div>}>
       <Routes>
         <Route path="/" element={<HomeLayout />} />
+
+        {/* Dedicated Manish Kumar Profile Routes (Not linked from Home) */}
+        <Route path="/manish-kumar" element={<ManishKumarProfile />} />
+        <Route path="/profile/manish-kumar" element={<ManishKumarProfile />} />
+        <Route path="/developer" element={<ManishKumarProfile />} />
+        <Route path="/manish-kumar-java-full-stack-developer" element={<ManishKumarProfile />} />
 
         <Route
           path="/cart"

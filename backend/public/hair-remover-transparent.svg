@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 400" width="100%" height="100%">
+  <defs>
+    <!-- Background glow -->
+    <radialGradient id="auraGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fec22a" stop-opacity="0.35" />
+      <stop offset="50%" stop-color="#fb7185" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Main Device Body Gradient: Sleek Matte Obsidian & Rose Accent -->
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="30%" stop-color="#1e293b" />
+      <stop offset="70%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+
+    <!-- Metallic Gold/Rose Gold Trim -->
+    <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="35%" stop-color="#fec22a" />
+      <stop offset="70%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#fef08a" />
+    </linearGradient>
+
+    <!-- Shaving Head Foil Chrome -->
+    <linearGradient id="chromeFoil" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f1f5f9" />
+      <stop offset="40%" stop-color="#cbd5e1" />
+      <stop offset="70%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#e2e8f0" />
+    </linearGradient>
+
+    <!-- Power Ring Glow -->
+    <radialGradient id="ringGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fec22a" stop-opacity="1" />
+      <stop offset="100%" stop-color="#d97706" stop-opacity="0.2" />
+    </radialGradient>
+
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#000000" flood-opacity="0.6" />
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#fec22a" flood-opacity="0.2" />
+    </filter>
+  </defs>
+
+  <!-- Ambient Aura -->
+  <ellipse cx="160" cy="200" rx="140" ry="170" fill="url(#auraGlow)" />
+
+  <!-- Device Container with Drop Shadow -->
+  <g filter="url(#dropShadow)" transform="rotate(-12 160 200)">
+    
+    <!-- Outer Ergonomic Body -->
+    <path d="M 125 75 
+             C 120 130, 115 220, 122 300 
+             C 125 335, 140 345, 160 345 
+             C 180 345, 195 335, 198 300 
+             C 205 220, 200 130, 195 75 
+             Z" 
+          fill="url(#bodyGrad)" />
+
+    <!-- Body Highlight Specular Edge (Left) -->
+    <path d="M 125 75 
+             C 120 130, 115 220, 122 300 
+             C 123 315, 128 330, 138 338" 
+          stroke="rgba(255, 255, 255, 0.3)" 
+          stroke-width="3" 
+          stroke-linecap="round" 
+          fill="none" />
+
+    <!-- Sleek Gold Collar Band -->
+    <path d="M 124 75 Q 160 85 196 75 L 194 65 Q 160 75 126 65 Z" fill="url(#goldTrim)" />
+
+    <!-- Precision Dual-Ring Foil Head -->
+    <ellipse cx="160" cy="54" rx="34" ry="18" fill="url(#chromeFoil)" />
+    <ellipse cx="160" cy="54" rx="26" ry="13" fill="#334155" stroke="url(#goldTrim)" stroke-width="2" />
+    
+    <!-- Micro-Foil Pattern Lines -->
+    <circle cx="160" cy="54" r="8" fill="url(#chromeFoil)" />
+    <circle cx="160" cy="54" r="3" fill="#0f172a" />
+    <line x1="144" y1="54" x2="176" y2="54" stroke="rgba(255,255,255,0.7)" stroke-width="1" />
+    <line x1="160" y1="46" x2="160" y2="62" stroke="rgba(255,255,255,0.7)" stroke-width="1" />
+
+    <!-- Metallic Mid Accent Ring -->
+    <path d="M 120 145 Q 160 155 200 145 L 199 152 Q 160 162 121 152 Z" fill="url(#goldTrim)" />
+
+    <!-- Power / Touch Button with Gold Ring -->
+    <circle cx="160" cy="195" r="14" fill="#0f172a" stroke="url(#goldTrim)" stroke-width="2.5" />
+    <!-- Power Icon -->
+    <path d="M 160 188 L 160 195 M 155 192 A 6 6 0 1 0 165 192" 
+          stroke="#fec22a" 
+          stroke-width="1.8" 
+          stroke-linecap="round" 
+          fill="none" />
+
+    <!-- Battery Level LED Indicators -->
+    <circle cx="160" cy="235" r="2.5" fill="#fec22a" />
+    <circle cx="160" cy="245" r="2.5" fill="#fec22a" />
+    <circle cx="160" cy="255" r="2.5" fill="rgba(254, 194, 42, 0.4)" />
+
+    <!-- Brand Typography on Device -->
+    <text x="160" y="295" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="7" font-weight="800" fill="rgba(255, 255, 255, 0.45)" text-anchor="middle" letter-spacing="2">AFSHA</text>
+
+    <!-- Bottom Charging Ring -->
+    <path d="M 132 335 Q 160 345 188 335" stroke="url(#goldTrim)" stroke-width="2.5" fill="none" />
+  </g>
+
+  <!-- Floating Sparkles -->
+  <g fill="#fec22a" opacity="0.9">
+    <path d="M 255 70 Q 260 70 260 65 Q 260 70 265 70 Q 260 70 260 75 Q 260 70 255 70 Z" />
+    <path d="M 75 140 Q 80 140 80 135 Q 80 140 85 140 Q 80 140 80 145 Q 80 140 75 140 Z" />
+    <path d="M 265 240 Q 272 240 272 233 Q 272 240 279 240 Q 272 240 272 247 Q 272 240 265 240 Z" />
+  </g>
+</svg>

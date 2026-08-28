@@ -124,6 +124,112 @@
   }
 }
 
+/* Developer Match Search Card */
+.developer-search-result-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  border-bottom: 2px solid rgba(56, 189, 248, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.developer-search-result-box:hover {
+  background: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+}
+
+.dev-search-avatar-wrap {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.dev-search-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 2px solid #38bdf8;
+}
+
+.dev-search-badge-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid #0f172a;
+}
+
+.dev-search-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.dev-search-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dev-search-name {
+  font-size: 0.96rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.dev-verified-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.dev-search-role {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin: 2px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dev-search-action {
+  flex-shrink: 0;
+}
+
+.dev-view-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #38bdf8;
+  color: #07090e;
+  font-size: 0.76rem;
+  font-weight: 900;
+  padding: 6px 12px;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.developer-search-result-box:hover .dev-view-profile-btn {
+  background: #7dd3fc;
+  transform: translateX(2px);
+}
+
 .suggestions-header {
   padding: 12px 18px;
   background: #f8fafc;
