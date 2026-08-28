@@ -28,8 +28,8 @@ const AdminProductForm = lazy(() => import('./pages/admin/AdminProductForm'));
 const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
 const AdminContacts = lazy(() => import('./pages/admin/AdminContacts'));
 const AdminStock = lazy(() => import('./pages/admin/AdminStock'));
-const ManishKumarProfile = lazy(() => import('./pages/profile/ManishKumarProfile'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+import ManishKumarProfile from './pages/profile/ManishKumarProfile';
 
 function App() {
   const location = useLocation();
