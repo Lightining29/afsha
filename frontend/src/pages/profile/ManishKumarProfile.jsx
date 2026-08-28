@@ -323,97 +323,100 @@ export default function ManishKumarProfile() {
         <div className="lux-ambient-glow lux-glow-2" />
         <div className="lux-ambient-glow lux-glow-3" />
 
-        {/* ── 1. FULL-SCREEN IMMERSIVE HERO SECTION ── */}
-        <section className="lux-fullscreen-hero">
-          <div className="lux-hero-media-wrapper">
-            <img
-              src="/manish-kumar.webp"
-              onError={(e) => { e.target.src = '/manish-kumar.jpg'; }}
-              alt="Manish Kumar - Best Java Full Stack Developer & AWS DevOps Engineer"
-              className="lux-hero-fullscreen-img"
-              fetchpriority="high"
-            />
-            {/* Cinematic Gradient Vignette */}
-            <div className="lux-hero-cinematic-scrim" />
-            <div className="lux-hero-mesh-overlay" />
-          </div>
+        {/* ── 1. ULTRA-BRIGHT PORTRAIT HERO SHOWCASE ── */}
+        <section className="lux-hero-showcase-section">
+          <div className="lux-hero-container">
 
-          <div className="lux-hero-content-box">
-            {/* Verified Badge */}
-            <div className="lux-hero-status-pill">
-              <span className="lux-green-pulse" />
-              <Sparkles size={13} className="lux-sparkle" />
-              <span>Available for Hire • Full-Time &amp; Cloud Roles</span>
+            {/* Bright, Crystal-Clear Portrait Card with Glowing Halo */}
+            <div className="lux-portrait-box-wrap">
+              <div className="lux-portrait-halo-ring">
+                <img
+                  src="/manish-kumar.webp"
+                  onError={(e) => { e.target.src = '/manish-kumar.jpg'; }}
+                  alt="Manish Kumar - Best Java Full Stack Developer & AWS DevOps Engineer"
+                  className="lux-crystal-portrait-img"
+                  fetchpriority="high"
+                />
+                <div className="lux-portrait-online-tag">
+                  <span className="lux-green-pulse" />
+                  <span>Available for Hire</span>
+                </div>
+              </div>
             </div>
 
-            {/* Beautiful Grand Name Typography */}
-            <h1 className="lux-hero-name">
-              Manish <span className="lux-name-gold">Kumar</span>
-            </h1>
+            {/* Typography & Identity Header (Cleanly positioned with zero obstruction) */}
+            <div className="lux-identity-details">
+              <div className="lux-hero-status-pill">
+                <Sparkles size={14} className="lux-sparkle" />
+                <span>Verified Full Stack Developer &amp; Cloud Architect</span>
+              </div>
 
-            {/* High-Impact Role Subtitle */}
-            <p className="lux-hero-title">
-              Senior Java Full Stack Developer <span className="lux-role-divider">•</span> AWS DevOps Solutions Architect
-            </p>
+              <h1 className="lux-hero-name">
+                Manish <span className="lux-name-gold">Kumar</span>
+              </h1>
 
-            {/* Concise Bio / Tagline */}
-            <p className="lux-hero-bio">
-              <strong>B.Tech in Computer Science</strong> graduate architecting enterprise <strong>Spring Boot Microservices</strong>, high-performance <strong>React.js</strong> interfaces, and resilient <strong>AWS Cloud &amp; CI/CD pipelines</strong>.
-            </p>
+              <p className="lux-hero-title">
+                Senior Java Full Stack Developer <span className="lux-role-divider">•</span> AWS DevOps Solutions Architect
+              </p>
 
-            {/* ── BEAUTIFUL ACTION BUTTONS ── */}
-            <div className="lux-hero-buttons-row">
-              <a
-                href="https://wa.me/918851961088?text=Hi%20Manish,%20I%20saw%20your%20profile%20and%20would%20like%20to%20discuss%20a%20project!"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="lux-btn lux-btn-whatsapp"
+              <p className="lux-hero-bio">
+                <strong>B.Tech in Computer Science</strong> graduate architecting high-throughput <strong>Spring Boot Microservices</strong>, reactive <strong>React.js</strong> applications, and automated <strong>AWS Cloud &amp; CI/CD pipelines</strong>.
+              </p>
+
+              {/* ── BEAUTIFUL ACTION BUTTONS ── */}
+              <div className="lux-hero-buttons-row">
+                <a
+                  href="https://wa.me/918851961088?text=Hi%20Manish,%20I%20saw%20your%20profile%20and%20would%20like%20to%20discuss%20a%20project!"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="lux-btn lux-btn-whatsapp"
+                >
+                  <MessageCircle size={18} />
+                  <span>Chat on WhatsApp</span>
+                </a>
+
+                <a href="tel:+918851961088" className="lux-btn lux-btn-call">
+                  <Phone size={17} />
+                  <span>Call +91 8851961088</span>
+                </a>
+
+                <a href="mailto:brayw433@gmail.com" className="lux-btn lux-btn-email">
+                  <Mail size={17} />
+                  <span>Email Me</span>
+                </a>
+
+                <a
+                  href="https://github.com/Lightining29"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="lux-btn lux-btn-github"
+                >
+                  <Github size={18} />
+                  <span>GitHub Code</span>
+                </a>
+
+                <a
+                  href="https://manish-java-developer.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="lux-btn lux-btn-portfolio"
+                >
+                  <ExternalLink size={17} />
+                  <span>Live Portfolio</span>
+                </a>
+              </div>
+
+              {/* Scroll Indicator */}
+              <button
+                type="button"
+                className="lux-scroll-down-pill"
+                onClick={scrollToQualifications}
+                aria-label="View Qualifications"
               >
-                <MessageCircle size={18} />
-                <span>Chat on WhatsApp</span>
-              </a>
-
-              <a href="tel:+918851961088" className="lux-btn lux-btn-call">
-                <Phone size={17} />
-                <span>Call +91 8851961088</span>
-              </a>
-
-              <a href="mailto:brayw433@gmail.com" className="lux-btn lux-btn-email">
-                <Mail size={17} />
-                <span>Email Me</span>
-              </a>
-
-              <a
-                href="https://github.com/Lightining29"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="lux-btn lux-btn-github"
-              >
-                <Github size={18} />
-                <span>GitHub Code</span>
-              </a>
-
-              <a
-                href="https://manish-java-developer.vercel.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="lux-btn lux-btn-portfolio"
-              >
-                <ExternalLink size={17} />
-                <span>Live Portfolio</span>
-              </a>
+                <span>View Qualifications &amp; Projects</span>
+                <ArrowDown size={14} className="lux-bounce-arrow" />
+              </button>
             </div>
-
-            {/* Scroll Indicator */}
-            <button
-              type="button"
-              className="lux-scroll-down-pill"
-              onClick={scrollToQualifications}
-              aria-label="View Qualifications"
-            >
-              <span>Explore Qualifications &amp; Projects</span>
-              <ArrowDown size={14} className="lux-bounce-arrow" />
-            </button>
           </div>
         </section>
 
