@@ -165,7 +165,42 @@ function generateHtml(p) {
           "priceValidUntil": "2027-12-31",
           "itemCondition": "https://schema.org/NewCondition",
           "availability": "https://schema.org/InStock",
-          "seller": { "@type": "Organization", "name": "Afsha Enterprises" }
+          "seller": { "@type": "Organization", "name": "Afsha Enterprises" },
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "0",
+              "currency": "INR"
+            },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "IN"
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "handlingTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 0,
+                "maxValue": 1,
+                "unitCode": "DAY"
+              },
+              "transitTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 2,
+                "maxValue": 5,
+                "unitCode": "DAY"
+              }
+            }
+          },
+          "hasMerchantReturnPolicy": {
+            "@type": "MerchantReturnPolicy",
+            "applicableCountry": "IN",
+            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+            "merchantReturnDays": 7,
+            "returnMethod": "https://schema.org/ReturnByMail",
+            "returnFees": "https://schema.org/FreeReturn"
+          }
         },
         "aggregateRating": {
           "@type": "AggregateRating",
@@ -214,6 +249,10 @@ function generateHtml(p) {
   <meta property="og:title" content="${p.metaTitle}">
   <meta property="og:description" content="${p.metaDescription}">
   <meta property="og:image" content="${imageUrl}">
+  <meta property="og:image:width" content="800">
+  <meta property="og:image:height" content="800">
+  <meta property="og:image:alt" content="${p.name}">
+  <meta name="thumbnail" content="${imageUrl}">
   <meta property="product:price:amount" content="${p.price}">
   <meta property="product:price:currency" content="INR">
 

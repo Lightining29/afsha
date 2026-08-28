@@ -302,6 +302,10 @@ export default function ManishKumarProfile() {
         <meta property="og:title" content={seoTitle} />
         <meta property="og:description" content={`Official portfolio & profile of ${seoHeading} — Senior Java Full Stack Developer & AWS DevOps Architect.`} />
         <meta property="og:image" content={profileImageUrl} />
+        <meta property="og:image:width" content="800" />
+        <meta property="og:image:height" content="800" />
+        <meta property="og:image:alt" content="Manish Kumar" />
+        <meta name="thumbnail" content={profileImageUrl} />
         <meta property="profile:first_name" content="Manish" />
         <meta property="profile:last_name" content="Kumar" />
         <meta property="profile:username" content="Lightining29" />

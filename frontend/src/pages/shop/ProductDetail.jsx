@@ -151,8 +151,18 @@ export default function ProductDetail() {
               "value": "0",
               "currency": "INR"
             },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "IN"
+            },
             "deliveryTime": {
               "@type": "ShippingDeliveryTime",
+              "handlingTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 0,
+                "maxValue": 1,
+                "unitCode": "DAY"
+              },
               "transitTime": {
                 "@type": "QuantitativeValue",
                 "minValue": 2,
@@ -160,6 +170,14 @@ export default function ProductDetail() {
                 "unitCode": "DAY"
               }
             }
+          },
+          "hasMerchantReturnPolicy": {
+            "@type": "MerchantReturnPolicy",
+            "applicableCountry": "IN",
+            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+            "merchantReturnDays": 7,
+            "returnMethod": "https://schema.org/ReturnByMail",
+            "returnFees": "https://schema.org/FreeReturn"
           }
         },
         "aggregateRating": {
@@ -253,6 +271,10 @@ export default function ProductDetail() {
         <meta property="og:title" content={seoData.title} />
         <meta property="og:description" content={seoData.metaDescription} />
         <meta property="og:image" content={fullImageUrl} />
+        <meta property="og:image:width" content="800" />
+        <meta property="og:image:height" content="800" />
+        <meta property="og:image:alt" content={product.name} />
+        <meta name="thumbnail" content={fullImageUrl} />
         <meta property="product:price:amount" content={finalPrice} />
         <meta property="product:price:currency" content="INR" />
 
