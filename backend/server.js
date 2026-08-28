@@ -304,10 +304,48 @@ app.get('/sitemap.xml', async (req, res) => {
 
     const staticUrls = [
       { loc: `${domain}/`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/products`, priority: '0.95', changefreq: 'daily' },
+      
+      // ⭐ Manish Kumar Official Developer Profile Pages ⭐
+      { loc: `${domain}/manish-kumar`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/profile`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/profile/manish-kumar`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/manish`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/manishkumar`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/manish-profile`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/manish-kumar-profile`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/developer-profile`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/developer`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/developer/manish-kumar`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/about-manish-kumar`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/manish-kumar-java-developer`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/manish-kumar-devops-engineer`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/manish-kumar-full-stack-developer`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/manish-kumar-java-full-stack-developer`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/manish-kumar-software-engineer`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/manish-kumar-aws-architect`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/manish-kumar-resume`, priority: '0.9', changefreq: 'daily' },
+      { loc: `${domain}/manish-kumar.html`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/profile.html`, priority: '0.95', changefreq: 'daily' },
+
+      // Separate Product Routes
+      { loc: `${domain}/electric-body-massager`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/deep-tissue-massager`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/painless-facial-hair-remover`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/neck-and-shoulder-massager`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/foot-and-calf-massager`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/rechargeable-body-massager`, priority: '0.95', changefreq: 'daily' },
+
+      // Static Product HTML Routes
+      { loc: `${domain}/electric-body-massager.html`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/deep-tissue-massager.html`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/painless-facial-hair-remover.html`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/neck-and-shoulder-massager.html`, priority: '0.95', changefreq: 'daily' },
+
       { loc: `${domain}/cart`, priority: '0.5', changefreq: 'monthly' },
       { loc: `${domain}/checkout`, priority: '0.5', changefreq: 'monthly' },
-      { loc: `${domain}/login`, priority: '0.4', changefreq: 'monthly' },
-      { loc: `${domain}/register`, priority: '0.4', changefreq: 'monthly' },
+      { loc: `${domain}/blogs`, priority: '0.8', changefreq: 'weekly' },
+      { loc: `${domain}/contact`, priority: '0.6', changefreq: 'monthly' },
     ];
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;

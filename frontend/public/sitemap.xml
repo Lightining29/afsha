@@ -22,7 +22,120 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Product 1: Electric Body Massager (All SEO Variants) -->
+  <!-- ============================================== -->
+  <!-- ⭐ MANISH KUMAR OFFICIAL DEVELOPER PROFILE PAGES ⭐ -->
+  <!-- ============================================== -->
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/profile</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/profile/manish-kumar</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manishkumar</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-profile</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-profile</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/developer-profile</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/developer</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/developer/manish-kumar</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/about-manish-kumar</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-java-developer</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-devops-engineer</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-full-stack-developer</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-java-full-stack-developer</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-software-engineer</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-aws-architect</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar-resume</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish-kumar.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/profile.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/manish.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- ============================================== -->
+  <!-- 🛍️ PRODUCT SEPARATE SEO PAGES -->
+  <!-- ============================================== -->
+
+  <!-- Product 1: Electric Body Massager -->
   <url>
     <loc>https://www.afshaenterprises.com/electric-body-massager</loc>
     <changefreq>daily</changefreq>
@@ -42,11 +155,6 @@
     <loc>https://www.afshaenterprises.com/products/electric-body-massager</loc>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/products/electric-body-massager.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
   </url>
 
   <!-- Product 2: Deep Tissue Percussion Massager Gun -->
@@ -70,11 +178,6 @@
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/products/deep-tissue-massager.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
 
   <!-- Product 3: Painless Facial & Body Hair Remover -->
   <url>
@@ -97,11 +200,6 @@
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/products/painless-facial-hair-remover.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
 
   <!-- Product 4: Cervical Spine Neck & Shoulder Massager -->
   <url>
@@ -123,11 +221,6 @@
     <loc>https://www.afshaenterprises.com/products/neck-and-shoulder-massager</loc>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/products/neck-and-shoulder-massager.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
   </url>
 
   <!-- Product 5: Foot & Calf Circulation Massager -->
@@ -172,63 +265,6 @@
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/category/body</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <!-- Manish Kumar High-Authority SEO & Keyword Landing Pages -->
-  <url>
-    <loc>https://www.afshaenterprises.com/manish</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manishkumar</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-java-developer</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-devops-engineer</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-full-stack-developer</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-software-engineer</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-aws-architect</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-resume</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/about-manish-kumar</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/developer/manish-kumar</loc>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>

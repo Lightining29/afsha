@@ -50,6 +50,12 @@ function App() {
         <Route path="/manish" element={<ManishKumarProfile />} />
         <Route path="/manish-kumar" element={<ManishKumarProfile />} />
         <Route path="/manishkumar" element={<ManishKumarProfile />} />
+        <Route path="/profile" element={<ManishKumarProfile />} />
+        <Route path="/profile/manish-kumar" element={<ManishKumarProfile />} />
+        <Route path="/profile/manish" element={<ManishKumarProfile />} />
+        <Route path="/manish-profile" element={<ManishKumarProfile />} />
+        <Route path="/manish-kumar-profile" element={<ManishKumarProfile />} />
+        <Route path="/developer-profile" element={<ManishKumarProfile />} />
         <Route path="/manish-kumar-java-developer" element={<ManishKumarProfile />} />
         <Route path="/manish-kumar-devops-engineer" element={<ManishKumarProfile />} />
         <Route path="/manish-kumar-full-stack-developer" element={<ManishKumarProfile />} />
@@ -59,7 +65,6 @@ function App() {
         <Route path="/manish-kumar-resume" element={<ManishKumarProfile />} />
         <Route path="/about-manish-kumar" element={<ManishKumarProfile />} />
         <Route path="/developer/manish-kumar" element={<ManishKumarProfile />} />
-        <Route path="/profile/manish-kumar" element={<ManishKumarProfile />} />
         <Route path="/developer" element={<ManishKumarProfile />} />
 
         <Route
