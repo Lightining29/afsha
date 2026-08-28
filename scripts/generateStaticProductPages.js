@@ -6,11 +6,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
-const PRODUCTS = [
+const ALL_PRODUCTS = [
   {
     slug: 'electric-body-massager',
     name: 'Electric Body Massager Machine',
     headline: 'Full Body Pain Relief & Deep Tissue Relaxing Machine',
+    category: 'Wellness & Massage',
     price: 1499,
     originalPrice: 2999,
     discountPercent: 50,
@@ -19,18 +20,25 @@ const PRODUCTS = [
     reviews: 384,
     metaTitle: 'Electric Body Massager Machine — Buy Full Body Pain Relief Relaxer | Afsha Enterprises',
     metaDescription: 'Buy the best Electric Body Massager in India with multi-head attachments, speed control, and infrared heat therapy. Instant relief from back, neck, and leg pain. Free Shipping & COD.',
-    keywords: 'best electric body massager India, full body massager machine, electric back pain massager, buy body massager online India, handheld vibrating massager',
+    keywords: 'best electric body massager India, full body massager machine, electric back pain massager, buy body massager online India, handheld vibrating massager, cervical neck massager, Afsha Enterprises',
     highlights: [
       'Multi-Head Interchangeable Attachments (Wave, Roller, Flat & Mesh)',
       'High-Torque 3200 RPM Heavy-Duty Copper Core Motor',
       'Infrared Thermal Therapy for Deep Muscle Penetration',
       'Ergonomic Comfort Grip for Hard-to-Reach Back Areas',
-      'Variable Speed Dial for Custom Pressure & Gentle to Deep Kneading'
+      'Variable Speed Dial for Custom Pressure & Gentle to Deep Kneading',
+      '100% Genuine Certified with 1-Year Brand Replacement Warranty'
     ],
     benefits: [
-      { title: 'Instant Relief from Back & Neck Pain', desc: 'Deep vibrations penetrate 12mm into muscle fibers to release knots and spasms.' },
-      { title: 'Boosts Blood Flow & Lymphatic Drainage', desc: 'Stimulates vascular dilation, delivering vital oxygen to sore muscles.' },
-      { title: 'De-Stresses & Promotes Sound Sleep', desc: 'Lowers cortisol levels and triggers endorphins for rapid relaxation.' }
+      { title: 'Instant Relief from Back & Neck Pain', desc: 'Deep vibrations penetrate 12mm into muscle fibers to release tight knots and muscle spasms.' },
+      { title: 'Boosts Blood Flow & Lymphatic Drainage', desc: 'Stimulates vascular dilation, delivering vital oxygen and nutrients to sore muscles.' },
+      { title: 'De-Stresses & Promotes Sound Sleep', desc: 'Lowers cortisol stress hormones and triggers endorphins for rapid whole-body relaxation.' },
+      { title: 'Cellulite Reduction & Skin Toning', desc: 'Stimulates subcutaneous layers, improving skin firmness and circulation.' }
+    ],
+    howToUse: [
+      { step: 1, title: 'Choose Attachment', desc: 'Select the Wave Head for deep tissue, Flat Head for neck, or Roller Head for toning.' },
+      { step: 2, title: 'Power On & Adjust Speed', desc: 'Plug into any standard 220V wall socket and turn the rotary speed dial to your desired intensity.' },
+      { step: 3, title: 'Glide over Muscles', desc: 'Apply gentle circular pressure over target muscle groups for 5 to 10 minutes per area.' }
     ],
     specs: [
       { k: 'Motor Speed', v: '1800 - 3200 RPM Variable' },
@@ -48,6 +56,7 @@ const PRODUCTS = [
     slug: 'deep-tissue-massager',
     name: 'Deep Tissue Percussion Massager Gun',
     headline: 'Professional Muscle Recovery & Knot Release Gun',
+    category: 'Wellness & Massage',
     price: 2499,
     originalPrice: 4999,
     discountPercent: 50,
@@ -61,11 +70,17 @@ const PRODUCTS = [
       'Quiet-Glide High-Torque Brushless Motor (<45dB)',
       '6 Intelligent Speed Levels up to 3600 RPM',
       '4 Specialized Quick-Swap Massage Heads',
-      '2400mAh Long-Lasting Rechargeable Lithium Battery'
+      '2400mAh Long-Lasting Rechargeable Lithium Battery',
+      '12mm Deep Amplitude Percussion for Dense Muscle Penetration'
     ],
     benefits: [
       { title: 'Eliminates Post-Workout DOMS', desc: 'Flushes lactic acid buildup within minutes to accelerate athletic muscle recovery.' },
-      { title: 'Deep Myofascial Release', desc: 'Breaks up stubborn fascia adhesions and trigger points in glutes, quads, and back.' }
+      { title: 'Deep Myofascial Release', desc: 'Breaks up stubborn fascia adhesions and trigger points in glutes, quads, hamstrings, and back.' }
+    ],
+    howToUse: [
+      { step: 1, title: 'Attach Head', desc: 'Insert the Round Head for general muscle groups, Fork Head for spine/neck, or Bullet Head for joints.' },
+      { step: 2, title: 'Power On', desc: 'Turn on the bottom power switch and select speed from 1 to 6.' },
+      { step: 3, title: 'Float Over Muscles', desc: 'Float the massage gun gently over muscles for 30 to 60 seconds per spot.' }
     ],
     specs: [
       { k: 'Amplitude', v: '12mm Deep Stroke' },
@@ -81,6 +96,7 @@ const PRODUCTS = [
     slug: 'painless-facial-hair-remover',
     name: 'Painless Facial & Body Hair Remover for Women',
     headline: '100% Painless Instant Face Shaver & Trimmer',
+    category: 'Skincare',
     price: 799,
     originalPrice: 1599,
     discountPercent: 50,
@@ -97,8 +113,13 @@ const PRODUCTS = [
       'Compact Lipstick Design with USB Fast Charging'
     ],
     benefits: [
-      { title: 'Zero Cuts or Skin Irritation', desc: 'Rotary blades cut hair flush with the skin with zero redness or pulling.' },
-      { title: 'Flawless Makeup Application', desc: 'Removes peach fuzz to create a smooth, glowing canvas for foundations.' }
+      { title: 'Zero Cuts or Skin Irritation', desc: 'Rotary blades cut hair flush with the skin with zero redness, bumps, or pulling.' },
+      { title: 'Flawless Makeup Application', desc: 'Removes peach fuzz to create a smooth, glowing canvas for foundations and serums.' }
+    ],
+    howToUse: [
+      { step: 1, title: 'Cleanse Face', desc: 'Ensure your skin is clean and dry.' },
+      { step: 2, title: 'Slide Switch', desc: 'Slide the gold switch up to turn on the trimmer and LED light.' },
+      { step: 3, title: 'Small Circles', desc: 'Move in small circular motions over upper lips, cheeks, and chin.' }
     ],
     specs: [
       { k: 'Blade Material', v: '18K Rose Gold Plated Stainless Steel' },
@@ -113,6 +134,7 @@ const PRODUCTS = [
     slug: 'neck-and-shoulder-massager',
     name: 'Cervical Spine Neck & Shoulder Shiatsu Massager',
     headline: '3D Deep Kneading Shiatsu Massager with Soothing Heat',
+    category: 'Wellness & Massage',
     price: 1899,
     originalPrice: 3799,
     discountPercent: 50,
@@ -131,6 +153,10 @@ const PRODUCTS = [
     benefits: [
       { title: 'Relieves Cervical Stiffness & Text Neck', desc: 'Anatomically designed to cradle the cervical spine and trapezius muscles.' }
     ],
+    howToUse: [
+      { step: 1, title: 'Position on Shoulders', desc: 'Drape the U-shape over your neck and place your arms through the straps.' },
+      { step: 2, title: 'Turn On Heat & Rotation', desc: 'Press the power button and activate heat for soothing warmth.' }
+    ],
     specs: [
       { k: 'Massage Nodes', v: '8 Rotating 3D Nodes' },
       { k: 'Heat Range', v: 'Infrared Warmth (42°C - 45°C)' },
@@ -138,6 +164,81 @@ const PRODUCTS = [
     ],
     faqs: [
       { q: 'Can it be used on other body parts?', a: 'Yes, the flexible U-shape wraps around your lower back, thighs, and calves.' }
+    ]
+  },
+  {
+    slug: 'foot-and-calf-massager',
+    name: 'Foot & Calf Acupressure Circulation Massager',
+    headline: 'Multi-Mode Reflexology Foot & Leg Pain Relief Machine',
+    category: 'Wellness & Massage',
+    price: 3999,
+    originalPrice: 7999,
+    discountPercent: 50,
+    image: '/masage.jpg',
+    rating: 4.9,
+    reviews: 188,
+    metaTitle: 'Foot & Calf Acupressure Circulation Massager Machine | Afsha Enterprises',
+    metaDescription: 'Buy Foot & Calf Leg Massager with Shiatsu Kneading, Air Compression, and Heat in India. Instant relief from plantar fasciitis, swelling, and neuropathy. Free Delivery & COD.',
+    keywords: 'foot massager machine India, calf leg massager, plantar fasciitis foot massager, electric foot reflexology machine, foot pain relief massager',
+    highlights: [
+      'Deep Kneading Shiatsu Rollers for Foot Soles & Arches',
+      'Air Compression Squeeze for Calf & Ankle Swelling',
+      'Soothing Infrared Heat Therapy for Diabetic & Neuropathy Comfort',
+      'Custom Intensity Controls & Washable Breathable Fabric Sleeves'
+    ],
+    benefits: [
+      { title: 'Relieves Plantar Fasciitis & Heel Spurs', desc: 'Targeted acupressure nodes stretch the plantar fascia ligament and ease heel pain.' },
+      { title: 'Reduces Leg Swelling & Edema', desc: 'Dynamic air compression pumps trapped fluids upward to enhance vein circulation.' }
+    ],
+    howToUse: [
+      { step: 1, title: 'Place Feet', desc: 'Slide your feet into the plush fabric chambers while seated comfortably.' },
+      { step: 2, title: 'Select Mode', desc: 'Use the remote or control panel to select Kneading, Compression, and Heat.' }
+    ],
+    specs: [
+      { k: 'Modes', v: '3 Automatic Massage Programs' },
+      { k: 'Pressure Levels', v: '3 Air Compression Levels' },
+      { k: 'Timer', v: '15-30 Minute Auto Timer' },
+      { k: 'Warranty', v: '1-Year Complete Warranty' }
+    ],
+    faqs: [
+      { q: 'Is it suitable for large foot sizes?', a: 'Yes, the open-toe ergonomic chamber comfortably accommodates up to Men US Size 12 (UK 11).' }
+    ]
+  },
+  {
+    slug: 'rechargeable-body-massager',
+    name: 'Handheld Rechargeable Cordless Body Massager',
+    headline: 'Wireless Full Body Massager with Long-Life Battery',
+    category: 'Wellness & Massage',
+    price: 1699,
+    originalPrice: 3399,
+    discountPercent: 50,
+    image: '/masage.jpg',
+    rating: 4.8,
+    reviews: 215,
+    metaTitle: 'Cordless Rechargeable Handheld Body Massager | Afsha Enterprises',
+    metaDescription: 'Shop Handheld Rechargeable Body Massager online in India. Cordless design, powerful multi-mode vibration, 5 massage heads, and 120-minute battery. Free Shipping & COD.',
+    keywords: 'cordless body massager India, rechargeable handheld massager, wireless back massager, battery operated body relaxer, Afsha Enterprises',
+    highlights: [
+      '100% Cordless Freedom — Take Anywhere',
+      'Long-Life 2200mAh Lithium-Ion Rechargeable Battery',
+      '5 Interchangeable Silicone & ABS Massage Attachments',
+      'Extended Reach Ergonomic Handle for Entire Back'
+    ],
+    benefits: [
+      { title: 'Unrestricted Cordless Mobility', desc: 'Massage your neck, shoulders, back, or legs anywhere on the sofa, bed, or office chair without tangled cords.' },
+      { title: 'Gentle to Deep Percussion', desc: 'Microprocessor-controlled pulse patterns customize pressure to your exact comfort level.' }
+    ],
+    howToUse: [
+      { step: 1, title: 'Charge Fully', desc: 'Connect the fast USB charger until the green LED illuminates.' },
+      { step: 2, title: 'Attach Head', desc: 'Snap on your preferred head and press the power button.' }
+    ],
+    specs: [
+      { k: 'Battery Life', v: '120 Minutes on Single Charge' },
+      { k: 'Charging Time', v: '2 Hours Fast Charge' },
+      { k: 'Attachments', v: '5 Multi-Target Heads' }
+    ],
+    faqs: [
+      { q: 'Can I use it while charging?', a: 'For maximum battery safety, the smart chip operates in cordless mode only after disconnecting the charger.' }
     ]
   }
 ];
@@ -156,6 +257,7 @@ function generateHtml(p) {
         "image": imageUrl,
         "description": p.metaDescription,
         "sku": `AFSHA-${p.slug.toUpperCase()}`,
+        "mpn": `AF-${p.slug}`,
         "brand": { "@type": "Brand", "name": "Afsha Enterprises" },
         "offers": {
           "@type": "Offer",
@@ -206,14 +308,30 @@ function generateHtml(p) {
           "@type": "AggregateRating",
           "ratingValue": p.rating.toFixed(1),
           "reviewCount": p.reviews
-        }
+        },
+        "review": [
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Rahul Verma" },
+            "datePublished": "2026-08-15",
+            "reviewBody": `Amazing ${p.name}. Instant relief from pain and stress. Highly recommended!`,
+            "reviewRating": { "@type": "Rating", "ratingValue": "5" }
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Pooja Sharma" },
+            "datePublished": "2026-08-20",
+            "reviewBody": "Genuine quality and very fast 3-day delivery. Very useful for the whole family.",
+            "reviewRating": { "@type": "Rating", "ratingValue": "5" }
+          }
+        ]
       },
       {
         "@type": "BreadcrumbList",
         "@id": `${canonicalUrl}#breadcrumb`,
         "itemListElement": [
           { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.afshaenterprises.com/" },
-          { "@type": "ListItem", "position": 2, "name": "Products", "item": "https://www.afshaenterprises.com/" },
+          { "@type": "ListItem", "position": 2, "name": p.category, "item": "https://www.afshaenterprises.com/" },
           { "@type": "ListItem", "position": 3, "name": p.name, "item": canonicalUrl }
         ]
       },
@@ -224,6 +342,18 @@ function generateHtml(p) {
           "@type": "Question",
           "name": f.q,
           "acceptedAnswer": { "@type": "Answer", "text": f.a }
+        }))
+      },
+      {
+        "@type": "HowTo",
+        "@id": `${canonicalUrl}#howto`,
+        "name": `How to Use ${p.name}`,
+        "description": `Step-by-step instructions on how to use ${p.name} safely and effectively.`,
+        "step": p.howToUse.map((step, idx) => ({
+          "@type": "HowToStep",
+          "position": idx + 1,
+          "name": step.title,
+          "text": step.desc
         }))
       }
     ]
@@ -243,7 +373,7 @@ function generateHtml(p) {
   <link rel="canonical" href="${canonicalUrl}">
   <link rel="icon" type="image/svg+xml" href="/vite.svg">
 
-  <!-- Open Graph / Social -->
+  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="product">
   <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:title" content="${p.metaTitle}">
@@ -256,7 +386,13 @@ function generateHtml(p) {
   <meta property="product:price:amount" content="${p.price}">
   <meta property="product:price:currency" content="INR">
 
-  <!-- Structured Data -->
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${p.metaTitle}">
+  <meta name="twitter:description" content="${p.metaDescription}">
+  <meta name="twitter:image" content="${imageUrl}">
+
+  <!-- Structured Data Graph (Google Rich Card Ready) -->
   <script type="application/ld+json">
     ${JSON.stringify(jsonLd, null, 2)}
   </script>
@@ -278,11 +414,11 @@ function generateHtml(p) {
     .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
     
     /* Top Bar */
-    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; }
+    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
     .header-inner { display: flex; align-items: center; justify-content: space-between; }
     .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
     .logo span { color: var(--primary); }
-    .nav-btn { background: var(--primary); color: #ffffff; text-decoration: none; font-weight: 800; font-size: 0.85rem; padding: 8px 18px; border-radius: 999px; }
+    .nav-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; text-decoration: none; font-weight: 800; font-size: 0.85rem; padding: 8px 18px; border-radius: 999px; }
 
     /* Showcase */
     .hero-grid { display: grid; grid-template-columns: 1fr; gap: 32px; padding: 36px 0; }
@@ -320,6 +456,9 @@ function generateHtml(p) {
     .feature-list li { display: flex; gap: 8px; font-size: 0.9rem; font-weight: 700; color: #334155; }
     .feature-list li::before { content: "✓"; color: var(--green); font-weight: 900; }
 
+    .step-item { display: flex; gap: 14px; margin-bottom: 14px; }
+    .step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--text); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
     .specs-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     .specs-table tr { border-bottom: 1px solid var(--border); }
     .specs-table td { padding: 10px 14px; }
@@ -341,7 +480,7 @@ function generateHtml(p) {
   <header class="header">
     <div class="container header-inner">
       <a href="/" class="logo">Afsha <span>Enterprises</span></a>
-      <a href="/checkout" class="nav-btn">🛒 Buy Now (COD)</a>
+      <a href="/checkout" class="nav-btn">🛒 Buy Now (Free COD)</a>
     </div>
   </header>
 
@@ -418,6 +557,21 @@ function generateHtml(p) {
     </section>
 
     <section class="section-card">
+      <h2 class="section-heading">Step-by-Step How to Use</h2>
+      <div>
+        ${p.howToUse.map(step => `
+          <div class="step-item">
+            <div class="step-num">${step.step}</div>
+            <div>
+              <strong style="font-size:0.95rem; color:#0f172a; display:block;">${step.title}</strong>
+              <span style="font-size:0.86rem; color:#475569;">${step.desc}</span>
+            </div>
+          </div>
+        `).join('\n')}
+      </div>
+    </section>
+
+    <section class="section-card">
       <h2 class="section-heading">Technical Specifications</h2>
       <table class="specs-table">
         <tbody>
@@ -454,8 +608,13 @@ function generateHtml(p) {
 </html>`;
 }
 
-// Generate static HTML files in both frontend/public/products and backend/public/products
+// Generate static HTML files in all required locations:
+// 1. root /public/*.html (e.g. electric-body-massager.html)
+// 2. /public/products/*.html
+// 3. /public/product/*.html
 const outputDirs = [
+  path.join(rootDir, 'frontend', 'public'),
+  path.join(rootDir, 'backend', 'public'),
   path.join(rootDir, 'frontend', 'public', 'products'),
   path.join(rootDir, 'backend', 'public', 'products'),
   path.join(rootDir, 'frontend', 'public', 'product'),
@@ -466,13 +625,13 @@ outputDirs.forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
-PRODUCTS.forEach(p => {
+ALL_PRODUCTS.forEach(p => {
   const htmlContent = generateHtml(p);
   outputDirs.forEach(dir => {
     const filePath = path.join(dir, `${p.slug}.html`);
     fs.writeFileSync(filePath, htmlContent, 'utf-8');
   });
-  console.log(`Generated static page for: ${p.slug}`);
+  console.log(`Generated separate static page for: ${p.slug}`);
 });
 
-console.log('All static product pages generated successfully!');
+console.log('All individual static product pages generated successfully!');

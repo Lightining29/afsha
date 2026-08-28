@@ -75,6 +75,13 @@ function App() {
 
         <Route path="/product/:slug" element={<ProductDetail />} />
         <Route path="/products/:slug" element={<ProductDetail />} />
+        <Route path="/products" element={<CategoryProducts />} />
+        <Route path="/electric-body-massager" element={<ProductDetail />} />
+        <Route path="/deep-tissue-massager" element={<ProductDetail />} />
+        <Route path="/painless-facial-hair-remover" element={<ProductDetail />} />
+        <Route path="/neck-and-shoulder-massager" element={<ProductDetail />} />
+        <Route path="/foot-and-calf-massager" element={<ProductDetail />} />
+        <Route path="/rechargeable-body-massager" element={<ProductDetail />} />
         <Route path="/category/:categorySlug" element={<CategoryProducts />} />
 
         <Route path="/login" element={<Login />} />

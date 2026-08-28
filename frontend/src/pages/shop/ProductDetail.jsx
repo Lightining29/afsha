@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
   ArrowLeft,
@@ -38,8 +38,12 @@ import { getProductSeoContent } from '../../data/productSeoContent';
 import './ProductDetail.css';
 
 export default function ProductDetail() {
-  const { slug } = useParams();
+  const { slug: paramSlug } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+  
+  // Extract slug from param or direct path like /electric-body-massager
+  const slug = paramSlug || location.pathname.replace(/^\/(products|product)?\/?/, '').replace(/\.html$/, '') || 'electric-body-massager';
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);

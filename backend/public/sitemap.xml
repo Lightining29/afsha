@@ -7,6 +7,11 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://www.afshaenterprises.com/products</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://www.afshaenterprises.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -17,11 +22,21 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- High-Authority Product Landing Pages (Priority 0.95 - 1.0) -->
+  <!-- Product 1: Electric Body Massager (All SEO Variants) -->
+  <url>
+    <loc>https://www.afshaenterprises.com/electric-body-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/electric-body-massager.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
   <url>
     <loc>https://www.afshaenterprises.com/product/electric-body-massager</loc>
     <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/products/electric-body-massager</loc>
@@ -31,12 +46,24 @@
   <url>
     <loc>https://www.afshaenterprises.com/products/electric-body-massager.html</loc>
     <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Product 2: Deep Tissue Percussion Massager Gun -->
+  <url>
+    <loc>https://www.afshaenterprises.com/deep-tissue-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/deep-tissue-massager.html</loc>
+    <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/product/deep-tissue-massager</loc>
     <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/products/deep-tissue-massager</loc>
@@ -46,12 +73,24 @@
   <url>
     <loc>https://www.afshaenterprises.com/products/deep-tissue-massager.html</loc>
     <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Product 3: Painless Facial & Body Hair Remover -->
+  <url>
+    <loc>https://www.afshaenterprises.com/painless-facial-hair-remover</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/painless-facial-hair-remover.html</loc>
+    <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/product/painless-facial-hair-remover</loc>
     <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/products/painless-facial-hair-remover</loc>
@@ -61,12 +100,24 @@
   <url>
     <loc>https://www.afshaenterprises.com/products/painless-facial-hair-remover.html</loc>
     <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Product 4: Cervical Spine Neck & Shoulder Massager -->
+  <url>
+    <loc>https://www.afshaenterprises.com/neck-and-shoulder-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/neck-and-shoulder-massager.html</loc>
+    <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/product/neck-and-shoulder-massager</loc>
     <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/products/neck-and-shoulder-massager</loc>
@@ -76,7 +127,31 @@
   <url>
     <loc>https://www.afshaenterprises.com/products/neck-and-shoulder-massager.html</loc>
     <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Product 5: Foot & Calf Circulation Massager -->
+  <url>
+    <loc>https://www.afshaenterprises.com/foot-and-calf-massager</loc>
+    <changefreq>daily</changefreq>
     <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/foot-and-calf-massager.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Product 6: Cordless Rechargeable Body Massager -->
+  <url>
+    <loc>https://www.afshaenterprises.com/rechargeable-body-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/rechargeable-body-massager.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <!-- Category Landing Pages -->
