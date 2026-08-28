@@ -348,13 +348,7 @@ export default function ManishKumarProfile() {
                   <span>DEV.PORTFOLIO</span>
                 </div>
 
-                {/* Center Title in Portrait */}
-                <div className="luv-portrait-name-box">
-                  <h1 className="luv-portrait-name">Manish Kumar</h1>
-                  <p className="luv-portrait-role">Java Full Stack &amp; AWS DevOps</p>
-                </div>
-
-                {/* Card Indicator Bars */}
+                {/* Card Indicator Bars at bottom of photo */}
                 <div className="luv-progress-bars">
                   <span className="bar active" />
                   <span className="bar" />
@@ -362,12 +356,17 @@ export default function ManishKumarProfile() {
                 </div>
               </div>
 
-              {/* Bottom Plan / Availability Capsule */}
+              {/* Bottom Identity & Availability Capsule (Cleanly below the photo) */}
               <div className="luv-plan-capsule">
+                <div className="luv-identity-head">
+                  <h1 className="luv-person-name">Manish Kumar</h1>
+                  <p className="luv-person-role">Senior Java Full Stack &amp; AWS DevOps Engineer</p>
+                </div>
+
                 <div className="luv-plan-header">
                   <div>
-                    <span className="luv-plan-type">Consulting &amp; Dev</span>
-                    <h4 className="luv-plan-title">Full-Stack &amp; Cloud</h4>
+                    <span className="luv-plan-type">Consulting &amp; Architecture</span>
+                    <h4 className="luv-plan-title">Spring Boot &amp; AWS Cloud</h4>
                   </div>
                   <div className="luv-plan-status">
                     <span className="online-dot" /> Online
@@ -382,6 +381,10 @@ export default function ManishKumarProfile() {
                   <div className="perk-row">
                     <Check size={14} className="perk-check" />
                     <span>AWS Cloud, Docker &amp; CI/CD Deployment</span>
+                  </div>
+                  <div className="perk-row">
+                    <Check size={14} className="perk-check" />
+                    <span>Enterprise React.js &amp; Database Architecture</span>
                   </div>
                 </div>
 

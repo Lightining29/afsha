@@ -141,19 +141,19 @@
 .luv-portrait-image-wrap {
   position: relative;
   width: 100%;
-  height: 340px;
+  height: 380px;
   border-radius: 24px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 18px;
+  padding: 16px;
   box-sizing: border-box;
 }
 
 @media (min-width: 820px) {
   .luv-portrait-image-wrap {
-    height: 380px;
+    height: 420px;
   }
 }
 
@@ -164,54 +164,32 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 12%;
   z-index: 1;
 }
 
 .luv-portrait-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.7) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
   z-index: 2;
+  pointer-events: none;
 }
 
 .luv-portrait-top-tag {
   position: relative;
   z-index: 3;
   align-self: flex-start;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #0f172a;
   font-size: 0.68rem;
   font-weight: 900;
   letter-spacing: 0.8px;
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 999px;
-}
-
-.luv-portrait-name-box {
-  position: relative;
-  z-index: 3;
-  text-align: center;
-  margin-bottom: 6px;
-}
-
-.luv-portrait-name {
-  font-size: 2.2rem;
-  font-weight: 900;
-  color: #ffffff;
-  margin: 0;
-  letter-spacing: -0.5px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.luv-portrait-role {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #f1f5f9;
-  margin: 2px 0 0;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .luv-progress-bars {
@@ -225,7 +203,7 @@
 .luv-progress-bars .bar {
   flex: 1;
   height: 3.5px;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.4);
   border-radius: 999px;
 }
 
@@ -233,9 +211,31 @@
   background: #ffffff;
 }
 
-/* Bottom Plan / Availability Capsule */
+/* Bottom Identity & Availability Capsule (Under the photo) */
 .luv-plan-capsule {
-  padding: 18px 14px 10px;
+  padding: 16px 14px 10px;
+}
+
+.luv-identity-head {
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.luv-person-name {
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.4px;
+  line-height: 1.15;
+}
+
+.luv-person-role {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #e11d48;
+  margin: 4px 0 0;
 }
 
 .luv-plan-header {
