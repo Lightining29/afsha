@@ -1,48 +1,48 @@
 /* ==========================================================================
-   MANISH KUMAR — Full-Screen Luxury Portfolio (Crystal-Clear Portrait & Hero)
+   MANISH KUMAR — Luxury Light Theme Portfolio (Crystal Portrait & Crisp UI)
    ========================================================================== */
 
 .luxury-profile-page {
   position: relative;
-  background: #07090e;
-  color: #f1f5f9;
+  background: #fbf9fa;
+  color: #0f172a;
   min-height: 100vh;
   overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Ambient Radial Glows */
+/* Soft Light Ambient Glows */
 .lux-ambient-glow {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  filter: blur(120px);
-  opacity: 0.35;
+  filter: blur(100px);
+  opacity: 0.55;
   z-index: 1;
 }
 
 .lux-glow-1 {
   top: -8%;
   left: -8%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #f59e0b 0%, #b45309 60%, transparent 100%);
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, #fef08a 0%, #fde047 50%, transparent 100%);
 }
 
 .lux-glow-2 {
   top: 35%;
   right: -8%;
-  width: 550px;
-  height: 550px;
-  background: radial-gradient(circle, #e11d48 0%, #9f1239 60%, transparent 100%);
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, #fecdd3 0%, #ffe4e6 60%, transparent 100%);
 }
 
 .lux-glow-3 {
   bottom: 5%;
   left: 20%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #0284c7 0%, #0369a1 60%, transparent 100%);
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, #bae6fd 0%, #e0f2fe 60%, transparent 100%);
 }
 
 .lux-container {
@@ -54,12 +54,12 @@
 }
 
 /* ==========================================================================
-   1. HERO SHOWCASE SECTION (Bright Crystal Portrait + Clear Typography)
+   1. HERO SHOWCASE SECTION (Light Theme Crystal Portrait + Clear Typography)
    ========================================================================== */
 
 .lux-hero-showcase-section {
   position: relative;
-  min-height: 95vh;
+  min-height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,7 +101,7 @@
   border-radius: 36px;
   padding: 4px;
   background: linear-gradient(135deg, #f59e0b 0%, #f43f5e 50%, #38bdf8 100%);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(245, 158, 11, 0.25);
+  box-shadow: 0 16px 44px rgba(244, 63, 94, 0.18), 0 4px 16px rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,7 +123,7 @@
   object-position: center 10%;
   display: block;
   filter: brightness(1.02) contrast(1.02);
-  border: 2px solid #0f172a;
+  border: 2px solid #ffffff;
 }
 
 @media (min-width: 900px) {
@@ -138,14 +138,14 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #0f172a;
+  background: #ffffff;
   border: 1.5px solid #22c55e;
-  color: #4ade80;
-  font-size: 0.74rem;
+  color: #15803d;
+  font-size: 0.76rem;
   font-weight: 800;
   padding: 6px 14px;
   border-radius: 999px;
-  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.25);
   white-space: nowrap;
 }
 
@@ -175,15 +175,16 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  color: #fbbf24;
+  background: #ffffff;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #d97706;
   font-size: 0.76rem;
   font-weight: 800;
   padding: 6px 14px;
   border-radius: 999px;
   margin-bottom: 12px;
   letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
 }
 
 .lux-sparkle {
@@ -193,14 +194,14 @@
 .lux-hero-name {
   font-size: clamp(2.4rem, 6vw, 4.4rem);
   font-weight: 900;
-  color: #ffffff;
+  color: #0f172a;
   margin: 0 0 8px;
   line-height: 1.1;
   letter-spacing: -1px;
 }
 
 .lux-name-gold {
-  background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #ea580c 100%);
+  background: linear-gradient(135deg, #d97706 0%, #e11d48 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -208,26 +209,26 @@
 .lux-hero-title {
   font-size: clamp(0.96rem, 2.5vw, 1.28rem);
   font-weight: 800;
-  color: #38bdf8;
+  color: #0284c7;
   margin: 0 0 14px;
   line-height: 1.4;
 }
 
 .lux-role-divider {
-  color: #64748b;
+  color: #94a3b8;
   margin: 0 4px;
 }
 
 .lux-hero-bio {
   font-size: clamp(0.9rem, 2vw, 1.05rem);
   line-height: 1.6;
-  color: #cbd5e1;
+  color: #475569;
   max-width: 600px;
   margin: 0 0 26px;
 }
 
 .lux-hero-bio strong {
-  color: #ffffff;
+  color: #0f172a;
 }
 
 /* ── LUXURY ACTION BUTTONS ── */
@@ -257,7 +258,7 @@
   border-radius: 999px;
   text-decoration: none;
   transition: all 0.22s ease;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 
 .lux-btn:hover {
@@ -267,53 +268,51 @@
 .lux-btn-whatsapp {
   background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
   color: #ffffff;
-  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);
+  box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35);
 }
 
 .lux-btn-whatsapp:hover {
-  box-shadow: 0 10px 28px rgba(34, 197, 94, 0.55);
+  box-shadow: 0 10px 24px rgba(34, 197, 94, 0.5);
 }
 
 .lux-btn-call {
   background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
   color: #ffffff;
-  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35);
 }
 
 .lux-btn-call:hover {
-  box-shadow: 0 10px 28px rgba(2, 132, 199, 0.55);
+  box-shadow: 0 10px 24px rgba(2, 132, 199, 0.5);
 }
 
 .lux-btn-email {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(12px);
-  color: #ffffff;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  color: #0f172a;
 }
 
 .lux-btn-email:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: #f8fafc;
+  border-color: #cbd5e1;
 }
 
 .lux-btn-github {
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #0f172a;
   color: #ffffff;
 }
 
 .lux-btn-github:hover {
-  background: #0f172a;
-  border-color: #38bdf8;
+  background: #1e293b;
 }
 
 .lux-btn-portfolio {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: #080a10;
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35);
 }
 
 .lux-btn-portfolio:hover {
-  box-shadow: 0 10px 28px rgba(245, 158, 11, 0.55);
+  box-shadow: 0 10px 24px rgba(245, 158, 11, 0.5);
 }
 
 /* Scroll Down Pill */
@@ -321,22 +320,22 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  color: #94a3b8;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
   font-size: 0.8rem;
   font-weight: 700;
   padding: 7px 16px;
   border-radius: 999px;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
 }
 
 .lux-scroll-down-pill:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  border-color: #38bdf8;
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #0284c7;
 }
 
 .lux-bounce-arrow {
@@ -349,7 +348,7 @@
 }
 
 /* ==========================================================================
-   COMMON LUXURY SECTION HEADERS
+   COMMON LUXURY SECTION HEADERS (Light Theme)
    ========================================================================== */
 
 .lux-section {
@@ -368,9 +367,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  color: #fbbf24;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #b45309;
   font-size: 0.74rem;
   font-weight: 800;
   padding: 4px 14px;
@@ -383,7 +382,7 @@
 .lux-section-heading {
   font-size: clamp(1.7rem, 4vw, 2.5rem);
   font-weight: 900;
-  color: #ffffff;
+  color: #0f172a;
   margin: 0 0 10px;
   letter-spacing: -0.8px;
 }
@@ -391,12 +390,12 @@
 .lux-section-sub {
   font-size: 0.92rem;
   line-height: 1.6;
-  color: #94a3b8;
+  color: #64748b;
   margin: 0;
 }
 
 /* ==========================================================================
-   2. QUALIFICATIONS GRID
+   2. QUALIFICATIONS GRID (Light Theme Cards)
    ========================================================================== */
 
 .lux-qualifications-grid {
@@ -412,22 +411,21 @@
 }
 
 .lux-qual-card {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0.9) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
   border-radius: 26px;
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
   transition: all 0.25s ease;
 }
 
 .lux-qual-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(245, 158, 11, 0.4);
-  box-shadow: 0 16px 44px rgba(245, 158, 11, 0.15);
+  border-color: #fed7aa;
+  box-shadow: 0 14px 32px rgba(245, 158, 11, 0.12);
 }
 
 .lux-qual-icon-box {
@@ -438,7 +436,7 @@
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
@@ -450,7 +448,7 @@
   display: inline-block;
   font-size: 0.7rem;
   font-weight: 800;
-  color: #fbbf24;
+  color: #d97706;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   margin-bottom: 3px;
@@ -459,26 +457,26 @@
 .lux-qual-title {
   font-size: 1.2rem;
   font-weight: 900;
-  color: #ffffff;
+  color: #0f172a;
   margin: 0 0 6px;
 }
 
 .lux-qual-company {
   font-size: 0.86rem;
   font-weight: 800;
-  color: #38bdf8;
+  color: #0284c7;
   margin-bottom: 8px;
 }
 
 .lux-qual-desc {
   font-size: 0.88rem;
   line-height: 1.6;
-  color: #94a3b8;
+  color: #475569;
   margin: 0 0 14px;
 }
 
 .lux-qual-desc strong {
-  color: #f1f5f9;
+  color: #0f172a;
 }
 
 .lux-qual-badges {
@@ -490,15 +488,15 @@
 .lux-qual-badges span {
   font-size: 0.72rem;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #cbd5e1;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
   padding: 4px 9px;
   border-radius: 8px;
 }
 
 /* ==========================================================================
-   3. FEATURED PROJECTS GRID
+   3. FEATURED PROJECTS GRID (Light Theme)
    ========================================================================== */
 
 .lux-projects-grid {
@@ -514,27 +512,27 @@
 }
 
 .lux-project-card {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0.9) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
   border-radius: 22px;
   padding: 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   transition: all 0.25s ease;
 }
 
 .lux-project-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: 0 16px 40px rgba(56, 189, 248, 0.15);
+  border-color: #bae6fd;
+  box-shadow: 0 14px 32px rgba(2, 132, 199, 0.12);
 }
 
 .lux-proj-tag {
   font-size: 0.68rem;
   font-weight: 800;
-  color: #f59e0b;
+  color: #d97706;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   display: inline-block;
@@ -544,14 +542,14 @@
 .lux-proj-title {
   font-size: 1.2rem;
   font-weight: 900;
-  color: #ffffff;
+  color: #0f172a;
   margin: 0 0 8px;
 }
 
 .lux-proj-desc {
   font-size: 0.84rem;
   line-height: 1.55;
-  color: #94a3b8;
+  color: #64748b;
   margin: 0 0 14px;
   flex-grow: 1;
 }
@@ -566,9 +564,8 @@
 .lux-proj-skills span {
   font-size: 0.68rem;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
+  background: #f1f5f9;
+  color: #334155;
   padding: 3px 7px;
   border-radius: 6px;
 }
@@ -577,7 +574,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: #38bdf8;
+  color: #0284c7;
   font-size: 0.84rem;
   font-weight: 800;
   text-decoration: none;
@@ -585,12 +582,12 @@
 }
 
 .lux-proj-btn:hover {
-  color: #7dd3fc;
+  color: #0369a1;
   transform: translateX(3px);
 }
 
 /* ==========================================================================
-   4. TECHNICAL SKILLS SECTION
+   4. TECHNICAL SKILLS SECTION (Light Theme)
    ========================================================================== */
 
 .lux-skills-filter-tabs {
@@ -602,22 +599,22 @@
 }
 
 .lux-tab-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
   font-size: 0.8rem;
   font-weight: 800;
   padding: 7px 16px;
   border-radius: 999px;
   cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
   transition: all 0.2s ease;
 }
 
 .lux-tab-btn.active {
-  background: #38bdf8;
-  color: #080a10;
-  border-color: #38bdf8;
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
 }
 
 .lux-skills-grid {
@@ -642,28 +639,29 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 12px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
   transition: all 0.2s ease;
 }
 
 .lux-skill-card:hover {
-  background: rgba(15, 23, 42, 0.95);
-  border-color: rgba(56, 189, 248, 0.3);
+  background: #f8fafc;
+  border-color: #0284c7;
   transform: translateY(-2px);
 }
 
 .lux-skill-icon {
-  color: #38bdf8;
+  color: #0284c7;
   flex-shrink: 0;
 }
 
 .lux-skill-name {
   font-size: 0.85rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #0f172a;
 }
 
 .lux-skill-level {
@@ -673,18 +671,17 @@
 }
 
 /* ==========================================================================
-   5. INTERACTIVE CHAT WIDGET
+   5. INTERACTIVE CHAT WIDGET (Light Theme)
    ========================================================================== */
 
 .lux-chat-widget {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
   border-radius: 26px;
   padding: 22px;
   max-width: 680px;
   margin: 0 auto;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.05);
 }
 
 .lux-chat-widget-head {
@@ -692,7 +689,7 @@
   align-items: center;
   gap: 12px;
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .lux-chat-avatar-wrap {
@@ -708,7 +705,7 @@
   border-radius: 50%;
   object-fit: cover;
   object-position: center top;
-  border: 2px solid #38bdf8;
+  border: 2px solid #0284c7;
 }
 
 .lux-chat-online-dot {
@@ -719,13 +716,13 @@
   height: 12px;
   border-radius: 50%;
   background: #22c55e;
-  border: 2px solid #0f172a;
+  border: 2px solid #ffffff;
 }
 
 .lux-chat-person-name {
   font-size: 1.05rem;
   font-weight: 900;
-  color: #ffffff;
+  color: #0f172a;
   margin: 0;
 }
 
@@ -735,7 +732,7 @@
   gap: 6px;
   font-size: 0.74rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: #64748b;
   margin-top: 2px;
 }
 
@@ -759,9 +756,9 @@
 }
 
 .lux-topic-chip {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #cbd5e1;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
   font-size: 0.72rem;
   font-weight: 800;
   padding: 6px 12px;
@@ -772,9 +769,9 @@
 }
 
 .lux-topic-chip:hover {
-  background: #38bdf8;
-  color: #080a10;
-  border-color: #38bdf8;
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
 }
 
 .lux-chat-message-stream {
@@ -832,22 +829,21 @@
 }
 
 .from-manish .lux-msg-bubble {
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  color: #f1f5f9;
+  background: #ffe4e6;
+  color: #881337;
   border-bottom-left-radius: 4px;
 }
 
 .from-user .lux-msg-bubble {
-  background: #38bdf8;
-  color: #080a10;
+  background: #0f172a;
+  color: #ffffff;
   font-weight: 600;
   border-bottom-right-radius: 4px;
 }
 
 .lux-msg-timestamp {
   font-size: 0.62rem;
-  color: #64748b;
+  color: #94a3b8;
   margin-top: 2px;
   padding: 0 2px;
 }
@@ -857,8 +853,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: #ffe4e6;
   padding: 9px 13px;
   border-radius: 16px;
   border-bottom-left-radius: 4px;
@@ -868,7 +863,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #38bdf8;
+  background: #e11d48;
   animation: luxTyping 1.4s infinite both;
 }
 
@@ -885,8 +880,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 999px;
   padding: 5px 6px 5px 14px;
   margin-top: 10px;
@@ -898,20 +893,20 @@
   background: transparent;
   outline: none;
   font-size: 0.86rem;
-  color: #ffffff;
+  color: #0f172a;
   min-width: 0;
 }
 
 .lux-chat-field::placeholder {
-  color: #64748b;
+  color: #94a3b8;
 }
 
 .lux-chat-send-btn {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #38bdf8;
-  color: #080a10;
+  background: #0f172a;
+  color: #ffffff;
   border: none;
   cursor: pointer;
   display: flex;
@@ -922,12 +917,12 @@
 }
 
 .lux-chat-send-btn:hover {
-  background: #7dd3fc;
+  background: #e11d48;
   transform: scale(1.05);
 }
 
 /* ==========================================================================
-   6. FAQ GRID
+   6. FAQ GRID (Light Theme)
    ========================================================================== */
 
 .lux-faq-grid {
@@ -937,10 +932,11 @@
 }
 
 .lux-faq-card {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
   border-radius: 18px;
   padding: 18px 22px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 }
 
 .lux-faq-q {
@@ -949,7 +945,7 @@
   gap: 8px;
   font-size: 1rem;
   font-weight: 800;
-  color: #38bdf8;
+  color: #0284c7;
   margin: 0 0 6px;
 }
 
@@ -961,15 +957,15 @@
 .lux-faq-a {
   font-size: 0.88rem;
   line-height: 1.6;
-  color: #94a3b8;
+  color: #475569;
   margin: 0;
 }
 
 .lux-faq-a strong {
-  color: #f1f5f9;
+  color: #0f172a;
 }
 
 .lux-faq-a a {
-  color: #38bdf8;
+  color: #0284c7;
   text-decoration: underline;
 }
