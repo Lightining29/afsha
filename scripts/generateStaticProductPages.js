@@ -1,0 +1,439 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, '..');
+
+const PRODUCTS = [
+  {
+    slug: 'electric-body-massager',
+    name: 'Electric Body Massager Machine',
+    headline: 'Full Body Pain Relief & Deep Tissue Relaxing Machine',
+    price: 1499,
+    originalPrice: 2999,
+    discountPercent: 50,
+    image: '/masage.jpg',
+    rating: 4.9,
+    reviews: 384,
+    metaTitle: 'Electric Body Massager Machine — Buy Full Body Pain Relief Relaxer | Afsha Enterprises',
+    metaDescription: 'Buy the best Electric Body Massager in India with multi-head attachments, speed control, and infrared heat therapy. Instant relief from back, neck, and leg pain. Free Shipping & COD.',
+    keywords: 'best electric body massager India, full body massager machine, electric back pain massager, buy body massager online India, handheld vibrating massager',
+    highlights: [
+      'Multi-Head Interchangeable Attachments (Wave, Roller, Flat & Mesh)',
+      'High-Torque 3200 RPM Heavy-Duty Copper Core Motor',
+      'Infrared Thermal Therapy for Deep Muscle Penetration',
+      'Ergonomic Comfort Grip for Hard-to-Reach Back Areas',
+      'Variable Speed Dial for Custom Pressure & Gentle to Deep Kneading'
+    ],
+    benefits: [
+      { title: 'Instant Relief from Back & Neck Pain', desc: 'Deep vibrations penetrate 12mm into muscle fibers to release knots and spasms.' },
+      { title: 'Boosts Blood Flow & Lymphatic Drainage', desc: 'Stimulates vascular dilation, delivering vital oxygen to sore muscles.' },
+      { title: 'De-Stresses & Promotes Sound Sleep', desc: 'Lowers cortisol levels and triggers endorphins for rapid relaxation.' }
+    ],
+    specs: [
+      { k: 'Motor Speed', v: '1800 - 3200 RPM Variable' },
+      { k: 'Power Source', v: 'AC 220V - 240V, 50Hz' },
+      { k: 'Power Consumption', v: '28 Watts Energy Efficient' },
+      { k: 'Attachments', v: '4 Heads + 1 Protective Mesh Cover' },
+      { k: 'Warranty', v: '1-Year Official Brand Replacement Warranty' }
+    ],
+    faqs: [
+      { q: 'Can this massager be used for lower back and sciatica pain?', a: 'Yes! The deep percussion relaxes the piriformis and lumbar muscles, relieving pressure on the sciatic nerve.' },
+      { q: 'Is Cash on Delivery (COD) available?', a: 'Yes, we provide Free Cash on Delivery (COD) all across India with express 3-5 day delivery.' }
+    ]
+  },
+  {
+    slug: 'deep-tissue-massager',
+    name: 'Deep Tissue Percussion Massager Gun',
+    headline: 'Professional Muscle Recovery & Knot Release Gun',
+    price: 2499,
+    originalPrice: 4999,
+    discountPercent: 50,
+    image: '/bg.jpg',
+    rating: 4.9,
+    reviews: 420,
+    metaTitle: 'Deep Tissue Percussion Massager Gun — Muscle Recovery | Afsha Enterprises',
+    metaDescription: 'Shop Professional Deep Tissue Massage Gun in India. High-power brushless motor, 6 speed levels, 4 massage heads, and rechargeable battery. Free Shipping & COD.',
+    keywords: 'deep tissue massager gun India, percussion massage gun, gym muscle recovery machine, athletic percussion massager, best massage gun price India',
+    highlights: [
+      'Quiet-Glide High-Torque Brushless Motor (<45dB)',
+      '6 Intelligent Speed Levels up to 3600 RPM',
+      '4 Specialized Quick-Swap Massage Heads',
+      '2400mAh Long-Lasting Rechargeable Lithium Battery'
+    ],
+    benefits: [
+      { title: 'Eliminates Post-Workout DOMS', desc: 'Flushes lactic acid buildup within minutes to accelerate athletic muscle recovery.' },
+      { title: 'Deep Myofascial Release', desc: 'Breaks up stubborn fascia adhesions and trigger points in glutes, quads, and back.' }
+    ],
+    specs: [
+      { k: 'Amplitude', v: '12mm Deep Stroke' },
+      { k: 'Battery Life', v: '4 to 6 Hours per Charge' },
+      { k: 'Weight', v: '950 grams' },
+      { k: 'Warranty', v: '1-Year Full Warranty' }
+    ],
+    faqs: [
+      { q: 'Can I use this massage gun daily?', a: 'Yes, 10-15 minutes daily before or after workouts or after long sitting hours is highly recommended.' }
+    ]
+  },
+  {
+    slug: 'painless-facial-hair-remover',
+    name: 'Painless Facial & Body Hair Remover for Women',
+    headline: '100% Painless Instant Face Shaver & Trimmer',
+    price: 799,
+    originalPrice: 1599,
+    discountPercent: 50,
+    image: '/masage.jpg',
+    rating: 4.8,
+    reviews: 512,
+    metaTitle: 'Painless Facial & Body Hair Remover Trimmer for Women | Afsha Enterprises',
+    metaDescription: 'Buy 100% Painless Facial Hair Remover for Women in India. Hypoallergenic 18K gold head, built-in LED light, and USB rechargeable. Free Delivery & COD.',
+    keywords: 'painless facial hair remover women India, face hair trimmer for women, upper lip hair remover machine, flawless face shaver, painless eyebrow trimmer',
+    highlights: [
+      'Hypoallergenic 18K Gold-Plated Precision Cutting Head',
+      'Built-in Smart LED Guidance Light for Fine Peach Fuzz',
+      '100% Painless — No Waxing, No Plucking, No Razor Redness',
+      'Compact Lipstick Design with USB Fast Charging'
+    ],
+    benefits: [
+      { title: 'Zero Cuts or Skin Irritation', desc: 'Rotary blades cut hair flush with the skin with zero redness or pulling.' },
+      { title: 'Flawless Makeup Application', desc: 'Removes peach fuzz to create a smooth, glowing canvas for foundations.' }
+    ],
+    specs: [
+      { k: 'Blade Material', v: '18K Rose Gold Plated Stainless Steel' },
+      { k: 'Power Source', v: 'USB Rechargeable Lithium Battery' },
+      { k: 'Dimensions', v: '11cm × 2.5cm Pocket Lipstick Size' }
+    ],
+    faqs: [
+      { q: 'Will hair grow back thicker?', a: 'No, cutting surface hair does not affect the root or follicle. Regrowth remains soft and natural.' }
+    ]
+  },
+  {
+    slug: 'neck-and-shoulder-massager',
+    name: 'Cervical Spine Neck & Shoulder Shiatsu Massager',
+    headline: '3D Deep Kneading Shiatsu Massager with Soothing Heat',
+    price: 1899,
+    originalPrice: 3799,
+    discountPercent: 50,
+    image: '/masage.jpg',
+    rating: 4.9,
+    reviews: 290,
+    metaTitle: 'Cervical Spine Neck & Shoulder Shiatsu Massager with Heat | Afsha Enterprises',
+    metaDescription: 'Buy 3D Shiatsu Neck and Shoulder Massager with Infrared Heat in India. Relieves cervical pain, stiff shoulders, and text neck. Free Delivery & COD.',
+    keywords: 'neck and shoulder massager India, cervical pain relief machine, shiatsu neck massager with heat, best cervical spine massager, electric shoulder relaxer',
+    highlights: [
+      '8 Bi-Directional Deep Kneading 3D Massage Nodes',
+      'Therapeutic Infrared Heating for Deep Muscle Relaxation',
+      'Adjustable Arm Straps to Control Pressure & Depth',
+      'Includes Wall Power Adapter + Car 12V Charger'
+    ],
+    benefits: [
+      { title: 'Relieves Cervical Stiffness & Text Neck', desc: 'Anatomically designed to cradle the cervical spine and trapezius muscles.' }
+    ],
+    specs: [
+      { k: 'Massage Nodes', v: '8 Rotating 3D Nodes' },
+      { k: 'Heat Range', v: 'Infrared Warmth (42°C - 45°C)' },
+      { k: 'Timer', v: '15-Minute Auto-Shutoff Safety' }
+    ],
+    faqs: [
+      { q: 'Can it be used on other body parts?', a: 'Yes, the flexible U-shape wraps around your lower back, thighs, and calves.' }
+    ]
+  }
+];
+
+function generateHtml(p) {
+  const canonicalUrl = `https://www.afshaenterprises.com/product/${p.slug}`;
+  const imageUrl = `https://www.afshaenterprises.com${p.image}`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": `${canonicalUrl}#product`,
+        "name": p.name,
+        "image": imageUrl,
+        "description": p.metaDescription,
+        "sku": `AFSHA-${p.slug.toUpperCase()}`,
+        "brand": { "@type": "Brand", "name": "Afsha Enterprises" },
+        "offers": {
+          "@type": "Offer",
+          "url": canonicalUrl,
+          "priceCurrency": "INR",
+          "price": p.price,
+          "priceValidUntil": "2027-12-31",
+          "itemCondition": "https://schema.org/NewCondition",
+          "availability": "https://schema.org/InStock",
+          "seller": { "@type": "Organization", "name": "Afsha Enterprises" }
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": p.rating.toFixed(1),
+          "reviewCount": p.reviews
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${canonicalUrl}#breadcrumb`,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.afshaenterprises.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Products", "item": "https://www.afshaenterprises.com/" },
+          { "@type": "ListItem", "position": 3, "name": p.name, "item": canonicalUrl }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${canonicalUrl}#faq`,
+        "mainEntity": p.faqs.map(f => ({
+          "@type": "Question",
+          "name": f.q,
+          "acceptedAnswer": { "@type": "Answer", "text": f.a }
+        }))
+      }
+    ]
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${p.metaTitle}</title>
+  <meta name="title" content="${p.metaTitle}">
+  <meta name="description" content="${p.metaDescription}">
+  <meta name="keywords" content="${p.keywords}">
+  <meta name="author" content="Afsha Enterprises">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="${canonicalUrl}">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="product">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="${p.metaTitle}">
+  <meta property="og:description" content="${p.metaDescription}">
+  <meta property="og:image" content="${imageUrl}">
+  <meta property="product:price:amount" content="${p.price}">
+  <meta property="product:price:currency" content="INR">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+    ${JSON.stringify(jsonLd, null, 2)}
+  </script>
+
+  <style>
+    :root {
+      --primary: #f59e0b;
+      --primary-dark: #d97706;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --green: #16a34a;
+      --rose: #e11d48;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    
+    /* Top Bar */
+    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .logo span { color: var(--primary); }
+    .nav-btn { background: var(--primary); color: #ffffff; text-decoration: none; font-weight: 800; font-size: 0.85rem; padding: 8px 18px; border-radius: 999px; }
+
+    /* Showcase */
+    .hero-grid { display: grid; grid-template-columns: 1fr; gap: 32px; padding: 36px 0; }
+    @media(min-width: 800px) { .hero-grid { grid-template-columns: 1fr 1.1fr; gap: 48px; } }
+    
+    .img-card { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 16px; position: relative; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+    .img-card img { width: 100%; max-height: 420px; object-fit: cover; border-radius: 18px; }
+    .badge-bogo { position: absolute; top: 24px; left: 24px; background: var(--rose); color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 4px 12px; border-radius: 999px; }
+    
+    .info-card { display: flex; flex-direction: column; gap: 14px; }
+    .rating-row { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 700; color: #b45309; }
+    .title { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 900; line-height: 1.2; color: var(--text); }
+    .headline { font-size: 0.95rem; font-weight: 700; color: #0284c7; }
+    
+    .price-row { display: flex; align-items: baseline; gap: 12px; margin: 6px 0; }
+    .price-curr { font-size: 2rem; font-weight: 900; color: var(--text); }
+    .price-orig { font-size: 1.2rem; color: var(--text-muted); text-decoration: line-through; }
+    .badge-save { background: #dcfce7; color: var(--green); font-size: 0.76rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; }
+
+    /* Trust Grid */
+    .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: #ffffff; border: 1px solid var(--border); border-radius: 18px; padding: 14px; margin: 10px 0; }
+    .trust-item strong { display: block; font-size: 0.8rem; color: var(--text); }
+    .trust-item span { font-size: 0.7rem; color: var(--text-muted); }
+
+    /* Buy CTAs */
+    .btn-buy-now { display: block; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; font-size: 1.05rem; font-weight: 900; text-decoration: none; padding: 16px 24px; border-radius: 999px; box-shadow: 0 8px 24px rgba(245,158,11,0.35); transition: transform 0.2s; }
+    .btn-buy-now:hover { transform: translateY(-2px); }
+
+    /* Sections */
+    .section-card { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 28px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.02); }
+    .section-heading { font-size: 1.3rem; font-weight: 900; margin-bottom: 16px; color: var(--text); }
+    
+    .feature-list { list-style: none; display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media(min-width: 700px) { .feature-list { grid-template-columns: repeat(2, 1fr); } }
+    .feature-list li { display: flex; gap: 8px; font-size: 0.9rem; font-weight: 700; color: #334155; }
+    .feature-list li::before { content: "✓"; color: var(--green); font-weight: 900; }
+
+    .specs-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .specs-table tr { border-bottom: 1px solid var(--border); }
+    .specs-table td { padding: 10px 14px; }
+    .specs-table td:first-child { font-weight: 700; color: var(--text-muted); width: 35%; }
+    .specs-table td:last-child { font-weight: 800; color: var(--text); }
+
+    .faq-item { margin-bottom: 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; }
+    .faq-q { font-weight: 800; font-size: 0.95rem; color: #0284c7; margin-bottom: 6px; }
+    .faq-a { font-size: 0.88rem; color: #475569; }
+
+    /* Footer */
+    .footer { background: #0f172a; color: #94a3b8; padding: 40px 0 60px; text-align: center; font-size: 0.85rem; margin-top: 50px; }
+    .footer a { color: #ffffff; text-decoration: none; margin: 0 10px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Afsha <span>Enterprises</span></a>
+      <a href="/checkout" class="nav-btn">🛒 Buy Now (COD)</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="hero-grid">
+      <!-- Image Stage -->
+      <div class="img-card">
+        <span class="badge-bogo">BUY 1 GET 1 FREE</span>
+        <img src="${p.image}" alt="${p.name}">
+      </div>
+
+      <!-- Info & Buy Column -->
+      <div class="info-card">
+        <div class="rating-row">
+          <span>★★★★★</span>
+          <span>${p.rating.toFixed(1)} (${p.reviews} verified reviews)</span>
+        </div>
+
+        <h1 class="title">${p.name}</h1>
+        <p class="headline">${p.headline}</p>
+
+        <div class="price-row">
+          <span class="price-curr">₹${p.price}</span>
+          <span class="price-orig">₹${p.originalPrice}</span>
+          <span class="badge-save">SAVE ${p.discountPercent}% OFF</span>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="trust-grid">
+          <div class="trust-item">
+            <strong>🚚 Free Express Delivery</strong>
+            <span>All-India in 3-5 days</span>
+          </div>
+          <div class="trust-item">
+            <strong>🛡️ 1-Year Warranty</strong>
+            <span>100% Genuine Certified</span>
+          </div>
+          <div class="trust-item">
+            <strong>🔄 7-Day Replacement</strong>
+            <span>Hassle-free support</span>
+          </div>
+          <div class="trust-item">
+            <strong>💵 Cash on Delivery</strong>
+            <span>Pay on doorstep</span>
+          </div>
+        </div>
+
+        <!-- Direct Buy Action -->
+        <a href="/product/${p.slug}" class="btn-buy-now">
+          ⚡ BUY NOW — FREE CASH ON DELIVERY
+        </a>
+      </div>
+    </div>
+
+    <!-- Long-Form SEO Sections -->
+    <section class="section-card">
+      <h2 class="section-heading">Key Features &amp; Highlights</h2>
+      <ul class="feature-list">
+        ${p.highlights.map(h => `<li>${h}</li>`).join('\n        ')}
+      </ul>
+    </section>
+
+    <section class="section-card">
+      <h2 class="section-heading">Health &amp; Therapeutic Benefits</h2>
+      <div style="display: grid; gap: 14px;">
+        ${p.benefits.map(b => `
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:14px;">
+            <h3 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:4px;">${b.title}</h3>
+            <p style="font-size:0.86rem; color:#475569;">${b.desc}</p>
+          </div>
+        `).join('\n')}
+      </div>
+    </section>
+
+    <section class="section-card">
+      <h2 class="section-heading">Technical Specifications</h2>
+      <table class="specs-table">
+        <tbody>
+          ${p.specs.map(s => `<tr><td>${s.k}</td><td>${s.v}</td></tr>`).join('\n          ')}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section-card">
+      <h2 class="section-heading">Frequently Asked Questions</h2>
+      ${p.faqs.map(f => `
+        <div class="faq-item">
+          <div class="faq-q">Q: ${f.q}</div>
+          <div class="faq-a">A: ${f.a}</div>
+        </div>
+      `).join('\n      ')}
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 Afsha Enterprises. All rights reserved.</p>
+      <p style="margin-top: 8px;">
+        <a href="/">Home</a> •
+        <a href="/blogs">Blog</a> •
+        <a href="/contact">Contact</a> •
+        <a href="/manish-kumar">Developer Profile</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>`;
+}
+
+// Generate static HTML files in both frontend/public/products and backend/public/products
+const outputDirs = [
+  path.join(rootDir, 'frontend', 'public', 'products'),
+  path.join(rootDir, 'backend', 'public', 'products'),
+  path.join(rootDir, 'frontend', 'public', 'product'),
+  path.join(rootDir, 'backend', 'public', 'product'),
+];
+
+outputDirs.forEach(dir => {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+});
+
+PRODUCTS.forEach(p => {
+  const htmlContent = generateHtml(p);
+  outputDirs.forEach(dir => {
+    const filePath = path.join(dir, `${p.slug}.html`);
+    fs.writeFileSync(filePath, htmlContent, 'utf-8');
+  });
+  console.log(`Generated static page for: ${p.slug}`);
+});
+
+console.log('All static product pages generated successfully!');

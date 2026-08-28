@@ -17,6 +17,90 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- High-Authority Product Landing Pages (Priority 0.95 - 1.0) -->
+  <url>
+    <loc>https://www.afshaenterprises.com/product/electric-body-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/products/electric-body-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/products/electric-body-massager.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/product/deep-tissue-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/products/deep-tissue-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/products/deep-tissue-massager.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/product/painless-facial-hair-remover</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/products/painless-facial-hair-remover</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/products/painless-facial-hair-remover.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/product/neck-and-shoulder-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/products/neck-and-shoulder-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/products/neck-and-shoulder-massager.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Category Landing Pages -->
+  <url>
+    <loc>https://www.afshaenterprises.com/category/wellness-massage</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/category/skincare</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/category/hair-care</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/category/body</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
   <!-- Manish Kumar High-Authority SEO & Keyword Landing Pages -->
   <url>
     <loc>https://www.afshaenterprises.com/manish</loc>
