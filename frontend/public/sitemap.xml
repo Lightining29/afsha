@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Master Site Pages -->
   <url>
     <loc>https://www.afshaenterprises.com/</loc>
     <changefreq>daily</changefreq>
@@ -12,19 +11,15 @@
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://www.afshaenterprises.com/contact</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <loc>https://www.afshaenterprises.com/blogs</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.afshaenterprises.com/blogs</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://www.afshaenterprises.com/contact</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- ============================================== -->
-  <!-- ⭐ MANISH KUMAR OFFICIAL DEVELOPER PROFILE PAGES ⭐ -->
-  <!-- ============================================== -->
   <url>
     <loc>https://www.afshaenterprises.com/manish-kumar</loc>
     <changefreq>daily</changefreq>
@@ -56,27 +51,12 @@
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-profile</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
     <loc>https://www.afshaenterprises.com/developer-profile</loc>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/developer</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/developer/manish-kumar</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/about-manish-kumar</loc>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
@@ -96,26 +76,6 @@
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-java-full-stack-developer</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-software-engineer</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-aws-architect</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/manish-kumar-resume</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://www.afshaenterprises.com/manish-kumar.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
@@ -126,25 +86,9 @@
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://www.afshaenterprises.com/manish.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- ============================================== -->
-  <!-- 🛍️ PRODUCT SEPARATE SEO PAGES -->
-  <!-- ============================================== -->
-
-  <!-- Product 1: Electric Body Massager -->
-  <url>
     <loc>https://www.afshaenterprises.com/electric-body-massager</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/electric-body-massager.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/product/electric-body-massager</loc>
@@ -156,17 +100,15 @@
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
-
-  <!-- Product 2: Deep Tissue Percussion Massager Gun -->
+  <url>
+    <loc>https://www.afshaenterprises.com/electric-body-massager.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
   <url>
     <loc>https://www.afshaenterprises.com/deep-tissue-massager</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/deep-tissue-massager.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/product/deep-tissue-massager</loc>
@@ -178,17 +120,15 @@
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
-
-  <!-- Product 3: Painless Facial & Body Hair Remover -->
+  <url>
+    <loc>https://www.afshaenterprises.com/deep-tissue-massager.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
   <url>
     <loc>https://www.afshaenterprises.com/painless-facial-hair-remover</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/painless-facial-hair-remover.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/product/painless-facial-hair-remover</loc>
@@ -200,17 +140,15 @@
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
-
-  <!-- Product 4: Cervical Spine Neck & Shoulder Massager -->
+  <url>
+    <loc>https://www.afshaenterprises.com/painless-facial-hair-remover.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
   <url>
     <loc>https://www.afshaenterprises.com/neck-and-shoulder-massager</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/neck-and-shoulder-massager.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/product/neck-and-shoulder-massager</loc>
@@ -222,93 +160,138 @@
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
-
-  <!-- Product 5: Foot & Calf Circulation Massager -->
+  <url>
+    <loc>https://www.afshaenterprises.com/neck-and-shoulder-massager.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
   <url>
     <loc>https://www.afshaenterprises.com/foot-and-calf-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/product/foot-and-calf-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/products/foot-and-calf-massager</loc>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/foot-and-calf-massager.html</loc>
     <changefreq>daily</changefreq>
-    <priority>0.9</priority>
+    <priority>0.95</priority>
   </url>
-
-  <!-- Product 6: Cordless Rechargeable Body Massager -->
   <url>
     <loc>https://www.afshaenterprises.com/rechargeable-body-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/product/rechargeable-body-massager</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/products/rechargeable-body-massager</loc>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/rechargeable-body-massager.html</loc>
     <changefreq>daily</changefreq>
-    <priority>0.9</priority>
+    <priority>0.95</priority>
   </url>
-
-  <!-- Category Landing Pages -->
-  <url>
-    <loc>https://www.afshaenterprises.com/category/wellness-massage</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/category/skincare</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/category/hair-care</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/category/body</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <!-- Local SEO Pages -->
-  <url>
-    <loc>https://www.afshaenterprises.com/locations/delhi</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/locations/mumbai</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.afshaenterprises.com/locations/bangalore</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Seeded Blog Pages -->
   <url>
     <loc>https://www.afshaenterprises.com/blog/top-10-benefits-of-using-a-body-massager</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/blogs/top-10-benefits-of-using-a-body-massager</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/blog/top-10-benefits-of-using-a-body-massager.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/blog/best-massager-for-back-pain-in-india</loc>
     <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/blogs/best-massager-for-back-pain-in-india</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/blog/best-massager-for-back-pain-in-india.html</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/blog/how-to-choose-a-handheld-massager</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/blogs/how-to-choose-a-handheld-massager</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/blog/how-to-choose-a-handheld-massager.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/blog/neck-pain-relief-tips-at-home</loc>
     <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/blogs/neck-pain-relief-tips-at-home</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/blog/neck-pain-relief-tips-at-home.html</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.afshaenterprises.com/blog/electric-vs-manual-massagers</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/blogs/electric-vs-manual-massagers</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/blog/electric-vs-manual-massagers.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/locations/delhi</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/locations/mumbai</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.afshaenterprises.com/locations/bangalore</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

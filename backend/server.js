@@ -281,8 +281,22 @@ app.get('/robots.txt', (req, res) => {
   res.send(`User-agent: *\nAllow: /\n\nSitemap: ${domain}/sitemap.xml\n`);
 });
 
-// Dynamic SEO Sitemap.xml Route
-app.get('/sitemap.xml', async (req, res) => {
+// Dynamic SEO Sitemap.xml Route (Handles sitemap.xml, sitemap_index.xml, /blogs/sitemap.xml, etc.)
+app.get([
+  '/sitemap.xml',
+  '/sitemap_index.xml',
+  '/sitemap-index.xml',
+  '/sitemap-products.xml',
+  '/sitemap-blogs.xml',
+  '/sitemap-profile.xml',
+  '/sitemap-pages.xml',
+  '/sitemap-locations.xml',
+  '/sitemap-categories.xml',
+  '/blogs/sitemap.xml',
+  '/blog/sitemap.xml',
+  '/products/sitemap.xml',
+  '/product/sitemap.xml'
+], async (req, res) => {
   try {
     const host = req.get('host') || 'www.afshaenterprises.com';
     const protocol = req.protocol === 'https' || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
@@ -302,9 +316,38 @@ app.get('/sitemap.xml', async (req, res) => {
       console.warn('Sitemap DB query warning:', dbErr.message);
     }
 
+    // Default seeded slugs if DB is empty
+    const fallbackProductSlugs = [
+      'electric-body-massager',
+      'deep-tissue-massager',
+      'painless-facial-hair-remover',
+      'neck-and-shoulder-massager',
+      'foot-and-calf-massager',
+      'rechargeable-body-massager'
+    ];
+
+    const fallbackBlogSlugs = [
+      'top-10-benefits-of-using-a-body-massager',
+      'best-massager-for-back-pain-in-india',
+      'how-to-choose-a-handheld-massager',
+      'neck-pain-relief-tips-at-home',
+      'electric-vs-manual-massagers'
+    ];
+
+    const fallbackCategorySlugs = [
+      'wellness-massage',
+      'skincare',
+      'hair-care',
+      'body'
+    ];
+
     const staticUrls = [
       { loc: `${domain}/`, priority: '1.0', changefreq: 'daily' },
       { loc: `${domain}/products`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/blogs`, priority: '0.9', changefreq: 'daily' },
+      { loc: `${domain}/blog`, priority: '0.85', changefreq: 'daily' },
+      { loc: `${domain}/contact`, priority: '0.8', changefreq: 'monthly' },
+      { loc: `${domain}/contact-us`, priority: '0.75', changefreq: 'monthly' },
       
       // ⭐ Manish Kumar Official Developer Profile Pages ⭐
       { loc: `${domain}/manish-kumar`, priority: '1.0', changefreq: 'daily' },
@@ -328,7 +371,7 @@ app.get('/sitemap.xml', async (req, res) => {
       { loc: `${domain}/manish-kumar.html`, priority: '0.95', changefreq: 'daily' },
       { loc: `${domain}/profile.html`, priority: '0.95', changefreq: 'daily' },
 
-      // Separate Product Routes
+      // Separate Product Direct Routes
       { loc: `${domain}/electric-body-massager`, priority: '1.0', changefreq: 'daily' },
       { loc: `${domain}/deep-tissue-massager`, priority: '1.0', changefreq: 'daily' },
       { loc: `${domain}/painless-facial-hair-remover`, priority: '1.0', changefreq: 'daily' },
@@ -341,11 +384,16 @@ app.get('/sitemap.xml', async (req, res) => {
       { loc: `${domain}/deep-tissue-massager.html`, priority: '0.95', changefreq: 'daily' },
       { loc: `${domain}/painless-facial-hair-remover.html`, priority: '0.95', changefreq: 'daily' },
       { loc: `${domain}/neck-and-shoulder-massager.html`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/foot-and-calf-massager.html`, priority: '0.9', changefreq: 'daily' },
+      { loc: `${domain}/rechargeable-body-massager.html`, priority: '0.9', changefreq: 'daily' },
+
+      // Local SEO City Pages
+      { loc: `${domain}/locations/delhi`, priority: '0.85', changefreq: 'weekly' },
+      { loc: `${domain}/locations/mumbai`, priority: '0.85', changefreq: 'weekly' },
+      { loc: `${domain}/locations/bangalore`, priority: '0.85', changefreq: 'weekly' },
 
       { loc: `${domain}/cart`, priority: '0.5', changefreq: 'monthly' },
       { loc: `${domain}/checkout`, priority: '0.5', changefreq: 'monthly' },
-      { loc: `${domain}/blogs`, priority: '0.8', changefreq: 'weekly' },
-      { loc: `${domain}/contact`, priority: '0.6', changefreq: 'monthly' },
     ];
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
@@ -359,34 +407,38 @@ app.get('/sitemap.xml', async (req, res) => {
       xml += `  </url>\n`;
     });
 
-    categories.forEach((c) => {
-      if (!c.slug) return;
-      const date = c.updatedAt ? c.updatedAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+    const activeCatSlugs = categories.length > 0 ? categories.map(c => c.slug).filter(Boolean) : fallbackCategorySlugs;
+    activeCatSlugs.forEach((slug) => {
       xml += `  <url>\n`;
-      xml += `    <loc>${domain}/category/${c.slug}</loc>\n`;
-      xml += `    <lastmod>${date}</lastmod>\n`;
+      xml += `    <loc>${domain}/category/${slug}</loc>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
-      xml += `    <priority>0.8</priority>\n`;
+      xml += `    <priority>0.85</priority>\n`;
       xml += `  </url>\n`;
     });
 
-    products.forEach((p) => {
-      if (!p.slug) return;
-      const date = p.updatedAt ? p.updatedAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+    const activeProductSlugs = products.length > 0 ? products.map(p => p.slug).filter(Boolean) : fallbackProductSlugs;
+    activeProductSlugs.forEach((slug) => {
       xml += `  <url>\n`;
-      xml += `    <loc>${domain}/product/${p.slug}</loc>\n`;
-      xml += `    <lastmod>${date}</lastmod>\n`;
+      xml += `    <loc>${domain}/product/${slug}</loc>\n`;
       xml += `    <changefreq>daily</changefreq>\n`;
-      xml += `    <priority>0.9</priority>\n`;
+      xml += `    <priority>0.95</priority>\n`;
+      xml += `  </url>\n`;
+      xml += `  <url>\n`;
+      xml += `    <loc>${domain}/products/${slug}</loc>\n`;
+      xml += `    <changefreq>daily</changefreq>\n`;
+      xml += `    <priority>0.95</priority>\n`;
       xml += `  </url>\n`;
     });
 
-    blogs.forEach((b) => {
-      if (!b.slug) return;
-      const date = b.updatedAt ? b.updatedAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+    const activeBlogSlugs = blogs.length > 0 ? blogs.map(b => b.slug).filter(Boolean) : fallbackBlogSlugs;
+    activeBlogSlugs.forEach((slug) => {
       xml += `  <url>\n`;
-      xml += `    <loc>${domain}/blog/${b.slug}</loc>\n`;
-      xml += `    <lastmod>${date}</lastmod>\n`;
+      xml += `    <loc>${domain}/blog/${slug}</loc>\n`;
+      xml += `    <changefreq>weekly</changefreq>\n`;
+      xml += `    <priority>0.85</priority>\n`;
+      xml += `  </url>\n`;
+      xml += `  <url>\n`;
+      xml += `    <loc>${domain}/blogs/${slug}</loc>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.8</priority>\n`;
       xml += `  </url>\n`;

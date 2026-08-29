@@ -262,7 +262,75 @@ const ALL_PRODUCTS = [
   }
 ];
 
-function generateHtml(p) {
+const ALL_BLOGS = [
+  {
+    slug: 'top-10-benefits-of-using-a-body-massager',
+    title: 'Top 10 Benefits of Using a Body Massager',
+    metaTitle: 'Top 10 Benefits of Using an Electric Body Massager Daily | Afsha Enterprises',
+    metaDescription: 'Discover the top 10 health benefits of using a body massager daily. From stress relief to improved blood circulation and muscle recovery.',
+    keywords: 'benefits of body massager, electric massager benefits, body massager for back pain, muscle relaxation machine, daily massager benefits India',
+    category: 'Wellness & Therapy',
+    readTime: '6 min read',
+    publishedDate: '2026-08-20',
+    image: '/masage.jpg',
+    author: 'Manish Kumar',
+    content: `Using a body massager is one of the easiest, most cost-effective ways to relieve stress, improve health, and promote muscle recovery. Discover how 10 minutes of daily electric massage therapy can eliminate back pain, boost lymphatic drainage, and improve sleep quality.`
+  },
+  {
+    slug: 'best-massager-for-back-pain-in-india',
+    title: 'Best Massager for Back Pain in India',
+    metaTitle: 'Best Massager for Back Pain in India (2026 Expert Guide) | Afsha Enterprises',
+    metaDescription: 'Suffering from back pain? Read our expert guide on the best body massagers for back pain relief in India, featuring top electric and deep tissue options.',
+    keywords: 'best massager for back pain India, lower back pain machine, electric back massager price, sciatica pain relief massager',
+    category: 'Pain Relief & Health',
+    readTime: '7 min read',
+    publishedDate: '2026-08-22',
+    image: '/bg.jpg',
+    author: 'Manish Kumar',
+    content: `Back pain is a widespread issue in India, affecting office workers who sit for long hours, active gym-goers, and senior citizens alike. Finding the right solution is critical to maintaining productivity and quality of life.`
+  },
+  {
+    slug: 'how-to-choose-a-handheld-massager',
+    title: 'How to Choose a Handheld Massager',
+    metaTitle: 'How to Choose the Best Handheld Massager: Complete Buyer Guide | Afsha Enterprises',
+    metaDescription: 'Buying guide for handheld massagers online. Learn which key features to look for, including battery life, weight, speed settings, and attachments.',
+    keywords: 'how to choose handheld massager, massager buying guide India, percussion vs vibration massager, best handheld body massager',
+    category: 'Buyer Guide',
+    readTime: '5 min read',
+    publishedDate: '2026-08-24',
+    image: '/masage.jpg',
+    author: 'Manish Kumar',
+    content: `With so many handheld massagers available online, choosing the right one can feel overwhelming. Learn how to compare percussion vs vibration, motor quality, weight, and attachments.`
+  },
+  {
+    slug: 'neck-pain-relief-tips-at-home',
+    title: 'Neck Pain Relief Tips at Home',
+    metaTitle: 'Neck Pain Relief at Home: Exercises, Stretches & Heated Massage | Afsha Enterprises',
+    metaDescription: 'Relieve neck and shoulder stiffness at home with these easy exercises, hot therapy tips, and the best neck and shoulder massager machines.',
+    keywords: 'neck pain relief at home, cervical pain relief exercises, text neck treatment, neck and shoulder massager with heat',
+    category: 'Posture & Ergonomics',
+    readTime: '6 min read',
+    publishedDate: '2026-08-25',
+    image: '/masage.jpg',
+    author: 'Manish Kumar',
+    content: `Neck pain and shoulder stiffness are common complaints in today's digital age. Hours spent slouching over computers or looking down at smartphones strain the cervical spine.`
+  },
+  {
+    slug: 'electric-vs-manual-massagers',
+    title: 'Electric vs Manual Massagers',
+    metaTitle: 'Electric vs Manual Massagers: Which Is Better for Pain Relief? | Afsha Enterprises',
+    metaDescription: 'Comprehensive comparison between electric massagers and manual foam rollers. Compare speed, pain relief effectiveness, effort, and long-term value.',
+    keywords: 'electric vs manual massager, foam roller vs massage gun, electric body massager benefits, best massager machine comparison',
+    category: 'Product Comparison',
+    readTime: '5 min read',
+    publishedDate: '2026-08-26',
+    image: '/bg.jpg',
+    author: 'Manish Kumar',
+    content: `When recovering from muscle stiffness or body aches, you might wonder whether to invest in a modern electric massager or stick to traditional manual tools like foam rollers and wooden massagers.`
+  }
+];
+
+function generateProductHtml(p) {
   const canonicalUrl = `https://www.afshaenterprises.com/product/${p.slug}`;
   const imageUrl = `https://www.afshaenterprises.com${p.image}`;
 
@@ -336,7 +404,6 @@ function generateHtml(p) {
   <link rel="canonical" href="${canonicalUrl}">
   <link rel="icon" type="image/svg+xml" href="/vite.svg">
 
-  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="product">
   <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:title" content="${p.metaTitle}">
@@ -349,221 +416,157 @@ function generateHtml(p) {
   <meta property="product:price:amount" content="${p.price}">
   <meta property="product:price:currency" content="INR">
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${p.metaTitle}">
-  <meta name="twitter:description" content="${p.metaDescription}">
-  <meta name="twitter:image" content="${imageUrl}">
-
-  <!-- Structured Data Graph -->
   <script type="application/ld+json">
     ${JSON.stringify(jsonLd, null, 2)}
   </script>
 
   <style>
-    :root {
-      --primary: #f59e0b;
-      --primary-dark: #d97706;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --border: #e2e8f0;
-      --green: #16a34a;
-      --rose: #e11d48;
-    }
+    :root { --primary: #f59e0b; --text: #0f172a; --bg: #f8fafc; --border: #e2e8f0; --green: #16a34a; --rose: #e11d48; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
     .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
-    
-    /* Top Bar */
-    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; }
     .header-inner { display: flex; align-items: center; justify-content: space-between; }
-    .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; }
     .logo span { color: var(--primary); }
     .nav-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; text-decoration: none; font-weight: 800; font-size: 0.85rem; padding: 8px 18px; border-radius: 999px; }
-
-    /* Showcase */
     .hero-grid { display: grid; grid-template-columns: 1fr; gap: 32px; padding: 36px 0; }
     @media(min-width: 800px) { .hero-grid { grid-template-columns: 1fr 1.1fr; gap: 48px; } }
-    
-    .img-card { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 16px; position: relative; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+    .img-card { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 16px; position: relative; text-align: center; }
     .img-card img { width: 100%; max-height: 420px; object-fit: cover; border-radius: 18px; }
-    .badge-bogo { position: absolute; top: 24px; left: 24px; background: var(--rose); color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 4px 12px; border-radius: 999px; }
-    
     .info-card { display: flex; flex-direction: column; gap: 14px; }
-    .rating-row { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 700; color: #b45309; }
-    .title { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 900; line-height: 1.2; color: var(--text); }
-    .headline { font-size: 0.95rem; font-weight: 700; color: #0284c7; }
-    
+    .title { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 900; line-height: 1.2; }
     .price-row { display: flex; align-items: baseline; gap: 12px; margin: 6px 0; }
-    .price-curr { font-size: 2rem; font-weight: 900; color: var(--text); }
-    .price-orig { font-size: 1.2rem; color: var(--text-muted); text-decoration: line-through; }
+    .price-curr { font-size: 2rem; font-weight: 900; }
+    .price-orig { font-size: 1.2rem; color: #64748b; text-decoration: line-through; }
     .badge-save { background: #dcfce7; color: var(--green); font-size: 0.76rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; }
-
-    /* Buy CTAs */
-    .btn-buy-now { display: block; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; font-size: 1.05rem; font-weight: 900; text-decoration: none; padding: 16px 24px; border-radius: 999px; box-shadow: 0 8px 24px rgba(245,158,11,0.35); transition: transform 0.2s; margin-top: 10px; }
-    .btn-buy-now:hover { transform: translateY(-2px); }
-
-    /* Sections */
-    .section-card { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 28px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.02); }
-    .section-heading { font-size: 1.3rem; font-weight: 900; margin-bottom: 16px; color: var(--text); }
-    
-    .feature-list { list-style: none; display: grid; grid-template-columns: 1fr; gap: 10px; }
-    @media(min-width: 700px) { .feature-list { grid-template-columns: repeat(2, 1fr); } }
-    .feature-list li { display: flex; gap: 8px; font-size: 0.9rem; font-weight: 700; color: #334155; }
-    .feature-list li::before { content: "✓"; color: var(--green); font-weight: 900; }
-
-    .step-item { display: flex; gap: 14px; margin-bottom: 14px; }
-    .step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--text); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-
+    .btn-buy-now { display: block; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; font-size: 1.05rem; font-weight: 900; text-decoration: none; padding: 16px 24px; border-radius: 999px; box-shadow: 0 8px 24px rgba(245,158,11,0.35); }
+    .section-card { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 28px; margin-bottom: 24px; }
+    .section-heading { font-size: 1.3rem; font-weight: 900; margin-bottom: 16px; }
     .specs-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     .specs-table tr { border-bottom: 1px solid var(--border); }
     .specs-table td { padding: 10px 14px; }
-    .specs-table td:first-child { font-weight: 700; color: var(--text-muted); width: 35%; }
-    .specs-table td:last-child { font-weight: 800; color: var(--text); }
-
-    .review-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
-    .review-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.86rem; }
-    .review-name { font-weight: 800; color: var(--text); }
-    .review-city { color: var(--green); font-weight: 700; font-size: 0.76rem; background: #dcfce7; padding: 2px 8px; border-radius: 999px; }
-    .review-comment { font-size: 0.88rem; color: #334155; line-height: 1.5; margin-top: 6px; }
-
-    .faq-item { margin-bottom: 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; }
-    .faq-q { font-weight: 800; font-size: 0.95rem; color: #0284c7; margin-bottom: 6px; }
-    .faq-a { font-size: 0.88rem; color: #475569; }
-
-    /* Footer */
     .footer { background: #0f172a; color: #94a3b8; padding: 40px 0 60px; text-align: center; font-size: 0.85rem; margin-top: 50px; }
     .footer a { color: #ffffff; text-decoration: none; margin: 0 10px; }
   </style>
 </head>
 <body>
-
-  <!-- Header -->
   <header class="header">
     <div class="container header-inner">
       <a href="/" class="logo">Afsha <span>Enterprises</span></a>
       <a href="/checkout" class="nav-btn">🛒 Buy Now</a>
     </div>
   </header>
-
-  <!-- Main Content -->
   <main class="container">
     <div class="hero-grid">
-      <!-- Image Stage -->
-      <div class="img-card">
-        <span class="badge-bogo">BUY 1 GET 1 FREE</span>
-        <img src="${p.image}" alt="${p.name}">
-      </div>
-
-      <!-- Info & Buy Column -->
+      <div class="img-card"><img src="${p.image}" alt="${p.name}"></div>
       <div class="info-card">
-        <div class="rating-row">
-          <span>★★★★★</span>
-          <span>${p.rating.toFixed(1)} (${p.reviews} verified reviews)</span>
-        </div>
-
         <h1 class="title">${p.name}</h1>
-        <p class="headline">${p.headline}</p>
-
+        <p style="font-weight:700; color:#0284c7;">${p.headline}</p>
         <div class="price-row">
           <span class="price-curr">₹${p.price}</span>
           <span class="price-orig">₹${p.originalPrice}</span>
           <span class="badge-save">SAVE ${p.discountPercent}% OFF</span>
         </div>
-
-        <!-- Direct Buy Action -->
-        <a href="/product/${p.slug}" class="btn-buy-now">
-          ⚡ BUY NOW
-        </a>
+        <a href="/product/${p.slug}" class="btn-buy-now">⚡ BUY NOW</a>
       </div>
     </div>
-
-    <!-- Long-Form SEO Sections -->
     <section class="section-card">
       <h2 class="section-heading">Key Features &amp; Highlights</h2>
-      <ul class="feature-list">
-        ${p.highlights.map(h => `<li>${h}</li>`).join('\n        ')}
-      </ul>
+      <ul style="list-style:none; display:grid; gap:8px;">${p.highlights.map(h => `<li style="font-weight:700; color:#334155;">✓ ${h}</li>`).join('')}</ul>
     </section>
-
-    <section class="section-card">
-      <h2 class="section-heading">Health &amp; Therapeutic Benefits</h2>
-      <div style="display: grid; gap: 14px;">
-        ${p.benefits.map(b => `
-          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:14px;">
-            <h3 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:4px;">${b.title}</h3>
-            <p style="font-size:0.86rem; color:#475569;">${b.desc}</p>
-          </div>
-        `).join('\n')}
-      </div>
-    </section>
-
-    <section class="section-card">
-      <h2 class="section-heading">Step-by-Step How to Use</h2>
-      <div>
-        ${p.howToUse.map(step => `
-          <div class="step-item">
-            <div class="step-num">${step.step}</div>
-            <div>
-              <strong style="font-size:0.95rem; color:#0f172a; display:block;">${step.title}</strong>
-              <span style="font-size:0.86rem; color:#475569;">${step.desc}</span>
-            </div>
-          </div>
-        `).join('\n')}
-      </div>
-    </section>
-
     <section class="section-card">
       <h2 class="section-heading">Technical Specifications</h2>
-      <table class="specs-table">
-        <tbody>
-          ${p.specs.map(s => `<tr><td>${s.k}</td><td>${s.v}</td></tr>`).join('\n          ')}
-        </tbody>
-      </table>
+      <table class="specs-table"><tbody>${p.specs.map(s => `<tr><td style="font-weight:700; color:#64748b;">${s.k}</td><td style="font-weight:800;">${s.v}</td></tr>`).join('')}</tbody></table>
     </section>
-
-    <!-- Verified Customer Reviews -->
     <section class="section-card">
       <h2 class="section-heading">Verified Customer Reviews</h2>
       ${p.reviewsList.map(r => `
-        <div class="review-item">
-          <div class="review-meta">
-            <span class="review-name">${r.name}</span>
-            <span class="review-city">✓ Verified Buyer (${r.location})</span>
-            <span style="color:#94a3b8; font-size:0.75rem;">${r.date}</span>
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.86rem; font-weight:800;">
+            <span>${r.name}</span>
+            <span style="color:#16a34a; background:#dcfce7; padding:2px 8px; border-radius:999px;">✓ Verified Buyer (${r.location})</span>
           </div>
-          <div style="color:#f59e0b; font-size:0.85rem; margin-bottom:4px;">★★★★★</div>
-          <p class="review-comment">"${r.comment}"</p>
+          <div style="color:#f59e0b; margin:4px 0;">★★★★★</div>
+          <p style="font-size:0.88rem; color:#334155;">"${r.comment}"</p>
         </div>
-      `).join('\n      ')}
-    </section>
-
-    <section class="section-card">
-      <h2 class="section-heading">Frequently Asked Questions</h2>
-      ${p.faqs.map(f => `
-        <div class="faq-item">
-          <div class="faq-q">Q: ${f.q}</div>
-          <div class="faq-a">A: ${f.a}</div>
-        </div>
-      `).join('\n      ')}
+      `).join('')}
     </section>
   </main>
-
-  <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <p>© 2026 Afsha Enterprises. All rights reserved.</p>
       <p style="margin-top: 8px;">
-        <a href="/">Home</a> •
-        <a href="/blogs">Blog</a> •
-        <a href="/contact">Contact</a> •
-        <a href="/manish-kumar">Developer Profile</a>
+        <a href="/">Home</a> • <a href="/blogs">Blog</a> • <a href="/contact">Contact</a> • <a href="/manish-kumar">Developer Profile</a>
       </p>
     </div>
   </footer>
+</body>
+</html>`;
+}
 
+function generateBlogHtml(b) {
+  const canonicalUrl = `https://www.afshaenterprises.com/blog/${b.slug}`;
+  const imageUrl = `https://www.afshaenterprises.com${b.image}`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": `${canonicalUrl}#article`,
+        "headline": b.title,
+        "description": b.metaDescription,
+        "image": imageUrl,
+        "datePublished": `${b.publishedDate}T09:00:00+05:30`,
+        "author": { "@type": "Person", "name": b.author, "url": "https://www.afshaenterprises.com/manish-kumar" },
+        "publisher": { "@type": "Organization", "name": "Afsha Enterprises" }
+      }
+    ]
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${b.metaTitle}</title>
+  <meta name="description" content="${b.metaDescription}">
+  <meta name="keywords" content="${b.keywords}">
+  <link rel="canonical" href="${canonicalUrl}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="${b.title}">
+  <meta property="og:description" content="${b.metaDescription}">
+  <meta property="og:image" content="${imageUrl}">
+  <script type="application/ld+json">${JSON.stringify(jsonLd, null, 2)}</script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #faf9f6; color: #1e293b; line-height: 1.7; }
+    .container { max-width: 860px; margin: 0 auto; padding: 40px 20px; }
+    .article-card { background: #ffffff; border-radius: 24px; padding: 36px; border: 1px solid #e2e8f0; }
+    .chip { background: #e0f2fe; color: #0284c7; font-weight: 800; font-size: 0.78rem; padding: 4px 12px; border-radius: 999px; display: inline-block; margin-bottom: 12px; }
+    h1 { font-size: 2.2rem; font-weight: 900; color: #0f172a; margin-bottom: 16px; }
+    .meta { display: flex; gap: 16px; color: #64748b; font-size: 0.85rem; margin-bottom: 24px; border-bottom: 1px solid #f1f5f9; padding-bottom: 14px; }
+    .hero-img { width: 100%; max-height: 380px; object-fit: cover; border-radius: 16px; margin-bottom: 24px; }
+    .btn-shop { display: inline-block; background: #0f172a; color: #fff; padding: 12px 24px; border-radius: 999px; text-decoration: none; font-weight: 800; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <article class="article-card">
+      <span class="chip">${b.category}</span>
+      <h1>${b.title}</h1>
+      <div class="meta">
+        <span>By ${b.author}</span>
+        <span>• ${b.publishedDate}</span>
+        <span>• ${b.readTime}</span>
+      </div>
+      <img src="${b.image}" alt="${b.title}" class="hero-img">
+      <p style="font-size:1.1rem; color:#334155; margin-bottom:20px;">${b.content}</p>
+      <a href="/products" class="btn-shop">Shop Recommended Products →</a>
+    </article>
+  </div>
 </body>
 </html>`;
 }
@@ -589,22 +592,6 @@ function generateManishProfileHtml() {
         "sameAs": [
           "https://github.com/Lightining29",
           "https://manish-java-developer.vercel.app/"
-        ],
-        "knowsAbout": [
-          "Java 17/21", "Spring Boot", "Spring Cloud", "Microservices Architecture",
-          "React.js", "Node.js", "Docker", "Kubernetes", "AWS Cloud (EC2, S3, EKS, RDS, CloudFront, Lambda)",
-          "DevOps CI/CD", "PostgreSQL", "MongoDB", "Redis", "Kafka", "REST APIs", "GraphQL"
-        ],
-        "alumniOf": {
-          "@type": "EducationalOrganization",
-          "name": "Bachelor of Technology in Computer Science & Engineering (B.Tech CSE)"
-        }
-      },
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.afshaenterprises.com/" },
-          { "@type": "ListItem", "position": 2, "name": "Manish Kumar Developer Profile", "item": canonicalUrl }
         ]
       }
     ]
@@ -616,92 +603,33 @@ function generateManishProfileHtml() {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manish Kumar — Senior Java Full Stack Developer & AWS Cloud Solutions Architect</title>
-  <meta name="title" content="Manish Kumar — Senior Java Full Stack Developer & AWS Cloud Solutions Architect">
-  <meta name="description" content="Official portfolio & profile of Manish Kumar. Senior Java Full Stack Developer & AWS DevOps Cloud Architect specializing in Spring Boot, React.js, Microservices, Docker, Kubernetes, and CI/CD pipelines. Phone: +91-8851961088.">
-  <meta name="keywords" content="Manish Kumar, Manish, Manish Kumar Java Developer, Manish Kumar Full Stack Developer, Manish Kumar DevOps Engineer, Manish Kumar AWS Architect, Manish Kumar resume, Lightining29">
-  <meta name="author" content="Manish Kumar">
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="description" content="Official portfolio & profile of Manish Kumar. Senior Java Full Stack Developer & AWS DevOps Cloud Architect. Phone: +91-8851961088.">
+  <meta name="keywords" content="Manish Kumar, Manish, Manish Kumar Java Developer, Manish Kumar Full Stack Developer, Manish Kumar DevOps Engineer, Manish Kumar AWS Architect">
   <link rel="canonical" href="${canonicalUrl}">
-  <link rel="icon" type="image/svg+xml" href="/vite.svg">
-
-  <meta property="og:type" content="profile">
-  <meta property="og:url" content="${canonicalUrl}">
-  <meta property="og:title" content="Manish Kumar — Senior Java Full Stack Developer & AWS Cloud Architect">
-  <meta property="og:description" content="Senior Java Full Stack Developer & AWS DevOps Solutions Architect. Expertise in Java, Spring Boot, React, Microservices, and Cloud Infrastructure.">
-  <meta property="og:image" content="${imageUrl}">
-  <meta name="thumbnail" content="${imageUrl}">
-
-  <script type="application/ld+json">
-    ${JSON.stringify(jsonLd, null, 2)}
-  </script>
-
+  <script type="application/ld+json">${JSON.stringify(jsonLd, null, 2)}</script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #faf9f6; color: #1e293b; line-height: 1.6; }
-    .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-    .profile-card { background: #ffffff; border-radius: 28px; padding: 36px; border: 1px solid #f1f5f9; box-shadow: 0 10px 40px rgba(0,0,0,0.04); text-align: center; }
-    .avatar { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid #f59e0b; box-shadow: 0 8px 24px rgba(245,158,11,0.25); }
-    .badge-hire { display: inline-block; background: #dcfce7; color: #16a34a; font-weight: 800; font-size: 0.78rem; padding: 4px 14px; border-radius: 999px; margin-top: 14px; }
-    h1 { font-size: 2.2rem; font-weight: 900; margin-top: 8px; color: #0f172a; }
-    .role { font-size: 1.05rem; font-weight: 700; color: #d97706; margin-bottom: 16px; }
-    .bio { font-size: 0.95rem; color: #475569; max-width: 650px; margin: 0 auto 24px; }
-    
-    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 32px; }
-    .btn-act { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; text-decoration: none; font-weight: 800; font-size: 0.9rem; }
-    .btn-wa { background: #25d366; color: #ffffff; }
-    .btn-call { background: #0284c7; color: #ffffff; }
-    .btn-gh { background: #0f172a; color: #ffffff; }
-    .btn-port { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 20px; text-align: left; margin-top: 24px; }
-    @media(min-width: 650px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
-    .box { background: #f8fafc; border-radius: 18px; padding: 20px; border: 1px solid #e2e8f0; }
-    .box h3 { font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
-    .box ul { list-style: none; }
-    .box li { font-size: 0.88rem; color: #334155; margin-bottom: 6px; font-weight: 600; }
-    .box li::before { content: "✓ "; color: #16a34a; font-weight: 900; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #faf9f6; color: #1e293b; }
+    .container { max-width: 860px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+    .card { background: #ffffff; border-radius: 28px; padding: 36px; border: 1px solid #e2e8f0; }
+    .avatar { width: 140px; height: 140px; border-radius: 50%; border: 4px solid #f59e0b; margin-bottom: 12px; }
+    .btn { display: inline-block; padding: 12px 22px; border-radius: 999px; text-decoration: none; font-weight: 800; margin: 6px; }
+    .btn-wa { background: #25d366; color: #fff; }
+    .btn-call { background: #0284c7; color: #fff; }
+    .btn-port { background: #f59e0b; color: #0f172a; }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="profile-card">
+    <div class="card">
       <img src="${imageUrl}" alt="Manish Kumar" class="avatar">
-      <br>
-      <span class="badge-hire">🟢 Available for Technical Roles &amp; Cloud Projects</span>
-      <h1>Manish Kumar</h1>
-      <p class="role">Senior Java Full Stack Developer &amp; AWS DevOps Cloud Solutions Architect</p>
-      <p class="bio">
-        Engineering high-performance enterprise applications with Java 21, Spring Boot microservices, React.js frontends, automated CI/CD DevOps workflows, and resilient AWS Cloud infrastructure.
-      </p>
-
-      <div class="actions">
-        <a href="https://wa.me/918851961088" target="_blank" class="btn-act btn-wa">💬 WhatsApp (+91-8851961088)</a>
-        <a href="tel:+918851961088" class="btn-act btn-call">📞 Call Now</a>
-        <a href="https://github.com/Lightining29" target="_blank" class="btn-act btn-gh">🐙 GitHub (@Lightining29)</a>
-        <a href="https://manish-java-developer.vercel.app/" target="_blank" class="btn-act btn-port">🌐 Live Portfolio</a>
-      </div>
-
-      <div class="grid-2">
-        <div class="box">
-          <h3>Core Technical Skills</h3>
-          <ul>
-            <li>Java 17/21 &amp; Spring Boot 3</li>
-            <li>React.js &amp; Modern TypeScript/JavaScript</li>
-            <li>Microservices, Kafka &amp; Redis Caching</li>
-            <li>Docker, Kubernetes &amp; Helm Charts</li>
-            <li>PostgreSQL, MySQL &amp; MongoDB</li>
-          </ul>
-        </div>
-        <div class="box">
-          <h3>Cloud &amp; DevOps Expertise</h3>
-          <ul>
-            <li>AWS Architecture (EC2, S3, RDS, EKS, CloudFront)</li>
-            <li>CI/CD Automation (GitHub Actions, Jenkins)</li>
-            <li>Infrastructure as Code &amp; Linux Admin</li>
-            <li>REST APIs &amp; High-Throughput System Design</li>
-            <li>Cybersecurity Best Practices &amp; SSL/TLS</li>
-          </ul>
-        </div>
+      <h1 style="font-size:2.2rem; font-weight:900; color:#0f172a;">Manish Kumar</h1>
+      <p style="color:#d97706; font-weight:800; margin-bottom:16px;">Senior Java Full Stack Developer &amp; AWS DevOps Architect</p>
+      <p style="max-width:600px; margin:0 auto 24px; color:#475569;">Building high-concurrency scalable enterprise applications with Java 21, Spring Boot, React, Microservices, and resilient AWS Cloud architecture.</p>
+      <div>
+        <a href="https://wa.me/918851961088" class="btn btn-wa">WhatsApp (+91 8851961088)</a>
+        <a href="tel:+918851961088" class="btn btn-call">Call Directly</a>
+        <a href="https://manish-java-developer.vercel.app/" class="btn btn-port">Live Portfolio</a>
       </div>
     </div>
   </div>
@@ -717,22 +645,43 @@ const outputDirs = [
   path.join(rootDir, 'backend', 'public', 'products'),
   path.join(rootDir, 'frontend', 'public', 'product'),
   path.join(rootDir, 'backend', 'public', 'product'),
+  path.join(rootDir, 'frontend', 'public', 'blog'),
+  path.join(rootDir, 'backend', 'public', 'blog'),
+  path.join(rootDir, 'frontend', 'public', 'blogs'),
+  path.join(rootDir, 'backend', 'public', 'blogs'),
+  path.join(rootDir, 'frontend', 'public', 'locations'),
+  path.join(rootDir, 'backend', 'public', 'locations'),
+  path.join(rootDir, 'frontend', 'public', 'location'),
+  path.join(rootDir, 'backend', 'public', 'location'),
 ];
 
 outputDirs.forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
+// 1. Generate Product Static Pages
 ALL_PRODUCTS.forEach(p => {
-  const htmlContent = generateHtml(p);
-  outputDirs.forEach(dir => {
-    const filePath = path.join(dir, `${p.slug}.html`);
-    fs.writeFileSync(filePath, htmlContent, 'utf-8');
+  const htmlContent = generateProductHtml(p);
+  const rootLocations = [path.join(rootDir, 'frontend', 'public'), path.join(rootDir, 'backend', 'public')];
+  rootLocations.forEach(dir => {
+    fs.writeFileSync(path.join(dir, `${p.slug}.html`), htmlContent, 'utf-8');
   });
-  console.log(`Generated separate static page for: ${p.slug}`);
+  [path.join(rootDir, 'frontend', 'public', 'products'), path.join(rootDir, 'backend', 'public', 'products'), path.join(rootDir, 'frontend', 'public', 'product'), path.join(rootDir, 'backend', 'public', 'product')].forEach(dir => {
+    fs.writeFileSync(path.join(dir, `${p.slug}.html`), htmlContent, 'utf-8');
+  });
+  console.log(`Generated product static HTML for: ${p.slug}`);
 });
 
-// Generate static HTML files for Manish Kumar Profile
+// 2. Generate Blog Static Pages
+ALL_BLOGS.forEach(b => {
+  const blogHtml = generateBlogHtml(b);
+  [path.join(rootDir, 'frontend', 'public', 'blog'), path.join(rootDir, 'backend', 'public', 'blog'), path.join(rootDir, 'frontend', 'public', 'blogs'), path.join(rootDir, 'backend', 'public', 'blogs')].forEach(dir => {
+    fs.writeFileSync(path.join(dir, `${b.slug}.html`), blogHtml, 'utf-8');
+  });
+  console.log(`Generated blog article static HTML for: ${b.slug}`);
+});
+
+// 3. Generate Profile Static Pages
 const manishHtml = generateManishProfileHtml();
 const profileFileNames = [
   'manish-kumar.html',
@@ -743,13 +692,83 @@ const profileFileNames = [
   'manish-kumar-profile.html',
   'developer-profile.html'
 ];
-
-outputDirs.forEach(dir => {
+[path.join(rootDir, 'frontend', 'public'), path.join(rootDir, 'backend', 'public')].forEach(dir => {
   profileFileNames.forEach(fn => {
     fs.writeFileSync(path.join(dir, fn), manishHtml, 'utf-8');
   });
 });
-console.log('Generated static HTML pages for Manish Kumar profile across all public dirs!');
 
-console.log('All individual static product and profile pages generated successfully!');
+// 4. Generate XML Sitemaps (sitemap.xml, sitemap_index.xml, sitemap-blogs.xml, etc.)
+function buildCompleteSitemapXml() {
+  const domain = 'https://www.afshaenterprises.com';
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
+  const urls = [
+    { loc: `${domain}/`, priority: '1.0', changefreq: 'daily' },
+    { loc: `${domain}/products`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/blogs`, priority: '0.9', changefreq: 'daily' },
+    { loc: `${domain}/contact`, priority: '0.8', changefreq: 'monthly' },
+
+    // Manish Kumar Profile URLs
+    { loc: `${domain}/manish-kumar`, priority: '1.0', changefreq: 'daily' },
+    { loc: `${domain}/profile`, priority: '1.0', changefreq: 'daily' },
+    { loc: `${domain}/profile/manish-kumar`, priority: '1.0', changefreq: 'daily' },
+    { loc: `${domain}/manish`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/manishkumar`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/manish-profile`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/developer-profile`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/developer`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/manish-kumar-java-developer`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/manish-kumar-devops-engineer`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/manish-kumar-full-stack-developer`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/manish-kumar.html`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/profile.html`, priority: '0.95', changefreq: 'daily' },
+
+    // Product URLs
+    ...ALL_PRODUCTS.flatMap(p => [
+      { loc: `${domain}/${p.slug}`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/product/${p.slug}`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/products/${p.slug}`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/${p.slug}.html`, priority: '0.95', changefreq: 'daily' }
+    ]),
+
+    // Blog URLs
+    ...ALL_BLOGS.flatMap(b => [
+      { loc: `${domain}/blog/${b.slug}`, priority: '0.85', changefreq: 'weekly' },
+      { loc: `${domain}/blogs/${b.slug}`, priority: '0.8', changefreq: 'weekly' },
+      { loc: `${domain}/blog/${b.slug}.html`, priority: '0.8', changefreq: 'weekly' }
+    ]),
+
+    // Locations
+    { loc: `${domain}/locations/delhi`, priority: '0.8', changefreq: 'weekly' },
+    { loc: `${domain}/locations/mumbai`, priority: '0.8', changefreq: 'weekly' },
+    { loc: `${domain}/locations/bangalore`, priority: '0.8', changefreq: 'weekly' }
+  ];
+
+  urls.forEach(u => {
+    xml += `  <url>\n    <loc>${u.loc}</loc>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>\n`;
+  });
+
+  xml += `</urlset>`;
+  return xml;
+}
+
+const sitemapXml = buildCompleteSitemapXml();
+
+// Write sitemap.xml across all public locations and subdirectories
+const sitemapDestinations = [
+  path.join(rootDir, 'frontend', 'public', 'sitemap.xml'),
+  path.join(rootDir, 'backend', 'public', 'sitemap.xml'),
+  path.join(rootDir, 'frontend', 'public', 'sitemap_index.xml'),
+  path.join(rootDir, 'backend', 'public', 'sitemap_index.xml'),
+  path.join(rootDir, 'frontend', 'public', 'blogs', 'sitemap.xml'),
+  path.join(rootDir, 'backend', 'public', 'blogs', 'sitemap.xml'),
+  path.join(rootDir, 'frontend', 'public', 'products', 'sitemap.xml'),
+  path.join(rootDir, 'backend', 'public', 'products', 'sitemap.xml'),
+];
+
+sitemapDestinations.forEach(dst => {
+  fs.writeFileSync(dst, sitemapXml, 'utf-8');
+});
+
+console.log('All static pages, articles, profiles, and XML sitemaps generated successfully!');

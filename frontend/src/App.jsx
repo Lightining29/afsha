@@ -28,6 +28,10 @@ const AdminProductForm = lazy(() => import('./pages/admin/AdminProductForm'));
 const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
 const AdminContacts = lazy(() => import('./pages/admin/AdminContacts'));
 const AdminStock = lazy(() => import('./pages/admin/AdminStock'));
+const BlogList = lazy(() => import('./pages/shop/BlogList'));
+const BlogDetail = lazy(() => import('./pages/shop/BlogDetail'));
+const Contact = lazy(() => import('./pages/shop/Contact'));
+const LocationLanding = lazy(() => import('./pages/shop/LocationLanding'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 import ManishKumarProfile from './pages/profile/ManishKumarProfile';
 
@@ -88,6 +92,21 @@ function App() {
         <Route path="/foot-and-calf-massager" element={<ProductDetail />} />
         <Route path="/rechargeable-body-massager" element={<ProductDetail />} />
         <Route path="/category/:categorySlug" element={<CategoryProducts />} />
+        <Route path="/categories" element={<CategoryProducts />} />
+
+        {/* SEO Blog Routes */}
+        <Route path="/blogs" element={<BlogList />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:slug" element={<BlogDetail />} />
+        <Route path="/blogs/:slug" element={<BlogDetail />} />
+
+        {/* Contact Us Routes */}
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/contact-us" element={<Contact />} />
+
+        {/* Local SEO Landing Pages */}
+        <Route path="/locations/:city" element={<LocationLanding />} />
+        <Route path="/location/:city" element={<LocationLanding />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

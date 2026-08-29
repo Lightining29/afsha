@@ -12,7 +12,6 @@
   <link rel="canonical" href="https://www.afshaenterprises.com/product/painless-facial-hair-remover">
   <link rel="icon" type="image/svg+xml" href="/vite.svg">
 
-  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="product">
   <meta property="og:url" content="https://www.afshaenterprises.com/product/painless-facial-hair-remover">
   <meta property="og:title" content="Painless Facial & Body Hair Remover Trimmer for Women | Afsha Enterprises">
@@ -25,13 +24,6 @@
   <meta property="product:price:amount" content="799">
   <meta property="product:price:currency" content="INR">
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Painless Facial & Body Hair Remover Trimmer for Women | Afsha Enterprises">
-  <meta name="twitter:description" content="Buy 100% Painless Facial Hair Remover for Women in India. Hypoallergenic 18K gold head, built-in LED light, and USB rechargeable.">
-  <meta name="twitter:image" content="https://www.afshaenterprises.com/masage.jpg">
-
-  <!-- Structured Data Graph -->
   <script type="application/ld+json">
     {
   "@context": "https://schema.org",
@@ -138,248 +130,94 @@
   </script>
 
   <style>
-    :root {
-      --primary: #f59e0b;
-      --primary-dark: #d97706;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --border: #e2e8f0;
-      --green: #16a34a;
-      --rose: #e11d48;
-    }
+    :root { --primary: #f59e0b; --text: #0f172a; --bg: #f8fafc; --border: #e2e8f0; --green: #16a34a; --rose: #e11d48; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
     .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
-    
-    /* Top Bar */
-    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; }
     .header-inner { display: flex; align-items: center; justify-content: space-between; }
-    .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; }
     .logo span { color: var(--primary); }
     .nav-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; text-decoration: none; font-weight: 800; font-size: 0.85rem; padding: 8px 18px; border-radius: 999px; }
-
-    /* Showcase */
     .hero-grid { display: grid; grid-template-columns: 1fr; gap: 32px; padding: 36px 0; }
     @media(min-width: 800px) { .hero-grid { grid-template-columns: 1fr 1.1fr; gap: 48px; } }
-    
-    .img-card { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 16px; position: relative; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+    .img-card { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 16px; position: relative; text-align: center; }
     .img-card img { width: 100%; max-height: 420px; object-fit: cover; border-radius: 18px; }
-    .badge-bogo { position: absolute; top: 24px; left: 24px; background: var(--rose); color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 4px 12px; border-radius: 999px; }
-    
     .info-card { display: flex; flex-direction: column; gap: 14px; }
-    .rating-row { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 700; color: #b45309; }
-    .title { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 900; line-height: 1.2; color: var(--text); }
-    .headline { font-size: 0.95rem; font-weight: 700; color: #0284c7; }
-    
+    .title { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 900; line-height: 1.2; }
     .price-row { display: flex; align-items: baseline; gap: 12px; margin: 6px 0; }
-    .price-curr { font-size: 2rem; font-weight: 900; color: var(--text); }
-    .price-orig { font-size: 1.2rem; color: var(--text-muted); text-decoration: line-through; }
+    .price-curr { font-size: 2rem; font-weight: 900; }
+    .price-orig { font-size: 1.2rem; color: #64748b; text-decoration: line-through; }
     .badge-save { background: #dcfce7; color: var(--green); font-size: 0.76rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; }
-
-    /* Buy CTAs */
-    .btn-buy-now { display: block; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; font-size: 1.05rem; font-weight: 900; text-decoration: none; padding: 16px 24px; border-radius: 999px; box-shadow: 0 8px 24px rgba(245,158,11,0.35); transition: transform 0.2s; margin-top: 10px; }
-    .btn-buy-now:hover { transform: translateY(-2px); }
-
-    /* Sections */
-    .section-card { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 28px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.02); }
-    .section-heading { font-size: 1.3rem; font-weight: 900; margin-bottom: 16px; color: var(--text); }
-    
-    .feature-list { list-style: none; display: grid; grid-template-columns: 1fr; gap: 10px; }
-    @media(min-width: 700px) { .feature-list { grid-template-columns: repeat(2, 1fr); } }
-    .feature-list li { display: flex; gap: 8px; font-size: 0.9rem; font-weight: 700; color: #334155; }
-    .feature-list li::before { content: "✓"; color: var(--green); font-weight: 900; }
-
-    .step-item { display: flex; gap: 14px; margin-bottom: 14px; }
-    .step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--text); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-
+    .btn-buy-now { display: block; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; font-size: 1.05rem; font-weight: 900; text-decoration: none; padding: 16px 24px; border-radius: 999px; box-shadow: 0 8px 24px rgba(245,158,11,0.35); }
+    .section-card { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 28px; margin-bottom: 24px; }
+    .section-heading { font-size: 1.3rem; font-weight: 900; margin-bottom: 16px; }
     .specs-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     .specs-table tr { border-bottom: 1px solid var(--border); }
     .specs-table td { padding: 10px 14px; }
-    .specs-table td:first-child { font-weight: 700; color: var(--text-muted); width: 35%; }
-    .specs-table td:last-child { font-weight: 800; color: var(--text); }
-
-    .review-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
-    .review-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.86rem; }
-    .review-name { font-weight: 800; color: var(--text); }
-    .review-city { color: var(--green); font-weight: 700; font-size: 0.76rem; background: #dcfce7; padding: 2px 8px; border-radius: 999px; }
-    .review-comment { font-size: 0.88rem; color: #334155; line-height: 1.5; margin-top: 6px; }
-
-    .faq-item { margin-bottom: 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; }
-    .faq-q { font-weight: 800; font-size: 0.95rem; color: #0284c7; margin-bottom: 6px; }
-    .faq-a { font-size: 0.88rem; color: #475569; }
-
-    /* Footer */
     .footer { background: #0f172a; color: #94a3b8; padding: 40px 0 60px; text-align: center; font-size: 0.85rem; margin-top: 50px; }
     .footer a { color: #ffffff; text-decoration: none; margin: 0 10px; }
   </style>
 </head>
 <body>
-
-  <!-- Header -->
   <header class="header">
     <div class="container header-inner">
       <a href="/" class="logo">Afsha <span>Enterprises</span></a>
       <a href="/checkout" class="nav-btn">🛒 Buy Now</a>
     </div>
   </header>
-
-  <!-- Main Content -->
   <main class="container">
     <div class="hero-grid">
-      <!-- Image Stage -->
-      <div class="img-card">
-        <span class="badge-bogo">BUY 1 GET 1 FREE</span>
-        <img src="/masage.jpg" alt="Painless Facial & Body Hair Remover for Women">
-      </div>
-
-      <!-- Info & Buy Column -->
+      <div class="img-card"><img src="/masage.jpg" alt="Painless Facial & Body Hair Remover for Women"></div>
       <div class="info-card">
-        <div class="rating-row">
-          <span>★★★★★</span>
-          <span>4.8 (512 verified reviews)</span>
-        </div>
-
         <h1 class="title">Painless Facial & Body Hair Remover for Women</h1>
-        <p class="headline">100% Painless Instant Face Shaver & Trimmer</p>
-
+        <p style="font-weight:700; color:#0284c7;">100% Painless Instant Face Shaver & Trimmer</p>
         <div class="price-row">
           <span class="price-curr">₹799</span>
           <span class="price-orig">₹1599</span>
           <span class="badge-save">SAVE 50% OFF</span>
         </div>
-
-        <!-- Direct Buy Action -->
-        <a href="/product/painless-facial-hair-remover" class="btn-buy-now">
-          ⚡ BUY NOW
-        </a>
+        <a href="/product/painless-facial-hair-remover" class="btn-buy-now">⚡ BUY NOW</a>
       </div>
     </div>
-
-    <!-- Long-Form SEO Sections -->
     <section class="section-card">
       <h2 class="section-heading">Key Features &amp; Highlights</h2>
-      <ul class="feature-list">
-        <li>Hypoallergenic 18K Gold-Plated Precision Cutting Head</li>
-        <li>Built-in Smart LED Guidance Light for Fine Peach Fuzz</li>
-        <li>100% Painless — No Waxing, No Plucking, No Razor Redness</li>
-        <li>Compact Lipstick Design with USB Fast Charging</li>
-      </ul>
+      <ul style="list-style:none; display:grid; gap:8px;"><li style="font-weight:700; color:#334155;">✓ Hypoallergenic 18K Gold-Plated Precision Cutting Head</li><li style="font-weight:700; color:#334155;">✓ Built-in Smart LED Guidance Light for Fine Peach Fuzz</li><li style="font-weight:700; color:#334155;">✓ 100% Painless — No Waxing, No Plucking, No Razor Redness</li><li style="font-weight:700; color:#334155;">✓ Compact Lipstick Design with USB Fast Charging</li></ul>
     </section>
-
-    <section class="section-card">
-      <h2 class="section-heading">Health &amp; Therapeutic Benefits</h2>
-      <div style="display: grid; gap: 14px;">
-        
-          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:14px;">
-            <h3 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:4px;">Zero Cuts or Skin Irritation</h3>
-            <p style="font-size:0.86rem; color:#475569;">Rotary blades cut hair flush with the skin with zero redness, bumps, or pulling.</p>
-          </div>
-        
-
-          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:14px;">
-            <h3 style="font-size:0.95rem; font-weight:800; color:#0f172a; margin-bottom:4px;">Flawless Makeup Application</h3>
-            <p style="font-size:0.86rem; color:#475569;">Removes peach fuzz to create a smooth, glowing canvas for foundations and serums.</p>
-          </div>
-        
-      </div>
-    </section>
-
-    <section class="section-card">
-      <h2 class="section-heading">Step-by-Step How to Use</h2>
-      <div>
-        
-          <div class="step-item">
-            <div class="step-num">1</div>
-            <div>
-              <strong style="font-size:0.95rem; color:#0f172a; display:block;">Cleanse Face</strong>
-              <span style="font-size:0.86rem; color:#475569;">Ensure your skin is clean and dry.</span>
-            </div>
-          </div>
-        
-
-          <div class="step-item">
-            <div class="step-num">2</div>
-            <div>
-              <strong style="font-size:0.95rem; color:#0f172a; display:block;">Slide Switch</strong>
-              <span style="font-size:0.86rem; color:#475569;">Slide the gold switch up to turn on the trimmer and LED light.</span>
-            </div>
-          </div>
-        
-
-          <div class="step-item">
-            <div class="step-num">3</div>
-            <div>
-              <strong style="font-size:0.95rem; color:#0f172a; display:block;">Small Circles</strong>
-              <span style="font-size:0.86rem; color:#475569;">Move in small circular motions over upper lips, cheeks, and chin.</span>
-            </div>
-          </div>
-        
-      </div>
-    </section>
-
     <section class="section-card">
       <h2 class="section-heading">Technical Specifications</h2>
-      <table class="specs-table">
-        <tbody>
-          <tr><td>Blade Material</td><td>18K Rose Gold Plated Stainless Steel</td></tr>
-          <tr><td>Power Source</td><td>USB Rechargeable Lithium Battery</td></tr>
-          <tr><td>Dimensions</td><td>11cm × 2.5cm Pocket Lipstick Size</td></tr>
-        </tbody>
-      </table>
+      <table class="specs-table"><tbody><tr><td style="font-weight:700; color:#64748b;">Blade Material</td><td style="font-weight:800;">18K Rose Gold Plated Stainless Steel</td></tr><tr><td style="font-weight:700; color:#64748b;">Power Source</td><td style="font-weight:800;">USB Rechargeable Lithium Battery</td></tr><tr><td style="font-weight:700; color:#64748b;">Dimensions</td><td style="font-weight:800;">11cm × 2.5cm Pocket Lipstick Size</td></tr></tbody></table>
     </section>
-
-    <!-- Verified Customer Reviews -->
     <section class="section-card">
       <h2 class="section-heading">Verified Customer Reviews</h2>
       
-        <div class="review-item">
-          <div class="review-meta">
-            <span class="review-name">Ritu Singhania</span>
-            <span class="review-city">✓ Verified Buyer (Delhi)</span>
-            <span style="color:#94a3b8; font-size:0.75rem;">15 Aug 2026</span>
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.86rem; font-weight:800;">
+            <span>Ritu Singhania</span>
+            <span style="color:#16a34a; background:#dcfce7; padding:2px 8px; border-radius:999px;">✓ Verified Buyer (Delhi)</span>
           </div>
-          <div style="color:#f59e0b; font-size:0.85rem; margin-bottom:4px;">★★★★★</div>
-          <p class="review-comment">"No more painful salon threading or waxing redness! This pocket lipstick trimmer removes upper lip peach fuzz completely painlessly in 30 seconds. My foundation looks flawless and glass-smooth."</p>
+          <div style="color:#f59e0b; margin:4px 0;">★★★★★</div>
+          <p style="font-size:0.88rem; color:#334155;">"No more painful salon threading or waxing redness! This pocket lipstick trimmer removes upper lip peach fuzz completely painlessly in 30 seconds. My foundation looks flawless and glass-smooth."</p>
         </div>
       
-      
-        <div class="review-item">
-          <div class="review-meta">
-            <span class="review-name">Meera Nair</span>
-            <span class="review-city">✓ Verified Buyer (Kochi)</span>
-            <span style="color:#94a3b8; font-size:0.75rem;">20 Aug 2026</span>
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:16px; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.86rem; font-weight:800;">
+            <span>Meera Nair</span>
+            <span style="color:#16a34a; background:#dcfce7; padding:2px 8px; border-radius:999px;">✓ Verified Buyer (Kochi)</span>
           </div>
-          <div style="color:#f59e0b; font-size:0.85rem; margin-bottom:4px;">★★★★★</div>
-          <p class="review-comment">"Extremely gentle on my sensitive acne-prone skin. The built-in LED light helps you spot fine invisible hairs easily. Fits right in my handbag!"</p>
-        </div>
-      
-    </section>
-
-    <section class="section-card">
-      <h2 class="section-heading">Frequently Asked Questions</h2>
-      
-        <div class="faq-item">
-          <div class="faq-q">Q: Will hair grow back thicker?</div>
-          <div class="faq-a">A: No, cutting surface hair does not affect the root or follicle. Regrowth remains soft and natural.</div>
+          <div style="color:#f59e0b; margin:4px 0;">★★★★★</div>
+          <p style="font-size:0.88rem; color:#334155;">"Extremely gentle on my sensitive acne-prone skin. The built-in LED light helps you spot fine invisible hairs easily. Fits right in my handbag!"</p>
         </div>
       
     </section>
   </main>
-
-  <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <p>© 2026 Afsha Enterprises. All rights reserved.</p>
       <p style="margin-top: 8px;">
-        <a href="/">Home</a> •
-        <a href="/blogs">Blog</a> •
-        <a href="/contact">Contact</a> •
-        <a href="/manish-kumar">Developer Profile</a>
+        <a href="/">Home</a> • <a href="/blogs">Blog</a> • <a href="/contact">Contact</a> • <a href="/manish-kumar">Developer Profile</a>
       </p>
     </div>
   </footer>
-
 </body>
 </html>
