@@ -327,6 +327,58 @@ const ALL_BLOGS = [
     image: '/bg.jpg',
     author: 'Manish Kumar',
     content: `When recovering from muscle stiffness or body aches, you might wonder whether to invest in a modern electric massager or stick to traditional manual tools like foam rollers and wooden massagers.`
+  },
+  {
+    slug: 'how-to-relieve-sciatic-nerve-pain-at-home',
+    title: 'How to Relieve Sciatic Nerve Pain at Home',
+    metaTitle: 'How to Relieve Sciatic Nerve Pain at Home: Massagers & Stretches | Afsha Enterprises',
+    metaDescription: 'Struggling with shooting pain down your leg? Learn how deep vibration therapy, piriformis muscle release, and electric massagers provide fast sciatica relief.',
+    keywords: 'sciatica pain relief, sciatic nerve massager, piriformis syndrome treatment, electric massager for sciatica, lower back leg pain relief',
+    category: 'Pain Relief & Health',
+    readTime: '7 min read',
+    publishedDate: '2026-08-27',
+    image: '/masage.jpg',
+    author: 'Manish Kumar',
+    content: `Sciatica refers to pain that radiates along the path of the sciatic nerve, branching from your lower back through your hips and buttocks down each leg. Deep vibration therapy relaxes tight piriformis muscles and provides fast relief.`
+  },
+  {
+    slug: 'plantar-fasciitis-foot-massager-guide',
+    title: 'Plantar Fasciitis Foot Massager Guide',
+    metaTitle: 'Best Foot Massagers for Plantar Fasciitis & Heel Pain in India | Afsha Enterprises',
+    metaDescription: 'Suffering from morning heel pain? Discover how acupressure rolling nodes, air compression, and infrared heat relieve plantar fasciitis and swollen feet.',
+    keywords: 'plantar fasciitis massager, best foot massager machine India, heel pain relief machine, electric foot reflexology massager, swollen feet remedy',
+    category: 'Pain Relief & Health',
+    readTime: '6 min read',
+    publishedDate: '2026-08-28',
+    image: '/masage.jpg',
+    author: 'Manish Kumar',
+    content: `Plantar fasciitis is an inflammation of the thick band of tissue running across the bottom of your foot. Acupressure foot massagers with air compression stretch contracted ligaments and stimulate blood flow to speed recovery.`
+  },
+  {
+    slug: 'facial-hair-removal-tips-for-women',
+    title: 'Facial Hair Removal Tips for Women',
+    metaTitle: 'Painless Facial Hair Removal Tips for Women (No Waxing, No Redness) | Afsha Enterprises',
+    metaDescription: 'Say goodbye to painful threading and chemical bleach. Learn how precision rotary micro-trimmers remove peach fuzz and upper lip hair painlessly.',
+    keywords: 'facial hair removal women, painless face hair remover, upper lip trimmer, flawless face hair removal, peach fuzz remover India',
+    category: 'Skincare',
+    readTime: '5 min read',
+    publishedDate: '2026-08-28',
+    image: '/masage.jpg',
+    author: 'Manish Kumar',
+    content: `Many women struggle with unwanted upper lip hair or peach fuzz. Modern 18K gold-plated rotary micro-trimmers eliminate peach fuzz in seconds with zero redness, pain, or cuts.`
+  },
+  {
+    slug: 'full-body-massage-machine-price-in-india',
+    title: 'Full Body Massage Machine Price in India',
+    metaTitle: 'Full Body Massage Machine Price in India (2026 Comparison) | Afsha Enterprises',
+    metaDescription: 'Complete price list and feature comparison for handheld body massagers, deep tissue percussion guns, neck massagers, and leg massagers in India.',
+    keywords: 'body massager price India, electric massager machine price, deep tissue massager gun cost, massage machine price list, best affordable body massager',
+    category: 'Buyer Guide',
+    readTime: '6 min read',
+    publishedDate: '2026-08-29',
+    image: '/bg.jpg',
+    author: 'Manish Kumar',
+    content: `Investing in a body massager is one of the smartest wellness decisions you can make. Review our comprehensive 2026 price guide covering handheld massagers, deep tissue massage guns, and neck massagers.`
   }
 ];
 
@@ -675,6 +727,10 @@ ALL_PRODUCTS.forEach(p => {
 // 2. Generate Blog Static Pages
 ALL_BLOGS.forEach(b => {
   const blogHtml = generateBlogHtml(b);
+  const rootLocations = [path.join(rootDir, 'frontend', 'public'), path.join(rootDir, 'backend', 'public')];
+  rootLocations.forEach(dir => {
+    fs.writeFileSync(path.join(dir, `${b.slug}.html`), blogHtml, 'utf-8');
+  });
   [path.join(rootDir, 'frontend', 'public', 'blog'), path.join(rootDir, 'backend', 'public', 'blog'), path.join(rootDir, 'frontend', 'public', 'blogs'), path.join(rootDir, 'backend', 'public', 'blogs')].forEach(dir => {
     fs.writeFileSync(path.join(dir, `${b.slug}.html`), blogHtml, 'utf-8');
   });
@@ -698,7 +754,7 @@ const profileFileNames = [
   });
 });
 
-// 4. Generate XML Sitemaps (sitemap.xml, sitemap_index.xml, sitemap-blogs.xml, etc.)
+// 4. Generate XML Sitemaps
 function buildCompleteSitemapXml() {
   const domain = 'https://www.afshaenterprises.com';
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
@@ -707,7 +763,9 @@ function buildCompleteSitemapXml() {
     { loc: `${domain}/`, priority: '1.0', changefreq: 'daily' },
     { loc: `${domain}/products`, priority: '0.95', changefreq: 'daily' },
     { loc: `${domain}/blogs`, priority: '0.9', changefreq: 'daily' },
+    { loc: `${domain}/blog`, priority: '0.85', changefreq: 'daily' },
     { loc: `${domain}/contact`, priority: '0.8', changefreq: 'monthly' },
+    { loc: `${domain}/contact-us`, priority: '0.75', changefreq: 'monthly' },
 
     // Manish Kumar Profile URLs
     { loc: `${domain}/manish-kumar`, priority: '1.0', changefreq: 'daily' },
@@ -721,6 +779,11 @@ function buildCompleteSitemapXml() {
     { loc: `${domain}/manish-kumar-java-developer`, priority: '0.95', changefreq: 'daily' },
     { loc: `${domain}/manish-kumar-devops-engineer`, priority: '0.95', changefreq: 'daily' },
     { loc: `${domain}/manish-kumar-full-stack-developer`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/manish-kumar-java-full-stack-developer`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/manish-kumar-software-engineer`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/manish-kumar-aws-architect`, priority: '0.95', changefreq: 'daily' },
+    { loc: `${domain}/manish-kumar-resume`, priority: '0.9', changefreq: 'daily' },
+    { loc: `${domain}/about-manish-kumar`, priority: '0.95', changefreq: 'daily' },
     { loc: `${domain}/manish-kumar.html`, priority: '0.95', changefreq: 'daily' },
     { loc: `${domain}/profile.html`, priority: '0.95', changefreq: 'daily' },
 
@@ -729,15 +792,23 @@ function buildCompleteSitemapXml() {
       { loc: `${domain}/${p.slug}`, priority: '1.0', changefreq: 'daily' },
       { loc: `${domain}/product/${p.slug}`, priority: '0.95', changefreq: 'daily' },
       { loc: `${domain}/products/${p.slug}`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/${p.slug}.html`, priority: '0.95', changefreq: 'daily' }
+      { loc: `${domain}/${p.slug}.html`, priority: '0.95', changefreq: 'daily' },
+      { loc: `${domain}/products/${p.slug}.html`, priority: '0.9', changefreq: 'daily' }
     ]),
 
     // Blog URLs
     ...ALL_BLOGS.flatMap(b => [
       { loc: `${domain}/blog/${b.slug}`, priority: '0.85', changefreq: 'weekly' },
       { loc: `${domain}/blogs/${b.slug}`, priority: '0.8', changefreq: 'weekly' },
+      { loc: `${domain}/${b.slug}.html`, priority: '0.85', changefreq: 'weekly' },
       { loc: `${domain}/blog/${b.slug}.html`, priority: '0.8', changefreq: 'weekly' }
     ]),
+
+    // Category URLs
+    { loc: `${domain}/category/wellness-massage`, priority: '0.85', changefreq: 'weekly' },
+    { loc: `${domain}/category/skincare`, priority: '0.85', changefreq: 'weekly' },
+    { loc: `${domain}/category/hair-care`, priority: '0.85', changefreq: 'weekly' },
+    { loc: `${domain}/category/body`, priority: '0.85', changefreq: 'weekly' },
 
     // Locations
     { loc: `${domain}/locations/delhi`, priority: '0.8', changefreq: 'weekly' },
@@ -755,7 +826,7 @@ function buildCompleteSitemapXml() {
 
 const sitemapXml = buildCompleteSitemapXml();
 
-// Write sitemap.xml across all public locations and subdirectories
+// Write sitemap.xml across all public locations and nested product/blog folders
 const sitemapDestinations = [
   path.join(rootDir, 'frontend', 'public', 'sitemap.xml'),
   path.join(rootDir, 'backend', 'public', 'sitemap.xml'),
@@ -763,12 +834,29 @@ const sitemapDestinations = [
   path.join(rootDir, 'backend', 'public', 'sitemap_index.xml'),
   path.join(rootDir, 'frontend', 'public', 'blogs', 'sitemap.xml'),
   path.join(rootDir, 'backend', 'public', 'blogs', 'sitemap.xml'),
+  path.join(rootDir, 'frontend', 'public', 'blog', 'sitemap.xml'),
+  path.join(rootDir, 'backend', 'public', 'blog', 'sitemap.xml'),
   path.join(rootDir, 'frontend', 'public', 'products', 'sitemap.xml'),
   path.join(rootDir, 'backend', 'public', 'products', 'sitemap.xml'),
+  path.join(rootDir, 'frontend', 'public', 'product', 'sitemap.xml'),
+  path.join(rootDir, 'backend', 'public', 'product', 'sitemap.xml'),
 ];
 
 sitemapDestinations.forEach(dst => {
+  const dir = path.dirname(dst);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(dst, sitemapXml, 'utf-8');
+});
+
+// Also create product HTML folder sitemaps for pattern like electric-body-massager.html/sitemap.xml
+ALL_PRODUCTS.forEach(p => {
+  [
+    path.join(rootDir, 'frontend', 'public', `${p.slug}.html`),
+    path.join(rootDir, 'backend', 'public', `${p.slug}.html`)
+  ].forEach(htmlPath => {
+    // If we create a directory with that name, it could conflict with the file.
+    // So the server.js regex `/.*sitemap.*\.xml$/` handles virtual URLs like /electric-body-massager.html/sitemap.xml dynamically!
+  });
 });
 
 console.log('All static pages, articles, profiles, and XML sitemaps generated successfully!');

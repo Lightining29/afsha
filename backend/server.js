@@ -281,7 +281,7 @@ app.get('/robots.txt', (req, res) => {
   res.send(`User-agent: *\nAllow: /\n\nSitemap: ${domain}/sitemap.xml\n`);
 });
 
-// Dynamic SEO Sitemap.xml Route (Handles sitemap.xml, sitemap_index.xml, /blogs/sitemap.xml, etc.)
+// Dynamic SEO Sitemap.xml Route (Handles sitemap.xml, sitemap_index.xml, /blogs/sitemap.xml, /*.html/sitemap.xml, etc.)
 app.get([
   '/sitemap.xml',
   '/sitemap_index.xml',
@@ -295,7 +295,8 @@ app.get([
   '/blogs/sitemap.xml',
   '/blog/sitemap.xml',
   '/products/sitemap.xml',
-  '/product/sitemap.xml'
+  '/product/sitemap.xml',
+  /.*sitemap.*\.xml$/
 ], async (req, res) => {
   try {
     const host = req.get('host') || 'www.afshaenterprises.com';
