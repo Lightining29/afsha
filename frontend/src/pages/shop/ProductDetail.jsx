@@ -412,7 +412,7 @@ export default function ProductDetail() {
             {/* BOGO Countdown Timer (if active) */}
             {isBogo && product.bogoEndsAt && (
               <div className="pdp-bogo-timer-box">
-                <CountdownTimer targetDate={product.bogoEndsAt} label="Raksha Bandhan BOGO Offer Ends In" />
+                <CountdownTimer targetDate={product.bogoEndsAt} label="Special Limited-Time Offer Ends In" />
               </div>
             )}
 

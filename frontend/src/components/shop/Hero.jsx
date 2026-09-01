@@ -1,37 +1,17 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Gift, HeartHandshake, Flame } from 'lucide-react';
-import { fetchProducts } from '../../api';
+import { Zap, Sparkles, Flame, Star, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
 import './Hero.css';
 
 export default function Hero() {
-  const [hairRemover, setHairRemover] = useState(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const touchStartX = useRef(null);
 
-  useEffect(() => {
-    fetchProducts({ limit: '16' })
-      .then((data) => {
-        const items = Array.isArray(data) ? data : (data?.items || []);
-        if (Array.isArray(items)) {
-          const found = items.find((p) =>
-            /hair.remover|hair.removal|epilat|ipl|wax|trimmer|shaver|eyebrow/i.test(p.name)
-          );
-          if (found) {
-            setHairRemover(found);
-          } else if (items.length > 0) {
-            setHairRemover(items[0]);
-          }
-        }
-      })
-      .catch(() => {});
-  }, []);
-
-  // 3s Auto Slider Timer for 3 slides as requested
+  // 4s Auto Slider Timer for 3 slides
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % 3);
-    }, 3000);
+    }, 4000);
     return () => clearInterval(timer);
   }, []);
 
@@ -50,10 +30,6 @@ export default function Hero() {
     touchStartX.current = null;
   };
 
-  const isBogo = hairRemover?.isBogoActive ?? (hairRemover?.isBogo && (!hairRemover?.bogoEndsAt || new Date(hairRemover.bogoEndsAt) > new Date()));
-  const showcaseImage = '/hair-remover-showcase-v3.png';
-  const targetProductLink = hairRemover?.slug ? `/products/${hairRemover.slug}` : '#all-products';
-
   return (
     <section id="home" className="hero-banner-section">
       <div className="container">
@@ -62,122 +38,134 @@ export default function Hero() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* ── Slide 1: Raksha Bandhan Light Theme (Same as Slide 2) with Product Showcase ── */}
-          <div className={`hero-banner-card slide-raksha-light slide-trimmer-light ${activeSlide === 0 ? 'slide-active' : 'slide-hidden'}`}>
-            {/* Left Content */}
+          {/* ── Slide 1: Electric Body Massager (Best-Seller Hero) ── */}
+          <div className={`hero-banner-card slide-wellness-gold ${activeSlide === 0 ? 'slide-active' : 'slide-hidden'}`}>
             <div className="hero-banner-left">
-              <div className="hero-banner-eyebrow raksha-light-eyebrow">
-                <Gift size={11} className="raksha-heart-icon" />
-                <span>Raksha Bandhan Special</span>
+              <div className="hero-eyebrow eyebrow-gold">
+                <Zap size={13} className="eyebrow-icon" />
+                <span>Instant Pain Relief &amp; Relaxation</span>
               </div>
 
-              <h2 className="hero-banner-title slide-light-title">
-                Silky Smooth <br />
-                <span className="slide-light-title-main">Flawless Finish</span> <br />
-                <span className="slide-light-title-accent">
-                  {isBogo ? 'Buy 1 Get 1 Free' : 'Special Gift For Sister'}
-                </span>
+              <h2 className="hero-banner-title">
+                Therapeutic Full Body <br />
+                <span className="hero-title-highlight highlight-amber">Electric Massager</span> <br />
+                <span className="hero-title-sub">Relieve Back, Neck &amp; Muscle Stiffness</span>
               </h2>
 
-              <Link to={targetProductLink} className="hero-banner-shop-btn slide-light-cta-btn">
-                Shop Gift 🎁
-              </Link>
+              <div className="hero-feature-tags">
+                <span className="hero-tag"><Star size={12} fill="#f59e0b" color="#f59e0b" /> 4.9 Rating (380+ Reviews)</span>
+                <span className="hero-tag"><CheckCircle2 size={12} color="#16a34a" /> 100% Pure Copper Motor</span>
+                <span className="hero-tag"><ShieldCheck size={12} color="#0284c7" /> 4 Multi-Heads + Mesh Guard</span>
+              </div>
+
+              <div className="hero-cta-row">
+                <Link to="/electric-body-massager" className="hero-shop-btn btn-gold">
+                  Shop Massager <ArrowRight size={15} />
+                </Link>
+                <span className="hero-offer-badge">⚡ Special Price ₹1,499</span>
+              </div>
             </div>
 
-            {/* Right Product Image Showcase (No shadow as requested) */}
             <div className="hero-banner-right">
-              <div className="hero-banner-img-container">
+              <div className="hero-img-box">
                 <img
-                  src={showcaseImage}
-                  alt={hairRemover?.name || 'Multi-functional Eyebrow & Body Trimmer'}
-                  className="hero-banner-img hero-img-no-shadow"
+                  src="/masage.jpg"
+                  alt="Electric Body Massager Machine"
+                  className="hero-product-photo"
                   fetchpriority="high"
                   decoding="async"
                 />
-
-                {isBogo && (
-                  <div className="hero-banner-bogo-tag slide-light-bogo-tag">
-                    <Gift size={11} /> BOGO FREE
-                  </div>
-                )}
+                <div className="hero-floating-chip chip-top-left">
+                  <span>✨ 3200 RPM High Torque</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* ── Slide 2: Raksha Bandhan Special Banner (Light Theme, Wishes & Shop Button Only) ── */}
-          <div className={`hero-banner-card slide-raksha-light ${activeSlide === 1 ? 'slide-active' : 'slide-hidden'}`}>
-            <div className="raksha-light-content">
-              {/* Left Transparent Raksha Bandhan & Rakhi Art */}
-              <div className="raksha-light-left-art">
-                <img
-                  src="/raksha-bandhan-clean-transparent.png"
-                  alt="Happy Raksha Bandhan"
-                  className="raksha-light-main-img hero-img-no-shadow"
-                  fetchpriority="high"
-                />
+          {/* ── Slide 2: Painless Facial Hair Remover (Skincare Hero) ── */}
+          <div className={`hero-banner-card slide-skincare-rose ${activeSlide === 1 ? 'slide-active' : 'slide-hidden'}`}>
+            <div className="hero-banner-left">
+              <div className="hero-eyebrow eyebrow-rose">
+                <Sparkles size={13} className="eyebrow-icon" />
+                <span>100% Painless &amp; Gentle Grooming</span>
               </div>
 
-              {/* Right Wishes & Shop Button */}
-              <div className="raksha-light-text-col">
-                <div className="raksha-light-eyebrow">
-                  <HeartHandshake size={13} className="raksha-heart-icon" />
-                  <span>Bond of Love &amp; Protection</span>
-                </div>
-
-                <h3 className="raksha-light-wishes-title">
-                  Happy <span className="raksha-title-highlight">Raksha Bandhan</span> ✨
-                </h3>
-
-                <div className="raksha-ornament-wrap">
-                  <img
-                    src="/festive-rakhi-ornament.png"
-                    alt="Festive Rakhi"
-                    className="raksha-ornament-img hero-img-no-shadow"
-                  />
-                </div>
-
-                <p className="raksha-light-wishes-desc">
-                  May this auspicious festival of Rakhi bring boundless love, peace, and eternal joy to you and your family.
-                </p>
-
-                <Link to="#all-products" className="hero-banner-shop-btn raksha-light-cta-btn">
-                  Shop Festive Gifts 🎁
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Slide 3: Royal Festive Light Theme with Half Rakhi Hanging Out & Italic Colorful Text ── */}
-          <div className={`hero-banner-card slide-raksha-royal-light ${activeSlide === 2 ? 'slide-active' : 'slide-hidden'}`}>
-            {/* Half Rakhi Hanging Out of Banner Top-Right */}
-            <div className="hero-hanging-rakhi-wrap">
-              <img
-                src="/hanging-rakhi-ornament.png"
-                alt="Hanging Rakhi Ornament"
-                className="hero-hanging-rakhi-img"
-              />
-            </div>
-
-            {/* Slide Content */}
-            <div className="royal-slide-content">
-              <div className="royal-eyebrow royal-light-eyebrow">
-                <Flame size={12} className="royal-sparkle-icon" />
-                <span>Rakhi Festive Celebration</span>
-              </div>
-
-              <h2 className="royal-italic-headline royal-light-italic-headline">
-                <span className="royal-italic-line-1-dark">A Sacred Thread of</span> <br />
-                <span className="royal-italic-colorful-light">Love, Joy &amp; Protection</span>
+              <h2 className="hero-banner-title">
+                Silky Smooth Skin <br />
+                <span className="hero-title-highlight highlight-rose">Flawless Facial Trimmer</span> <br />
+                <span className="hero-title-sub">Instant Touch-Ups • Zero Redness or Bumps</span>
               </h2>
 
-              <p className="royal-wishes-subtitle royal-light-subtitle">
-                Cherish the sweetest memories and celebrate eternal sibling love with exclusive curated gifts.
-              </p>
+              <div className="hero-feature-tags">
+                <span className="hero-tag"><CheckCircle2 size={12} color="#16a34a" /> 18K Gold-Plated Precision Head</span>
+                <span className="hero-tag"><CheckCircle2 size={12} color="#16a34a" /> Built-in Smart LED Light</span>
+                <span className="hero-tag"><CheckCircle2 size={12} color="#16a34a" /> Pocket Lipstick Size</span>
+              </div>
 
-              <div className="royal-btn-group">
-                <Link to="#all-products" className="hero-banner-shop-btn royal-light-cta-btn">
-                  Gift Sister Today 💖
+              <div className="hero-cta-row">
+                <Link to="/painless-facial-hair-remover" className="hero-shop-btn btn-rose">
+                  Explore Trimmer <ArrowRight size={15} />
                 </Link>
+                <span className="hero-offer-badge badge-rose">💖 Only ₹799 (50% OFF)</span>
+              </div>
+            </div>
+
+            <div className="hero-banner-right">
+              <div className="hero-img-box">
+                <img
+                  src="/hair-remover-showcase-v3.png"
+                  alt="Painless Facial Hair Remover"
+                  className="hero-product-photo"
+                  fetchpriority="high"
+                  decoding="async"
+                />
+                <div className="hero-floating-chip chip-bottom-right">
+                  <span>✨ Hypoallergenic 18K Gold</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Slide 3: Deep Tissue Massage Gun (Muscle Recovery Hero) ── */}
+          <div className={`hero-banner-card slide-recovery-slate ${activeSlide === 2 ? 'slide-active' : 'slide-hidden'}`}>
+            <div className="hero-banner-left">
+              <div className="hero-eyebrow eyebrow-amber">
+                <Flame size={13} className="eyebrow-icon" />
+                <span>Athletic Recovery &amp; Trigger Point Relief</span>
+              </div>
+
+              <h2 className="hero-banner-title">
+                Professional Grade <br />
+                <span className="hero-title-highlight highlight-amber">Deep Tissue Massage Gun</span> <br />
+                <span className="hero-title-sub">Flush Lactic Acid &amp; Release Muscle Knots</span>
+              </h2>
+
+              <div className="hero-feature-tags">
+                <span className="hero-tag"><CheckCircle2 size={12} color="#16a34a" /> 12mm Deep Stroke Amplitude</span>
+                <span className="hero-tag"><CheckCircle2 size={12} color="#16a34a" /> 6 Speed Gears up to 3600 RPM</span>
+                <span className="hero-tag"><CheckCircle2 size={12} color="#16a34a" /> 4-6 Hours Battery Life</span>
+              </div>
+
+              <div className="hero-cta-row">
+                <Link to="/deep-tissue-massager" className="hero-shop-btn btn-amber">
+                  Shop Massage Gun <ArrowRight size={15} />
+                </Link>
+                <span className="hero-offer-badge badge-amber">🔥 ₹2,499 (Save ₹2,500)</span>
+              </div>
+            </div>
+
+            <div className="hero-banner-right">
+              <div className="hero-img-box">
+                <img
+                  src="/bg.jpg"
+                  alt="Deep Tissue Percussion Massager Gun"
+                  className="hero-product-photo"
+                  fetchpriority="high"
+                  decoding="async"
+                />
+                <div className="hero-floating-chip chip-top-left">
+                  <span>🎯 12mm Deep Amplitude</span>
+                </div>
               </div>
             </div>
           </div>
@@ -188,7 +176,7 @@ export default function Hero() {
               <button
                 key={idx}
                 type="button"
-                className={`hero-slider-dot dot-on-light ${activeSlide === idx ? 'active' : ''}`}
+                className={`hero-slider-dot ${activeSlide === idx ? 'active' : ''}`}
                 onClick={() => setActiveSlide(idx)}
                 aria-label={`Slide ${idx + 1}`}
               />

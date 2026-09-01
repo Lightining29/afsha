@@ -6,7 +6,6 @@ import SearchBar from '../../components/shop/SearchBar';
 import Hero from '../../components/shop/Hero';
 import ProductCard from '../../components/product/ProductCard';
 import Footer from '../../components/layout/Footer';
-import RakhiUnderline from '../../components/common/RakhiUnderline';
 import './Home.css';
 
 const siteTitle = 'Afsha Enterprises | Premium Body Massagers & Personal Grooming';
@@ -138,9 +137,8 @@ export default function Home() {
       <section className="home-section-block">
         <div className="container">
           <div className="home-section-header">
-            <div className="home-title-rakhi-wrap">
-              <h2 className="home-section-title">New Arrival</h2>
-              <RakhiUnderline />
+            <div className="home-title-wrap">
+              <h2 className="home-section-title">New Arrivals</h2>
             </div>
             <a href="#all-products" className="home-see-all-link">See all</a>
           </div>
@@ -158,9 +156,8 @@ export default function Home() {
       <section id="all-products" className="home-section-block">
         <div className="container">
           <div className="home-section-header">
-            <div className="home-title-rakhi-wrap">
-              <h2 className="home-section-title">Best Seller</h2>
-              <RakhiUnderline />
+            <div className="home-title-wrap">
+              <h2 className="home-section-title">Best Sellers</h2>
             </div>
             <a href="#all-products" className="home-see-all-link">See all</a>
           </div>
