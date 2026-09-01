@@ -6,54 +6,37 @@ import {
   Flame,
   Star,
   CheckCircle2,
-  ShieldCheck,
   ArrowRight,
   ChevronLeft,
-  ChevronRight,
-  TrendingUp,
-  Award,
-  Users
+  ChevronRight
 } from 'lucide-react';
 import './Hero.css';
 
 const SLIDES = [
   {
     id: 0,
-    tabLabel: 'Electric Massager',
-    tabIcon: Zap,
     themeClass: 'slide-wellness-gold',
-    eyebrowText: 'Top-Rated Pain Relief & Relaxation',
+    eyebrowText: 'Instant Pain Relief & Relaxation',
     eyebrowClass: 'eyebrow-gold',
     eyebrowIcon: Zap,
     titleLead: 'Therapeutic Full Body',
     titleHighlight: 'Electric Massager',
     highlightClass: 'highlight-amber',
-    titleSub: 'Instant relief from back, neck & shoulder fatigue',
+    titleSub: 'Relieve Back, Neck & Muscle Stiffness',
     price: '₹1,499',
     origPrice: '₹2,999',
     discount: '50% OFF',
     rating: '4.9',
     reviewsCount: '380+',
-    features: [
-      '3200 RPM High-Torque Pure Copper Motor',
-      '4 Interchangeable Heads + Mesh Guard',
-      'Variable Speed Dial with Deep Kneading'
-    ],
     ctaText: 'Shop Massager ⚡',
     ctaClass: 'btn-gold',
     ctaLink: '/electric-body-massager',
     image: '/masage.jpg',
     imageAlt: 'Electric Body Massager Machine',
-    floatingBadges: [
-      { text: '⚡ 3200 RPM Copper Core', position: 'float-top-left' },
-      { text: '🔥 50% OFF TODAY', position: 'float-top-right' },
-      { text: '✨ 4 Multi-Heads', position: 'float-bottom-left' }
-    ]
+    badgeText: '✨ 3200 RPM Copper Motor'
   },
   {
     id: 1,
-    tabLabel: 'Facial Trimmer',
-    tabIcon: Sparkles,
     themeClass: 'slide-skincare-rose',
     eyebrowText: '100% Painless & Gentle Grooming',
     eyebrowClass: 'eyebrow-rose',
@@ -61,60 +44,40 @@ const SLIDES = [
     titleLead: 'Silky Smooth Glowing Skin',
     titleHighlight: 'Flawless Facial Trimmer',
     highlightClass: 'highlight-rose',
-    titleSub: 'Instant touch-ups for peach fuzz & upper lips with zero redness',
+    titleSub: 'Instant Touch-Ups • Zero Redness or Bumps',
     price: '₹799',
     origPrice: '₹1,599',
     discount: '50% OFF',
     rating: '4.8',
     reviewsCount: '510+',
-    features: [
-      'Hypoallergenic 18K Gold-Plated Precision Head',
-      'Built-in Smart LED Light for Fine Peach Fuzz',
-      'Discreet Lipstick Size & USB Fast Charging'
-    ],
     ctaText: 'Explore Trimmer 💖',
     ctaClass: 'btn-rose',
     ctaLink: '/painless-facial-hair-remover',
     image: '/hair-remover-showcase-v3.png',
     imageAlt: 'Painless Facial Hair Remover',
-    floatingBadges: [
-      { text: '✨ 18K Rose Gold Head', position: 'float-top-left' },
-      { text: '💡 Built-in LED Guide', position: 'float-top-right' },
-      { text: '🌸 Zero Redness & Cuts', position: 'float-bottom-right' }
-    ]
+    badgeText: '✨ 18K Gold Precision Head'
   },
   {
     id: 2,
-    tabLabel: 'Massage Gun',
-    tabIcon: Flame,
     themeClass: 'slide-recovery-slate',
-    eyebrowText: 'Athletic Recovery & Deep Tissue Release',
+    eyebrowText: 'Athletic Recovery & Deep Tissue',
     eyebrowClass: 'eyebrow-amber',
     eyebrowIcon: Flame,
     titleLead: 'Professional Grade Percussion',
     titleHighlight: 'Deep Tissue Massage Gun',
     highlightClass: 'highlight-amber',
-    titleSub: 'Flush lactic acid & eliminate muscle knots in minutes',
+    titleSub: 'Flush Lactic Acid & Release Muscle Knots',
     price: '₹2,499',
     origPrice: '₹4,999',
     discount: '50% OFF',
     rating: '4.9',
     reviewsCount: '420+',
-    features: [
-      '12mm Deep Muscle Stroke Amplitude',
-      '6 Intelligent Speed Levels up to 3600 RPM',
-      '4-6 Hours Rechargeable Battery Life'
-    ],
     ctaText: 'Shop Massage Gun 🎯',
     ctaClass: 'btn-amber',
     ctaLink: '/deep-tissue-massager',
     image: '/bg.jpg',
     imageAlt: 'Deep Tissue Percussion Massager Gun',
-    floatingBadges: [
-      { text: '🎯 12mm Deep Amplitude', position: 'float-top-left' },
-      { text: '🔋 6-Hour Battery Life', position: 'float-top-right' },
-      { text: '🤫 <45dB Whisper Quiet', position: 'float-bottom-left' }
-    ]
+    badgeText: '🎯 12mm Deep Amplitude'
   }
 ];
 
@@ -123,12 +86,12 @@ export default function Hero() {
   const [isPaused, setIsPaused] = useState(false);
   const touchStartX = useRef(null);
 
-  // 4.5s Auto Slider Timer (pauses on user hover)
+  // 4s Auto Slider Timer (pauses on user hover)
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % SLIDES.length);
-    }, 4500);
+    }, 4000);
     return () => clearInterval(timer);
   }, [isPaused]);
 
@@ -153,25 +116,7 @@ export default function Hero() {
   return (
     <section id="home" className="hero-banner-section">
       <div className="container">
-        {/* ── Quick Switcher Header Tabs ── */}
-        <div className="hero-quick-tabs">
-          {SLIDES.map((slide, idx) => {
-            const Icon = slide.tabIcon;
-            return (
-              <button
-                key={slide.id}
-                type="button"
-                className={`hero-tab-pill ${activeSlide === idx ? 'tab-active' : ''}`}
-                onClick={() => setActiveSlide(idx)}
-              >
-                <Icon size={14} className="hero-tab-icon" />
-                <span>{slide.tabLabel}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* ── Main Interactive Slider Viewport ── */}
+        {/* ── Main Slider Viewport (Exact 210px Rakshabandhan Aspect Ratio) ── */}
         <div
           className="hero-slider-viewport"
           onMouseEnter={() => setIsPaused(true)}
@@ -195,7 +140,7 @@ export default function Hero() {
                 {/* Left Content Column */}
                 <div className="hero-banner-left">
                   <div className={`hero-eyebrow ${slide.eyebrowClass}`}>
-                    <EyebrowIcon size={13} className="eyebrow-icon" />
+                    <EyebrowIcon size={12} className="eyebrow-icon" />
                     <span>{slide.eyebrowText}</span>
                   </div>
 
@@ -207,59 +152,36 @@ export default function Hero() {
                     <span className="hero-title-sub">{slide.titleSub}</span>
                   </h2>
 
-                  {/* Feature Checklist Tags */}
-                  <div className="hero-feature-tags">
-                    {slide.features.map((feat, fIdx) => (
-                      <span key={fIdx} className="hero-tag">
-                        <CheckCircle2 size={12} className="tag-check-icon" />
-                        {feat}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Pricing, Reviews & CTA Row */}
-                  <div className="hero-action-box">
-                    <div className="hero-price-stack">
-                      <div className="hero-price-line">
-                        <span className="hero-curr-price">{slide.price}</span>
-                        <span className="hero-orig-price">{slide.origPrice}</span>
-                        <span className="hero-save-badge">{slide.discount}</span>
-                      </div>
-                      <div className="hero-rating-badge">
-                        <div className="hero-stars-row">
-                          {[1, 2, 3, 4, 5].map((s) => (
-                            <Star key={s} size={11} fill="#f59e0b" color="#f59e0b" />
-                          ))}
-                        </div>
-                        <span className="hero-rating-text">{slide.rating} ({slide.reviewsCount} reviews)</span>
-                      </div>
-                    </div>
-
+                  {/* Pricing & CTA Row */}
+                  <div className="hero-action-row">
                     <Link to={slide.ctaLink} className={`hero-shop-btn ${slide.ctaClass}`}>
                       <span>{slide.ctaText}</span>
-                      <ArrowRight size={16} className="btn-arrow-icon" />
+                      <ArrowRight size={14} className="btn-arrow-icon" />
                     </Link>
+
+                    <div className="hero-price-chip">
+                      <span className="hero-curr-price">{slide.price}</span>
+                      <span className="hero-orig-price">{slide.origPrice}</span>
+                      <span className="hero-save-badge">{slide.discount}</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Right Interactive Product Stage */}
+                {/* Right Product Image Column */}
                 <div className="hero-banner-right">
-                  <div className="hero-stage-aura" />
                   <div className="hero-img-box">
                     <img
                       src={slide.image}
                       alt={slide.imageAlt}
-                      className="hero-product-photo"
+                      className="hero-product-photo hero-img-no-shadow"
                       fetchpriority={idx === 0 ? 'high' : 'auto'}
                       decoding="async"
                     />
 
-                    {/* Dynamic Floating Badges */}
-                    {slide.floatingBadges.map((badge, bIdx) => (
-                      <div key={bIdx} className={`hero-floating-chip ${badge.position}`}>
-                        <span>{badge.text}</span>
-                      </div>
-                    ))}
+                    {/* Floating Feature Chip */}
+                    <div className="hero-floating-chip">
+                      <span>{slide.badgeText}</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -273,7 +195,7 @@ export default function Hero() {
             onClick={prevSlide}
             aria-label="Previous Slide"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={18} />
           </button>
           <button
             type="button"
@@ -281,7 +203,7 @@ export default function Hero() {
             onClick={nextSlide}
             aria-label="Next Slide"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={18} />
           </button>
 
           {/* Slider Pagination Indicators */}
