@@ -106,12 +106,8 @@ export default function ProductDetail() {
   const fullImageUrl = mainImage.startsWith('http') ? mainImage : `https://www.afshaenterprises.com${mainImage}`;
   const canonicalUrl = `https://www.afshaenterprises.com/product/${slug}`;
 
-  // Custom Background Color & Accent set by Admin or intelligent preset fallback
-  const customBgColor = product.backgroundColor || (
-    slug === 'painless-facial-hair-remover' ? '#fce7f3' :
-    slug === 'electric-body-massager' ? '#fef3c7' :
-    slug === 'deep-tissue-massager' ? '#f1f5f9' : '#fce7f3'
-  );
+  // White background for product image on product detail page as requested
+  const customBgColor = '#ffffff';
 
   const customAccentColor = product.accentColor || (
     slug === 'painless-facial-hair-remover' ? '#e11d48' :

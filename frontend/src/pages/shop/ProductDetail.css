@@ -94,11 +94,11 @@
   width: 100%;
   aspect-ratio: 1 / 1;
   max-width: 480px;
-  background: #fce7f3;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0;
   border-radius: 36px;
   overflow: hidden;
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;

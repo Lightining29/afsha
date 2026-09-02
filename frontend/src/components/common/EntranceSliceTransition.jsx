@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { playWebsiteOpeningSound } from '../../utils/audioEffects';
 import './EntranceSliceTransition.css';
 
 /**
@@ -10,6 +11,17 @@ export default function EntranceSliceTransition() {
   const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
+    // Play website opening sound effect
+    playWebsiteOpeningSound();
+
+    const handleFirstInteraction = () => {
+      playWebsiteOpeningSound();
+      window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+    window.addEventListener('pointerdown', handleFirstInteraction, { once: true });
+    window.addEventListener('keydown', handleFirstInteraction, { once: true });
+
     // Start sliding animation
     const timer1 = setTimeout(() => {
       setExiting(true);
@@ -21,6 +33,8 @@ export default function EntranceSliceTransition() {
     }, 1500);
 
     return () => {
+      window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
