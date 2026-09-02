@@ -22,9 +22,9 @@
   pointer-events: none;
 }
 
-/* 1. Black Circular Wipe (Expands from Bottom-Right to Top-Left) */
+/* 1. Black Circular Wipe (Expands from Bottom-Right to Top-Left, Slow & Silky Smooth) */
 .black-transition-layer.black-circular-wipe {
-  animation: blackCircularReveal 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: blackCircularReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes blackCircularReveal {
@@ -42,10 +42,10 @@
   }
 }
 
-/* 2. Black Perspective Slide (Glides from Bottom-Right to Top-Left) */
+/* 2. Black Perspective Slide (Glides from Bottom-Right to Top-Left, Slow & Majestic) */
 .black-transition-layer.black-perspective-slide {
   transform-origin: bottom right;
-  animation: blackPerspectiveSlide 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: blackPerspectiveSlide 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes blackPerspectiveSlide {
@@ -63,9 +63,9 @@
   }
 }
 
-/* 3. Black Diagonal Wipe (Wipes from Bottom-Right to Top-Left) */
+/* 3. Black Diagonal Wipe (Wipes from Bottom-Right to Top-Left, Slow & Cinematic) */
 .black-transition-layer.black-diagonal-wipe {
-  animation: blackDiagonalWipe 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: blackDiagonalWipe 0.82s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes blackDiagonalWipe {
@@ -83,9 +83,9 @@
   }
 }
 
-/* 4. Black Horizontal / Diagonal Curtain Wipe (Sweeps from Bottom-Right to Top-Left) */
+/* 4. Black Horizontal / Diagonal Curtain Wipe (Sweeps from Bottom-Right to Top-Left, Slow & Graceful) */
 .black-transition-layer.black-horizontal-wipe {
-  animation: blackHorizontalWipe 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: blackHorizontalWipe 0.82s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes blackHorizontalWipe {

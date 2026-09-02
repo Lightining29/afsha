@@ -32,7 +32,7 @@ export default function PageTransitionWrapper({ children }) {
 
     const timer = setTimeout(() => {
       setTransitioning(false);
-    }, 380);
+    }, 880);
 
     return () => clearTimeout(timer);
   }, [location.pathname]);

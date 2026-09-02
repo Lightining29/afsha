@@ -70,12 +70,12 @@ export default function EntranceSliceTransition() {
     // Slow, cinematic timing for the spacetime logo experience
     const timer1 = setTimeout(() => {
       setExiting(true);
-    }, 2200);
+    }, 2500);
 
-    // Complete transition and unmount after slices slide away
+    // Complete transition and unmount after slices slide away smoothly
     const timer2 = setTimeout(() => {
       setActive(false);
-    }, 2800);
+    }, 3500);
 
     return () => {
       clearInterval(checkInterval);
@@ -98,7 +98,7 @@ export default function EntranceSliceTransition() {
     setSoundPlaying(true);
 
     setExiting(true);
-    setTimeout(() => setActive(false), 550);
+    setTimeout(() => setActive(false), 950);
   };
 
   if (!active) return null;

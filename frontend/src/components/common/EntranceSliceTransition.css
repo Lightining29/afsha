@@ -264,17 +264,17 @@
   text-align: center;
 }
 
-/* ── Exiting State: Slices slide from bottom-right to top-left smoothly ── */
+/* ── Exiting State: Slices slide from bottom-right to top-left slowly and smoothly ── */
 .slice-exiting .cutout-slice-top {
-  animation: sliceSlideUpTop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: sliceSlideUpTop 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .slice-exiting .cutout-slice-bottom {
-  animation: sliceSlideUpBottom 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: sliceSlideUpBottom 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .slice-exiting .spacetime-warp-container {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.85s ease;
   opacity: 0;
 }
 
