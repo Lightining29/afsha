@@ -52,9 +52,6 @@ export default function EntranceSliceTransition() {
         </div>
       </div>
 
-      {/* Seam glow light beam along the diagonal */}
-      <div className="cutout-slice-seam" />
-
       {/* Bottom diagonal slice */}
       <div className="cutout-slice-bottom">
         <div className="slice-watermark">PREMIUM WELLNESS &amp; LIFESTYLE</div>

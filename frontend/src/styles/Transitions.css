@@ -220,39 +220,7 @@ button:hover:not(:disabled),
   transform: perspective(600px) translateZ(10px) translateY(-2px) !important;
 }
 
-/* Diagonal Wipe Light Beam Sweep on Button Hover */
-button::after,
-.btn::after,
-.btn-primary::after,
-.hero-shop-btn::after,
-.pdp-hero-buy-btn::after,
-.pdp-cta-yellow-btn::after {
-  content: '';
-  position: absolute;
-  top: -60%;
-  left: -70%;
-  width: 50%;
-  height: 220%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.35) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transform: rotate(30deg);
-  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-  z-index: 5;
-}
-
-button:hover::after,
-.btn:hover::after,
-.btn-primary:hover::after,
-.hero-shop-btn:hover::after,
-.pdp-hero-buy-btn:hover::after,
-.pdp-cta-yellow-btn:hover::after {
-  transform: rotate(30deg) translate(400%, 0);
-}
+/* (White shiny light removed as requested) */
 
 /* Circular Ripple Click Expansion on Buttons */
 button:active::before,
