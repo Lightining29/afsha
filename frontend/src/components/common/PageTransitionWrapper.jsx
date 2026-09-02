@@ -1,38 +1,32 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../../styles/Transitions.css';
 
 const BLACK_TRANSITIONS = [
-  'black-circular-wipe',
+  'black-slide-in-out',
   'black-perspective-slide',
-  'black-diagonal-wipe',
+  'black-slide-in-out',
   'black-horizontal-wipe'
 ];
 
 /**
- * Universal Page Transition Wrapper with Deep Black Cinematic Effects
- * Cycles through Black Circular Wipe, Black Perspective Slide, Black Diagonal Wipe, and Black Horizontal Wipe
- * on every page navigation across the entire website.
+ * Universal Page Transition Wrapper with Slide In & Slide Out Effects
+ * Displays a full-screen slide in and slide out transition whenever ANY page opens
+ * or routes change across the entire website.
  */
 export default function PageTransitionWrapper({ children }) {
   const location = useLocation();
-  const [transitioning, setTransitioning] = useState(false);
+  const [transitioning, setTransitioning] = useState(true);
   const [transitionIndex, setTransitionIndex] = useState(0);
-  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    // Avoid running on very first initial page load
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
+    // Trigger slide in and slide out transition whenever any page opens
     setTransitioning(true);
     setTransitionIndex((prev) => (prev + 1) % BLACK_TRANSITIONS.length);
 
     const timer = setTimeout(() => {
       setTransitioning(false);
-    }, 600);
+    }, 620);
 
     return () => clearTimeout(timer);
   }, [location.pathname]);

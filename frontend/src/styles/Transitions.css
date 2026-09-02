@@ -103,6 +103,30 @@
   }
 }
 
+/* 5. Black Full-Screen Slide In & Slide Out Transition */
+.black-transition-layer.black-slide-in-out {
+  animation: blackSlideInOut 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes blackSlideInOut {
+  0% {
+    transform: translate3d(100%, 100%, 0);
+    opacity: 1;
+  }
+  46% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  54% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-100%, -100%, 0);
+    opacity: 0.95;
+  }
+}
+
 /* ── 1. Circular Wipe Reveal Effect (.circular) ── */
 .circular,
 .transition-circular {
@@ -280,4 +304,24 @@ button:active::before,
 .btn-secondary:hover::before,
 .pdp-btn-cart:hover::before {
   transform: scaleX(1);
+}
+
+/* Page Content Slide In Transition */
+.page-content-transitioning {
+  animation: pageContentSlideTransition 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes pageContentSlideTransition {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.985) translate3d(20px, 20px, 0);
+  }
+  48% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
 }
