@@ -24,57 +24,64 @@ export default function EntranceSliceTransition() {
   const audioElementRef = useRef(null);
 
   useEffect(() => {
-    // Setup global unlock listeners immediately
+    // Setup global unlock listeners immediately (including passive non-click events)
     setupGestureUnlock();
 
-    // Attempt direct audio playback on mount
-    const audioEl = audioElementRef.current || document.getElementById('afsha-entrance-audio');
-    if (audioEl) {
-      audioEl.volume = 1.0;
-      audioEl.play().then(() => {
-        setSoundPlaying(true);
-      }).catch(() => {
-        // Autoplay requires user interaction; setup fallback listeners
-        playWebsiteOpeningSound().then((played) => {
-          if (played) setSoundPlaying(true);
-        });
-      });
-    } else {
+    const triggerAudio = () => {
+      const audioEl = window.__afshaEntranceAudio || audioElementRef.current || document.getElementById('afsha-entrance-audio');
+      if (audioEl) {
+        audioEl.volume = 1.0;
+        audioEl.play().then(() => {
+          setSoundPlaying(true);
+        }).catch(() => {});
+      }
       playWebsiteOpeningSound().then((played) => {
         if (played) setSoundPlaying(true);
       });
-    }
-
-    const onUserInteraction = () => {
-      if (audioElementRef.current) {
-        audioElementRef.current.play().then(() => {
-          setSoundPlaying(true);
-        }).catch(() => {});
-      } else {
-        playWebsiteOpeningSound().then((played) => {
-          if (played) setSoundPlaying(true);
-        });
-      }
     };
 
-    // Attach to multiple gesture events for instant sound trigger
-    ['click', 'touchstart', 'touchend', 'mousedown', 'keydown'].forEach((evt) => {
-      document.addEventListener(evt, onUserInteraction, { once: true, passive: true });
+    // 1. Immediate play on mount
+    triggerAudio();
+
+    // 2. Passive non-click triggers (mouse movement, scroll, hover, focus)
+    const passiveEvents = ['mousemove', 'pointermove', 'scroll', 'wheel', 'mouseenter', 'focus', 'touchstart', 'click'];
+    const onPassive = () => {
+      triggerAudio();
+      passiveEvents.forEach((evt) => {
+        window.removeEventListener(evt, onPassive, true);
+        document.removeEventListener(evt, onPassive, true);
+      });
+    };
+
+    passiveEvents.forEach((evt) => {
+      window.addEventListener(evt, onPassive, { passive: true, capture: true });
+      document.addEventListener(evt, onPassive, { passive: true, capture: true });
     });
+
+    // Check if audio has started playing periodically
+    const checkInterval = setInterval(() => {
+      const audioEl = window.__afshaEntranceAudio || audioElementRef.current || document.getElementById('afsha-entrance-audio');
+      if (audioEl && !audioEl.paused) {
+        setSoundPlaying(true);
+        clearInterval(checkInterval);
+      }
+    }, 150);
 
     // Slow, cinematic timing for the spacetime logo experience
     const timer1 = setTimeout(() => {
       setExiting(true);
-    }, 2100);
+    }, 2200);
 
     // Complete transition and unmount after slices slide away
     const timer2 = setTimeout(() => {
       setActive(false);
-    }, 2700);
+    }, 2800);
 
     return () => {
-      ['click', 'touchstart', 'touchend', 'mousedown', 'keydown'].forEach((evt) => {
-        document.removeEventListener(evt, onUserInteraction);
+      clearInterval(checkInterval);
+      passiveEvents.forEach((evt) => {
+        window.removeEventListener(evt, onPassive, true);
+        document.removeEventListener(evt, onPassive, true);
       });
       clearTimeout(timer1);
       clearTimeout(timer2);
@@ -148,7 +155,7 @@ export default function EntranceSliceTransition() {
           {/* Interactive Sound Status Pill */}
           <div className={`slice-sound-indicator ${soundPlaying ? 'is-playing' : 'is-waiting'}`}>
             <Volume2 size={15} />
-            <span>{soundPlaying ? 'ENTRANCE SOUND PLAYING' : 'TAP TO ENTER WITH SOUND'}</span>
+            <span>{soundPlaying ? 'ENTRANCE SOUND PLAYING' : '✦ SPACETIME AUDIO EXPERIENCE ✦'}</span>
           </div>
         </div>
       </div>
