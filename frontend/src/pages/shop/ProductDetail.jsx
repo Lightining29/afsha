@@ -361,7 +361,7 @@ export default function ProductDetail() {
                 <img
                   src={mainImage}
                   alt={product.name}
-                  className="pdp-stage-img pdp-img-drop-shadow"
+                  className="pdp-stage-img"
                   fetchpriority="high"
                 />
               </div>
