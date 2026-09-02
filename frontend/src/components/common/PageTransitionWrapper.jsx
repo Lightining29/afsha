@@ -17,17 +17,22 @@ const TRANSITION_CLASSES = [
 export default function PageTransitionWrapper({ children }) {
   const location = useLocation();
   const [transitionIndex, setTransitionIndex] = useState(0);
-  const [animKey, setAnimKey] = useState(location.pathname);
+  const [animClass, setAnimClass] = useState('transition-perspective-slide');
 
   useEffect(() => {
-    setAnimKey(location.pathname);
+    const nextClass = TRANSITION_CLASSES[transitionIndex];
+    setAnimClass(nextClass);
     setTransitionIndex((prev) => (prev + 1) % TRANSITION_CLASSES.length);
+
+    const timer = setTimeout(() => {
+      setAnimClass('');
+    }, 700);
+
+    return () => clearTimeout(timer);
   }, [location.pathname]);
 
-  const activeTransition = TRANSITION_CLASSES[transitionIndex];
-
   return (
-    <div key={animKey} className={`page-transition-host ${activeTransition}`}>
+    <div className={`page-transition-host ${animClass}`}>
       {children}
     </div>
   );

@@ -331,37 +331,40 @@ export default function ProductDetail() {
               className="pdp-stage-img-wrap"
               style={{ backgroundColor: customBgColor }}
             >
-              {/* Floating Frosted Back Button (as in screenshot) */}
-              <button
-                type="button"
-                className="pdp-floating-top-btn pdp-float-back"
-                onClick={() => navigate(-1)}
-                aria-label="Back"
-              >
-                <ArrowLeft size={18} />
-              </button>
+              {/* Floating Top Action Bar: Back on Left, Wishlist Heart on Right */}
+              <div className="pdp-stage-actions-bar">
+                <button
+                  type="button"
+                  className="pdp-floating-top-btn pdp-float-back"
+                  onClick={() => navigate(-1)}
+                  aria-label="Back"
+                >
+                  <ArrowLeft size={18} />
+                </button>
 
-              {/* Floating Frosted Wishlist Heart Button (as in screenshot) */}
-              <button
-                type="button"
-                className={`pdp-floating-top-btn pdp-float-wishlist ${isLiked ? 'liked' : ''}`}
-                onClick={() => toggleWishlist(product)}
-                aria-label="Toggle wishlist"
-              >
-                <Heart
-                  size={18}
-                  fill={isLiked ? '#ef4444' : 'none'}
-                  color={isLiked ? '#ef4444' : '#64748b'}
+                <button
+                  type="button"
+                  className={`pdp-floating-top-btn pdp-float-wishlist ${isLiked ? 'liked' : ''}`}
+                  onClick={() => toggleWishlist(product)}
+                  aria-label="Toggle wishlist"
+                >
+                  <Heart
+                    size={18}
+                    fill={isLiked ? '#ef4444' : 'none'}
+                    color={isLiked ? '#ef4444' : '#64748b'}
+                  />
+                </button>
+              </div>
+
+              {/* Centered Product Image in Dedicated Canvas */}
+              <div className="pdp-stage-image-container">
+                <img
+                  src={mainImage}
+                  alt={product.name}
+                  className="pdp-stage-img pdp-img-drop-shadow"
+                  fetchpriority="high"
                 />
-              </button>
-
-              {/* Product Image with Realistic 3D Filter Drop-Shadow */}
-              <img
-                src={mainImage}
-                alt={product.name}
-                className="pdp-stage-img pdp-img-drop-shadow"
-                fetchpriority="high"
-              />
+              </div>
 
               {isBogo && (
                 <div className="pdp-bogo-float-badge">

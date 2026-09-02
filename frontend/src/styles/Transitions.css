@@ -85,7 +85,6 @@
    Combines Perspective Slide + Diagonal Wipe Shine + Circular Click Ripple
    ========================================================================== */
 
-button,
 .btn,
 .btn-primary,
 .btn-gold,
@@ -98,12 +97,12 @@ button,
 .pdp-action-btn,
 .nav-btn,
 .admin-mobile-add-btn {
-  position: relative !important;
-  overflow: hidden !important;
+  position: relative;
+  overflow: hidden;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 0.25s ease,
               background 0.25s ease,
-              filter 0.25s ease !important;
+              filter 0.25s ease;
   transform: perspective(600px) translateZ(0);
 }
 
