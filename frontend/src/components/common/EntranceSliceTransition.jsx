@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Sparkles, Volume2 } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { playWebsiteOpeningSound, setupGestureUnlock } from '../../utils/audioEffects';
 import './EntranceSliceTransition.css';
 
@@ -15,35 +15,40 @@ const WARP_STREAKS = Array.from({ length: 32 }, (_, i) => ({
 /**
  * Cinematic Spacetime Travel Entrance Transition
  * Features high-speed hyperspace warp stars, radiant glowing Afsha Enterprises logo,
- * slower majestic timing, and plays entrance.mp3 on website opening.
+ * slower majestic timing, and instant entrance.mp3 playback on website open.
  */
 export default function EntranceSliceTransition() {
   const [active, setActive] = useState(true);
   const [exiting, setExiting] = useState(false);
-  const [soundPlaying, setSoundPlaying] = useState(false);
   const audioElementRef = useRef(null);
 
   useEffect(() => {
-    // Setup global unlock listeners immediately (including passive non-click events)
+    // Setup gesture unlock listeners immediately
     setupGestureUnlock();
 
+    // Trigger instant entrance audio playback on mount
     const triggerAudio = () => {
-      const audioEl = window.__afshaEntranceAudio || audioElementRef.current || document.getElementById('afsha-entrance-audio');
+      const audioEl = window.__afshaAudio || audioElementRef.current || document.getElementById('afsha-entrance-audio');
       if (audioEl) {
         audioEl.volume = 1.0;
-        audioEl.play().then(() => {
-          setSoundPlaying(true);
-        }).catch(() => {});
+        audioEl.play().catch(() => {});
       }
-      playWebsiteOpeningSound().then((played) => {
-        if (played) setSoundPlaying(true);
-      });
+      playWebsiteOpeningSound();
     };
 
-    // 1. Immediate play on mount
     triggerAudio();
 
-    // 2. Passive non-click triggers (mouse movement, scroll, hover, focus)
+    // Micro-polling every 40ms to start audio the exact millisecond browser allows
+    const audioPoll = setInterval(() => {
+      const audioEl = window.__afshaAudio || audioElementRef.current || document.getElementById('afsha-entrance-audio');
+      if (audioEl && !audioEl.paused) {
+        clearInterval(audioPoll);
+      } else {
+        triggerAudio();
+      }
+    }, 40);
+
+    // Passive non-click triggers (mouse movement, hover, scroll, touch)
     const passiveEvents = ['mousemove', 'pointermove', 'scroll', 'wheel', 'mouseenter', 'focus', 'touchstart', 'click'];
     const onPassive = () => {
       triggerAudio();
@@ -58,15 +63,6 @@ export default function EntranceSliceTransition() {
       document.addEventListener(evt, onPassive, { passive: true, capture: true });
     });
 
-    // Check if audio has started playing periodically
-    const checkInterval = setInterval(() => {
-      const audioEl = window.__afshaEntranceAudio || audioElementRef.current || document.getElementById('afsha-entrance-audio');
-      if (audioEl && !audioEl.paused) {
-        setSoundPlaying(true);
-        clearInterval(checkInterval);
-      }
-    }, 150);
-
     // Slow, cinematic timing for the spacetime logo experience
     const timer1 = setTimeout(() => {
       setExiting(true);
@@ -78,7 +74,7 @@ export default function EntranceSliceTransition() {
     }, 3500);
 
     return () => {
-      clearInterval(checkInterval);
+      clearInterval(audioPoll);
       passiveEvents.forEach((evt) => {
         window.removeEventListener(evt, onPassive, true);
         document.removeEventListener(evt, onPassive, true);
@@ -89,13 +85,11 @@ export default function EntranceSliceTransition() {
   }, []);
 
   const handleUserTap = () => {
-    // Direct user click on overlay: 100% guarantees audio playback without autoplay block
-    const audioEl = audioElementRef.current || document.getElementById('afsha-entrance-audio');
+    const audioEl = window.__afshaAudio || audioElementRef.current || document.getElementById('afsha-entrance-audio');
     if (audioEl) {
       audioEl.play().catch(() => {});
     }
     playWebsiteOpeningSound();
-    setSoundPlaying(true);
 
     setExiting(true);
     setTimeout(() => setActive(false), 950);
@@ -109,9 +103,9 @@ export default function EntranceSliceTransition() {
       onClick={handleUserTap}
       role="button"
       tabIndex={0}
-      aria-label="Click anywhere to enter with sound"
+      aria-label="Click to enter"
     >
-      {/* ── Native DOM Audio Element for Preloading and Direct Playback ── */}
+      {/* ── Native DOM Audio Element for Preloading and Instant Playback ── */}
       <audio
         ref={audioElementRef}
         id="afsha-entrance-audio"
@@ -119,7 +113,6 @@ export default function EntranceSliceTransition() {
         preload="auto"
         playsInline
         autoPlay
-        onPlay={() => setSoundPlaying(true)}
       />
 
       {/* ── Spacetime Travel Hyperspace Tunnel Background ── */}
@@ -151,12 +144,6 @@ export default function EntranceSliceTransition() {
           <span className="slice-logo-mark">AFSHA</span>
           <span className="slice-tagline">ENTERPRISES</span>
           <span className="slice-sub-tagline">✦ LUXURY WELLNESS &amp; CARE ✦</span>
-
-          {/* Interactive Sound Status Pill */}
-          <div className={`slice-sound-indicator ${soundPlaying ? 'is-playing' : 'is-waiting'}`}>
-            <Volume2 size={15} />
-            <span>{soundPlaying ? 'ENTRANCE SOUND PLAYING' : '✦ SPACETIME AUDIO EXPERIENCE ✦'}</span>
-          </div>
         </div>
       </div>
 

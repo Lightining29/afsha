@@ -6,6 +6,65 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title> Afsha Enterprises</title>
+
+  <!-- High-Priority Audio Preload: Begin loading entrance.mp3 immediately in the first byte of head -->
+  <link rel="preload" href="/entrance.mp3" as="fetch" type="audio/mpeg" crossorigin />
+
+  <script>
+    // Instant entrance audio trigger: executes at the very first millisecond of HTML parsing
+    (function () {
+      try {
+        var audio = new Audio('/entrance.mp3');
+        audio.id = 'afsha-entrance-audio';
+        audio.preload = 'auto';
+        audio.volume = 1.0;
+        audio.setAttribute('playsinline', 'true');
+        audio.setAttribute('webkit-playsinline', 'true');
+        window.__afshaAudio = audio;
+
+        function startNow() {
+          if (window.__afshaAudioStarted) return;
+          var p = audio.play();
+          if (p !== undefined) {
+            p.then(function () {
+              window.__afshaAudioStarted = true;
+              detach();
+            }).catch(function () {});
+          }
+        }
+
+        function detach() {
+          var evts = ['mousemove', 'pointermove', 'touchstart', 'scroll', 'wheel', 'focus', 'click', 'keydown', 'pageshow', 'visibilitychange'];
+          for (var i = 0; i < evts.length; i++) {
+            window.removeEventListener(evts[i], startNow, true);
+            document.removeEventListener(evts[i], startNow, true);
+          }
+        }
+
+        // 1. Instant execution
+        startNow();
+
+        // 2. Immediate micro-polling every 40ms to start the moment browser unblocks
+        var attempts = 0;
+        var loop = setInterval(function () {
+          attempts++;
+          if (window.__afshaAudioStarted || attempts > 35) {
+            clearInterval(loop);
+            return;
+          }
+          startNow();
+        }, 40);
+
+        // 3. Earliest natural non-click triggers (mouse movement, hover, scroll, touch)
+        var evts = ['mousemove', 'pointermove', 'touchstart', 'scroll', 'wheel', 'focus', 'click', 'keydown', 'pageshow', 'visibilitychange'];
+        for (var j = 0; j < evts.length; j++) {
+          window.addEventListener(evts[j], startNow, { passive: true, capture: true });
+          document.addEventListener(evts[j], startNow, { passive: true, capture: true });
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <meta name="description"
     content="Buy premium body massagers from Afsha Enterprises. Electric, handheld and pain relief massagers with fast delivery across India." />
   <link data-rh="true" rel="canonical" href="https://www.afshaenterprises.com/" />
@@ -37,104 +96,19 @@
           'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-TQPF2KP4');</script>
   <!-- End Google Tag Manager -->
-  <script type="module" crossorigin src="/assets/index-Be3V1mXe.js"></script>
+  <script type="module" crossorigin src="/assets/index-B_vDazh8.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/vendor-router-B8qd8pqr.js">
-  <link rel="modulepreload" crossorigin href="/assets/vendor-icons--VRd1ftt.js">
-  <link rel="modulepreload" crossorigin href="/assets/admin-BwvK2rIt.js">
+  <link rel="modulepreload" crossorigin href="/assets/vendor-icons-Brxqnm8Z.js">
+  <link rel="modulepreload" crossorigin href="/assets/admin-C17-Xwsn.js">
   <link rel="stylesheet" crossorigin href="/assets/admin-BQ9bg0YG.css">
-  <link rel="stylesheet" crossorigin href="/assets/index-vJVeO7RS.css">
+  <link rel="stylesheet" crossorigin href="/assets/index-on4I07Tl.css">
 </head>
 
 <body>
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TQPF2KP4" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- Hidden Autoplay Facilitator Frame with full permissions -->
-  <iframe src="/audio-player.html" allow="autoplay *; encrypted-media *" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;border:0;pointer-events:none;" id="autoplay-frame"></iframe>
-
-  <script>
-    (function () {
-      // Direct instant entrance audio controller
-      try {
-        var audio = new Audio('/entrance.mp3');
-        audio.id = 'afsha-entrance-audio';
-        audio.preload = 'auto';
-        audio.volume = 1.0;
-        audio.setAttribute('playsinline', 'true');
-        audio.setAttribute('webkit-playsinline', 'true');
-        window.__afshaEntranceAudio = audio;
-
-        var audioPlayed = false;
-
-        function attemptAutoPlay() {
-          if (audioPlayed || window.__afshaAudioPlayed) return;
-          var p = audio.play();
-          if (p !== undefined) {
-            p.then(function () {
-              audioPlayed = true;
-              window.__afshaAudioPlayed = true;
-              detachEvents();
-            }).catch(function () {});
-          }
-        }
-
-        function onPassiveMovement() {
-          if (!audioPlayed && !window.__afshaAudioPlayed) {
-            audio.currentTime = 0;
-            var p = audio.play();
-            if (p !== undefined) {
-              p.then(function () {
-                audioPlayed = true;
-                window.__afshaAudioPlayed = true;
-                detachEvents();
-              }).catch(function () {});
-            }
-          }
-        }
-
-        function detachEvents() {
-          var events = ['mousemove', 'pointermove', 'scroll', 'wheel', 'touchstart', 'mouseenter', 'focus', 'click', 'pageshow', 'visibilitychange'];
-          for (var i = 0; i < events.length; i++) {
-            window.removeEventListener(events[i], onPassiveMovement, true);
-            document.removeEventListener(events[i], onPassiveMovement, true);
-          }
-        }
-
-        window.addEventListener('message', function(e) {
-          if (e.data === 'AFSHA_AUDIO_PLAYING') {
-            audioPlayed = true;
-            window.__afshaAudioPlayed = true;
-            detachEvents();
-          }
-        });
-
-        // 1. Immediate instant autoplay attempt
-        attemptAutoPlay();
-
-        // 2. High-frequency check to catch browser permission grant within first milliseconds
-        var checkCount = 0;
-        var poller = setInterval(function() {
-          checkCount++;
-          if (audioPlayed || window.__afshaAudioPlayed || checkCount > 50) {
-            clearInterval(poller);
-            return;
-          }
-          attemptAutoPlay();
-        }, 80);
-
-        // 3. DOMContentLoaded and Window load attempts
-        document.addEventListener('DOMContentLoaded', attemptAutoPlay);
-        window.addEventListener('load', attemptAutoPlay);
-
-        // 4. Automated non-click passive triggers (mouse movement, scroll, hover, touch)
-        var passiveEvts = ['mousemove', 'pointermove', 'scroll', 'wheel', 'touchstart', 'mouseenter', 'focus', 'click', 'pageshow', 'visibilitychange'];
-        for (var j = 0; j < passiveEvts.length; j++) {
-          window.addEventListener(passiveEvts[j], onPassiveMovement, { passive: true, capture: true });
-          document.addEventListener(passiveEvts[j], onPassiveMovement, { passive: true, capture: true });
-        }
-      } catch (e) {}
-    })();
-  </script>
+  <!-- End Google Tag Manager (noscript) -->
 
   <div id="root"></div>
 </body>

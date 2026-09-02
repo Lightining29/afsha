@@ -221,40 +221,7 @@
   text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
 }
 
-/* Interactive Sound Indicator Pill */
-.slice-sound-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 14px;
-  padding: 8px 18px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  transition: all 0.3s ease;
-  user-select: none;
-}
 
-.slice-sound-indicator.is-waiting {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fde047;
-  border: 1px solid rgba(245, 158, 11, 0.5);
-  box-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
-  animation: soundPillPulse 1.4s infinite alternate;
-}
-
-.slice-sound-indicator.is-playing {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.5);
-  box-shadow: 0 0 16px rgba(34, 197, 94, 0.3);
-}
-
-@keyframes soundPillPulse {
-  0% { transform: scale(0.96); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
-  100% { transform: scale(1.04); box-shadow: 0 0 24px rgba(245, 158, 11, 0.5); }
-}
 
 .slice-watermark {
   font-size: 0.74rem;
