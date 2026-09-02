@@ -1,95 +1,125 @@
 /**
- * High-End Synthesized & MP3 Audio Effects
- * Plays /entrance.mp3 when the website opens with seamless fallback.
+ * Bulletproof Audio Player for entrance.mp3
+ * Handles browser autoplay policies, preloading, user gesture unlock on mobile & desktop,
+ * and high-fidelity playback.
  */
 
-let audioCtx = null;
-let entranceAudio = null;
+let globalEntranceAudio = null;
+let isAudioPlaying = false;
+let unlockListenersAttached = false;
 
-function getAudioContext() {
+/**
+ * Get or create the singleton entrance audio instance
+ */
+export function getEntranceAudio() {
   if (typeof window === 'undefined') return null;
-  if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (AudioContextClass) {
-      audioCtx = new AudioContextClass();
+
+  if (!globalEntranceAudio) {
+    // Check if DOM element exists
+    const domAudio = document.getElementById('afsha-entrance-audio');
+    if (domAudio) {
+      globalEntranceAudio = domAudio;
+    } else {
+      globalEntranceAudio = new Audio('/entrance.mp3');
+      globalEntranceAudio.id = 'afsha-entrance-audio';
+      globalEntranceAudio.preload = 'auto';
+      globalEntranceAudio.setAttribute('playsinline', 'true');
+      globalEntranceAudio.setAttribute('webkit-playsinline', 'true');
     }
-  }
-  if (audioCtx && audioCtx.state === 'suspended') {
-    audioCtx.resume().catch(() => {});
-  }
-  return audioCtx;
-}
+    globalEntranceAudio.volume = 1.0;
 
-/**
- * Play website opening sound using entrance.mp3 with graceful fallback
- */
-export function playWebsiteOpeningSound() {
-  if (typeof window === 'undefined') return;
-
-  try {
-    if (!entranceAudio) {
-      entranceAudio = new Audio('/entrance.mp3');
-      entranceAudio.volume = 0.9;
-    }
-    entranceAudio.currentTime = 0;
-    const playPromise = entranceAudio.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Autoplay policy prevented immediate playback; fallback to Web Audio API chime
-        playSynthesizedChime();
-      });
-    }
-  } catch (err) {
-    playSynthesizedChime();
-  }
-}
-
-/**
- * Fallback synthesizer using Web Audio API if MP3 playback is restricted
- */
-function playSynthesizedChime() {
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-
-    const now = ctx.currentTime;
-    const freqs = [523.25, 659.25, 783.99, 987.77, 1046.50];
-
-    const masterGain = ctx.createGain();
-    masterGain.gain.setValueAtTime(0.001, now);
-    masterGain.gain.exponentialRampToValueAtTime(0.18, now + 0.08);
-    masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
-    masterGain.connect(ctx.destination);
-
-    freqs.forEach((f, idx) => {
-      const osc = ctx.createOscillator();
-      const noteGain = ctx.createGain();
-
-      osc.type = idx === 0 ? 'sine' : 'triangle';
-      osc.frequency.setValueAtTime(f, now + idx * 0.035);
-
-      noteGain.gain.setValueAtTime(0.001, now + idx * 0.035);
-      noteGain.gain.exponentialRampToValueAtTime(0.12 / (idx + 1), now + idx * 0.035 + 0.05);
-      noteGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2 + idx * 0.1);
-
-      osc.connect(noteGain);
-      noteGain.connect(masterGain);
-
-      osc.start(now + idx * 0.035);
-      osc.stop(now + 1.8);
+    globalEntranceAudio.addEventListener('play', () => {
+      isAudioPlaying = true;
     });
-  } catch (e) {}
+    globalEntranceAudio.addEventListener('ended', () => {
+      isAudioPlaying = false;
+    });
+  }
+
+  return globalEntranceAudio;
 }
 
 /**
- * Play subtle button click/hover micro-sound
+ * Attempt to play entrance.mp3
+ * Returns a promise resolving to boolean (true if playing, false if blocked by browser policy)
+ */
+export async function playWebsiteOpeningSound() {
+  if (typeof window === 'undefined') return false;
+
+  const audio = getEntranceAudio();
+  if (!audio) return false;
+
+  try {
+    audio.currentTime = 0;
+    const playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+      await playPromise;
+      isAudioPlaying = true;
+      return true;
+    }
+    return true;
+  } catch (err) {
+    // Browser autoplay policy blocked sound without interaction
+    isAudioPlaying = false;
+    setupGestureUnlock();
+    return false;
+  }
+}
+
+/**
+ * Setup global gesture unlock listeners to start audio immediately on first user touch/click/keypress
+ */
+export function setupGestureUnlock() {
+  if (typeof window === 'undefined' || unlockListenersAttached) return;
+  unlockListenersAttached = true;
+
+  const triggerAudioOnGesture = () => {
+    const audio = getEntranceAudio();
+    if (audio && !isAudioPlaying) {
+      audio.currentTime = 0;
+      audio.play().then(() => {
+        isAudioPlaying = true;
+        cleanupGestureListeners();
+      }).catch(() => {
+        // Retry on next gesture if still blocked
+      });
+    } else if (isAudioPlaying) {
+      cleanupGestureListeners();
+    }
+  };
+
+  const cleanupGestureListeners = () => {
+    ['click', 'touchstart', 'touchend', 'mousedown', 'keydown', 'pointerdown'].forEach((evt) => {
+      document.removeEventListener(evt, triggerAudioOnGesture, true);
+      window.removeEventListener(evt, triggerAudioOnGesture, true);
+    });
+    unlockListenersAttached = false;
+  };
+
+  ['click', 'touchstart', 'touchend', 'mousedown', 'keydown', 'pointerdown'].forEach((evt) => {
+    document.addEventListener(evt, triggerAudioOnGesture, { once: false, passive: true, capture: true });
+    window.addEventListener(evt, triggerAudioOnGesture, { once: false, passive: true, capture: true });
+  });
+}
+
+/**
+ * Check if audio is currently playing
+ */
+export function isEntranceAudioPlaying() {
+  return isAudioPlaying;
+}
+
+/**
+ * Subtle button click sound
  */
 export function playButtonChime() {
+  if (typeof window === 'undefined') return;
   try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
     const now = ctx.currentTime;
-
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
@@ -105,5 +135,5 @@ export function playButtonChime() {
 
     osc.start(now);
     osc.stop(now + 0.13);
-  } catch (err) {}
+  } catch (e) {}
 }
