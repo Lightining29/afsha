@@ -153,6 +153,8 @@ router.post('/products', upload.array('images', 5), async (req, res) => {
       isBogo: isBogoOffer,
       bogoEndsAt: bogoEndsAt ? new Date(bogoEndsAt) : null,
       bogoBadgeText: bogoBadgeText || 'BUY 1 GET 1 FREE',
+      backgroundColor: req.body.backgroundColor || '#fef3c7',
+      accentColor: req.body.accentColor || '#ea580c',
       inStock: qty > 0,
     });
 

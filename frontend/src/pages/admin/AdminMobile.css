@@ -1,0 +1,304 @@
+/* ==========================================================================
+   ADMIN DASHBOARD — Best Real UI/UX for Mobile View
+   Touch-Optimized Bottom Nav, Floating Actions, Clean Mobile Cards
+   ========================================================================== */
+
+/* ── Mobile Top Header Bar ── */
+.admin-mobile-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .panel-layout.admin-layout-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f8fafc;
+  }
+
+  .admin-mobile-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 10px 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  }
+
+  .admin-mobile-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .admin-menu-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .admin-mobile-logo {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .admin-mobile-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .admin-mobile-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+  }
+
+  .admin-avatar-pill {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+  }
+
+  .admin-main-panel {
+    padding: 16px 14px 96px !important;
+    background: #f8fafc;
+  }
+
+  /* ── Mobile Fixed Bottom Navigation Bar (Real App Feel) ── */
+  .admin-mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 1000;
+    padding: 4px 6px calc(4px + env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.06);
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: #64748b;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-nav-item.active {
+    color: #0f172a;
+  }
+
+  .mobile-nav-item.active svg {
+    color: #d97706;
+    transform: scale(1.1);
+  }
+
+  .mobile-nav-center {
+    position: relative;
+    top: -10px;
+  }
+
+  .center-add-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
+    margin-bottom: 2px;
+  }
+
+  /* ── Stats Grid on Mobile: 2x2 Clean Cards ── */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .stat-card {
+    padding: 14px 12px !important;
+    border-radius: 16px !important;
+  }
+
+  .stat-card-value {
+    font-size: 1.4rem !important;
+  }
+
+  .stat-card-label {
+    font-size: 0.75rem !important;
+  }
+
+  /* ── Responsive Mobile Tables: Card Conversion ── */
+  table.panel-table,
+  table.admin-table {
+    display: block;
+    width: 100%;
+  }
+
+  table.panel-table thead,
+  table.admin-table thead {
+    display: none; /* Hide header row on mobile */
+  }
+
+  table.panel-table tbody,
+  table.admin-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  table.panel-table tr,
+  table.admin-table tr {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    gap: 8px;
+  }
+
+  table.panel-table td,
+  table.admin-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0 !important;
+    border: none !important;
+    font-size: 0.85rem;
+  }
+
+  table.panel-table td::before,
+  table.admin-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #64748b;
+    font-size: 0.78rem;
+  }
+
+  /* ── Responsive Mobile Table Cards ── */
+  .data-table {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow-x: visible !important;
+  }
+
+  .data-table table {
+    display: block;
+    width: 100%;
+  }
+
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .data-table tr {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    gap: 10px;
+  }
+
+  .data-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 0 !important;
+    border: none !important;
+    font-size: 0.88rem;
+  }
+
+  .data-table td[data-label]::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #64748b;
+    font-size: 0.8rem;
+  }
+
+  .data-table td[data-full] {
+    display: block;
+    margin-bottom: 6px;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+  }
+
+  .data-table td[data-full]::before {
+    display: none;
+  }
+
+  .panel-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  .panel-actions .btn {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 12px;
+  }
+}
+
+@media (min-width: 769px) {
+  .admin-mobile-bottom-nav {
+    display: none;
+  }
+}

@@ -1,8 +1,23 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, LogOut, Home, Mail, Boxes, Menu, X, PlusCircle } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  LogOut,
+  Home,
+  Mail,
+  Boxes,
+  Menu,
+  X,
+  PlusCircle,
+  Layers,
+  ArrowUpRight
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import AdminCurtainTransition from '../../components/admin/AdminCurtainTransition';
 import '../../styles/Panel.css';
+import './AdminMobile.css';
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
@@ -37,19 +52,33 @@ export default function AdminLayout() {
   const navItemStyle = { color: '#334155', fontWeight: 600 };
 
   return (
-    <div className="panel-layout" style={{ minHeight: '100vh', background: '#f8fafc' }}>
-      {/* Mobile top bar — hidden on desktop */}
-      <div className="admin-mobile-bar" style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
-        <button
-          className="admin-menu-toggle"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-        <img src="/logo.png" alt="Afsha Enterprises" className="admin-mobile-logo" />
-        <span className="admin-mobile-user">{user?.name}</span>
+    <div className="panel-layout admin-layout-shell">
+      {/* ── Grand Theatrical Curtain Opening Effect ── */}
+      <AdminCurtainTransition />
+
+      {/* ── Mobile Top Bar (Clean, modern app-like header) ── */}
+      <div className="admin-mobile-bar">
+        <div className="admin-mobile-left">
+          <button
+            className="admin-menu-toggle"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          <img src="/logo.png" alt="Afsha Enterprises" className="admin-mobile-logo" />
+        </div>
+
+        <div className="admin-mobile-right">
+          <NavLink to="/admin/products/new" className="admin-mobile-add-btn" aria-label="Add Product">
+            <PlusCircle size={17} />
+            <span>Add</span>
+          </NavLink>
+          <div className="admin-avatar-pill" title={user?.name}>
+            <span>{user?.name?.charAt(0)?.toUpperCase() || 'A'}</span>
+          </div>
+        </div>
       </div>
 
       {/* Overlay behind the drawer (mobile only) */}
@@ -59,11 +88,21 @@ export default function AdminLayout() {
         aria-hidden="true"
       />
 
+      {/* ── Desktop & Mobile Slide-Out Sidebar ── */}
       <aside className={sidebarClass} style={sidebarStyle}>
         <div className="panel-sidebar-header" style={headerStyle}>
           <img src="/logo.png" alt="Afsha Enterprises" className="admin-sidebar-logo" />
-          <p style={{ color: '#0f172a', fontWeight: 700 }}>{user?.name}</p>
+          <div className="admin-profile-badge">
+            <div className="admin-avatar-small">
+              {user?.name?.charAt(0)?.toUpperCase() || 'A'}
+            </div>
+            <div>
+              <p className="admin-user-title">{user?.name || 'Administrator'}</p>
+              <span className="admin-role-tag">Super Admin</span>
+            </div>
+          </div>
         </div>
+
         <nav className="panel-nav">
           <NavLink to="/admin" end style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <LayoutDashboard size={18} /> Dashboard
@@ -71,7 +110,6 @@ export default function AdminLayout() {
           <NavLink to="/admin/orders" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <Package size={18} /> Orders
           </NavLink>
-
           <NavLink to="/admin/products" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <ShoppingCart size={18} /> Products
           </NavLink>
@@ -79,27 +117,53 @@ export default function AdminLayout() {
             <Boxes size={18} /> Stock Management
           </NavLink>
           <NavLink to="/admin/categories" style={navItemStyle} onClick={() => setMenuOpen(false)}>
-            <Package size={18} /> Categories
+            <Layers size={18} /> Categories
           </NavLink>
           <NavLink to="/admin/contacts" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <Mail size={18} /> Messages
           </NavLink>
-
           <NavLink to="/admin/products/new" style={navItemStyle} onClick={() => setMenuOpen(false)}>
             <PlusCircle size={18} /> Add Product
           </NavLink>
           <NavLink to="/" style={navItemStyle} onClick={() => setMenuOpen(false)}>
-            <Home size={18} /> Storefront
+            <Home size={18} /> View Storefront <ArrowUpRight size={14} />
           </NavLink>
           <button onClick={handleSignOut} style={navItemStyle}>
             <LogOut size={18} /> Sign Out
           </button>
         </nav>
       </aside>
-      <main className="panel-content" style={{ background: '#ffffff', padding: '24px' }}>
+
+      {/* ── Main Panel Content ── */}
+      <main className="panel-content admin-main-panel">
         <Outlet />
       </main>
+
+      {/* ── Mobile Bottom Navigation Bar (Real App-like UX) ── */}
+      <nav className="admin-mobile-bottom-nav">
+        <NavLink to="/admin" end className="mobile-nav-item">
+          <LayoutDashboard size={20} />
+          <span>Home</span>
+        </NavLink>
+        <NavLink to="/admin/orders" className="mobile-nav-item">
+          <Package size={20} />
+          <span>Orders</span>
+        </NavLink>
+        <NavLink to="/admin/products/new" className="mobile-nav-item mobile-nav-center">
+          <div className="center-add-circle">
+            <PlusCircle size={24} />
+          </div>
+          <span>Add</span>
+        </NavLink>
+        <NavLink to="/admin/products" className="mobile-nav-item">
+          <ShoppingCart size={20} />
+          <span>Products</span>
+        </NavLink>
+        <NavLink to="/admin/stock" className="mobile-nav-item">
+          <Boxes size={20} />
+          <span>Stock</span>
+        </NavLink>
+      </nav>
     </div>
   );
 }
-

@@ -27,6 +27,8 @@ const emptyForm = {
   isBogo: false,
   bogoEndsAt: '',
   bogoBadgeText: 'BUY 1 GET 1 FREE',
+  backgroundColor: '#fef3c7',
+  accentColor: '#ea580c',
 };
 
 export default function AdminProductForm() {
@@ -81,6 +83,8 @@ export default function AdminProductForm() {
             isBogo: p.isBogo || false,
             bogoEndsAt: p.bogoEndsAt ? new Date(p.bogoEndsAt).toISOString().slice(0, 16) : '',
             bogoBadgeText: p.bogoBadgeText || 'BUY 1 GET 1 FREE',
+            backgroundColor: p.backgroundColor || '#fef3c7',
+            accentColor: p.accentColor || '#ea580c',
           });
           // Prefer the multi-image array; fall back to the primary URL.
           const imgs = Array.isArray(p.images) ? p.images : [];
@@ -172,6 +176,8 @@ export default function AdminProductForm() {
         isBogo: form.isBogo,
         bogoEndsAt: form.bogoEndsAt ? new Date(form.bogoEndsAt).toISOString() : '',
         bogoBadgeText: form.bogoBadgeText || 'BUY 1 GET 1 FREE',
+        backgroundColor: form.backgroundColor || '#fef3c7',
+        accentColor: form.accentColor || '#ea580c',
       };
 
       if (isEdit) {
@@ -304,6 +310,63 @@ export default function AdminProductForm() {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Custom Backdrop Color & Styling */}
+            <div className="apf-group apf-color-card" style={{ marginTop: '20px', padding: '16px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              <label style={{ fontWeight: 700, display: 'block', marginBottom: '8px' }}>
+                🎨 Product Backdrop Color (Set Custom Background)
+              </label>
+              <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '12px' }}>
+                Choose a background color for the product showcase. A realistic 3D filter drop-shadow will automatically be applied to the product image.
+              </p>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                {[
+                  { name: 'Soft Pink', color: '#fce7f3' },
+                  { name: 'Peach', color: '#fed7aa' },
+                  { name: 'Warm Gold', color: '#fef3c7' },
+                  { name: 'Fresh Mint', color: '#dcfce7' },
+                  { name: 'Sky Blue', color: '#e0f2fe' },
+                  { name: 'Lavender', color: '#f3e8ff' },
+                  { name: 'Light Slate', color: '#f1f5f9' },
+                  { name: 'Pure White', color: '#ffffff' }
+                ].map((swatch) => (
+                  <button
+                    key={swatch.color}
+                    type="button"
+                    title={swatch.name}
+                    onClick={() => setForm((prev) => ({ ...prev, backgroundColor: swatch.color }))}
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      background: swatch.color,
+                      border: form.backgroundColor === swatch.color ? '3px solid #0f172a' : '1px solid #cbd5e1',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                      transition: 'transform 0.15s ease'
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <input
+                  type="color"
+                  value={form.backgroundColor || '#fef3c7'}
+                  onChange={update('backgroundColor')}
+                  style={{ width: '40px', height: '36px', border: 'none', borderRadius: '8px', cursor: 'pointer', background: 'transparent' }}
+                />
+                <input
+                  type="text"
+                  value={form.backgroundColor}
+                  onChange={update('backgroundColor')}
+                  placeholder="#fef3c7"
+                  style={{ width: '120px', padding: '6px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', fontFamily: 'monospace', fontWeight: 600 }}
+                />
+                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Custom Hex Color</span>
+              </div>
             </div>
 
           </div>

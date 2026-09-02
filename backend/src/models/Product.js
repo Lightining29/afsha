@@ -38,6 +38,9 @@ const productSchema = new mongoose.Schema(
     isBogo:           { type: Boolean, default: false, index: true },
     bogoEndsAt:       { type: Date, default: null },
     bogoBadgeText:    { type: String, default: 'BUY 1 GET 1 FREE' },
+    // Custom Background & Accent Colors set by Admin
+    backgroundColor:  { type: String, default: '#fef3c7' },
+    accentColor:      { type: String, default: '#ea580c' },
   },
   { timestamps: true }
 );

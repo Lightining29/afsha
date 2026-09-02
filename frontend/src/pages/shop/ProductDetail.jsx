@@ -17,6 +17,7 @@ import {
   HelpCircle,
   ChevronDown,
   ShoppingBag,
+  ShoppingCart,
   Share2,
   Award,
   Sparkles,
@@ -104,6 +105,18 @@ export default function ProductDetail() {
   const mainImage = gallery[activeIdx] || product.image || '/masage.jpg';
   const fullImageUrl = mainImage.startsWith('http') ? mainImage : `https://www.afshaenterprises.com${mainImage}`;
   const canonicalUrl = `https://www.afshaenterprises.com/product/${slug}`;
+
+  // Custom Background Color & Accent set by Admin or intelligent preset fallback
+  const customBgColor = product.backgroundColor || (
+    slug === 'painless-facial-hair-remover' ? '#fce7f3' :
+    slug === 'electric-body-massager' ? '#fef3c7' :
+    slug === 'deep-tissue-massager' ? '#f1f5f9' : '#fce7f3'
+  );
+
+  const customAccentColor = product.accentColor || (
+    slug === 'painless-facial-hair-remover' ? '#e11d48' :
+    slug === 'electric-body-massager' ? '#ea580c' : '#0f172a'
+  );
 
   // Direct Buy Flow: Adds selected quantity to cart and routes straight to checkout
   const handleBuyNow = () => {
@@ -314,17 +327,46 @@ export default function ProductDetail() {
           </button>
         </header>
 
-        {/* ── Main Showcase Grid (Image Gallery & Core Buying Info) ── */}
+        {/* ── Main Showcase Grid (Image Stage with Admin Background & Realistic Drop Shadow + Card Info) ── */}
         <div className="pdp-main-content-layout">
-          {/* Main Showcase Image Stage */}
+          {/* Main Showcase Image Stage with Admin-configured Background Color */}
           <div className="pdp-stage-section">
-            <div className="pdp-stage-img-wrap">
+            <div
+              className="pdp-stage-img-wrap"
+              style={{ backgroundColor: customBgColor }}
+            >
+              {/* Floating Frosted Back Button (as in screenshot) */}
+              <button
+                type="button"
+                className="pdp-floating-top-btn pdp-float-back"
+                onClick={() => navigate(-1)}
+                aria-label="Back"
+              >
+                <ArrowLeft size={18} />
+              </button>
+
+              {/* Floating Frosted Wishlist Heart Button (as in screenshot) */}
+              <button
+                type="button"
+                className={`pdp-floating-top-btn pdp-float-wishlist ${isLiked ? 'liked' : ''}`}
+                onClick={() => toggleWishlist(product)}
+                aria-label="Toggle wishlist"
+              >
+                <Heart
+                  size={18}
+                  fill={isLiked ? '#ef4444' : 'none'}
+                  color={isLiked ? '#ef4444' : '#64748b'}
+                />
+              </button>
+
+              {/* Product Image with Realistic 3D Filter Drop-Shadow */}
               <img
                 src={mainImage}
                 alt={product.name}
-                className="pdp-stage-img"
+                className="pdp-stage-img pdp-img-drop-shadow"
                 fetchpriority="high"
               />
+
               {isBogo && (
                 <div className="pdp-bogo-float-badge">
                   <Gift size={13} /> {product.bogoBadgeText || 'BUY 1 GET 1 FREE'}
@@ -355,15 +397,38 @@ export default function ProductDetail() {
             )}
           </div>
 
-          {/* Product Buying Info Sheet */}
+          {/* Product Buying Info Sheet Matching Screenshot */}
           <div className="pdp-info-sheet">
-            {/* Rating Badge */}
+            {/* Top Row: Product Name on Left, Price on Right */}
+            <div className="pdp-hero-title-price-row">
+              <h2 className="pdp-product-name">{product.name}</h2>
+              <div className="pdp-hero-price-wrap">
+                <span className="pdp-price-hero">{formatPrice(finalPrice)}</span>
+                {(hasDiscount || product.originalPrice || seoData.originalPrice) && (
+                  <span className="pdp-price-hero-old">
+                    {formatPrice(product.originalPrice || seoData.originalPrice || (finalPrice * 2))}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Subtitle / Brand / Category in soft muted gray */}
+            <p className="pdp-hero-subtitle">
+              {product.category?.name || seoData.category || "Wellness & Care"}
+            </p>
+
+            {/* Concise Description Summary */}
+            <p className="pdp-hero-desc">
+              {product.description || seoData.headline || seoData.metaDescription}
+            </p>
+
+            {/* Rating Stars & Customer Count */}
             <div className="pdp-rating-badge">
               <div className="pdp-stars-row">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
-                    size={15}
+                    size={14}
                     fill={star <= Math.round(product.rating ?? seoData.rating ?? 4.9) ? '#f59e0b' : '#e2e8f0'}
                     color={star <= Math.round(product.rating ?? seoData.rating ?? 4.9) ? '#f59e0b' : '#cbd5e1'}
                   />
@@ -373,42 +438,6 @@ export default function ProductDetail() {
               <span className="pdp-rating-reviews">({product.reviewCount || seoData.reviewCount || 384} verified reviews)</span>
             </div>
 
-            <div className="pdp-title-row">
-              <div>
-                <h2 className="pdp-product-name">{product.name}</h2>
-                <p className="pdp-category-name">
-                  {product.category?.name || seoData.category || "Wellness & Care"}
-                </p>
-              </div>
-
-              {/* Wishlist Heart Button */}
-              <button
-                type="button"
-                className={`pdp-heart-circle-btn ${isLiked ? 'liked' : ''}`}
-                onClick={() => toggleWishlist(product)}
-                aria-label="Toggle wishlist"
-              >
-                <Heart
-                  size={20}
-                  fill={isLiked ? '#ef4444' : 'none'}
-                  color={isLiked ? '#ef4444' : '#94a3b8'}
-                />
-              </button>
-            </div>
-
-            {/* Price Row */}
-            <div className="pdp-price-row">
-              <span className="pdp-price-current">{formatPrice(finalPrice)}</span>
-              {(hasDiscount || product.originalPrice || seoData.originalPrice) && (
-                <span className="pdp-price-original">
-                  {formatPrice(product.originalPrice || seoData.originalPrice || (finalPrice * 2))}
-                </span>
-              )}
-              {hasDiscount && (
-                <span className="pdp-save-chip">SAVE {product.discountPercent || seoData.discountPercent}%</span>
-              )}
-            </div>
-
             {/* BOGO Countdown Timer (if active) */}
             {isBogo && product.bogoEndsAt && (
               <div className="pdp-bogo-timer-box">
@@ -416,29 +445,24 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* Short Headline & Overview */}
-            <div className="pdp-quick-headline-card">
-              <Sparkles size={16} className="sparkle-gold" />
-              <p>{seoData.headline}</p>
-            </div>
-
-            {/* Direct Action Buttons on Info Sheet */}
-            <div className="pdp-desktop-actions-row">
+            {/* Action Row: Large Rounded Pill "Buy Now" + Circular Shopping Cart Button */}
+            <div className="pdp-hero-action-row">
               <button
                 type="button"
-                className="pdp-action-btn pdp-btn-cart"
-                onClick={handleAddToCart}
-              >
-                <ShoppingBag size={18} />
-                <span>Add to Cart</span>
-              </button>
-              <button
-                type="button"
-                className="pdp-action-btn pdp-btn-buy"
+                className="pdp-hero-buy-btn"
+                style={{ backgroundColor: customAccentColor }}
                 onClick={handleBuyNow}
               >
-                <Zap size={18} fill="#ffffff" />
                 <span>Buy Now</span>
+              </button>
+
+              <button
+                type="button"
+                className="pdp-hero-cart-circle-btn"
+                onClick={handleAddToCart}
+                aria-label="Add to cart"
+              >
+                <ShoppingCart size={22} color={customAccentColor} />
               </button>
             </div>
           </div>

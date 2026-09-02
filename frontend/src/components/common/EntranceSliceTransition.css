@@ -1,0 +1,146 @@
+/* ==========================================================================
+   DUAL DIAGONAL CUTOUT SLICES — Bottom-Right to Top-Left Entrance Transition
+   As requested: cutout-slice-top & cutout-slice-bottom with @keyframes sliceSlideUp
+   ========================================================================== */
+
+.entrance-slice-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
+  pointer-events: all;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* ── Top Diagonal Cutout Slice ── */
+.cutout-slice-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #090d16 0%, #0f172a 60%, #1e293b 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 85%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Bottom Diagonal Cutout Slice ── */
+.cutout-slice-bottom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(315deg, #090d16 0%, #0f172a 50%, #1e293b 100%);
+  clip-path: polygon(0 85%, 100% 45%, 100% 100%, 0 100%);
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 40px;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Diagonal Seam Light Beam ── */
+.cutout-slice-seam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(135deg, transparent 40%, rgba(245, 158, 11, 0.4) 48%, rgba(255, 255, 255, 0.8) 50%, rgba(245, 158, 11, 0.4) 52%, transparent 60%);
+  opacity: 0.9;
+  transition: opacity 0.5s ease;
+}
+
+/* ── Slice Brand Logo ── */
+.slice-brand-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transform: translateY(-40px);
+}
+
+.slice-logo-mark {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: 6px;
+  background: linear-gradient(135deg, #ffffff 0%, #fef3c7 40%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 24px rgba(245, 158, 11, 0.4);
+}
+
+.slice-tagline {
+  font-size: 0.75rem;
+  letter-spacing: 5px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.slice-watermark {
+  font-size: 0.72rem;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+/* ── Exiting State: Slices slide from bottom-right to top-left ── */
+.slice-exiting .cutout-slice-top {
+  animation: sliceSlideUpTop 1.1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.slice-exiting .cutout-slice-bottom {
+  animation: sliceSlideUpBottom 1.1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.slice-exiting .cutout-slice-seam {
+  animation: seamFade 0.6s ease forwards;
+}
+
+/* Diagonal slide animations from bottom-right to top-left */
+@keyframes sliceSlideUpTop {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  100% {
+    /* Sliding towards top-left */
+    transform: translate3d(-100%, -100%, 0);
+    opacity: 0.95;
+  }
+}
+
+@keyframes sliceSlideUpBottom {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  100% {
+    /* Sliding from bottom-right towards top-left / exit */
+    transform: translate3d(100%, 100%, 0);
+    opacity: 0.95;
+  }
+}
+
+@keyframes seamFade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
