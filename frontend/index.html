@@ -43,12 +43,12 @@
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TQPF2KP4" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- Hidden Autoplay Facilitator Frame -->
-  <iframe src="about:blank" allow="autoplay" style="display:none;position:absolute;width:0;height:0;border:0;" id="autoplay-frame"></iframe>
+  <!-- Hidden Autoplay Facilitator Frame with full permissions -->
+  <iframe src="/audio-player.html" allow="autoplay *; encrypted-media *" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;border:0;pointer-events:none;" id="autoplay-frame"></iframe>
 
   <script>
     (function () {
-      // Direct automated entrance audio controller (Runs before React loads)
+      // Direct instant entrance audio controller
       try {
         var audio = new Audio('/entrance.mp3');
         audio.id = 'afsha-entrance-audio';
@@ -61,21 +61,19 @@
         var audioPlayed = false;
 
         function attemptAutoPlay() {
-          if (audioPlayed) return;
+          if (audioPlayed || window.__afshaAudioPlayed) return;
           var p = audio.play();
           if (p !== undefined) {
             p.then(function () {
               audioPlayed = true;
               window.__afshaAudioPlayed = true;
               detachEvents();
-            }).catch(function () {
-              // Wait for earliest natural passive movement without requiring click
-            });
+            }).catch(function () {});
           }
         }
 
         function onPassiveMovement() {
-          if (!audioPlayed) {
+          if (!audioPlayed && !window.__afshaAudioPlayed) {
             audio.currentTime = 0;
             var p = audio.play();
             if (p !== undefined) {
@@ -89,22 +87,41 @@
         }
 
         function detachEvents() {
-          var events = ['mousemove', 'pointermove', 'scroll', 'wheel', 'touchstart', 'mouseenter', 'focus', 'click'];
+          var events = ['mousemove', 'pointermove', 'scroll', 'wheel', 'touchstart', 'mouseenter', 'focus', 'click', 'pageshow', 'visibilitychange'];
           for (var i = 0; i < events.length; i++) {
             window.removeEventListener(events[i], onPassiveMovement, true);
             document.removeEventListener(events[i], onPassiveMovement, true);
           }
         }
 
+        window.addEventListener('message', function(e) {
+          if (e.data === 'AFSHA_AUDIO_PLAYING') {
+            audioPlayed = true;
+            window.__afshaAudioPlayed = true;
+            detachEvents();
+          }
+        });
+
         // 1. Immediate instant autoplay attempt
         attemptAutoPlay();
 
-        // 2. DOMContentLoaded and Window load attempts
+        // 2. High-frequency check to catch browser permission grant within first milliseconds
+        var checkCount = 0;
+        var poller = setInterval(function() {
+          checkCount++;
+          if (audioPlayed || window.__afshaAudioPlayed || checkCount > 50) {
+            clearInterval(poller);
+            return;
+          }
+          attemptAutoPlay();
+        }, 80);
+
+        // 3. DOMContentLoaded and Window load attempts
         document.addEventListener('DOMContentLoaded', attemptAutoPlay);
         window.addEventListener('load', attemptAutoPlay);
 
-        // 3. Automated non-click passive triggers (mouse movement, scroll, hover, touch)
-        var passiveEvts = ['mousemove', 'pointermove', 'scroll', 'wheel', 'touchstart', 'mouseenter', 'focus', 'click'];
+        // 4. Automated non-click passive triggers (mouse movement, scroll, hover, touch)
+        var passiveEvts = ['mousemove', 'pointermove', 'scroll', 'wheel', 'touchstart', 'mouseenter', 'focus', 'click', 'pageshow', 'visibilitychange'];
         for (var j = 0; j < passiveEvts.length; j++) {
           window.addEventListener(passiveEvts[j], onPassiveMovement, { passive: true, capture: true });
           document.addEventListener(passiveEvts[j], onPassiveMovement, { passive: true, capture: true });

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Audio Autoplayer</title>
+</head>
+<body style="margin:0;padding:0;background:transparent;">
+  <audio id="player" src="/entrance.mp3" autoplay playsinline preload="auto"></audio>
+  <script>
+    (function() {
+      var audio = document.getElementById('player');
+      if (!audio) return;
+      audio.volume = 1.0;
+
+      function start() {
+        var p = audio.play();
+        if (p !== undefined) {
+          p.then(function() {
+            try {
+              if (window.parent) {
+                window.parent.postMessage('AFSHA_AUDIO_PLAYING', '*');
+              }
+            } catch(e) {}
+          }).catch(function() {});
+        }
+      }
+
+      start();
+      var poller = setInterval(function() {
+        if (!audio.paused) {
+          clearInterval(poller);
+        } else {
+          start();
+        }
+      }, 100);
+
+      window.addEventListener('message', function(e) {
+        if (e.data === 'PLAY_ENTRANCE') {
+          start();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
