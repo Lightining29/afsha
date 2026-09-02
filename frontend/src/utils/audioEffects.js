@@ -1,9 +1,10 @@
 /**
- * High-End Synthesized Audio Effects using Web Audio API
- * Provides a luxurious opening chime and subtle UI sound effects with zero external MP3 dependencies.
+ * High-End Synthesized & MP3 Audio Effects
+ * Plays /entrance.mp3 when the website opens with seamless fallback.
  */
 
 let audioCtx = null;
+let entranceAudio = null;
 
 function getAudioContext() {
   if (typeof window === 'undefined') return null;
@@ -20,19 +21,40 @@ function getAudioContext() {
 }
 
 /**
- * Play luxurious website opening sound
- * A celestial harmonic chime chord (C5 - E5 - G5 - C6) with soft reverb decay.
+ * Play website opening sound using entrance.mp3 with graceful fallback
  */
 export function playWebsiteOpeningSound() {
+  if (typeof window === 'undefined') return;
+
+  try {
+    if (!entranceAudio) {
+      entranceAudio = new Audio('/entrance.mp3');
+      entranceAudio.volume = 0.9;
+    }
+    entranceAudio.currentTime = 0;
+    const playPromise = entranceAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Autoplay policy prevented immediate playback; fallback to Web Audio API chime
+        playSynthesizedChime();
+      });
+    }
+  } catch (err) {
+    playSynthesizedChime();
+  }
+}
+
+/**
+ * Fallback synthesizer using Web Audio API if MP3 playback is restricted
+ */
+function playSynthesizedChime() {
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    // Harmonic frequencies for luxury warm bell chord (C-maj9 vibe)
     const freqs = [523.25, 659.25, 783.99, 987.77, 1046.50];
 
-    // Master gain
     const masterGain = ctx.createGain();
     masterGain.gain.setValueAtTime(0.001, now);
     masterGain.gain.exponentialRampToValueAtTime(0.18, now + 0.08);
@@ -56,9 +78,7 @@ export function playWebsiteOpeningSound() {
       osc.start(now + idx * 0.035);
       osc.stop(now + 1.8);
     });
-  } catch (err) {
-    // Audio policies in modern browsers gracefully degrade without error
-  }
+  } catch (e) {}
 }
 
 /**
