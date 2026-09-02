@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom';
 import {
   Zap,
   Sparkles,
-  Flame,
   Star,
-  CheckCircle2,
   ArrowRight,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
+import { fetchProduct, fetchProducts, formatPrice, getProductPrice } from '../../api';
 import './Hero.css';
 
 const SLIDES = [
@@ -23,11 +22,6 @@ const SLIDES = [
     titleHighlight: 'Body Hair Remover',
     highlightClass: 'highlight-rose',
     titleSub: 'Instant Touch-Ups • Zero Redness, Cuts or Bumps',
-    price: '₹799',
-    origPrice: '₹1,599',
-    discount: '50% OFF',
-    rating: '4.9',
-    reviewsCount: '620+',
     ctaText: 'Buy Hair Remover 💖',
     ctaClass: 'btn-rose',
     ctaLink: '/painless-facial-hair-remover',
@@ -45,11 +39,6 @@ const SLIDES = [
     titleHighlight: 'Precision Shaver',
     highlightClass: 'highlight-amber',
     titleSub: 'Face • Arms • Legs • Underarms • Bikini Line',
-    price: '₹799',
-    origPrice: '₹1,599',
-    discount: '50% OFF',
-    rating: '4.9',
-    reviewsCount: '510+',
     ctaText: 'Shop Hair Remover ⚡',
     ctaClass: 'btn-gold',
     ctaLink: '/painless-facial-hair-remover',
@@ -67,11 +56,6 @@ const SLIDES = [
     titleHighlight: 'Body Hair Trimmer',
     highlightClass: 'highlight-rose',
     titleSub: 'Built-in LED Light • USB Fast Charging',
-    price: '₹799',
-    origPrice: '₹1,599',
-    discount: '50% OFF',
-    rating: '4.8',
-    reviewsCount: '480+',
     ctaText: 'Order Now 50% Off ✨',
     ctaClass: 'btn-rose',
     ctaLink: '/painless-facial-hair-remover',
@@ -81,10 +65,56 @@ const SLIDES = [
   }
 ];
 
-export default function Hero() {
+function findHairRemover(items) {
+  if (!Array.isArray(items)) return null;
+  return items.find(
+    (p) =>
+      p.slug === 'painless-facial-hair-remover' ||
+      /painless.*hair|facial.*hair|hair[- ]?remover/i.test(p.slug || '') ||
+      /hair[- ]?remover|facial.*trimmer/i.test(p.name || '')
+  );
+}
+
+export default function Hero({ products: initialProducts = [] }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [productData, setProductData] = useState(() => findHairRemover(initialProducts));
   const touchStartX = useRef(null);
+
+  // Fetch real live product data and pricing from API
+  useEffect(() => {
+    let isMounted = true;
+
+    if (initialProducts && initialProducts.length > 0) {
+      const match = findHairRemover(initialProducts);
+      if (match) {
+        setProductData(match);
+        return;
+      }
+    }
+
+    fetchProduct('painless-facial-hair-remover')
+      .then((data) => {
+        if (!isMounted) return;
+        if (data && (data.price !== undefined || data.finalPrice !== undefined)) {
+          setProductData(data);
+        }
+      })
+      .catch(() => {
+        fetchProducts({ limit: 10 })
+          .then((res) => {
+            if (!isMounted) return;
+            const list = Array.isArray(res) ? res : res?.items || [];
+            const match = findHairRemover(list);
+            if (match) setProductData(match);
+          })
+          .catch(() => {});
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [initialProducts]);
 
   // 4s Auto Slider Timer (pauses on user hover)
   useEffect(() => {
@@ -94,6 +124,22 @@ export default function Hero() {
     }, 4000);
     return () => clearInterval(timer);
   }, [isPaused]);
+
+  // Compute live real pricing from fetched product data
+  const currentPrice = productData ? getProductPrice(productData) : 799;
+  const originalPrice = productData?.originalPrice || productData?.mrp || (currentPrice * 2);
+
+  const displayPrice = formatPrice(currentPrice);
+  const displayOrigPrice = formatPrice(originalPrice);
+  const displayDiscount = productData?.discountPercent
+    ? `${productData.discountPercent}% OFF`
+    : originalPrice > currentPrice
+    ? `${Math.round(((originalPrice - currentPrice) / originalPrice) * 100)}% OFF`
+    : '50% OFF';
+
+  const productTargetLink = productData?.slug
+    ? `/${productData.slug}`
+    : '/painless-facial-hair-remover';
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
@@ -116,7 +162,7 @@ export default function Hero() {
   return (
     <section id="home" className="hero-banner-section">
       <div className="container">
-        {/* ── Main Slider Viewport (Exact 210px Rakshabandhan Aspect Ratio) ── */}
+        {/* ── Main Slider Viewport (Exact 210px Aspect Ratio) ── */}
         <div
           className="hero-slider-viewport"
           onMouseEnter={() => setIsPaused(true)}
@@ -152,17 +198,17 @@ export default function Hero() {
                     <span className="hero-title-sub">{slide.titleSub}</span>
                   </h2>
 
-                  {/* Pricing & CTA Row */}
+                  {/* Pricing & CTA Row with Real Live Fetched Prices */}
                   <div className="hero-action-row">
-                    <Link to={slide.ctaLink} className={`hero-shop-btn ${slide.ctaClass}`}>
+                    <Link to={productTargetLink} className={`hero-shop-btn ${slide.ctaClass}`}>
                       <span>{slide.ctaText}</span>
                       <ArrowRight size={14} className="btn-arrow-icon" />
                     </Link>
 
                     <div className="hero-price-chip">
-                      <span className="hero-curr-price">{slide.price}</span>
-                      <span className="hero-orig-price">{slide.origPrice}</span>
-                      <span className="hero-save-badge">{slide.discount}</span>
+                      <span className="hero-curr-price">{displayPrice}</span>
+                      <span className="hero-orig-price">{displayOrigPrice}</span>
+                      <span className="hero-save-badge">{displayDiscount}</span>
                     </div>
                   </div>
                 </div>

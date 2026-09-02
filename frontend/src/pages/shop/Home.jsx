@@ -81,7 +81,7 @@ export default function Home() {
       </div>
 
       {/* ── Hero Banner with Transparent Trimmer & Orbiting Badges ── */}
-      <Hero />
+      <Hero products={products} />
 
       {/* ── Circular Categories Row (Instant Loading Local Badges) ── */}
       <section id="categories" className="home-categories-circle-section">
