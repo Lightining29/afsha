@@ -1,39 +1,52 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../../styles/Transitions.css';
 
-const TRANSITION_CLASSES = [
-  'transition-perspective-slide',
-  'transition-diagonal-wipe',
-  'transition-circular',
-  'transition-horizontal-wipe'
+const BLACK_TRANSITIONS = [
+  'black-circular-wipe',
+  'black-perspective-slide',
+  'black-diagonal-wipe',
+  'black-horizontal-wipe'
 ];
 
 /**
- * Universal Page Transition Wrapper
- * Cycles through Perspective Slide, Diagonal Wipe, .circular, and Horizontal Wipe
- * whenever navigation happens across all pages on the website.
+ * Universal Page Transition Wrapper with Deep Black Cinematic Effects
+ * Cycles through Black Circular Wipe, Black Perspective Slide, Black Diagonal Wipe, and Black Horizontal Wipe
+ * on every page navigation across the entire website.
  */
 export default function PageTransitionWrapper({ children }) {
   const location = useLocation();
+  const [transitioning, setTransitioning] = useState(false);
   const [transitionIndex, setTransitionIndex] = useState(0);
-  const [animClass, setAnimClass] = useState('transition-perspective-slide');
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    const nextClass = TRANSITION_CLASSES[transitionIndex];
-    setAnimClass(nextClass);
-    setTransitionIndex((prev) => (prev + 1) % TRANSITION_CLASSES.length);
+    // Avoid running on very first initial page load
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    setTransitioning(true);
+    setTransitionIndex((prev) => (prev + 1) % BLACK_TRANSITIONS.length);
 
     const timer = setTimeout(() => {
-      setAnimClass('');
-    }, 700);
+      setTransitioning(false);
+    }, 600);
 
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+  const activeBlackTransition = BLACK_TRANSITIONS[transitionIndex];
+
   return (
-    <div className={`page-transition-host ${animClass}`}>
-      {children}
+    <div className="page-transition-host">
+      {transitioning && (
+        <div className={`black-transition-layer ${activeBlackTransition}`} aria-hidden="true" />
+      )}
+      <div className={transitioning ? 'page-content-transitioning' : ''}>
+        {children}
+      </div>
     </div>
   );
 }
