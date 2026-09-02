@@ -7,64 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title> Afsha Enterprises</title>
 
-  <!-- High-Priority Audio Preload: Begin loading salesman.mp3 immediately in the first byte of head -->
-  <link rel="preload" href="/salesman.mp3" as="fetch" type="audio/mpeg" crossorigin />
-
-  <script>
-    // Instant entrance audio trigger: executes at the very first millisecond of HTML parsing
-    (function () {
-      try {
-        var audio = new Audio('/salesman.mp3');
-        audio.id = 'afsha-entrance-audio';
-        audio.preload = 'auto';
-        audio.volume = 1.0;
-        audio.setAttribute('playsinline', 'true');
-        audio.setAttribute('webkit-playsinline', 'true');
-        window.__afshaAudio = audio;
-
-        function startNow() {
-          if (window.__afshaAudioStarted) return;
-          var p = audio.play();
-          if (p !== undefined) {
-            p.then(function () {
-              window.__afshaAudioStarted = true;
-              detach();
-            }).catch(function () {});
-          }
-        }
-
-        function detach() {
-          var evts = ['mousemove', 'pointermove', 'touchstart', 'scroll', 'wheel', 'focus', 'click', 'keydown', 'pageshow', 'visibilitychange'];
-          for (var i = 0; i < evts.length; i++) {
-            window.removeEventListener(evts[i], startNow, true);
-            document.removeEventListener(evts[i], startNow, true);
-          }
-        }
-
-        // 1. Instant execution
-        startNow();
-
-        // 2. Immediate micro-polling every 40ms to start the moment browser unblocks
-        var attempts = 0;
-        var loop = setInterval(function () {
-          attempts++;
-          if (window.__afshaAudioStarted || attempts > 35) {
-            clearInterval(loop);
-            return;
-          }
-          startNow();
-        }, 40);
-
-        // 3. Earliest natural non-click triggers (mouse movement, hover, scroll, touch)
-        var evts = ['mousemove', 'pointermove', 'touchstart', 'scroll', 'wheel', 'focus', 'click', 'keydown', 'pageshow', 'visibilitychange'];
-        for (var j = 0; j < evts.length; j++) {
-          window.addEventListener(evts[j], startNow, { passive: true, capture: true });
-          document.addEventListener(evts[j], startNow, { passive: true, capture: true });
-        }
-      } catch (e) {}
-    })();
-  </script>
-
   <meta name="description"
     content="Buy premium body massagers from Afsha Enterprises. Electric, handheld and pain relief massagers with fast delivery across India." />
   <link data-rh="true" rel="canonical" href="https://www.afshaenterprises.com/" />
