@@ -7,15 +7,15 @@ import './EntranceSliceTransition.css';
 const WARP_STREAKS = Array.from({ length: 32 }, (_, i) => ({
   id: i,
   angle: (i * 360) / 32,
-  delay: (i % 6) * 0.08,
-  speed: 0.9 + (i % 5) * 0.15,
+  delay: (i % 6) * 0.05,
+  speed: 0.7 + (i % 5) * 0.12,
   length: 70 + (i % 4) * 35
 }));
 
 /**
- * Cinematic Spacetime Travel Entrance Transition
- * Features high-speed hyperspace warp stars, radiant glowing Afsha Enterprises logo,
- * slower majestic timing, and instant entrance.mp3 playback on website open.
+ * Full-Screen Entrance Logo Transition Effect (Medium Speed)
+ * A dynamic, continuous transition effect featuring the Afsha Enterprises shining logo,
+ * spacetime warp streaks, and instant salesman.mp3 playback on website open.
  */
 export default function EntranceSliceTransition() {
   const [active, setActive] = useState(true);
@@ -26,7 +26,7 @@ export default function EntranceSliceTransition() {
     // Setup gesture unlock listeners immediately
     setupGestureUnlock();
 
-    // Trigger instant entrance audio playback on mount
+    // Trigger instant salesman.mp3 audio playback on mount
     const triggerAudio = () => {
       const audioEl = window.__afshaAudio || audioElementRef.current || document.getElementById('afsha-entrance-audio');
       if (audioEl) {
@@ -38,7 +38,7 @@ export default function EntranceSliceTransition() {
 
     triggerAudio();
 
-    // Micro-polling every 40ms to start audio the exact millisecond browser allows
+    // Micro-polling every 40ms to catch instant playback permission
     const audioPoll = setInterval(() => {
       const audioEl = window.__afshaAudio || audioElementRef.current || document.getElementById('afsha-entrance-audio');
       if (audioEl && !audioEl.paused) {
@@ -63,15 +63,15 @@ export default function EntranceSliceTransition() {
       document.addEventListener(evt, onPassive, { passive: true, capture: true });
     });
 
-    // Slow, cinematic timing for the spacetime logo experience
+    // Medium-speed transition effect: logo reveals with warp speed, then smoothly wipes
     const timer1 = setTimeout(() => {
       setExiting(true);
-    }, 2500);
+    }, 650);
 
-    // Complete transition and unmount after slices slide away smoothly
+    // Transition effect completes and unmounts
     const timer2 = setTimeout(() => {
       setActive(false);
-    }, 3500);
+    }, 1300);
 
     return () => {
       clearInterval(audioPoll);
@@ -92,7 +92,7 @@ export default function EntranceSliceTransition() {
     playWebsiteOpeningSound();
 
     setExiting(true);
-    setTimeout(() => setActive(false), 950);
+    setTimeout(() => setActive(false), 450);
   };
 
   if (!active) return null;
@@ -103,13 +103,13 @@ export default function EntranceSliceTransition() {
       onClick={handleUserTap}
       role="button"
       tabIndex={0}
-      aria-label="Click to enter"
+      aria-label="Click to skip transition"
     >
-      {/* ── Native DOM Audio Element for Preloading and Instant Playback ── */}
+      {/* ── Native DOM Audio Element for Preloading and Instant Playback of salesman.mp3 ── */}
       <audio
         ref={audioElementRef}
         id="afsha-entrance-audio"
-        src="/entrance.mp3"
+        src="/salesman.mp3"
         preload="auto"
         playsInline
         autoPlay

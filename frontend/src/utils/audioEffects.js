@@ -20,7 +20,7 @@ export function getEntranceAudio() {
     if (domAudio) {
       globalEntranceAudio = domAudio;
     } else {
-      globalEntranceAudio = new Audio('/entrance.mp3');
+      globalEntranceAudio = new Audio('/salesman.mp3');
       globalEntranceAudio.id = 'afsha-entrance-audio';
       globalEntranceAudio.preload = 'auto';
       globalEntranceAudio.setAttribute('playsinline', 'true');
