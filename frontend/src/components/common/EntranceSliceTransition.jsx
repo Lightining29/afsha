@@ -25,12 +25,12 @@ export default function EntranceSliceTransition() {
     // Start sliding animation
     const timer1 = setTimeout(() => {
       setExiting(true);
-    }, 200);
+    }, 100);
 
     // Complete transition and remove from DOM
     const timer2 = setTimeout(() => {
       setActive(false);
-    }, 1500);
+    }, 650);
 
     return () => {
       window.removeEventListener('pointerdown', handleFirstInteraction);

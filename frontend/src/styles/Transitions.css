@@ -22,91 +22,83 @@
   pointer-events: none;
 }
 
-/* 1. Black Circular Wipe (.circular effect) */
+/* 1. Black Circular Wipe (Expands from Bottom-Right to Top-Left) */
 .black-transition-layer.black-circular-wipe {
-  animation: blackCircularReveal 0.6s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  animation: blackCircularReveal 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes blackCircularReveal {
   0% {
-    clip-path: circle(0% at 50% 50%);
+    clip-path: circle(0% at 100% 100%);
     opacity: 1;
   }
-  50% {
-    clip-path: circle(150% at 50% 50%);
+  60% {
+    clip-path: circle(180% at 100% 100%);
     opacity: 1;
   }
   100% {
-    clip-path: circle(150% at 50% 50%);
+    clip-path: circle(180% at 0% 0%);
     opacity: 0;
   }
 }
 
-/* 2. Black Perspective Slide */
+/* 2. Black Perspective Slide (Glides from Bottom-Right to Top-Left) */
 .black-transition-layer.black-perspective-slide {
-  transform-origin: center bottom;
-  animation: blackPerspectiveSlide 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  transform-origin: bottom right;
+  animation: blackPerspectiveSlide 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes blackPerspectiveSlide {
   0% {
-    transform: perspective(1000px) translateY(100%) rotateX(-12deg);
-    opacity: 1;
-  }
-  45% {
-    transform: perspective(1000px) translateY(0%) rotateX(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: perspective(1000px) translateY(-100%) rotateX(12deg);
-    opacity: 0.9;
-  }
-}
-
-/* 3. Black Diagonal Wipe */
-.black-transition-layer.black-diagonal-wipe {
-  animation: blackDiagonalWipe 0.6s cubic-bezier(0.77, 0, 0.175, 1) forwards;
-}
-
-@keyframes blackDiagonalWipe {
-  0% {
-    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+    transform: perspective(1000px) translate3d(100%, 100%, 0) rotate3d(-1, 1, 0, 15deg);
     opacity: 1;
   }
   50% {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: perspective(1000px) translate3d(0, 0, 0) rotate3d(0, 0, 0, 0deg);
     opacity: 1;
   }
   100% {
-    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+    transform: perspective(1000px) translate3d(-100%, -100%, 0) rotate3d(1, -1, 0, 15deg);
     opacity: 0;
   }
 }
 
-/* 4. Black Horizontal Wipe */
+/* 3. Black Diagonal Wipe (Wipes from Bottom-Right to Top-Left) */
+.black-transition-layer.black-diagonal-wipe {
+  animation: blackDiagonalWipe 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes blackDiagonalWipe {
+  0% {
+    clip-path: polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%);
+    opacity: 1;
+  }
+  50% {
+    clip-path: polygon(0 100%, 100% 0, 100% 100%, 100% 100%);
+    opacity: 1;
+  }
+  100% {
+    clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+    opacity: 0;
+  }
+}
+
+/* 4. Black Horizontal / Diagonal Curtain Wipe (Sweeps from Bottom-Right to Top-Left) */
 .black-transition-layer.black-horizontal-wipe {
-  animation: blackHorizontalWipe 0.55s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation: blackHorizontalWipe 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes blackHorizontalWipe {
   0% {
-    transform: scaleX(0);
-    transform-origin: left center;
+    transform: translate3d(100%, 100%, 0);
     opacity: 1;
   }
   50% {
-    transform: scaleX(1);
-    transform-origin: left center;
-    opacity: 1;
-  }
-  51% {
-    transform: scaleX(1);
-    transform-origin: right center;
+    transform: translate3d(0, 0, 0);
     opacity: 1;
   }
   100% {
-    transform: scaleX(0);
-    transform-origin: right center;
+    transform: translate3d(-100%, -100%, 0);
     opacity: 0;
   }
 }

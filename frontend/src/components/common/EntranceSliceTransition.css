@@ -100,15 +100,15 @@
 
 /* ── Exiting State: Slices slide from bottom-right to top-left ── */
 .slice-exiting .cutout-slice-top {
-  animation: sliceSlideUpTop 1.1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  animation: sliceSlideUpTop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .slice-exiting .cutout-slice-bottom {
-  animation: sliceSlideUpBottom 1.1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  animation: sliceSlideUpBottom 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .slice-exiting .cutout-slice-seam {
-  animation: seamFade 0.6s ease forwards;
+  animation: seamFade 0.3s ease forwards;
 }
 
 /* Diagonal slide animations from bottom-right to top-left */
@@ -130,8 +130,8 @@
     opacity: 1;
   }
   100% {
-    /* Sliding from bottom-right towards top-left / exit */
-    transform: translate3d(100%, 100%, 0);
+    /* Sliding from bottom-right towards top-left */
+    transform: translate3d(-100%, -100%, 0);
     opacity: 0.95;
   }
 }
