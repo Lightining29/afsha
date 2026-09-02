@@ -125,9 +125,9 @@ export default function Hero({ products: initialProducts = [] }) {
     return () => clearInterval(timer);
   }, [isPaused]);
 
-  // Compute live real pricing from fetched product data
-  const currentPrice = productData ? getProductPrice(productData) : 799;
-  const originalPrice = productData?.originalPrice || productData?.mrp || (currentPrice * 2);
+  // Set banner price to 1,799 as requested
+  const currentPrice = 1799;
+  const originalPrice = productData?.originalPrice || productData?.mrp || 3599;
 
   const displayPrice = formatPrice(currentPrice);
   const displayOrigPrice = formatPrice(originalPrice);
