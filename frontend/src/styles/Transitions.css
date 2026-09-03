@@ -325,3 +325,16 @@ button:active::before,
     transform: scale(1) translate3d(0, 0, 0);
   }
 }
+
+/* ── Explicitly Remove Page Transition on Product Detail Page ── */
+.product-detail-app-container {
+  animation: none !important;
+  transform: none !important;
+}
+
+.page-transition-host:has(.product-detail-app-container) .black-transition-layer {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

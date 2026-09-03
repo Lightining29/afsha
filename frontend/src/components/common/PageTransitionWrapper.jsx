@@ -9,18 +9,48 @@ const BLACK_TRANSITIONS = [
   'black-horizontal-wipe'
 ];
 
+const KNOWN_PRODUCT_SLUGS = [
+  'electric-body-massager',
+  'deep-tissue-massager',
+  'painless-facial-hair-remover',
+  'neck-and-shoulder-massager',
+  'foot-and-calf-massager',
+  'rechargeable-body-massager'
+];
+
+/**
+ * Detects if the current path corresponds to a product detail page.
+ * Returns true for all product detail routes (/product/:slug, /products/:slug, and direct product slugs).
+ */
+function isProductDetailPage(pathname = '') {
+  if (!pathname) return false;
+  const clean = pathname.replace(/^\/+|\/+$/g, '').replace(/\.html$/, '');
+
+  if (clean.startsWith('product/')) return true;
+  if (clean.startsWith('products/') && clean !== 'products') return true;
+  if (KNOWN_PRODUCT_SLUGS.includes(clean)) return true;
+  if (/massager|hair-remover/i.test(clean)) return true;
+
+  return false;
+}
+
 /**
  * Universal Page Transition Wrapper with Slide In & Slide Out Effects
- * Displays a full-screen slide in and slide out transition whenever ANY page opens
- * or routes change across the entire website.
+ * Page transition effects are completely disabled on product detail pages as requested.
  */
 export default function PageTransitionWrapper({ children }) {
   const location = useLocation();
-  const [transitioning, setTransitioning] = useState(true);
+  const isProductPage = isProductDetailPage(location.pathname);
+  const [transitioning, setTransitioning] = useState(() => !isProductDetailPage(location.pathname));
   const [transitionIndex, setTransitionIndex] = useState(0);
 
   useEffect(() => {
-    // Trigger slide in and slide out transition whenever any page opens
+    // Completely disable and remove transition on product detail page
+    if (isProductDetailPage(location.pathname)) {
+      setTransitioning(false);
+      return;
+    }
+
     setTransitioning(true);
     setTransitionIndex((prev) => (prev + 1) % BLACK_TRANSITIONS.length);
 
@@ -35,10 +65,10 @@ export default function PageTransitionWrapper({ children }) {
 
   return (
     <div className="page-transition-host">
-      {transitioning && (
+      {!isProductPage && transitioning && (
         <div className={`black-transition-layer ${activeBlackTransition}`} aria-hidden="true" />
       )}
-      <div className={transitioning ? 'page-content-transitioning' : ''}>
+      <div className={!isProductPage && transitioning ? 'page-content-transitioning' : ''}>
         {children}
       </div>
     </div>
