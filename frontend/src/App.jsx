@@ -34,9 +34,6 @@ const Contact = lazy(() => import('./pages/shop/Contact'));
 const LocationLanding = lazy(() => import('./pages/shop/LocationLanding'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 import ManishKumarProfile from './pages/profile/ManishKumarProfile';
-import EntranceSliceTransition from './components/common/EntranceSliceTransition';
-import PageTransitionWrapper from './components/common/PageTransitionWrapper';
-import './styles/Transitions.css';
 
 function App() {
   const location = useLocation();
@@ -49,9 +46,7 @@ function App() {
 
   return (
     <>
-      <EntranceSliceTransition />
       <Suspense fallback={<div className="loading-screen"><div className="loading-spinner" /></div>}>
-      <PageTransitionWrapper>
       <Routes>
         <Route path="/" element={<HomeLayout />} />
 
@@ -168,7 +163,6 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
-      </PageTransitionWrapper>
       </Suspense>
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
       <BottomNav />
