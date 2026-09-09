@@ -277,169 +277,161 @@ app.get('/robots.txt', (req, res) => {
   const host = req.get('host') || 'www.afshaenterprises.com';
   const protocol = req.protocol === 'https' || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
   const domain = process.env.SITE_URL || `${protocol}://${host}`;
-  res.header('Content-Type', 'text/plain');
-  res.send(`User-agent: *\nAllow: /\n\nSitemap: ${domain}/sitemap.xml\n`);
+  res.header('Content-Type', 'text/plain; charset=utf-8');
+  res.send(`User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin
+
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin
+
+User-agent: Googlebot-Image
+Allow: /
+
+Sitemap: ${domain}/sitemap.xml
+Sitemap: ${domain}/sitemap_index.xml
+`);
 });
 
-// Dynamic SEO Sitemap.xml Route (Handles sitemap.xml, sitemap_index.xml, /blogs/sitemap.xml, /*.html/sitemap.xml, etc.)
+// Dynamic SEO Sitemap.xml & sitemap_index.xml Route
+// Google Search Console Best Practice: Only 100% canonical 200-OK URLs! No duplicates, no redirects, no aliases.
 app.get([
   '/sitemap.xml',
   '/sitemap_index.xml',
   '/sitemap-index.xml',
-  '/sitemap-products.xml',
-  '/sitemap-blogs.xml',
-  '/sitemap-profile.xml',
-  '/sitemap-pages.xml',
-  '/sitemap-locations.xml',
-  '/sitemap-categories.xml',
-  '/blogs/sitemap.xml',
-  '/blog/sitemap.xml',
-  '/products/sitemap.xml',
-  '/product/sitemap.xml',
   /.*sitemap.*\.xml$/
 ], async (req, res) => {
   try {
     const host = req.get('host') || 'www.afshaenterprises.com';
     const protocol = req.protocol === 'https' || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
     const domain = (process.env.SITE_URL || `${protocol}://${host}`).replace(/\/$/, '');
+    const today = '2026-09-09';
 
-    let categories = [];
+    // If sitemap_index.xml is explicitly requested, return standard sitemap index
+    if (req.path.includes('index')) {
+      res.header('Content-Type', 'application/xml; charset=utf-8');
+      return res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${domain}/sitemap.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+</sitemapindex>`);
+    }
+
     let products = [];
     let blogs = [];
 
     try {
       if (mongoose.connection.readyState === 1) {
-        categories = await Category.find().select('slug updatedAt');
-        products = await Product.find().select('slug updatedAt');
-        blogs = await Blog.find().select('slug updatedAt');
+        products = await Product.find({ isActive: { $ne: false } }).select('slug name image updatedAt');
+        blogs = await Blog.find().select('slug title image updatedAt');
       }
     } catch (dbErr) {
       console.warn('Sitemap DB query warning:', dbErr.message);
     }
 
-    // Default seeded slugs if DB is empty
-    const fallbackProductSlugs = [
-      'electric-body-massager',
-      'deep-tissue-massager',
-      'painless-facial-hair-remover',
-      'neck-and-shoulder-massager',
-      'foot-and-calf-massager',
-      'rechargeable-body-massager'
+    const fallbackProducts = [
+      { slug: 'electric-body-massager', name: 'Electric Full Body Massager Machine', image: '/masage.jpg' },
+      { slug: 'deep-tissue-massager', name: 'Deep Tissue Percussion Massage Gun', image: '/masage.jpg' },
+      { slug: 'painless-facial-hair-remover', name: 'Painless Facial & Body Hair Remover', image: '/hair-remover-showcase-v3.png' },
+      { slug: 'neck-and-shoulder-massager', name: 'Shiatsu Neck and Shoulder Massager', image: '/masage.jpg' },
+      { slug: 'foot-and-calf-massager', name: 'Foot and Calf Acupressure Massager', image: '/masage.jpg' },
+      { slug: 'rechargeable-body-massager', name: 'Handheld Rechargeable Cordless Body Massager', image: '/masage.jpg' }
     ];
 
-    const fallbackBlogSlugs = [
-      'top-10-benefits-of-using-a-body-massager',
-      'best-massager-for-back-pain-in-india',
-      'how-to-choose-a-handheld-massager',
-      'neck-pain-relief-tips-at-home',
-      'electric-vs-manual-massagers'
+    const fallbackBlogs = [
+      { slug: 'top-10-benefits-of-using-a-body-massager', title: 'Top 10 Benefits of Using an Electric Body Massager Daily' },
+      { slug: 'best-massager-for-back-pain-in-india', title: 'Best Massager for Back Pain in India (2026 Doctor Guide)' },
+      { slug: 'how-to-choose-a-handheld-massager', title: 'How to Choose the Right Handheld Massager' },
+      { slug: 'neck-pain-relief-tips-at-home', title: '5 Quick Neck Pain Relief Tips at Home' },
+      { slug: 'electric-vs-manual-massagers', title: 'Electric vs Manual Massagers: Which Is Better?' },
+      { slug: 'how-to-relieve-sciatic-nerve-pain-at-home', title: 'How to Relieve Sciatic Nerve Pain at Home' },
+      { slug: 'plantar-fasciitis-foot-massager-guide', title: 'Best Foot Massagers for Plantar Fasciitis in India' },
+      { slug: 'facial-hair-removal-tips-for-women', title: 'Painless Facial Hair Removal Tips for Women' },
+      { slug: 'full-body-massage-machine-price-in-india', title: 'Full Body Massage Machine Price in India (2026 Buying Guide)' }
     ];
 
-    const fallbackCategorySlugs = [
-      'wellness-massage',
-      'skincare',
-      'hair-care',
-      'body'
-    ];
-
-    const staticUrls = [
-      { loc: `${domain}/`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${domain}/products`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/blogs`, priority: '0.9', changefreq: 'daily' },
-      { loc: `${domain}/blog`, priority: '0.85', changefreq: 'daily' },
-      { loc: `${domain}/contact`, priority: '0.8', changefreq: 'monthly' },
-      { loc: `${domain}/contact-us`, priority: '0.75', changefreq: 'monthly' },
-      
-      // ⭐ Manish Kumar Official Developer Profile Pages ⭐
-      { loc: `${domain}/manish-kumar`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${domain}/profile`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${domain}/profile/manish-kumar`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${domain}/manish`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/manishkumar`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/manish-profile`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/manish-kumar-profile`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/developer-profile`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/developer`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/developer/manish-kumar`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/about-manish-kumar`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/manish-kumar-java-developer`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/manish-kumar-devops-engineer`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/manish-kumar-full-stack-developer`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/manish-kumar-java-full-stack-developer`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/manish-kumar-software-engineer`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/manish-kumar-aws-architect`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/manish-kumar-resume`, priority: '0.9', changefreq: 'daily' },
-      { loc: `${domain}/manish-kumar.html`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/profile.html`, priority: '0.95', changefreq: 'daily' },
-
-      // Separate Product Direct Routes
-      { loc: `${domain}/electric-body-massager`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${domain}/deep-tissue-massager`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${domain}/painless-facial-hair-remover`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${domain}/neck-and-shoulder-massager`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${domain}/foot-and-calf-massager`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/rechargeable-body-massager`, priority: '0.95', changefreq: 'daily' },
-
-      // Static Product HTML Routes
-      { loc: `${domain}/electric-body-massager.html`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/deep-tissue-massager.html`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/painless-facial-hair-remover.html`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/neck-and-shoulder-massager.html`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/foot-and-calf-massager.html`, priority: '0.9', changefreq: 'daily' },
-      { loc: `${domain}/rechargeable-body-massager.html`, priority: '0.9', changefreq: 'daily' },
-
-      // Local SEO City Pages
-      { loc: `${domain}/locations/delhi`, priority: '0.85', changefreq: 'weekly' },
-      { loc: `${domain}/locations/mumbai`, priority: '0.85', changefreq: 'weekly' },
-      { loc: `${domain}/locations/bangalore`, priority: '0.85', changefreq: 'weekly' },
-
-      { loc: `${domain}/cart`, priority: '0.5', changefreq: 'monthly' },
-      { loc: `${domain}/checkout`, priority: '0.5', changefreq: 'monthly' },
-    ];
+    const finalProducts = products.length > 0 ? products : fallbackProducts;
+    const finalBlogs = blogs.length > 0 ? blogs : fallbackBlogs;
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
+    xml += `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n`;
 
-    staticUrls.forEach((url) => {
+    // 1. Core Site Pages (Canonical 200 OK)
+    const coreUrls = [
+      { loc: `${domain}/`, priority: '1.0', changefreq: 'daily' },
+      { loc: `${domain}/products`, priority: '0.9', changefreq: 'daily' },
+      { loc: `${domain}/blogs`, priority: '0.8', changefreq: 'daily' },
+      { loc: `${domain}/contact`, priority: '0.7', changefreq: 'monthly' },
+      {
+        loc: `${domain}/manish-kumar`,
+        priority: '1.0',
+        changefreq: 'daily',
+        image: `${domain}/manish-kumar.jpg`,
+        imageTitle: 'Manish Kumar - Senior Java Full Stack Developer & AWS DevOps Architect'
+      },
+    ];
+
+    coreUrls.forEach(u => {
       xml += `  <url>\n`;
-      xml += `    <loc>${url.loc}</loc>\n`;
-      xml += `    <changefreq>${url.changefreq}</changefreq>\n`;
-      xml += `    <priority>${url.priority}</priority>\n`;
+      xml += `    <loc>${u.loc}</loc>\n`;
+      xml += `    <lastmod>${today}</lastmod>\n`;
+      xml += `    <changefreq>${u.changefreq}</changefreq>\n`;
+      xml += `    <priority>${u.priority}</priority>\n`;
+      if (u.image) {
+        xml += `    <image:image>\n`;
+        xml += `      <image:loc>${u.image}</image:loc>\n`;
+        xml += `      <image:title>${u.imageTitle.replace(/&/g, '&amp;')}</image:title>\n`;
+        xml += `    </image:image>\n`;
+      }
       xml += `  </url>\n`;
     });
 
-    const activeCatSlugs = categories.length > 0 ? categories.map(c => c.slug).filter(Boolean) : fallbackCategorySlugs;
-    activeCatSlugs.forEach((slug) => {
+    // 2. Product Canonical Pages (/product/:slug)
+    finalProducts.forEach(p => {
+      const pImage = p.image ? (p.image.startsWith('http') ? p.image : `${domain}${p.image}`) : `${domain}/masage.jpg`;
       xml += `  <url>\n`;
-      xml += `    <loc>${domain}/category/${slug}</loc>\n`;
+      xml += `    <loc>${domain}/product/${p.slug}</loc>\n`;
+      xml += `    <lastmod>${today}</lastmod>\n`;
+      xml += `    <changefreq>daily</changefreq>\n`;
+      xml += `    <priority>1.0</priority>\n`;
+      xml += `    <image:image>\n`;
+      xml += `      <image:loc>${pImage}</image:loc>\n`;
+      xml += `      <image:title>${(p.name || p.slug).replace(/&/g, '&amp;')}</image:title>\n`;
+      xml += `    </image:image>\n`;
+      xml += `  </url>\n`;
+    });
+
+    // 3. Category Canonical Pages
+    ['wellness-massage', 'skincare', 'hair-care', 'body'].forEach(cat => {
+      xml += `  <url>\n`;
+      xml += `    <loc>${domain}/category/${cat}</loc>\n`;
+      xml += `    <lastmod>${today}</lastmod>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.85</priority>\n`;
       xml += `  </url>\n`;
     });
 
-    const activeProductSlugs = products.length > 0 ? products.map(p => p.slug).filter(Boolean) : fallbackProductSlugs;
-    activeProductSlugs.forEach((slug) => {
+    // 4. Blog Canonical Pages (/blog/:slug)
+    finalBlogs.forEach(b => {
       xml += `  <url>\n`;
-      xml += `    <loc>${domain}/product/${slug}</loc>\n`;
-      xml += `    <changefreq>daily</changefreq>\n`;
-      xml += `    <priority>0.95</priority>\n`;
-      xml += `  </url>\n`;
-      xml += `  <url>\n`;
-      xml += `    <loc>${domain}/products/${slug}</loc>\n`;
-      xml += `    <changefreq>daily</changefreq>\n`;
-      xml += `    <priority>0.95</priority>\n`;
-      xml += `  </url>\n`;
-    });
-
-    const activeBlogSlugs = blogs.length > 0 ? blogs.map(b => b.slug).filter(Boolean) : fallbackBlogSlugs;
-    activeBlogSlugs.forEach((slug) => {
-      xml += `  <url>\n`;
-      xml += `    <loc>${domain}/blog/${slug}</loc>\n`;
+      xml += `    <loc>${domain}/blog/${b.slug}</loc>\n`;
+      xml += `    <lastmod>${today}</lastmod>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.85</priority>\n`;
       xml += `  </url>\n`;
+    });
+
+    // 5. Location Pages
+    ['delhi', 'mumbai', 'bangalore'].forEach(city => {
       xml += `  <url>\n`;
-      xml += `    <loc>${domain}/blogs/${slug}</loc>\n`;
+      xml += `    <loc>${domain}/locations/${city}</loc>\n`;
+      xml += `    <lastmod>${today}</lastmod>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.8</priority>\n`;
       xml += `  </url>\n`;
@@ -447,7 +439,7 @@ app.get([
 
     xml += `</urlset>`;
 
-    res.header('Content-Type', 'application/xml');
+    res.header('Content-Type', 'application/xml; charset=utf-8');
     return res.send(xml);
   } catch (err) {
     console.error('Sitemap generation error:', err);
@@ -482,21 +474,139 @@ const staticDir = resolveStaticDirectory();
 if (staticDir) {
   console.log(`[Static] Serving frontend from: ${staticDir}`);
 
-  // Serve static assets with caching headers
+  // 1. Fast-path instant static handler for Manish Kumar Profile (Sub-20ms instant delivery for Googlebot and users)
+  app.get(['/manish-kumar', '/manish-kumar.html'], (req, res) => {
+    if (req.path.endsWith('.html')) {
+      return res.redirect(301, '/manish-kumar');
+    }
+    const profilePath = path.join(staticDir, 'manish-kumar.html');
+    if (fs.existsSync(profilePath)) {
+      res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+      res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+      res.setHeader('Link', '<https://www.afshaenterprises.com/manish-kumar>; rel="canonical"');
+      return res.sendFile(profilePath);
+    }
+    res.sendFile(path.join(staticDir, 'index.html'));
+  });
+
+  // 2. 301 Permanent Redirects for all legacy/alias Manish Kumar URLs to single canonical /manish-kumar
+  app.get([
+    '/manish',
+    '/manishkumar',
+    '/profile',
+    '/profile/manish',
+    '/profile/manish-kumar',
+    '/profile.html',
+    '/manish.html',
+    '/manishkumar.html',
+    '/developer',
+    '/developer.html',
+    '/developer-profile',
+    '/developer-profile.html',
+    '/about-manish-kumar',
+    '/manish-profile',
+    '/manish-kumar-profile',
+    '/manish-kumar-java-developer',
+    '/manish-kumar-devops-engineer',
+    '/manish-kumar-full-stack-developer',
+    '/manish-kumar-java-full-stack-developer',
+    '/manish-kumar-software-engineer',
+    '/manish-kumar-aws-architect',
+    '/manish-kumar-resume',
+    '/developer/manish-kumar'
+  ], (_req, res) => {
+    return res.redirect(301, '/manish-kumar');
+  });
+
+  // 3. Fast-path instant static handler for Product Detail Pages
+  app.get('/product/:slug', (req, res, next) => {
+    const slug = req.params.slug.replace(/\.html$/, '');
+    const candidates = [
+      path.join(staticDir, 'product', `${slug}.html`),
+      path.join(staticDir, `${slug}.html`)
+    ];
+    for (const p of candidates) {
+      if (fs.existsSync(p)) {
+        res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+        res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+        res.setHeader('Link', `<https://www.afshaenterprises.com/product/${slug}>; rel="canonical"`);
+        return res.sendFile(p);
+      }
+    }
+    next();
+  });
+
+  // 4. 301 Permanent Redirects for legacy product URLs to single canonical /product/:slug
+  app.get(['/products/:slug', '/:slug.html'], (req, res, next) => {
+    const raw = req.params.slug || req.path.replace(/^\/|\.html$/g, '');
+    const slug = raw.replace(/^products\//, '').replace(/^product\//, '');
+    const validSlugs = [
+      'electric-body-massager',
+      'deep-tissue-massager',
+      'painless-facial-hair-remover',
+      'neck-and-shoulder-massager',
+      'foot-and-calf-massager',
+      'rechargeable-body-massager'
+    ];
+    if (validSlugs.includes(slug)) {
+      return res.redirect(301, `/product/${slug}`);
+    }
+    next();
+  });
+
+  // 5. Fast-path instant static handler for Blog Articles
+  app.get('/blog/:slug', (req, res, next) => {
+    const slug = req.params.slug.replace(/\.html$/, '');
+    const candidates = [
+      path.join(staticDir, 'blog', `${slug}.html`),
+      path.join(staticDir, `${slug}.html`)
+    ];
+    for (const p of candidates) {
+      if (fs.existsSync(p)) {
+        res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+        res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+        res.setHeader('Link', `<https://www.afshaenterprises.com/blog/${slug}>; rel="canonical"`);
+        return res.sendFile(p);
+      }
+    }
+    next();
+  });
+
+  // 6. 301 Permanent Redirects for legacy blog URLs to single canonical /blog/:slug
+  app.get(['/blogs/:slug', '/blog/:slug.html', '/blogs/:slug.html'], (req, res, next) => {
+    const slug = (req.params.slug || req.path.replace(/^\/blogs?\//, '')).replace(/\.html$/, '');
+    if (slug) {
+      return res.redirect(301, `/blog/${slug}`);
+    }
+    next();
+  });
+
+  // 7. 301 Redirect for /contact-us to /contact
+  app.get(['/contact-us', '/contact-us.html', '/contact.html'], (_req, res) => {
+    res.redirect(301, '/contact');
+  });
+
+  // 8. 301 Redirect for /blog (singular) to /blogs (catalog)
+  app.get(['/blog', '/blog.html', '/blogs.html'], (_req, res) => {
+    res.redirect(301, '/blogs');
+  });
+
+  // Serve static assets with caching headers & automatic .html extension support
   app.use(
     express.static(staticDir, {
       maxAge: '1d',
+      extensions: ['html'],
       setHeaders: (res, filePath) => {
         if (filePath.includes('assets') || filePath.endsWith('.js') || filePath.endsWith('.css')) {
           res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
         } else if (filePath.endsWith('.html')) {
-          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
         }
       },
     })
   );
 
-  // SPA fallback for all non-API routes
+  // SPA fallback for all remaining non-API routes
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api/') || req.path.startsWith('/socket.io/')) {
       return next();

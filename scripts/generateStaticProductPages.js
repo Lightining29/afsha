@@ -628,7 +628,7 @@ function generateBlogHtml(b) {
 
 function generateManishProfileHtml() {
   const canonicalUrl = 'https://www.afshaenterprises.com/manish-kumar';
-  const imageUrl = 'https://www.afshaenterprises.com/manish.jpg';
+  const imageUrl = 'https://www.afshaenterprises.com/manish-kumar.jpg';
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -639,15 +639,34 @@ function generateManishProfileHtml() {
         "name": "Manish Kumar",
         "alternateName": ["Manish", "Manish Kumar Developer", "Lightining29"],
         "jobTitle": "Senior Java Full Stack Developer & AWS DevOps Cloud Solutions Architect",
-        "description": "Senior Java Full Stack Developer & AWS DevOps Cloud Architect with expertise in Spring Boot, React.js, Microservices, Kubernetes, Docker, CI/CD pipelines, MongoDB, PostgreSQL, and high-concurrency systems.",
+        "description": "Senior Java Full Stack Developer & AWS DevOps Cloud Architect with expertise in Java 21, Spring Boot 3, Microservices, React.js, Docker, Kubernetes, CI/CD pipelines, MongoDB, PostgreSQL, and high-concurrency systems.",
         "url": canonicalUrl,
         "image": imageUrl,
         "email": "mailto:brayw433@gmail.com",
         "telephone": "+91-8851961088",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Ghaziabad",
+          "addressRegion": "Uttar Pradesh",
+          "postalCode": "201001",
+          "addressCountry": "IN"
+        },
+        "alumniOf": {
+          "@type": "EducationalOrganization",
+          "name": "B.Tech in Computer Science & Engineering"
+        },
         "sameAs": [
           "https://github.com/Lightining29",
           "https://manish-java-developer.vercel.app/"
         ]
+      },
+      {
+        "@type": "ProfilePage",
+        "@id": `${canonicalUrl}#webpage`,
+        "url": canonicalUrl,
+        "name": "Manish Kumar — Senior Java Full Stack Developer & AWS Solutions Architect",
+        "description": "Official verified profile of Manish Kumar. Senior Java Full Stack Developer, AWS DevOps Architect, and Full Stack Engineer.",
+        "primaryImageOfPage": imageUrl
       }
     ]
   };
@@ -657,37 +676,146 @@ function generateManishProfileHtml() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manish Kumar — Senior Java Full Stack Developer & AWS Cloud Solutions Architect</title>
-  <meta name="description" content="Official portfolio & profile of Manish Kumar. Senior Java Full Stack Developer & AWS DevOps Cloud Architect. Phone: +91-8851961088.">
+  <title>Manish Kumar — Senior Java Full Stack Developer &amp; AWS Cloud Solutions Architect</title>
+  <meta name="description" content="Official portfolio &amp; profile of Manish Kumar. Senior Java Full Stack Developer &amp; AWS DevOps Cloud Architect. Expert in Java 21, Spring Boot, Microservices, React, Docker, and AWS. Contact: +91-8851961088.">
   <meta name="keywords" content="Manish Kumar, Manish, Manish Kumar Java Developer, Manish Kumar Full Stack Developer, Manish Kumar DevOps Engineer, Manish Kumar AWS Architect">
   <link rel="canonical" href="${canonicalUrl}">
+  <meta property="og:type" content="profile">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="Manish Kumar — Senior Java Full Stack Developer &amp; AWS DevOps Architect">
+  <meta property="og:description" content="Official portfolio &amp; profile of Manish Kumar. Senior Java Full Stack Developer &amp; AWS Cloud Architect.">
+  <meta property="og:image" content="${imageUrl}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Manish Kumar — Senior Java Full Stack Developer">
+  <meta name="twitter:description" content="Building enterprise-scale web applications with Java, Spring Boot, React, and resilient AWS Cloud architecture.">
+  <meta name="twitter:image" content="${imageUrl}">
   <script type="application/ld+json">${JSON.stringify(jsonLd, null, 2)}</script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #faf9f6; color: #1e293b; }
-    .container { max-width: 860px; margin: 0 auto; padding: 40px 20px; text-align: center; }
-    .card { background: #ffffff; border-radius: 28px; padding: 36px; border: 1px solid #e2e8f0; }
-    .avatar { width: 140px; height: 140px; border-radius: 50%; border: 4px solid #f59e0b; margin-bottom: 12px; }
-    .btn { display: inline-block; padding: 12px 22px; border-radius: 999px; text-decoration: none; font-weight: 800; margin: 6px; }
-    .btn-wa { background: #25d366; color: #fff; }
-    .btn-call { background: #0284c7; color: #fff; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f19; color: #f1f5f9; line-height: 1.6; }
+    .nav { background: #111827; border-bottom: 1px solid #1f2937; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .nav a { color: #f59e0b; text-decoration: none; font-weight: 800; font-size: 1.1rem; }
+    .nav-links a { color: #94a3b8; font-size: 0.9rem; margin-left: 16px; font-weight: 600; }
+    .nav-links a:hover { color: #fff; }
+    .container { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
+    .card { background: #111827; border-radius: 24px; padding: 32px; border: 1px solid #1f2937; margin-bottom: 24px; }
+    .hero { text-align: center; }
+    .avatar { width: 140px; height: 140px; border-radius: 50%; border: 4px solid #f59e0b; margin: 0 auto 16px; display: block; object-fit: cover; }
+    h1 { font-size: 2.2rem; font-weight: 900; color: #ffffff; margin-bottom: 6px; }
+    .role { color: #f59e0b; font-weight: 800; font-size: 1.15rem; margin-bottom: 14px; }
+    .bio { max-width: 650px; margin: 0 auto 20px; color: #94a3b8; font-size: 1.05rem; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 18px; }
+    .btn { display: inline-flex; align-items: center; padding: 10px 20px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.92rem; }
+    .btn-wa { background: #22c55e; color: #ffffff; }
+    .btn-call { background: #0284c7; color: #ffffff; }
     .btn-port { background: #f59e0b; color: #0f172a; }
+    .btn-gh { background: #27272a; color: #ffffff; border: 1px solid #3f3f46; }
+    .btn-email { background: #6366f1; color: #ffffff; }
+    .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin: 24px 0 8px; }
+    .stat-box { background: #1e293b; padding: 16px; border-radius: 16px; text-align: center; border: 1px solid #334155; }
+    .stat-num { font-size: 1.6rem; font-weight: 900; color: #f59e0b; }
+    .stat-lbl { font-size: 0.8rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; }
+    h2 { font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .badge-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge { background: #1e293b; color: #38bdf8; padding: 6px 12px; border-radius: 8px; font-size: 0.88rem; font-weight: 700; border: 1px solid #334155; }
+    .proj-item { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 18px; margin-bottom: 12px; }
+    .proj-title { font-size: 1.05rem; font-weight: 800; color: #ffffff; }
+    .proj-desc { color: #94a3b8; font-size: 0.92rem; margin-top: 4px; }
+    footer { text-align: center; padding: 30px 20px; color: #64748b; font-size: 0.85rem; border-top: 1px solid #1e293b; margin-top: 30px; }
+    footer a { color: #94a3b8; text-decoration: none; margin: 0 8px; }
   </style>
 </head>
 <body>
+  <nav class="nav">
+    <a href="/">Afsha Enterprises</a>
+    <div class="nav-links">
+      <a href="/">Shop Products</a>
+      <a href="/blogs">Articles</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </nav>
+
   <div class="container">
-    <div class="card">
-      <img src="${imageUrl}" alt="Manish Kumar" class="avatar">
-      <h1 style="font-size:2.2rem; font-weight:900; color:#0f172a;">Manish Kumar</h1>
-      <p style="color:#d97706; font-weight:800; margin-bottom:16px;">Senior Java Full Stack Developer &amp; AWS DevOps Architect</p>
-      <p style="max-width:600px; margin:0 auto 24px; color:#475569;">Building high-concurrency scalable enterprise applications with Java 21, Spring Boot, React, Microservices, and resilient AWS Cloud architecture.</p>
-      <div>
-        <a href="https://wa.me/918851961088" class="btn btn-wa">WhatsApp (+91 8851961088)</a>
-        <a href="tel:+918851961088" class="btn btn-call">Call Directly</a>
-        <a href="https://manish-java-developer.vercel.app/" class="btn btn-port">Live Portfolio</a>
+    <div class="card hero">
+      <img src="${imageUrl}" alt="Manish Kumar" class="avatar" width="140" height="140">
+      <h1>Manish Kumar</h1>
+      <p class="role">Senior Java Full Stack Developer &amp; AWS DevOps Solutions Architect</p>
+      <p class="bio">Building ultra-fast, high-concurrency scalable enterprise systems with Java 21, Spring Boot 3, React.js, Docker, Kubernetes, and resilient AWS Cloud architecture.</p>
+      <div class="actions">
+        <a href="https://wa.me/918851961088" class="btn btn-wa">💬 WhatsApp (+91 8851961088)</a>
+        <a href="tel:+918851961088" class="btn btn-call">📞 Call Directly</a>
+        <a href="https://manish-java-developer.vercel.app/" class="btn btn-port" target="_blank" rel="noopener">🌐 Live Portfolio</a>
+        <a href="https://github.com/Lightining29" class="btn btn-gh" target="_blank" rel="noopener">🐙 GitHub</a>
+        <a href="mailto:brayw433@gmail.com" class="btn btn-email">✉️ Email</a>
+      </div>
+
+      <div class="grid-stats">
+        <div class="stat-box"><div class="stat-num">4+</div><div class="stat-lbl">Years Exp</div></div>
+        <div class="stat-box"><div class="stat-num">15+</div><div class="stat-lbl">Enterprise Projects</div></div>
+        <div class="stat-box"><div class="stat-num">99.9%</div><div class="stat-lbl">Cloud Uptime</div></div>
+        <div class="stat-box"><div class="stat-num">100%</div><div class="stat-lbl">Client Rating</div></div>
       </div>
     </div>
+
+    <div class="card">
+      <h2>🛠️ Core Technical Stack</h2>
+      <div class="badge-cloud">
+        <span class="badge">Java 21 / 17</span>
+        <span class="badge">Spring Boot 3</span>
+        <span class="badge">Microservices Architecture</span>
+        <span class="badge">Spring Security &amp; OAuth2</span>
+        <span class="badge">Hibernate / JPA</span>
+        <span class="badge">React.js</span>
+        <span class="badge">AWS Cloud (EC2, S3, RDS, Lambda)</span>
+        <span class="badge">Docker &amp; Kubernetes</span>
+        <span class="badge">Jenkins CI/CD Pipelines</span>
+        <span class="badge">MySQL &amp; PostgreSQL</span>
+        <span class="badge">MongoDB</span>
+        <span class="badge">Redis Caching</span>
+        <span class="badge">RESTful APIs &amp; WebSockets</span>
+        <span class="badge">Linux Administration</span>
+        <span class="badge">Cybersecurity Auditing</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🚀 Flagship Enterprise Projects</h2>
+      <div class="proj-item">
+        <div class="proj-title">Afsha Enterprises — Commercial E-Commerce Platform</div>
+        <div class="proj-desc">High-speed consumer health &amp; wellness online store featuring live Razorpay payments, real-time OTP auth, pre-rendered fast SSR architecture, and comprehensive SEO optimization.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-title">ProgrammingWala — Online Tech Education &amp; LMS Portal</div>
+        <div class="proj-desc">High-concurrency learning management system delivering on-demand coding courses, real-time code sandboxes, and automated student enrollment microservices.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-title">Rancom Technologies — Cloud Infrastructure Automation</div>
+        <div class="proj-desc">Multi-region AWS Cloud architecture leveraging ECS containers, automated GitHub Actions CI/CD deployment pipelines, and zero-downtime rolling updates.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>💼 Professional Work Experience</h2>
+      <div class="proj-item">
+        <div class="proj-title">Senior Java Full Stack Developer &amp; AWS Solutions Architect</div>
+        <div style="color:#f59e0b; font-size:0.88rem; font-weight:700; margin: 2px 0 6px;">Appletree Infotech • Full-Time</div>
+        <div class="proj-desc">Architecting robust backend microservices, optimizing database transactions, designing secure REST endpoints, and automating multi-tier CI/CD cloud deployments across global infrastructure.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🎓 Education &amp; Credentials</h2>
+      <p style="color:#ffffff; font-weight:800; font-size:1.05rem;">Bachelor of Technology (B.Tech) in Computer Science &amp; Engineering</p>
+      <p style="color:#94a3b8; font-size:0.92rem; margin-top:4px;">Specialization in Cloud Computing, Distributed Systems, and Advanced Algorithms.</p>
+    </div>
   </div>
+
+  <footer>
+    <p>© 2026 Afsha Enterprises. Verified Developer Portfolio.</p>
+    <p style="margin-top:8px;">
+      <a href="/">Home</a> • <a href="/products">Products</a> • <a href="/blogs">Blog</a> • <a href="/contact">Contact</a> • <a href="/manish-kumar">Manish Kumar Profile</a>
+    </p>
+  </footer>
 </body>
 </html>`;
 }
@@ -706,35 +834,33 @@ const outputDirs = [
   path.join(rootDir, 'backend', 'public', 'blogs'),
   path.join(rootDir, 'frontend', 'public', 'locations'),
   path.join(rootDir, 'backend', 'public', 'locations'),
-  path.join(rootDir, 'frontend', 'public', 'location'),
-  path.join(rootDir, 'backend', 'public', 'location'),
 ];
 
 outputDirs.forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
-// 1. Generate Product Static Pages
+// 1. Generate Product Static Pages (stored as product/${p.slug}.html and root ${p.slug}.html)
 ALL_PRODUCTS.forEach(p => {
   const htmlContent = generateProductHtml(p);
   const rootLocations = [path.join(rootDir, 'frontend', 'public'), path.join(rootDir, 'backend', 'public')];
   rootLocations.forEach(dir => {
     fs.writeFileSync(path.join(dir, `${p.slug}.html`), htmlContent, 'utf-8');
   });
-  [path.join(rootDir, 'frontend', 'public', 'products'), path.join(rootDir, 'backend', 'public', 'products'), path.join(rootDir, 'frontend', 'public', 'product'), path.join(rootDir, 'backend', 'public', 'product')].forEach(dir => {
+  [path.join(rootDir, 'frontend', 'public', 'product'), path.join(rootDir, 'backend', 'public', 'product')].forEach(dir => {
     fs.writeFileSync(path.join(dir, `${p.slug}.html`), htmlContent, 'utf-8');
   });
   console.log(`Generated product static HTML for: ${p.slug}`);
 });
 
-// 2. Generate Blog Static Pages
+// 2. Generate Blog Static Pages (stored as blog/${b.slug}.html and root ${b.slug}.html)
 ALL_BLOGS.forEach(b => {
   const blogHtml = generateBlogHtml(b);
   const rootLocations = [path.join(rootDir, 'frontend', 'public'), path.join(rootDir, 'backend', 'public')];
   rootLocations.forEach(dir => {
     fs.writeFileSync(path.join(dir, `${b.slug}.html`), blogHtml, 'utf-8');
   });
-  [path.join(rootDir, 'frontend', 'public', 'blog'), path.join(rootDir, 'backend', 'public', 'blog'), path.join(rootDir, 'frontend', 'public', 'blogs'), path.join(rootDir, 'backend', 'public', 'blogs')].forEach(dir => {
+  [path.join(rootDir, 'frontend', 'public', 'blog'), path.join(rootDir, 'backend', 'public', 'blog')].forEach(dir => {
     fs.writeFileSync(path.join(dir, `${b.slug}.html`), blogHtml, 'utf-8');
   });
   console.log(`Generated blog article static HTML for: ${b.slug}`);
@@ -742,99 +868,115 @@ ALL_BLOGS.forEach(b => {
 
 // 3. Generate Profile Static Pages
 const manishHtml = generateManishProfileHtml();
-const profileFileNames = [
-  'manish-kumar.html',
-  'manish.html',
-  'manishkumar.html',
-  'profile.html',
-  'developer.html',
-  'manish-kumar-profile.html',
-  'developer-profile.html'
-];
 [path.join(rootDir, 'frontend', 'public'), path.join(rootDir, 'backend', 'public')].forEach(dir => {
-  profileFileNames.forEach(fn => {
-    fs.writeFileSync(path.join(dir, fn), manishHtml, 'utf-8');
-  });
+  fs.writeFileSync(path.join(dir, 'manish-kumar.html'), manishHtml, 'utf-8');
 });
 
-// 4. Generate XML Sitemaps
+// 4. Generate Standard Clean Canonical XML Sitemap
+// Google Search Console Best Practice: Only 100% canonical 200-OK URLs! No duplicates, no redirects, no aliases.
 function buildCompleteSitemapXml() {
   const domain = 'https://www.afshaenterprises.com';
-  let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+  const today = '2026-09-09';
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+  xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
+  xml += `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n`;
 
-  const urls = [
-    { loc: `${domain}/`, priority: '1.0', changefreq: 'daily' },
-    { loc: `${domain}/products`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/blogs`, priority: '0.9', changefreq: 'daily' },
-    { loc: `${domain}/blog`, priority: '0.85', changefreq: 'daily' },
-    { loc: `${domain}/contact`, priority: '0.8', changefreq: 'monthly' },
-    { loc: `${domain}/contact-us`, priority: '0.75', changefreq: 'monthly' },
+  const canonicalEntries = [
+    // Core Site Pages
+    { loc: `${domain}/`, priority: '1.0', changefreq: 'daily', lastmod: today },
+    { loc: `${domain}/products`, priority: '0.9', changefreq: 'daily', lastmod: today },
+    { loc: `${domain}/blogs`, priority: '0.8', changefreq: 'daily', lastmod: today },
+    { loc: `${domain}/contact`, priority: '0.7', changefreq: 'monthly', lastmod: today },
 
-    // Manish Kumar Profile URLs
-    { loc: `${domain}/manish-kumar`, priority: '1.0', changefreq: 'daily' },
-    { loc: `${domain}/profile`, priority: '1.0', changefreq: 'daily' },
-    { loc: `${domain}/profile/manish-kumar`, priority: '1.0', changefreq: 'daily' },
-    { loc: `${domain}/manish`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/manishkumar`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/manish-profile`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/developer-profile`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/developer`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/manish-kumar-java-developer`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/manish-kumar-devops-engineer`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/manish-kumar-full-stack-developer`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/manish-kumar-java-full-stack-developer`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/manish-kumar-software-engineer`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/manish-kumar-aws-architect`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/manish-kumar-resume`, priority: '0.9', changefreq: 'daily' },
-    { loc: `${domain}/about-manish-kumar`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/manish-kumar.html`, priority: '0.95', changefreq: 'daily' },
-    { loc: `${domain}/profile.html`, priority: '0.95', changefreq: 'daily' },
+    // Single Canonical Developer Profile Page
+    {
+      loc: `${domain}/manish-kumar`,
+      priority: '1.0',
+      changefreq: 'daily',
+      lastmod: today,
+      image: { loc: `${domain}/manish-kumar.jpg`, title: 'Manish Kumar - Senior Java Full Stack Developer' }
+    },
 
-    // Product URLs
-    ...ALL_PRODUCTS.flatMap(p => [
-      { loc: `${domain}/${p.slug}`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${domain}/product/${p.slug}`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/products/${p.slug}`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/${p.slug}.html`, priority: '0.95', changefreq: 'daily' },
-      { loc: `${domain}/products/${p.slug}.html`, priority: '0.9', changefreq: 'daily' }
-    ]),
+    // 6 Single Canonical Product URLs (/product/:slug)
+    ...ALL_PRODUCTS.map(p => ({
+      loc: `${domain}/product/${p.slug}`,
+      priority: '1.0',
+      changefreq: 'daily',
+      lastmod: today,
+      image: { loc: `${domain}${p.image}`, title: p.name }
+    })),
 
-    // Blog URLs
-    ...ALL_BLOGS.flatMap(b => [
-      { loc: `${domain}/blog/${b.slug}`, priority: '0.85', changefreq: 'weekly' },
-      { loc: `${domain}/blogs/${b.slug}`, priority: '0.8', changefreq: 'weekly' },
-      { loc: `${domain}/${b.slug}.html`, priority: '0.85', changefreq: 'weekly' },
-      { loc: `${domain}/blog/${b.slug}.html`, priority: '0.8', changefreq: 'weekly' }
-    ]),
+    // 4 Category URLs
+    { loc: `${domain}/category/wellness-massage`, priority: '0.85', changefreq: 'weekly', lastmod: today },
+    { loc: `${domain}/category/skincare`, priority: '0.85', changefreq: 'weekly', lastmod: today },
+    { loc: `${domain}/category/hair-care`, priority: '0.85', changefreq: 'weekly', lastmod: today },
+    { loc: `${domain}/category/body`, priority: '0.85', changefreq: 'weekly', lastmod: today },
 
-    // Category URLs
-    { loc: `${domain}/category/wellness-massage`, priority: '0.85', changefreq: 'weekly' },
-    { loc: `${domain}/category/skincare`, priority: '0.85', changefreq: 'weekly' },
-    { loc: `${domain}/category/hair-care`, priority: '0.85', changefreq: 'weekly' },
-    { loc: `${domain}/category/body`, priority: '0.85', changefreq: 'weekly' },
+    // 9 Single Canonical Blog URLs (/blog/:slug)
+    ...ALL_BLOGS.map(b => ({
+      loc: `${domain}/blog/${b.slug}`,
+      priority: '0.85',
+      changefreq: 'weekly',
+      lastmod: today,
+      image: { loc: `${domain}${b.image}`, title: b.title }
+    })),
 
-    // Locations
-    { loc: `${domain}/locations/delhi`, priority: '0.8', changefreq: 'weekly' },
-    { loc: `${domain}/locations/mumbai`, priority: '0.8', changefreq: 'weekly' },
-    { loc: `${domain}/locations/bangalore`, priority: '0.8', changefreq: 'weekly' }
+    // Location Pages
+    { loc: `${domain}/locations/delhi`, priority: '0.8', changefreq: 'weekly', lastmod: today },
+    { loc: `${domain}/locations/mumbai`, priority: '0.8', changefreq: 'weekly', lastmod: today },
+    { loc: `${domain}/locations/bangalore`, priority: '0.8', changefreq: 'weekly', lastmod: today },
   ];
 
-  urls.forEach(u => {
-    xml += `  <url>\n    <loc>${u.loc}</loc>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>\n`;
+  canonicalEntries.forEach(entry => {
+    xml += `  <url>\n`;
+    xml += `    <loc>${entry.loc}</loc>\n`;
+    xml += `    <lastmod>${entry.lastmod}</lastmod>\n`;
+    xml += `    <changefreq>${entry.changefreq}</changefreq>\n`;
+    xml += `    <priority>${entry.priority}</priority>\n`;
+    if (entry.image) {
+      xml += `    <image:image>\n`;
+      xml += `      <image:loc>${entry.image.loc}</image:loc>\n`;
+      xml += `      <image:title>${entry.image.title.replace(/&/g, '&amp;')}</image:title>\n`;
+      xml += `    </image:image>\n`;
+    }
+    xml += `  </url>\n`;
   });
 
   xml += `</urlset>`;
   return xml;
 }
 
-const sitemapXml = buildCompleteSitemapXml();
+function buildSitemapIndexXml() {
+  const domain = 'https://www.afshaenterprises.com';
+  const today = '2026-09-09';
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${domain}/sitemap.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+</sitemapindex>`;
+}
 
-// Write sitemap.xml across all public locations and nested product/blog folders
-const sitemapDestinations = [
-  path.join(rootDir, 'frontend', 'public', 'sitemap.xml'),
-  path.join(rootDir, 'backend', 'public', 'sitemap.xml'),
-  path.join(rootDir, 'frontend', 'public', 'sitemap_index.xml'),
-  path.join(rootDir, 'backend', 'public', 'sitemap_index.xml'),
+const sitemapXml = buildCompleteSitemapXml();
+const sitemapIndexXml = buildSitemapIndexXml();
+
+// Write sitemap.xml and sitemap_index.xml only to root public directories
+const sitemapFiles = [
+  { path: path.join(rootDir, 'frontend', 'public', 'sitemap.xml'), content: sitemapXml },
+  { path: path.join(rootDir, 'backend', 'public', 'sitemap.xml'), content: sitemapXml },
+  { path: path.join(rootDir, 'frontend', 'public', 'sitemap_index.xml'), content: sitemapIndexXml },
+  { path: path.join(rootDir, 'backend', 'public', 'sitemap_index.xml'), content: sitemapIndexXml },
+];
+
+sitemapFiles.forEach(f => {
+  const dir = path.dirname(f.path);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(f.path, f.content, 'utf-8');
+});
+
+// Clean up duplicate subfolder sitemaps so GSC doesn't crawl them
+const staleSubfolderSitemaps = [
   path.join(rootDir, 'frontend', 'public', 'blogs', 'sitemap.xml'),
   path.join(rootDir, 'backend', 'public', 'blogs', 'sitemap.xml'),
   path.join(rootDir, 'frontend', 'public', 'blog', 'sitemap.xml'),
@@ -845,21 +987,11 @@ const sitemapDestinations = [
   path.join(rootDir, 'backend', 'public', 'product', 'sitemap.xml'),
 ];
 
-sitemapDestinations.forEach(dst => {
-  const dir = path.dirname(dst);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(dst, sitemapXml, 'utf-8');
-});
-
-// Also create product HTML folder sitemaps for pattern like electric-body-massager.html/sitemap.xml
-ALL_PRODUCTS.forEach(p => {
-  [
-    path.join(rootDir, 'frontend', 'public', `${p.slug}.html`),
-    path.join(rootDir, 'backend', 'public', `${p.slug}.html`)
-  ].forEach(htmlPath => {
-    // If we create a directory with that name, it could conflict with the file.
-    // So the server.js regex `/.*sitemap.*\.xml$/` handles virtual URLs like /electric-body-massager.html/sitemap.xml dynamically!
-  });
+staleSubfolderSitemaps.forEach(f => {
+  if (fs.existsSync(f)) {
+    try { fs.unlinkSync(f); } catch (e) {}
+  }
 });
 
 console.log('All static pages, articles, profiles, and XML sitemaps generated successfully!');
+

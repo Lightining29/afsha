@@ -89,7 +89,7 @@ export default function ManishKumarProfile() {
     seoRole = 'Verified Resume & CV — Manish Kumar';
   }
 
-  const canonicalUrl = `https://www.afshaenterprises.com${location.pathname}`;
+  const canonicalUrl = 'https://www.afshaenterprises.com/manish-kumar';
   const profileImageUrl = 'https://www.afshaenterprises.com/manish-kumar.jpg';
 
   const handleSendChat = (e) => {
