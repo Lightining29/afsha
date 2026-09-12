@@ -80,7 +80,7 @@ export default function Register() {
         <div className="auth-logo">
           <Droplets size={28} /> Afsha enterprises
         </div>
-        <p className="auth-subtitle">Create your  account</p>
+        <p className="auth-subtitle">Create your account</p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           {error && <div className="auth-error">{error}</div>}
@@ -155,7 +155,9 @@ export default function Register() {
 
         <div className="auth-divider">or</div>
 
-        <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} text="signup_with" />
+        <div className="auth-google-wrapper">
+          <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} text="signup_with" />
+        </div>
 
         <p className="auth-footer">
           Already have an account? <Link to="/login">Sign in</Link>

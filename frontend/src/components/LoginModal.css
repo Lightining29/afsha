@@ -23,7 +23,19 @@
   position: relative;
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid rgba(135, 206, 235, 0.15);
+  display: flex;
+  flex-direction: column;
 }
+
+/* Desktop default ordering: Form first, then divider, then Google button */
+.modal-close-btn { order: 0; }
+.modal-logo { order: 1; }
+.modal-subtitle { order: 2; }
+.modal-error, .modal-success { order: 3; }
+.modal-form { order: 4; }
+.modal-container .auth-divider { order: 5; }
+.modal-google-wrapper { order: 6; }
+.modal-footer { order: 7; }
 
 .modal-close-btn {
   position: absolute;
@@ -144,3 +156,46 @@
     transform: translateY(0) scale(1);
   }
 }
+
+/* ── Mobile View: Sign up / Sign in with Google Button at Top ── */
+@media (max-width: 768px) {
+  .modal-container {
+    padding: 28px 18px;
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: 18px;
+  }
+
+  .modal-logo {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+
+  .modal-subtitle {
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+  }
+
+  /* Google Sign up / Sign in button ordered at top right under subtitle */
+  .modal-google-wrapper {
+    order: 4 !important;
+    margin-bottom: 0;
+  }
+
+  /* Divider positioned between Google button and manual form */
+  .modal-container .auth-divider {
+    order: 5 !important;
+    margin: 14px 0 !important;
+  }
+
+  /* Manual form positioned below divider */
+  .modal-form {
+    order: 6 !important;
+  }
+
+  .modal-footer {
+    order: 7 !important;
+    margin-top: 18px;
+  }
+}
+

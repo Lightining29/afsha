@@ -170,7 +170,9 @@ export default function LoginModal({ onClose }) {
             </form>
 
             <div className="auth-divider">or</div>
-            <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} text="signin_with" />
+            <div className="modal-google-wrapper">
+              <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} text="signin_with" />
+            </div>
 
             <p className="modal-footer">
               Don't have an account? <span onClick={() => { setMode('register'); setError(''); setMessage(''); }}>Create one</span>
@@ -180,7 +182,7 @@ export default function LoginModal({ onClose }) {
 
         {mode === 'register' && (
           <>
-            <p className="modal-subtitle">Create your Glowora account</p>
+            <p className="modal-subtitle">Create your account</p>
             <form className="modal-form" onSubmit={handleSubmit}>
               {error && <div className="modal-error">{error}</div>}
               {message && <div className="modal-success">{message}</div>}
@@ -228,7 +230,9 @@ export default function LoginModal({ onClose }) {
             </form>
 
             <div className="auth-divider">or</div>
-            <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} text="signup_with" />
+            <div className="modal-google-wrapper">
+              <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} text="signup_with" />
+            </div>
 
             <p className="modal-footer">
               Already have an account? <span onClick={() => { setMode('login'); setError(''); setMessage(''); }}>Sign in</span>

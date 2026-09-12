@@ -95,7 +95,9 @@ export default function Login() {
 
         <div className="auth-divider">or</div>
 
-        <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} text="signin_with" />
+        <div className="auth-google-wrapper">
+          <GoogleSignInButton onSuccess={handleGoogleSuccess} onError={handleGoogleError} text="signin_with" />
+        </div>
 
         <p className="auth-footer">
           Don't have an account? <Link to="/register">Create one</Link>

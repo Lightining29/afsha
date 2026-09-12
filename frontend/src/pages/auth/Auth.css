@@ -14,7 +14,18 @@
   padding: 48px 40px;
   width: 100%;
   max-width: 440px;
+  display: flex;
+  flex-direction: column;
 }
+
+/* Desktop default ordering: Form first, then divider, then Google button */
+.auth-logo { order: 1; }
+.auth-subtitle { order: 2; }
+.auth-error { order: 3; }
+.auth-form { order: 4; }
+.auth-divider { order: 5; }
+.auth-google-wrapper { order: 6; }
+.auth-footer { order: 7; }
 
 .auth-logo {
   display: flex;
@@ -146,3 +157,48 @@
 .auth-divider:not(:empty)::after {
   margin-left: .75em;
 }
+
+/* ── Mobile View: Sign up / Sign in with Google Button at Top ── */
+@media (max-width: 768px) {
+  .auth-page {
+    padding: 16px 12px;
+  }
+
+  .auth-card {
+    padding: 28px 18px;
+    border-radius: 18px;
+  }
+
+  .auth-logo {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+
+  .auth-subtitle {
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+  }
+
+  /* Google Sign up / Sign in button ordered at top right under subtitle */
+  .auth-google-wrapper {
+    order: 4 !important;
+    margin-bottom: 0;
+  }
+
+  /* Divider positioned between Google button and manual form */
+  .auth-divider {
+    order: 5 !important;
+    margin: 14px 0 !important;
+  }
+
+  /* Manual form positioned below divider */
+  .auth-form {
+    order: 6 !important;
+  }
+
+  .auth-footer {
+    order: 7 !important;
+    margin-top: 18px;
+  }
+}
+
