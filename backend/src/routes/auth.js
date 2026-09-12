@@ -55,58 +55,40 @@ async function generateAndSendOtp(user) {
 
 router.post('/register', upload.single('photo'), async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Name, email, and password are required' });
+    const { name, email, password, phone } = req.body;
+    if (!name || !email || !password || !phone) {
+      return res.status(400).json({ message: 'Full name, email, phone number, and password are required' });
     }
     if (password.length < 6) {
       return res.status(400).json({ message: 'Password must be at least 6 characters' });
     }
 
     const adminEmails = ['admin@glowora.com', 'brayw433@gmail.com'];
-    const isAdminEmail = adminEmails.includes(email.toLowerCase());
+    const isAdminEmail = adminEmails.includes(email.toLowerCase().trim());
 
-    let user;
-    const exists = await User.findOne({ email: email.toLowerCase() });
+    const exists = await User.findOne({ email: email.toLowerCase().trim() });
     if (exists) {
-      if (exists.isVerified || isAdminEmail) {
-        return res.status(400).json({ message: 'Email already registered' });
-      }
-      // Update unverified user's credentials and profile photo
-      exists.name = name;
-      exists.password = password;
-      if (req.file) {
-        exists.photoData = req.file.buffer;
-        exists.photoContentType = req.file.mimetype;
-      }
-      user = exists;
-    } else {
-      const userData = { 
-        name, 
-        email: email.toLowerCase(), 
-        password, 
-        isVerified: isAdminEmail ? true : false,
-        role: isAdminEmail ? 'admin' : 'user'
-      };
-      if (req.file) {
-        userData.photoData = req.file.buffer;
-        userData.photoContentType = req.file.mimetype;
-      }
-      user = new User(userData);
+      return res.status(400).json({ message: 'Email already registered. Please sign in instead.' });
     }
 
-    if (isAdminEmail) {
-      await user.save();
-      const token = signToken(user);
-      return res.status(201).json(userResponse(user, token));
+    const userData = { 
+      name: name.trim(), 
+      email: email.toLowerCase().trim(), 
+      password, 
+      phone: phone.trim(),
+      isVerified: true,
+      role: isAdminEmail ? 'admin' : 'user'
+    };
+    if (req.file) {
+      userData.photoData = req.file.buffer;
+      userData.photoContentType = req.file.mimetype;
     }
 
-    await generateAndSendOtp(user);
-    res.status(200).json({
-      requireVerification: true,
-      email: user.email,
-      message: 'Verification OTP sent to your email address.',
-    });
+    const user = new User(userData);
+    await user.save();
+
+    const token = signToken(user);
+    return res.status(201).json(userResponse(user, token));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -118,24 +100,15 @@ router.post('/login', async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required' });
     }
-    const user = await User.findOne({ email: email.toLowerCase() }).select('+password +otpCooldownUntil');
+    const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+password');
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    const adminEmails = ['admin@glowora.com', 'brayw433@gmail.com'];
-    const isAdminEmail = adminEmails.includes(user.email.toLowerCase()) || user.role === 'admin';
-
-    if (!user.isVerified && !isAdminEmail) {
-      // Trigger OTP resend if not in cooldown
-      if (!user.otpCooldownUntil || user.otpCooldownUntil < Date.now()) {
-        await generateAndSendOtp(user);
-      }
-      return res.status(403).json({
-        requireVerification: true,
-        email: user.email,
-        message: 'Your email is not verified. A verification code has been sent to your email.',
-      });
+    // Auto-verify legacy unverified accounts on successful password authentication
+    if (!user.isVerified) {
+      user.isVerified = true;
+      await user.save();
     }
 
     const token = signToken(user);

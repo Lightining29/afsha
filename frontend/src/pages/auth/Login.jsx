@@ -45,12 +45,8 @@ export default function Login() {
       toastSuccess('Welcome back!', `Signed in as ${user.name}`);
       navigate(user.role === 'admin' ? '/admin' : '/account', { replace: true });
     } catch (err) {
-      if (err.data?.requireVerification) {
-        navigate('/verify-otp', { state: { email: err.data.email } });
-      } else {
-        setError(err.message);
-        toastError('Sign in failed', err.message);
-      }
+      setError(err.message);
+      toastError('Sign in failed', err.message);
     } finally {
       setLoading(false);
     }

@@ -49,8 +49,13 @@ export function AuthProvider({ children }) {
     return res.user;
   };
 
-  const register = async (name, email, password, photoFile) => {
-    return await apiRegister(name, email, password, photoFile);
+  const register = async (name, email, password, photoFile, phone) => {
+    const res = await apiRegister(name, email, password, photoFile, phone);
+    if (res?.token && res?.user) {
+      setToken(res.token);
+      setUser(res.user);
+    }
+    return res;
   };
 
   const verifyOtp = async (email, code) => {

@@ -14,6 +14,7 @@ export default function LoginModal({ onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -73,16 +74,10 @@ export default function LoginModal({ onClose }) {
         onClose();
         navigate(u.role === 'admin' ? '/admin' : '/account');
       } else if (mode === 'register') {
-        const res = await register(name, email, password);
-        if (res?.requireVerification) {
-          toastInfo('Verification Code Sent', 'Redirecting to OTP verification page...');
-          onClose();
-          navigate(`/verify-otp?email=${encodeURIComponent(email)}`, { state: { email } });
-        } else {
-          toastSuccess('Account created!', 'Welcome to Afsha Enterprises.');
-          onClose();
-          navigate('/account');
-        }
+        await register(name, email, password, null, phone);
+        toastSuccess('Account created!', 'Welcome to Afsha Enterprises.');
+        onClose();
+        navigate('/account');
       } else if (mode === 'forgot') {
         if (forgotStep === 1) {
           const res = await forgotPassword(email);
@@ -200,6 +195,18 @@ export default function LoginModal({ onClose }) {
               </div>
 
               <div className="form-group">
+                <label htmlFor="modal-phone">Phone Number</label>
+                <input
+                  id="modal-phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="e.g. +91 9876543210"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
                 <label htmlFor="modal-email">Email</label>
                 <input
                   id="modal-email"
@@ -212,7 +219,7 @@ export default function LoginModal({ onClose }) {
               </div>
 
               <div className="form-group">
-                <label htmlFor="modal-password">Password</label>
+                <label htmlFor="modal-password">Create Password</label>
                 <input
                   id="modal-password"
                   type="password"

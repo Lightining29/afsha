@@ -91,11 +91,14 @@ export async function login(email, password) {
 export async function loginWithGoogle(credential) {
   return apiFetch('/auth/google', { method: 'POST', body: JSON.stringify({ credential }) });
 }
-export async function register(name, email, password, photoFile) {
+export async function register(name, email, password, photoFile, phone) {
   const fd = new FormData();
   fd.append('name', name);
   fd.append('email', email);
   fd.append('password', password);
+  if (phone) {
+    fd.append('phone', phone);
+  }
   if (photoFile) {
     fd.append('photo', photoFile);
   }

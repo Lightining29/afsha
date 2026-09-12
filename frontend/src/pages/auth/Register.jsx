@@ -8,6 +8,7 @@ import './Auth.css';
 
 export default function Register() {
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [photo, setPhoto] = useState(null);
@@ -58,14 +59,9 @@ export default function Register() {
     setError('');
     setLoading(true);
     try {
-      const res = await register(name, email, password, photo);
-      if (res?.requireVerification) {
-        toastInfo('Check your email', 'We sent a 6-digit verification code to your inbox.');
-        navigate(`/verify-otp?email=${encodeURIComponent(email)}`, { state: { email } });
-      } else {
-        toastSuccess('Account created!', 'Welcome to Afsha Enterprises.');
-        navigate('/account');
-      }
+      await register(name, email, password, photo, phone);
+      toastSuccess('Account created!', 'Welcome to Afsha Enterprises.');
+      navigate('/account');
     } catch (err) {
       setError(err.message);
       toastError('Registration failed', err.message);
@@ -126,6 +122,17 @@ export default function Register() {
             />
           </div>
           <div className="form-group">
+            <label htmlFor="phone">Phone Number</label>
+            <input
+              id="phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="e.g. +91 9876543210"
+              required
+            />
+          </div>
+          <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
               id="email"
@@ -137,7 +144,7 @@ export default function Register() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Create Password</label>
             <input
               id="password"
               type="password"
