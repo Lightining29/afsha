@@ -207,7 +207,7 @@ export default function BlogDetail() {
                     <p className="callout-price">₹{post.productPrice}</p>
                   </div>
                   <div className="callout-actions">
-                    <Link to={`/${post.productSlug}`} className="btn-callout-view">
+                    <Link to={`/product/${post.productSlug}`} className="btn-callout-view">
                       View Details
                     </Link>
                     <Link to={`/checkout`} className="btn-callout-buy">

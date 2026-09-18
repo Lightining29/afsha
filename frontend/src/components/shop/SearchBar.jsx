@@ -65,7 +65,7 @@ export default function SearchBar({ onFilterClick }) {
   const handleSelectProduct = (product) => {
     setIsOpen(false);
     setQuery('');
-    navigate(`/products/${product.slug}`);
+    navigate(`/product/${product.slug}`);
   };
 
   const handleSelectDeveloper = () => {

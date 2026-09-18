@@ -53,7 +53,18 @@ export default function CategoryProducts() {
     return () => { mounted = false; };
   }, [categorySlug]);
 
-  const canonicalUrl = `https://www.afshaenterprises.com/category/${categoryObj?.slug || categorySlug}`;
+  const effectiveCategorySlug = categoryObj?.slug || categorySlug;
+  const canonicalUrl = effectiveCategorySlug
+    ? `https://www.afshaenterprises.com/category/${effectiveCategorySlug}`
+    : 'https://www.afshaenterprises.com/products';
+
+  const pageTitle = categoryName
+    ? `${categoryName} — Buy Online in India | Afsha Enterprises`
+    : 'All Products & Best-Selling Body Massagers | Afsha Enterprises';
+
+  const pageDescription = categoryName
+    ? `Shop premium ${categoryName} online from Afsha Enterprises. High quality products with fast doorstep delivery across India.`
+    : 'Explore all body massagers, pain relief devices, and wellness essentials from Afsha Enterprises. Free delivery across India.';
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -68,7 +79,7 @@ export default function CategoryProducts() {
       {
         '@type': 'ListItem',
         'position': 2,
-        'name': categoryName || 'Category',
+        'name': categoryName || 'All Products',
         'item': canonicalUrl
       }
     ]
@@ -77,11 +88,11 @@ export default function CategoryProducts() {
   return (
     <>
       <Helmet>
-        <title>{categoryName ? `${categoryName} | Afsha Enterprises` : 'Shop Category | Afsha Enterprises'}</title>
-        <meta name="description" content={`Explore our premium range of ${categoryName || 'wellness'} products. High-quality body massagers, skincare, and wellness devices with quick delivery in India.`} />
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
         <link rel="canonical" href={canonicalUrl} />
-        <meta property="og:title" content={categoryName ? `${categoryName} | Afsha Enterprises` : 'Shop Category'} />
-        <meta property="og:description" content={`Explore our premium range of ${categoryName || 'wellness'} products.`} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl} />
         <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>

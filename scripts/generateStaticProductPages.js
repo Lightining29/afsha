@@ -820,6 +820,727 @@ function generateManishProfileHtml() {
 </html>`;
 }
 
+const ALL_CATEGORIES = [
+  {
+    slug: 'wellness-massage',
+    name: 'Wellness & Massage',
+    metaTitle: 'Wellness & Electric Body Massagers — Shop Best Pain Relief Machines | Afsha Enterprises',
+    metaDescription: 'Shop top-rated electric body massagers, deep tissue massage guns, and shiatsu neck massagers in India. Relieve muscle stiffness and fatigue.',
+    keywords: 'wellness and massage products, electric body massager India, buy massage gun online, neck massager with heat',
+    filter: (p) => p.category === 'Wellness & Massage'
+  },
+  {
+    slug: 'skincare',
+    name: 'Skincare',
+    metaTitle: 'Skincare Devices & Painless Facial Hair Removers | Afsha Enterprises',
+    metaDescription: 'Shop gentle, hypoallergenic facial hair trimmers and modern skincare tools for women and men in India. Instant flawless results.',
+    keywords: 'skincare devices India, painless facial hair remover, face trimmer for women, upper lip hair remover',
+    filter: (p) => p.category === 'Skincare'
+  },
+  {
+    slug: 'hair-care',
+    name: 'Hair Care',
+    metaTitle: 'Hair Care & Precision Trimming Tools | Afsha Enterprises',
+    metaDescription: 'Explore precision hair trimmers, groomers, and hair care accessories online at Afsha Enterprises. Gentle and durable.',
+    keywords: 'hair care tools India, hair trimmer for women, precision electric groomer, personal grooming accessories',
+    filter: (p) => p.category === 'Hair Care' || p.category === 'Skincare'
+  },
+  {
+    slug: 'body',
+    name: 'Body Care',
+    metaTitle: 'Full Body Care & Ergonomic Massagers | Afsha Enterprises',
+    metaDescription: 'Discover full body relaxation tools, muscle stimulators, and personal body care machines for everyday wellness and pain relief.',
+    keywords: 'full body care machines, body massager for home, body relaxation devices India, cordless body massager',
+    filter: (p) => p.category.includes('Wellness') || p.category.includes('Body')
+  }
+];
+
+const ALL_LOCATIONS = [
+  {
+    slug: 'delhi',
+    city: 'Delhi NCR',
+    metaTitle: 'Electric Body Massagers & Pain Relief Machines in Delhi NCR | Afsha Enterprises',
+    metaDescription: 'Buy high-quality electric body massagers and deep tissue massage guns in Delhi, Noida, Gurgaon, and Faridabad. Fast shipping & Cash on Delivery.',
+    keywords: 'body massager Delhi, electric massager Gurgaon, massage gun Noida, pain relief machine Delhi NCR'
+  },
+  {
+    slug: 'mumbai',
+    city: 'Mumbai',
+    metaTitle: 'Electric Body Massagers & Massage Guns in Mumbai | Afsha Enterprises',
+    metaDescription: 'Order top-rated electric body massagers, cervical neck massagers, and foot massagers delivered across Mumbai with verified warranty.',
+    keywords: 'body massager Mumbai, massage gun Mumbai, electric neck massager Mumbai, buy massager machine Mumbai'
+  },
+  {
+    slug: 'bangalore',
+    city: 'Bangalore',
+    metaTitle: 'Body Massagers & Muscle Recovery Equipment in Bangalore | Afsha Enterprises',
+    metaDescription: 'Premium percussion massage guns and handheld body massagers in Bangalore. Fast delivery for IT professionals and athletes.',
+    keywords: 'body massager Bangalore, massage gun Bangalore, muscle recovery machine Bangalore, tech neck massager'
+  }
+];
+
+function generateProductsListingHtml() {
+  const canonicalUrl = 'https://www.afshaenterprises.com/products';
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${canonicalUrl}#webpage`,
+        "url": canonicalUrl,
+        "name": "Shop Premium Body Massagers & Personal Care Devices | Afsha Enterprises",
+        "description": "Browse Afsha Enterprises collection of top-rated electric body massagers, deep tissue percussion guns, shiatsu neck massagers, foot massagers, and facial hair trimmers."
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${canonicalUrl}#breadcrumb`,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.afshaenterprises.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Products", "item": canonicalUrl }
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "itemListElement": ALL_PRODUCTS.map((p, idx) => ({
+          "@type": "ListItem",
+          "position": idx + 1,
+          "url": `https://www.afshaenterprises.com/product/${p.slug}`,
+          "name": p.name
+        }))
+      }
+    ]
+  };
+
+  const productCards = ALL_PRODUCTS.map(p => `
+    <a href="/product/${p.slug}" class="product-card">
+      <div class="product-img-wrap">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">${p.category}</span>
+        <h2 class="product-name">${p.name}</h2>
+        <div class="product-rating">★ ${p.rating} (${p.reviews} reviews)</div>
+        <div class="product-price-row">
+          <span class="product-price">₹${p.price}</span>
+          <span class="product-orig-price">₹${p.originalPrice}</span>
+          <span class="product-discount">${p.discountPercent}% OFF</span>
+        </div>
+        <span class="btn-view">View Details &amp; Order →</span>
+      </div>
+    </a>
+  `).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Premium Body Massagers &amp; Personal Care Devices | Afsha Enterprises</title>
+  <meta name="description" content="Browse Afsha Enterprises collection of top-rated electric body massagers, deep tissue percussion guns, shiatsu neck massagers, foot massagers, and facial hair trimmers. Instant relief from muscle pain.">
+  <meta name="keywords" content="buy body massager online India, electric massager machine, percussion massage gun price, facial hair remover, Afsha Enterprises products">
+  <meta name="author" content="Afsha Enterprises">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="${canonicalUrl}">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="Shop Premium Body Massagers &amp; Personal Care Devices | Afsha Enterprises">
+  <meta property="og:description" content="Browse Afsha Enterprises collection of top-rated electric body massagers, deep tissue percussion guns, and shiatsu neck massagers.">
+  <meta property="og:image" content="https://www.afshaenterprises.com/masage.jpg">
+  <script type="application/ld+json">${JSON.stringify(jsonLd, null, 2)}</script>
+  <style>
+    :root { --primary: #f59e0b; --primary-dark: #d97706; --text: #0f172a; --muted: #64748b; --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; }
+    .logo span { color: var(--primary); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--primary-dark); }
+    .page-title { font-size: 2.2rem; font-weight: 900; margin: 32px 0 8px; color: var(--text); }
+    .page-subtitle { color: var(--muted); font-size: 1.05rem; margin-bottom: 32px; max-width: 700px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); }
+    .product-img-wrap { background: radial-gradient(circle at 50% 50%, #ffffff 40%, #f1f5f9 100%); padding: 20px; text-align: center; height: 220px; display: flex; align-items: center; justify-content: center; }
+    .product-img-wrap img { max-height: 180px; max-width: 90%; object-fit: contain; }
+    .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
+    .product-cat { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--primary-dark); margin-bottom: 6px; }
+    .product-name { font-size: 1.05rem; font-weight: 800; line-height: 1.35; margin-bottom: 8px; color: var(--text); }
+    .product-rating { font-size: 0.85rem; font-weight: 700; color: #f59e0b; margin-bottom: 8px; }
+    .product-price-row { display: flex; align-items: baseline; gap: 8px; margin-top: auto; padding-top: 12px; }
+    .product-price { font-size: 1.3rem; font-weight: 900; color: var(--text); }
+    .product-orig-price { font-size: 0.9rem; color: #94a3b8; text-decoration: line-through; }
+    .product-discount { font-size: 0.8rem; font-weight: 800; color: #16a34a; }
+    .btn-view { display: block; text-align: center; background: #0f172a; color: #ffffff; font-weight: 700; font-size: 0.88rem; padding: 10px 16px; border-radius: 12px; margin-top: 14px; text-decoration: none; }
+    .footer { background: #0f172a; color: #94a3b8; padding: 48px 0 64px; text-align: center; font-size: 0.88rem; margin-top: 60px; }
+    .footer a { color: #ffffff; text-decoration: none; margin: 0 12px; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Afsha <span>Enterprises</span></a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/products" style="color:var(--primary-dark);">Products</a>
+        <a href="/blogs">Blog</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <h1 class="page-title">All Products</h1>
+    <p class="page-subtitle">Explore doctor-endorsed electric body massagers, percussion guns, and personal care essentials designed for instant relief and wellness at home.</p>
+    <div class="grid">
+      ${productCards}
+    </div>
+  </main>
+  <footer class="footer">
+    <p>© 2026 Afsha Enterprises. All rights reserved.</p>
+    <p style="margin-top:10px;">
+      <a href="/">Home</a> • <a href="/products">Products</a> • <a href="/blogs">Blog</a> • <a href="/contact">Contact</a> • <a href="/manish-kumar">Developer Profile</a>
+    </p>
+  </footer>
+</body>
+</html>`;
+}
+
+function generateBlogsListingHtml() {
+  const canonicalUrl = 'https://www.afshaenterprises.com/blogs';
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Blog",
+        "@id": `${canonicalUrl}#blog`,
+        "url": canonicalUrl,
+        "name": "Health & Wellness Blog | Afsha Enterprises",
+        "description": "Expert guides, pain relief tips, and body massager reviews by Afsha Enterprises."
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${canonicalUrl}#breadcrumb`,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.afshaenterprises.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Blog", "item": canonicalUrl }
+        ]
+      }
+    ]
+  };
+
+  const blogCards = ALL_BLOGS.map(b => `
+    <a href="/blog/${b.slug}" class="blog-card">
+      <div class="blog-img-wrap">
+        <img src="${b.image}" alt="${b.title}" loading="lazy">
+      </div>
+      <div class="blog-info">
+        <span class="blog-cat">${b.category}</span>
+        <h2 class="blog-title">${b.title}</h2>
+        <p class="blog-desc">${b.metaDescription}</p>
+        <div class="blog-meta">
+          <span>By ${b.author}</span> • <span>${b.readTime}</span>
+        </div>
+        <span class="btn-read">Read Article →</span>
+      </div>
+    </a>
+  `).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health &amp; Wellness Blog — Pain Relief Guides &amp; Massager Reviews | Afsha Enterprises</title>
+  <meta name="description" content="Expert guides, pain relief tips, and body massager reviews by Afsha Enterprises. Discover how to relieve back pain, sciatica, neck stiffness, and muscle fatigue.">
+  <meta name="keywords" content="wellness blog India, body massager reviews, back pain relief tips, sciatica exercises, cervical neck pain treatment">
+  <meta name="author" content="Afsha Enterprises">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="${canonicalUrl}">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="Health &amp; Wellness Blog | Afsha Enterprises">
+  <meta property="og:description" content="Expert guides, pain relief tips, and body massager reviews by Afsha Enterprises.">
+  <meta property="og:image" content="https://www.afshaenterprises.com/bg.jpg">
+  <script type="application/ld+json">${JSON.stringify(jsonLd, null, 2)}</script>
+  <style>
+    :root { --primary: #f59e0b; --primary-dark: #d97706; --text: #0f172a; --muted: #64748b; --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; }
+    .logo span { color: var(--primary); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--primary-dark); }
+    .page-title { font-size: 2.2rem; font-weight: 900; margin: 32px 0 8px; color: var(--text); }
+    .page-subtitle { color: var(--muted); font-size: 1.05rem; margin-bottom: 32px; max-width: 700px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .blog-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; }
+    .blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); }
+    .blog-img-wrap { height: 200px; overflow: hidden; }
+    .blog-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .blog-info { padding: 22px; display: flex; flex-direction: column; flex-grow: 1; }
+    .blog-cat { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--primary-dark); margin-bottom: 6px; }
+    .blog-title { font-size: 1.15rem; font-weight: 800; line-height: 1.35; margin-bottom: 8px; color: var(--text); }
+    .blog-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
+    .blog-meta { font-size: 0.8rem; color: #94a3b8; margin-top: auto; padding-top: 10px; }
+    .btn-read { display: inline-block; color: var(--primary-dark); font-weight: 700; font-size: 0.88rem; margin-top: 10px; }
+    .footer { background: #0f172a; color: #94a3b8; padding: 48px 0 64px; text-align: center; font-size: 0.88rem; margin-top: 60px; }
+    .footer a { color: #ffffff; text-decoration: none; margin: 0 12px; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Afsha <span>Enterprises</span></a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/blogs" style="color:var(--primary-dark);">Blog</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <h1 class="page-title">Health &amp; Wellness Articles</h1>
+    <p class="page-subtitle">Evidence-based advice on pain management, posture correction, and massager guides written by health and technology experts.</p>
+    <div class="grid">
+      ${blogCards}
+    </div>
+  </main>
+  <footer class="footer">
+    <p>© 2026 Afsha Enterprises. All rights reserved.</p>
+    <p style="margin-top:10px;">
+      <a href="/">Home</a> • <a href="/products">Products</a> • <a href="/blogs">Blog</a> • <a href="/contact">Contact</a> • <a href="/manish-kumar">Developer Profile</a>
+    </p>
+  </footer>
+</body>
+</html>`;
+}
+
+function generateContactHtml() {
+  const canonicalUrl = 'https://www.afshaenterprises.com/contact';
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ContactPage",
+        "@id": `${canonicalUrl}#webpage`,
+        "url": canonicalUrl,
+        "name": "Contact Us | Afsha Enterprises",
+        "description": "Contact Afsha Enterprises customer support for order queries, warranty assistance, wholesale inquiries, or product information."
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.afshaenterprises.com/#organization",
+        "name": "Afsha Enterprises",
+        "url": "https://www.afshaenterprises.com/",
+        "telephone": "+91-8851961088",
+        "email": "brayw433@gmail.com",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+91-8851961088",
+          "contactType": "customer service",
+          "areaServed": "IN",
+          "availableLanguage": ["English", "Hindi"]
+        }
+      }
+    ]
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — Customer Support &amp; Inquiries | Afsha Enterprises</title>
+  <meta name="description" content="Get in touch with Afsha Enterprises customer support. Contact us for order queries, warranty assistance, wholesale inquiries, or product information. Phone: +91-8851961088.">
+  <meta name="keywords" content="Afsha Enterprises contact, customer care number, support email, wholesale body massager India">
+  <meta name="author" content="Afsha Enterprises">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="${canonicalUrl}">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="Contact Us | Afsha Enterprises">
+  <meta property="og:description" content="Get in touch with Afsha Enterprises customer support for orders, warranty, and inquiries.">
+  <meta property="og:image" content="https://www.afshaenterprises.com/masage.jpg">
+  <script type="application/ld+json">${JSON.stringify(jsonLd, null, 2)}</script>
+  <style>
+    :root { --primary: #f59e0b; --primary-dark: #d97706; --text: #0f172a; --muted: #64748b; --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; }
+    .logo span { color: var(--primary); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--primary-dark); }
+    .page-title { font-size: 2.2rem; font-weight: 900; margin: 36px 0 10px; color: var(--text); text-align: center; }
+    .page-subtitle { color: var(--muted); font-size: 1.05rem; margin-bottom: 40px; text-align: center; }
+    .contact-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 36px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); margin-bottom: 40px; }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; }
+    .contact-item h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+    .contact-item p { color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+    .contact-item a { color: var(--primary-dark); text-decoration: none; font-weight: 700; }
+    .badge { display: inline-block; background: #ecfdf5; color: #047857; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 999px; margin-bottom: 8px; }
+    .footer { background: #0f172a; color: #94a3b8; padding: 48px 0 64px; text-align: center; font-size: 0.88rem; margin-top: 60px; }
+    .footer a { color: #ffffff; text-decoration: none; margin: 0 12px; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Afsha <span>Enterprises</span></a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/blogs">Blog</a>
+        <a href="/contact" style="color:var(--primary-dark);">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <h1 class="page-title">Contact Customer Support</h1>
+    <p class="page-subtitle">We are here to assist you with order status, tracking, technical support, and warranty claims.</p>
+    <div class="contact-card">
+      <div class="contact-grid">
+        <div class="contact-item">
+          <span class="badge">Direct Phone</span>
+          <h3>Call or WhatsApp Us</h3>
+          <p><a href="tel:+918851961088">+91 8851961088</a></p>
+          <p style="margin-top:4px;">Monday to Saturday: 9:00 AM – 7:00 PM IST</p>
+        </div>
+        <div class="contact-item">
+          <span class="badge">Email Support</span>
+          <h3>Official Email</h3>
+          <p><a href="mailto:brayw433@gmail.com">brayw433@gmail.com</a></p>
+          <p style="margin-top:4px;">Fast responses within 4 business hours.</p>
+        </div>
+        <div class="contact-item">
+          <span class="badge">Headquarters</span>
+          <h3>Registered Office</h3>
+          <p>Afsha Enterprises</p>
+          <p>Ghaziabad, Uttar Pradesh, 201001, India</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <p>© 2026 Afsha Enterprises. All rights reserved.</p>
+    <p style="margin-top:10px;">
+      <a href="/">Home</a> • <a href="/products">Products</a> • <a href="/blogs">Blog</a> • <a href="/contact">Contact</a> • <a href="/manish-kumar">Developer Profile</a>
+    </p>
+  </footer>
+</body>
+</html>`;
+}
+
+function generateCategoryHtml(cat) {
+  const canonicalUrl = `https://www.afshaenterprises.com/category/${cat.slug}`;
+  const matchingProducts = ALL_PRODUCTS.filter(cat.filter);
+  const productsToDisplay = matchingProducts.length > 0 ? matchingProducts : ALL_PRODUCTS;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${canonicalUrl}#webpage`,
+        "url": canonicalUrl,
+        "name": cat.metaTitle,
+        "description": cat.metaDescription
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${canonicalUrl}#breadcrumb`,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.afshaenterprises.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Categories", "item": "https://www.afshaenterprises.com/products" },
+          { "@type": "ListItem", "position": 3, "name": cat.name, "item": canonicalUrl }
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "itemListElement": productsToDisplay.map((p, idx) => ({
+          "@type": "ListItem",
+          "position": idx + 1,
+          "url": `https://www.afshaenterprises.com/product/${p.slug}`,
+          "name": p.name
+        }))
+      }
+    ]
+  };
+
+  const productCards = productsToDisplay.map(p => `
+    <a href="/product/${p.slug}" class="product-card">
+      <div class="product-img-wrap">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">${p.category}</span>
+        <h2 class="product-name">${p.name}</h2>
+        <div class="product-rating">★ ${p.rating} (${p.reviews} reviews)</div>
+        <div class="product-price-row">
+          <span class="product-price">₹${p.price}</span>
+          <span class="product-orig-price">₹${p.originalPrice}</span>
+          <span class="product-discount">${p.discountPercent}% OFF</span>
+        </div>
+        <span class="btn-view">View Details &amp; Order →</span>
+      </div>
+    </a>
+  `).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${cat.metaTitle}</title>
+  <meta name="description" content="${cat.metaDescription}">
+  <meta name="keywords" content="${cat.keywords}">
+  <meta name="author" content="Afsha Enterprises">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="${canonicalUrl}">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="${cat.metaTitle}">
+  <meta property="og:description" content="${cat.metaDescription}">
+  <meta property="og:image" content="https://www.afshaenterprises.com/masage.jpg">
+  <script type="application/ld+json">${JSON.stringify(jsonLd, null, 2)}</script>
+  <style>
+    :root { --primary: #f59e0b; --primary-dark: #d97706; --text: #0f172a; --muted: #64748b; --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; }
+    .logo span { color: var(--primary); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--primary-dark); }
+    .page-title { font-size: 2.2rem; font-weight: 900; margin: 32px 0 8px; color: var(--text); }
+    .page-subtitle { color: var(--muted); font-size: 1.05rem; margin-bottom: 32px; max-width: 700px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); }
+    .product-img-wrap { background: radial-gradient(circle at 50% 50%, #ffffff 40%, #f1f5f9 100%); padding: 20px; text-align: center; height: 220px; display: flex; align-items: center; justify-content: center; }
+    .product-img-wrap img { max-height: 180px; max-width: 90%; object-fit: contain; }
+    .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
+    .product-cat { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--primary-dark); margin-bottom: 6px; }
+    .product-name { font-size: 1.05rem; font-weight: 800; line-height: 1.35; margin-bottom: 8px; color: var(--text); }
+    .product-rating { font-size: 0.85rem; font-weight: 700; color: #f59e0b; margin-bottom: 8px; }
+    .product-price-row { display: flex; align-items: baseline; gap: 8px; margin-top: auto; padding-top: 12px; }
+    .product-price { font-size: 1.3rem; font-weight: 900; color: var(--text); }
+    .product-orig-price { font-size: 0.9rem; color: #94a3b8; text-decoration: line-through; }
+    .product-discount { font-size: 0.8rem; font-weight: 800; color: #16a34a; }
+    .btn-view { display: block; text-align: center; background: #0f172a; color: #ffffff; font-weight: 700; font-size: 0.88rem; padding: 10px 16px; border-radius: 12px; margin-top: 14px; text-decoration: none; }
+    .footer { background: #0f172a; color: #94a3b8; padding: 48px 0 64px; text-align: center; font-size: 0.88rem; margin-top: 60px; }
+    .footer a { color: #ffffff; text-decoration: none; margin: 0 12px; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Afsha <span>Enterprises</span></a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/blogs">Blog</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <h1 class="page-title">${cat.name}</h1>
+    <p class="page-subtitle">${cat.metaDescription}</p>
+    <div class="grid">
+      ${productCards}
+    </div>
+  </main>
+  <footer class="footer">
+    <p>© 2026 Afsha Enterprises. All rights reserved.</p>
+    <p style="margin-top:10px;">
+      <a href="/">Home</a> • <a href="/products">Products</a> • <a href="/blogs">Blog</a> • <a href="/contact">Contact</a> • <a href="/manish-kumar">Developer Profile</a>
+    </p>
+  </footer>
+</body>
+</html>`;
+}
+
+function generateLocationHtml(loc) {
+  const canonicalUrl = `https://www.afshaenterprises.com/locations/${loc.slug}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": `${canonicalUrl}#webpage`,
+        "url": canonicalUrl,
+        "name": loc.metaTitle,
+        "description": loc.metaDescription
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${canonicalUrl}#breadcrumb`,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.afshaenterprises.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Locations", "item": "https://www.afshaenterprises.com/products" },
+          { "@type": "ListItem", "position": 3, "name": loc.city, "item": canonicalUrl }
+        ]
+      }
+    ]
+  };
+
+  const productCards = ALL_PRODUCTS.slice(0, 4).map(p => `
+    <a href="/product/${p.slug}" class="product-card">
+      <div class="product-img-wrap">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+      </div>
+      <div class="product-info">
+        <span class="product-cat">${p.category}</span>
+        <h2 class="product-name">${p.name}</h2>
+        <div class="product-price-row">
+          <span class="product-price">₹${p.price}</span>
+          <span class="product-orig-price">₹${p.originalPrice}</span>
+          <span class="product-discount">${p.discountPercent}% OFF</span>
+        </div>
+        <span class="btn-view">Order in ${loc.city} →</span>
+      </div>
+    </a>
+  `).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${loc.metaTitle}</title>
+  <meta name="description" content="${loc.metaDescription}">
+  <meta name="keywords" content="${loc.keywords}">
+  <meta name="author" content="Afsha Enterprises">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="${canonicalUrl}">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:title" content="${loc.metaTitle}">
+  <meta property="og:description" content="${loc.metaDescription}">
+  <meta property="og:image" content="https://www.afshaenterprises.com/masage.jpg">
+  <script type="application/ld+json">${JSON.stringify(jsonLd, null, 2)}</script>
+  <style>
+    :root { --primary: #f59e0b; --primary-dark: #d97706; --text: #0f172a; --muted: #64748b; --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    .header { background: #ffffff; border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 50; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; }
+    .logo span { color: var(--primary); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--primary-dark); }
+    .page-title { font-size: 2.2rem; font-weight: 900; margin: 32px 0 8px; color: var(--text); }
+    .page-subtitle { color: var(--muted); font-size: 1.05rem; margin-bottom: 32px; max-width: 700px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); }
+    .product-img-wrap { background: radial-gradient(circle at 50% 50%, #ffffff 40%, #f1f5f9 100%); padding: 20px; text-align: center; height: 220px; display: flex; align-items: center; justify-content: center; }
+    .product-img-wrap img { max-height: 180px; max-width: 90%; object-fit: contain; }
+    .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
+    .product-cat { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--primary-dark); margin-bottom: 6px; }
+    .product-name { font-size: 1.05rem; font-weight: 800; line-height: 1.35; margin-bottom: 8px; color: var(--text); }
+    .product-price-row { display: flex; align-items: baseline; gap: 8px; margin-top: auto; padding-top: 12px; }
+    .product-price { font-size: 1.3rem; font-weight: 900; color: var(--text); }
+    .product-orig-price { font-size: 0.9rem; color: #94a3b8; text-decoration: line-through; }
+    .product-discount { font-size: 0.8rem; font-weight: 800; color: #16a34a; }
+    .btn-view { display: block; text-align: center; background: #0f172a; color: #ffffff; font-weight: 700; font-size: 0.88rem; padding: 10px 16px; border-radius: 12px; margin-top: 14px; text-decoration: none; }
+    .footer { background: #0f172a; color: #94a3b8; padding: 48px 0 64px; text-align: center; font-size: 0.88rem; margin-top: 60px; }
+    .footer a { color: #ffffff; text-decoration: none; margin: 0 12px; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Afsha <span>Enterprises</span></a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/blogs">Blog</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <h1 class="page-title">Electric Body Massagers in ${loc.city}</h1>
+    <p class="page-subtitle">${loc.metaDescription}</p>
+    <div class="grid">
+      ${productCards}
+    </div>
+  </main>
+  <footer class="footer">
+    <p>© 2026 Afsha Enterprises. All rights reserved.</p>
+    <p style="margin-top:10px;">
+      <a href="/">Home</a> • <a href="/products">Products</a> • <a href="/blogs">Blog</a> • <a href="/contact">Contact</a> • <a href="/manish-kumar">Developer Profile</a>
+    </p>
+  </footer>
+</body>
+</html>`;
+}
+
+function generate404Html() {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found | Afsha Enterprises</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg">
+  <style>
+    :root { --primary: #f59e0b; --text: #0f172a; --muted: #64748b; --bg: #f8fafc; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 20px; }
+    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 48px 32px; max-width: 520px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .code { font-size: 4.5rem; font-weight: 900; color: var(--primary); line-height: 1; margin-bottom: 12px; }
+    h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 12px; }
+    p { color: var(--muted); font-size: 0.95rem; margin-bottom: 28px; line-height: 1.5; }
+    .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 12px 24px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+    .btn-primary { background: #0f172a; color: #ffffff; }
+    .btn-secondary { background: #f1f5f9; color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="code">404</div>
+    <h1>Page Not Found</h1>
+    <p>The page you are looking for does not exist, has been moved, or the link is broken.</p>
+    <div class="btn-group">
+      <a href="/" class="btn btn-primary">Return Home</a>
+      <a href="/products" class="btn btn-secondary">Shop Massagers</a>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
 // Generate static HTML files in all locations
 const outputDirs = [
   path.join(rootDir, 'frontend', 'public'),
@@ -832,6 +1553,8 @@ const outputDirs = [
   path.join(rootDir, 'backend', 'public', 'blog'),
   path.join(rootDir, 'frontend', 'public', 'blogs'),
   path.join(rootDir, 'backend', 'public', 'blogs'),
+  path.join(rootDir, 'frontend', 'public', 'category'),
+  path.join(rootDir, 'backend', 'public', 'category'),
   path.join(rootDir, 'frontend', 'public', 'locations'),
   path.join(rootDir, 'backend', 'public', 'locations'),
 ];
@@ -870,6 +1593,67 @@ ALL_BLOGS.forEach(b => {
 const manishHtml = generateManishProfileHtml();
 [path.join(rootDir, 'frontend', 'public'), path.join(rootDir, 'backend', 'public')].forEach(dir => {
   fs.writeFileSync(path.join(dir, 'manish-kumar.html'), manishHtml, 'utf-8');
+});
+
+// 4. Generate Core Site Pages (products, blogs, contact, 404)
+const productsHtml = generateProductsListingHtml();
+[
+  path.join(rootDir, 'frontend', 'public', 'products.html'),
+  path.join(rootDir, 'backend', 'public', 'products.html'),
+  path.join(rootDir, 'frontend', 'public', 'products', 'index.html'),
+  path.join(rootDir, 'backend', 'public', 'products', 'index.html')
+].forEach(filePath => {
+  fs.writeFileSync(filePath, productsHtml, 'utf-8');
+});
+
+const blogsListingHtml = generateBlogsListingHtml();
+[
+  path.join(rootDir, 'frontend', 'public', 'blogs.html'),
+  path.join(rootDir, 'backend', 'public', 'blogs.html'),
+  path.join(rootDir, 'frontend', 'public', 'blogs', 'index.html'),
+  path.join(rootDir, 'backend', 'public', 'blogs', 'index.html')
+].forEach(filePath => {
+  fs.writeFileSync(filePath, blogsListingHtml, 'utf-8');
+});
+
+const contactHtml = generateContactHtml();
+[
+  path.join(rootDir, 'frontend', 'public', 'contact.html'),
+  path.join(rootDir, 'backend', 'public', 'contact.html')
+].forEach(filePath => {
+  fs.writeFileSync(filePath, contactHtml, 'utf-8');
+});
+
+const html404 = generate404Html();
+[
+  path.join(rootDir, 'frontend', 'public', '404.html'),
+  path.join(rootDir, 'backend', 'public', '404.html')
+].forEach(filePath => {
+  fs.writeFileSync(filePath, html404, 'utf-8');
+});
+
+// 5. Generate Category Static Pages
+ALL_CATEGORIES.forEach(cat => {
+  const catHtml = generateCategoryHtml(cat);
+  [
+    path.join(rootDir, 'frontend', 'public', 'category', `${cat.slug}.html`),
+    path.join(rootDir, 'backend', 'public', 'category', `${cat.slug}.html`)
+  ].forEach(filePath => {
+    fs.writeFileSync(filePath, catHtml, 'utf-8');
+  });
+  console.log(`Generated category static HTML for: ${cat.slug}`);
+});
+
+// 6. Generate Location Static Pages
+ALL_LOCATIONS.forEach(loc => {
+  const locHtml = generateLocationHtml(loc);
+  [
+    path.join(rootDir, 'frontend', 'public', 'locations', `${loc.slug}.html`),
+    path.join(rootDir, 'backend', 'public', 'locations', `${loc.slug}.html`)
+  ].forEach(filePath => {
+    fs.writeFileSync(filePath, locHtml, 'utf-8');
+  });
+  console.log(`Generated location static HTML for: ${loc.slug}`);
 });
 
 // 4. Generate Standard Clean Canonical XML Sitemap

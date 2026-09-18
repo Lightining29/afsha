@@ -27,7 +27,7 @@ function absImg(url) {
 
 function resolveHref(linkType, linkValue) {
   if (!linkValue || linkType === 'none') return null;
-  if (linkType === 'product')  return `/products/${linkValue}`;
+  if (linkType === 'product')  return `/product/${linkValue}`;
   if (linkType === 'category') return `/category/${linkValue}`;
   if (linkType === 'url')      return linkValue;
   return null;

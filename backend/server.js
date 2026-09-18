@@ -282,11 +282,21 @@ app.get('/robots.txt', (req, res) => {
 Allow: /
 Disallow: /api/
 Disallow: /admin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /login
+Disallow: /register
 
 User-agent: Googlebot
 Allow: /
 Disallow: /api/
 Disallow: /admin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /login
+Disallow: /register
 
 User-agent: Googlebot-Image
 Allow: /
@@ -474,7 +484,32 @@ const staticDir = resolveStaticDirectory();
 if (staticDir) {
   console.log(`[Static] Serving frontend from: ${staticDir}`);
 
-  // 1. Fast-path instant static handler for Manish Kumar Profile (Sub-20ms instant delivery for Googlebot and users)
+  // Helper to send a true HTTP 404 response with noindex header to prevent GSC Soft 404 errors
+  const send404 = (res) => {
+    res.status(404);
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    const custom404 = path.join(staticDir, '404.html');
+    if (fs.existsSync(custom404)) {
+      return res.sendFile(custom404);
+    }
+    return res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>404 - Page Not Found | Afsha Enterprises</title>
+  <meta name="robots" content="noindex, nofollow">
+</head>
+<body style="font-family:sans-serif; text-align:center; padding:50px;">
+  <h1>404 - Page Not Found</h1>
+  <p>The page you are looking for does not exist.</p>
+  <a href="/">Go to Homepage</a>
+</body>
+</html>`);
+  };
+
+  // 1. Fast-path instant static handler for Manish Kumar Profile
   app.get(['/manish-kumar', '/manish-kumar.html'], (req, res) => {
     if (req.path.endsWith('.html')) {
       return res.redirect(301, '/manish-kumar');
@@ -518,9 +553,93 @@ if (staticDir) {
     return res.redirect(301, '/manish-kumar');
   });
 
-  // 3. Fast-path instant static handler for Product Detail Pages
-  app.get('/product/:slug', (req, res, next) => {
-    const slug = req.params.slug.replace(/\.html$/, '');
+  // 3. Fast-path instant static handler for All Products Catalog (/products)
+  app.get(['/products', '/products.html'], (req, res) => {
+    if (req.path.endsWith('.html')) {
+      return res.redirect(301, '/products');
+    }
+    const filePath = path.join(staticDir, 'products.html');
+    if (fs.existsSync(filePath)) {
+      res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+      res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+      res.setHeader('Link', '<https://www.afshaenterprises.com/products>; rel="canonical"');
+      return res.sendFile(filePath);
+    }
+    res.sendFile(path.join(staticDir, 'index.html'));
+  });
+
+  // 4. Fast-path instant static handler for Blog Articles List (/blogs)
+  app.get(['/blogs', '/blogs.html', '/blog', '/blog.html'], (req, res) => {
+    if (req.path !== '/blogs') {
+      return res.redirect(301, '/blogs');
+    }
+    const filePath = path.join(staticDir, 'blogs.html');
+    if (fs.existsSync(filePath)) {
+      res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+      res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+      res.setHeader('Link', '<https://www.afshaenterprises.com/blogs>; rel="canonical"');
+      return res.sendFile(filePath);
+    }
+    res.sendFile(path.join(staticDir, 'index.html'));
+  });
+
+  // 5. Fast-path instant static handler for Contact Page (/contact)
+  app.get(['/contact', '/contact.html', '/contact-us', '/contact-us.html'], (req, res) => {
+    if (req.path !== '/contact') {
+      return res.redirect(301, '/contact');
+    }
+    const filePath = path.join(staticDir, 'contact.html');
+    if (fs.existsSync(filePath)) {
+      res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+      res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+      res.setHeader('Link', '<https://www.afshaenterprises.com/contact>; rel="canonical"');
+      return res.sendFile(filePath);
+    }
+    res.sendFile(path.join(staticDir, 'index.html'));
+  });
+
+  // 6. Fast-path instant static handler for Categories (/category/:slug)
+  app.get(['/category/:slug', '/categories/:slug'], (req, res) => {
+    const raw = req.params.slug;
+    if (req.path.startsWith('/categories/') || raw.endsWith('.html')) {
+      const clean = raw.replace(/\.html$/, '');
+      return res.redirect(301, `/category/${clean}`);
+    }
+    const slug = raw.toLowerCase();
+    const filePath = path.join(staticDir, 'category', `${slug}.html`);
+    if (fs.existsSync(filePath)) {
+      res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+      res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+      res.setHeader('Link', `<https://www.afshaenterprises.com/category/${slug}>; rel="canonical"`);
+      return res.sendFile(filePath);
+    }
+    return send404(res);
+  });
+
+  // 7. Fast-path instant static handler for Locations (/locations/:city)
+  app.get(['/locations/:city', '/location/:city'], (req, res) => {
+    const raw = req.params.city;
+    if (req.path.startsWith('/location/') || raw.endsWith('.html')) {
+      const clean = raw.replace(/\.html$/, '');
+      return res.redirect(301, `/locations/${clean}`);
+    }
+    const city = raw.toLowerCase();
+    const filePath = path.join(staticDir, 'locations', `${city}.html`);
+    if (fs.existsSync(filePath)) {
+      res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+      res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+      res.setHeader('Link', `<https://www.afshaenterprises.com/locations/${city}>; rel="canonical"`);
+      return res.sendFile(filePath);
+    }
+    return send404(res);
+  });
+
+  // 8. Fast-path instant static handler for Product Detail Pages (/product/:slug)
+  app.get('/product/:slug', (req, res) => {
+    if (req.params.slug.endsWith('.html')) {
+      return res.redirect(301, `/product/${req.params.slug.replace(/\.html$/, '')}`);
+    }
+    const slug = req.params.slug;
     const candidates = [
       path.join(staticDir, 'product', `${slug}.html`),
       path.join(staticDir, `${slug}.html`)
@@ -533,10 +652,10 @@ if (staticDir) {
         return res.sendFile(p);
       }
     }
-    next();
+    return send404(res);
   });
 
-  // 4. 301 Permanent Redirects for legacy product URLs to single canonical /product/:slug
+  // 9. 301 Permanent Redirects for legacy product URLs to single canonical /product/:slug
   app.get(['/products/:slug', '/:slug.html'], (req, res, next) => {
     const raw = req.params.slug || req.path.replace(/^\/|\.html$/g, '');
     const slug = raw.replace(/^products\//, '').replace(/^product\//, '');
@@ -554,9 +673,12 @@ if (staticDir) {
     next();
   });
 
-  // 5. Fast-path instant static handler for Blog Articles
-  app.get('/blog/:slug', (req, res, next) => {
-    const slug = req.params.slug.replace(/\.html$/, '');
+  // 10. Fast-path instant static handler for Blog Articles (/blog/:slug)
+  app.get('/blog/:slug', (req, res) => {
+    if (req.params.slug.endsWith('.html')) {
+      return res.redirect(301, `/blog/${req.params.slug.replace(/\.html$/, '')}`);
+    }
+    const slug = req.params.slug;
     const candidates = [
       path.join(staticDir, 'blog', `${slug}.html`),
       path.join(staticDir, `${slug}.html`)
@@ -569,26 +691,16 @@ if (staticDir) {
         return res.sendFile(p);
       }
     }
-    next();
+    return send404(res);
   });
 
-  // 6. 301 Permanent Redirects for legacy blog URLs to single canonical /blog/:slug
+  // 11. 301 Permanent Redirects for legacy blog URLs to single canonical /blog/:slug
   app.get(['/blogs/:slug', '/blog/:slug.html', '/blogs/:slug.html'], (req, res, next) => {
     const slug = (req.params.slug || req.path.replace(/^\/blogs?\//, '')).replace(/\.html$/, '');
     if (slug) {
       return res.redirect(301, `/blog/${slug}`);
     }
     next();
-  });
-
-  // 7. 301 Redirect for /contact-us to /contact
-  app.get(['/contact-us', '/contact-us.html', '/contact.html'], (_req, res) => {
-    res.redirect(301, '/contact');
-  });
-
-  // 8. 301 Redirect for /blog (singular) to /blogs (catalog)
-  app.get(['/blog', '/blog.html', '/blogs.html'], (_req, res) => {
-    res.redirect(301, '/blogs');
   });
 
   // Serve static assets with caching headers & automatic .html extension support
@@ -611,6 +723,26 @@ if (staticDir) {
     if (req.path.startsWith('/api/') || req.path.startsWith('/socket.io/')) {
       return next();
     }
+
+    // Block crawl loops on unknown file extensions by sending true HTTP 404 (prevents Soft 404)
+    const ext = path.extname(req.path).toLowerCase();
+    if (ext && ext !== '.html') {
+      return send404(res);
+    }
+    if (ext === '.html') {
+      const directFile = path.join(staticDir, req.path);
+      if (fs.existsSync(directFile)) {
+        return res.sendFile(directFile);
+      }
+      return send404(res);
+    }
+
+    // Explicitly noindex private and administrative routes
+    const privatePrefixes = ['/cart', '/checkout', '/account', '/login', '/register', '/admin'];
+    if (privatePrefixes.some(prefix => req.path === prefix || req.path.startsWith(prefix + '/'))) {
+      res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    }
+
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.sendFile(path.join(staticDir, 'index.html'));
   });

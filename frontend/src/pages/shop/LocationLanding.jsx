@@ -90,7 +90,7 @@ export default function LocationLanding() {
                       <span className="save-chip">50% OFF</span>
                     </div>
                     <div className="loc-card-actions">
-                      <Link to={`/${p.slug}`} className="btn-loc-details">
+                      <Link to={`/product/${p.slug}`} className="btn-loc-details">
                         View Details
                       </Link>
                       <Link to={`/checkout`} className="btn-loc-buy">

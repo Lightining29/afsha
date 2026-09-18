@@ -2,14 +2,25 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /admin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /login
+Disallow: /register
 
 User-agent: Googlebot
 Allow: /
 Disallow: /api/
 Disallow: /admin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /login
+Disallow: /register
 
 User-agent: Googlebot-Image
 Allow: /
 
 Sitemap: https://www.afshaenterprises.com/sitemap.xml
 Sitemap: https://www.afshaenterprises.com/sitemap_index.xml
+

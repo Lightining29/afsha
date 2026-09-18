@@ -48,7 +48,7 @@ function FlashCard({ product }) {
   };
 
   return (
-    <Link to={`/products/${product.slug}`} className="fs-card-link">
+    <Link to={`/product/${product.slug}`} className="fs-card-link">
       <div className="fs-card">
         <div className="fs-card-img-wrap">
           <img src={product.image} alt={product.name} loading="lazy" />

@@ -28,7 +28,7 @@ export default function ProductCard({ product, variant = 'standard' }) {
 
   return (
     <Link
-      to={`/products/${product.slug}`}
+      to={`/product/${product.slug}`}
       className={`product-card-link ${variant === 'carousel' ? 'carousel-card' : ''}`}
       onPointerEnter={prefetchProduct}
       onFocus={prefetchProduct}
