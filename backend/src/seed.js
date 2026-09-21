@@ -141,7 +141,8 @@ At Afsha Enterprises, we recommend starting with a high-quality electric handhel
 
 async function seed() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/glowora');
+    const verifiedAtlasUri = 'mongodb+srv://brayw433:Manish333@cluster0.gmw98.mongodb.net/ecommerce?retryWrites=true&w=majority';
+    await mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI || verifiedAtlasUri);
     console.log('Connected to MongoDB');
 
     // Clear old admin/demo users

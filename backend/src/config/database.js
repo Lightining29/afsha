@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 
 export async function connectDB() {
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/glowora';
+  const verifiedAtlasUri = 'mongodb+srv://brayw433:Manish333@cluster0.gmw98.mongodb.net/ecommerce?retryWrites=true&w=majority';
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URI || verifiedAtlasUri;
 
   try {
     const conn = await mongoose.connect(uri, {
