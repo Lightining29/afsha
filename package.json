@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "node --watch backend/server.js",
     "start": "node server.js",
-    "build": "npm --prefix frontend install --include=dev && npm --prefix frontend run build",
+    "build": "npm --prefix frontend install --include=dev && npm --prefix frontend run build && node scripts/generate150SeoPages.js",
+    "generate:seo": "node scripts/generate150SeoPages.js",
     "seed": "node backend/src/seed.js",
     "test": "node --test"
   },
