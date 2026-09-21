@@ -40,7 +40,7 @@ export default function BottomNav() {
       </Link>
 
       {/* Cart Tab */}
-      <Link to="/cart" className={`bottom-nav-item ${isCart ? 'active' : ''}`}>
+      <Link to="/cart" rel="nofollow" className={`bottom-nav-item ${isCart ? 'active' : ''}`}>
         <div className="bottom-nav-icon-box">
           <ShoppingBag size={20} strokeWidth={isCart ? 2.5 : 1.8} />
           {cartCount > 0 && <span className="bottom-nav-badge">{cartCount}</span>}
@@ -52,6 +52,7 @@ export default function BottomNav() {
       {/* Wishlist Tab */}
       <Link
         to={isAuthenticated ? '/account/wishlist' : '/login'}
+        rel="nofollow"
         onClick={(e) => {
           if (!isAuthenticated) {
             e.preventDefault();
@@ -71,6 +72,7 @@ export default function BottomNav() {
       {/* Account Tab */}
       <Link
         to={isAuthenticated ? '/account' : '/login'}
+        rel="nofollow"
         className={`bottom-nav-item ${isAccount ? 'active' : ''}`}
         onClick={() => {
           if (!isAuthenticated) setShowLoginModal(true);

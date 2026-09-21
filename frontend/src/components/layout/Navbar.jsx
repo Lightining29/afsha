@@ -106,11 +106,11 @@ export default function Navbar() {
                 {user ? (
                   <>
                     <p className="user-dropdown-name">{user.name}</p>
-                    <Link to="/account" onClick={() => setUserMenuOpen(false)}>My Account</Link>
-                    <Link to="/account/wishlist" onClick={() => setUserMenuOpen(false)}>Wishlist</Link>
+                    <Link to="/account" rel="nofollow" onClick={() => setUserMenuOpen(false)}>My Account</Link>
+                    <Link to="/account/wishlist" rel="nofollow" onClick={() => setUserMenuOpen(false)}>Wishlist</Link>
 
                     {isAdmin && (
-                      <Link to="/admin" onClick={() => setUserMenuOpen(false)}>Admin Panel</Link>
+                      <Link to="/admin" rel="nofollow" onClick={() => setUserMenuOpen(false)}>Admin Panel</Link>
                     )}
                     <button onClick={() => { logout(); setUserMenuOpen(false); navigate('/'); toastSuccess('Signed out', 'You have been signed out successfully.'); }}>
                       Sign Out
@@ -118,8 +118,8 @@ export default function Navbar() {
                   </>
                 ) : (
                   <>
-                    <Link to="/login" onClick={() => setUserMenuOpen(false)}>Sign In</Link>
-                    <Link to="/register" onClick={() => setUserMenuOpen(false)}>Register</Link>
+                    <Link to="/login" rel="nofollow" onClick={() => setUserMenuOpen(false)}>Sign In</Link>
+                    <Link to="/register" rel="nofollow" onClick={() => setUserMenuOpen(false)}>Register</Link>
                   </>
                 )}
               </div>
