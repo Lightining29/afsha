@@ -7,12 +7,25 @@ export default function GoogleSignInButton({ onSuccess, onError, text = 'signin_
   useEffect(() => {
     let script = document.getElementById('google-gsi-client');
     
-    const initializeGoogleSignIn = () => {
+    const initializeGoogleSignIn = async () => {
       try {
         if (!window.google) return;
         
+        let clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '798271672760-tsfmas0ibge6te3532tuhn8btkv3q6ad.apps.googleusercontent.com';
+        try {
+          const res = await fetch('/api/auth/google-client-id');
+          if (res.ok) {
+            const data = await res.json();
+            if (data?.clientId) clientId = data.clientId;
+          }
+        } catch {
+          // Fallback to static ID on network error
+        }
+
+        if (!window.google?.accounts?.id) return;
+
         window.google.accounts.id.initialize({
-          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '798271672760-tsfmas0ibge6te3532tuhn8btkv3q6ad.apps.googleusercontent.com',
+          client_id: clientId,
           callback: (res) => {
             if (res.credential) {
               onSuccess(res.credential);

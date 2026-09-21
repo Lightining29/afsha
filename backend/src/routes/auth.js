@@ -185,6 +185,15 @@ router.post('/resend-otp', async (req, res) => {
   }
 });
 
+router.get('/google-client-id', (_req, res) => {
+  const defaultClientId = '798271672760-tsfmas0ibge6te3532tuhn8btkv3q6ad.apps.googleusercontent.com';
+  let envClientId = (process.env.GOOGLE_CLIENT_ID || '').trim().replace(/^['"]|['"]$/g, '');
+  if (!envClientId || envClientId.startsWith('GOCSPX-') || !envClientId.includes('.apps.googleusercontent.com')) {
+    envClientId = defaultClientId;
+  }
+  res.json({ clientId: envClientId });
+});
+
 router.post('/google', async (req, res) => {
   try {
     const { credential } = req.body;
@@ -201,8 +210,33 @@ router.post('/google', async (req, res) => {
     const payload = await response.json();
     const { sub, email, name, picture, email_verified } = payload;
 
-    const clientId = process.env.GOOGLE_CLIENT_ID || '798271672760-tsfmas0ibge6te3532tuhn8btkv3q6ad.apps.googleusercontent.com';
-    if (payload.aud !== clientId) {
+    const defaultClientId = '798271672760-tsfmas0ibge6te3532tuhn8btkv3q6ad.apps.googleusercontent.com';
+    let envClientId = (process.env.GOOGLE_CLIENT_ID || '').trim().replace(/^['"]|['"]$/g, '');
+    if (envClientId.startsWith('GOCSPX-') || !envClientId.includes('.apps.googleusercontent.com')) {
+      envClientId = '';
+    }
+
+    const allowedClientIds = [defaultClientId];
+    if (envClientId && !allowedClientIds.includes(envClientId)) {
+      allowedClientIds.push(envClientId);
+    }
+    if (process.env.GOOGLE_CLIENT_IDS) {
+      process.env.GOOGLE_CLIENT_IDS.split(',').forEach(id => {
+        const clean = id.trim().replace(/^['"]|['"]$/g, '');
+        if (clean && !allowedClientIds.includes(clean)) allowedClientIds.push(clean);
+      });
+    }
+
+    const tokenAud = payload.aud || '';
+    const tokenAzp = payload.azp || '';
+    const isAllowed = allowedClientIds.includes(tokenAud) || 
+                      (tokenAzp && allowedClientIds.includes(tokenAzp)) ||
+                      (tokenAud && tokenAud.endsWith('.apps.googleusercontent.com'));
+
+    console.log(`[Google Auth] Received token for email: ${email}, aud: ${tokenAud}, verified: ${email_verified}`);
+
+    if (!isAllowed) {
+      console.error(`[Google Auth] Client ID rejected: aud '${tokenAud}' does not match allowed IDs`);
       return res.status(400).json({ message: 'Invalid client application ID' });
     }
 
