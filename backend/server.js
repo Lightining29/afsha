@@ -10,7 +10,7 @@ import mongoose from 'mongoose';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 
-import { connectDB } from './src/config/database.js';
+import { connectDB, lastDbError } from './src/config/database.js';
 import categoryRoutes from './src/routes/categories.js';
 import productRoutes from './src/routes/products.js';
 import authRoutes from './src/routes/auth.js';
@@ -127,6 +127,8 @@ app.get('/api/health', (_req, res) => {
     database: {
       status: states[dbState] || 'unknown',
       connected: dbState === 1,
+      lastError: lastDbError,
+      host: mongoose.connection.host || null,
     },
     nodeVersion: process.version,
     environment: process.env.NODE_ENV || 'production',
