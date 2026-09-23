@@ -567,6 +567,14 @@ if (staticDir) {
   });
 
   // 7. Fast-path instant static handler for Locations (/locations/:city)
+  // Directory landing routes to prevent redirect loops and 404s
+  app.get(['/locations', '/locations/'], (_req, res) => res.redirect(301, '/products'));
+  app.get(['/product', '/product/'], (_req, res) => res.redirect(301, '/products'));
+  app.get(['/blog', '/blog/'], (_req, res) => res.redirect(301, '/blogs'));
+  app.get(['/category', '/category/'], (_req, res) => res.redirect(301, '/products'));
+  app.get(['/categories', '/categories/'], (_req, res) => res.redirect(301, '/products'));
+
+  // 7. Fast-path instant static handler for Locations (/locations/:city)
   app.get(['/locations/:city', '/location/:city'], (req, res) => {
     const raw = req.params.city;
     if (req.path.startsWith('/location/') || raw.endsWith('.html')) {
@@ -605,20 +613,22 @@ if (staticDir) {
     return send404(res);
   });
 
-  // 9. 301 Permanent Redirects for legacy product URLs to single canonical /product/:slug
+  // 9. 301 Permanent Redirects for legacy product, blog, category, and location URLs
   app.get(['/products/:slug', '/:slug.html'], (req, res, next) => {
     const raw = req.params.slug || req.path.replace(/^\/|\.html$/g, '');
     const slug = raw.replace(/^products\//, '').replace(/^product\//, '');
-    const validSlugs = [
-      'electric-body-massager',
-      'deep-tissue-massager',
-      'painless-facial-hair-remover',
-      'neck-and-shoulder-massager',
-      'foot-and-calf-massager',
-      'rechargeable-body-massager'
-    ];
-    if (validSlugs.includes(slug)) {
+
+    if (fs.existsSync(path.join(staticDir, 'product', `${slug}.html`))) {
       return res.redirect(301, `/product/${slug}`);
+    }
+    if (fs.existsSync(path.join(staticDir, 'blog', `${slug}.html`))) {
+      return res.redirect(301, `/blog/${slug}`);
+    }
+    if (fs.existsSync(path.join(staticDir, 'locations', `${slug}.html`))) {
+      return res.redirect(301, `/locations/${slug}`);
+    }
+    if (fs.existsSync(path.join(staticDir, 'category', `${slug}.html`))) {
+      return res.redirect(301, `/category/${slug}`);
     }
     next();
   });
@@ -653,11 +663,12 @@ if (staticDir) {
     next();
   });
 
-  // Serve static assets with caching headers & automatic .html extension support
+  // Serve static assets with caching headers & automatic .html extension support (no directory redirect loops)
   app.use(
     express.static(staticDir, {
       maxAge: '1d',
       extensions: ['html'],
+      redirect: false,
       setHeaders: (res, filePath) => {
         if (filePath.includes('assets') || filePath.endsWith('.js') || filePath.endsWith('.css')) {
           res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
@@ -684,6 +695,20 @@ if (staticDir) {
       if (fs.existsSync(directFile)) {
         return res.sendFile(directFile);
       }
+      return send404(res);
+    }
+
+    // Known valid React client routes
+    const validClientRoutes = [
+      '/', '/products', '/blogs', '/contact', '/cart', '/checkout',
+      '/account', '/account/wishlist', '/account/orders', '/account/settings',
+      '/login', '/register', '/verify-otp', '/admin'
+    ];
+
+    const isKnownRoute = validClientRoutes.some(r => req.path === r || req.path.startsWith(r + '/'));
+
+    // If it's not a known client route and not a static file, send true HTTP 404 to avoid Soft 404
+    if (!isKnownRoute) {
       return send404(res);
     }
 
